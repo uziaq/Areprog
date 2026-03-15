@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Boutique - AREPROG</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <style>
+:root{--bg:#0d0e10;--surface:#17181b;--surface2:#1d1f22;--surface3:#232529;--border:#26282c;--border2:#32353a;--blue:#2196F3;--bl:#42A5F5;--tx:#eceef1;--tx2:#c8cdd4;--mu:#7c8490;--mu2:#555b64;--am:#F59E0B;--gr:#34D399;--rd:#F87171;--or:#FB923C;--fm:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;--r:3px;--rl:8px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:14px;line-height:1.6;display:flex;min-height:100vh}
+.sb{width:280px;min-width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;overflow:hidden;z-index:100}
+.sbh{padding:1.2rem 1.3rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.logo{font-family:var(--fm);font-weight:800;font-size:1.2rem;letter-spacing:.1em;color:var(--tx);text-decoration:none;display:block}
+.logo span{color:var(--blue)}
+.sub{font-size:.6rem;color:var(--mu);margin-top:.15rem;font-family:var(--fm);letter-spacing:.15em;text-transform:uppercase}
+.srch{padding:.7rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.srch input{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--tx);font-size:.8rem;padding:.45rem .7rem;border-radius:var(--r);outline:none}
+.srch input:focus{border-color:var(--blue)}
+.srch input::placeholder{color:var(--mu2)}
+.stats{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.sc{flex:1;padding:.55rem .4rem;text-align:center;border-right:1px solid var(--border)}
+.sc:last-child{border-right:none}
+.sv{font-family:var(--fm);font-weight:800;font-size:.95rem;line-height:1}
+.sv.g{color:var(--gr)}.sv.d{color:var(--mu2)}
+.sl{font-size:.55rem;color:var(--mu2);font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;margin-top:.1rem}
+.plist{flex:1;overflow-y:auto}
+.ch{padding:.4rem 1rem .25rem;font-family:var(--fm);font-size:.56rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mu2);background:var(--bg);position:sticky;top:0;z-index:1}
+.pi{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;position:relative}
+.pi:hover,.pi.act{background:var(--surface2)}
+.pi.act::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--blue)}
+.pi.off{opacity:.4}
+.pi-ic{font-size:1rem;width:1.5rem;text-align:center;flex-shrink:0}
+.pi-inf{flex:1;min-width:0}
+.pi-nm{font-family:var(--fm);font-weight:700;font-size:.7rem;text-transform:uppercase;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi-rw{display:flex;align-items:center;gap:.4rem;margin-top:.1rem}
+.pi-pr{font-family:var(--fm);font-weight:700;font-size:.62rem;color:var(--bl)}
+.pi-of{font-family:var(--fm);font-size:.5rem;font-weight:700;text-transform:uppercase;color:var(--mu2);background:var(--surface3);border:1px solid var(--border2);border-radius:2px;padding:.05rem .3rem}
+.tog{flex-shrink:0;position:relative;width:26px;height:15px}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tt{position:absolute;inset:0;background:var(--surface3);border:1px solid var(--border2);border-radius:100px;cursor:pointer;transition:background .2s}
+.tog input:checked + .tt{background:var(--gr);border-color:var(--gr)}
+.tt::after{content:'';position:absolute;top:2px;left:2px;width:9px;height:9px;background:#fff;border-radius:50%;transition:transform .2s;opacity:.7}
+.tog input:checked + .tt::after{transform:translateX(11px);opacity:1}
+.sbbot{flex-shrink:0;border-top:1px solid var(--border)}
+.sbb{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.7rem;font-family:var(--fm);font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;transition:background .15s}
+.sbb.p{background:var(--blue);color:#fff}.sbb.p:hover{background:var(--bl)}
+.sbb.e{background:transparent;color:var(--mu);border-top:1px solid var(--border)}.sbb.e:hover{color:var(--gr)}
+.ud{width:6px;height:6px;background:var(--or);border-radius:50%;display:none}.ud.on{display:block}
+.main{flex:1;margin-left:280px;display:flex;flex-direction:column;min-height:100vh}
+.tb{position:sticky;top:0;z-index:50;background:rgba(13,14,16,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:.75rem 1.8rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-shrink:0}
+.tl{display:flex;align-items:center;gap:.7rem;min-width:0}
+.tt2{font-family:var(--fm);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tid{font-family:var(--fm);font-size:.6rem;color:var(--mu2);flex-shrink:0}
+.ta{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.btn{padding:.38rem .85rem;font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:var(--r);cursor:pointer;transition:all .15s;border:none;display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;text-decoration:none}
+.bp{background:var(--blue);color:#fff}.bp:hover{background:var(--bl)}
+.bo{background:transparent;color:var(--tx2);border:1px solid var(--border2)}.bo:hover{border-color:rgba(33,150,243,.4);color:var(--blue)}
+.bd{background:transparent;color:var(--rd);border:1px solid rgba(248,113,113,.25)}.bd:hover{background:rgba(248,113,113,.08)}
+.bg{background:var(--gr);color:#000}.bg:hover{opacity:.85}
+.pl{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);text-decoration:none;border:1px solid var(--border2);border-radius:var(--r);padding:.38rem .7rem;transition:all .15s}
+.pl:hover{color:var(--blue);border-color:rgba(33,150,243,.4)}
+.bnr{background:rgba(52,211,153,.07);border-bottom:1px solid rgba(52,211,153,.15);padding:.6rem 1.8rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-shrink:0}
+.bnr.on{display:flex}
+.bnrt{font-size:.75rem;color:var(--tx2);display:flex;align-items:center;gap:.5rem}
+.bnrt strong{color:var(--gr);font-weight:600}
+.fw{padding:1.8rem;max-width:860px}
+.fs{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:1.2rem;overflow:hidden}
+.fsh{padding:.8rem 1.2rem;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.fst{font-family:var(--fm);font-size:.63rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx)}
+.fsv{color:var(--mu2);transition:transform .2s;font-size:.7rem}
+.fs.col .fsv{transform:rotate(-90deg)}
+.fsb{padding:1.2rem;display:flex;flex-direction:column;gap:.9rem}
+.fs.col .fsb{display:none}
+.fr{display:grid;gap:.8rem}
+.fr.c2{grid-template-columns:1fr 1fr}
+.fr.c3{grid-template-columns:1fr 1fr 1fr}
+.ff{display:flex;flex-direction:column;gap:.35rem}
+.fl{font-family:var(--fm);font-size:.58rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mu2)}
+.fl .rq{color:var(--rd);margin-left:.2rem}
+.fi,.fse,.fta{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--tx);font-family:var(--fb);font-size:.83rem;padding:.5rem .75rem;border-radius:var(--r);transition:border-color .15s;outline:none}
+.fi:focus,.fse:focus,.fta:focus{border-color:var(--blue)}
+.fse option{background:var(--surface2)}
+.fta{resize:vertical;min-height:80px;line-height:1.6}
+.fh{font-size:.65rem;color:var(--mu2);line-height:1.4}
+.fi.sok{border-color:rgba(52,211,153,.4)}.fi.sw{border-color:rgba(245,158,11,.4)}
+.trow{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border)}
+.trow-l{font-size:.82rem;color:var(--tx2)}
+.trow-l strong{color:var(--tx);font-weight:500}
+.tbg{position:relative;width:42px;height:24px;flex-shrink:0}
+.tbg input{opacity:0;width:0;height:0;position:absolute}
+.tbgk{position:absolute;inset:0;background:var(--surface3);border:1px solid var(--border2);border-radius:100px;cursor:pointer;transition:background .2s}
+.tbg input:checked + .tbgk{background:var(--gr);border-color:var(--gr)}
+.tbgk::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;opacity:.7}
+.tbg input:checked + .tbgk::after{transform:translateX(18px);opacity:1}
+.dl{display:flex;flex-direction:column;gap:.4rem}
+.di{display:flex;align-items:flex-start;gap:.45rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:.55rem .7rem}
+.di input,.di textarea{flex:1;background:transparent;border:none;color:var(--tx);font-family:var(--fb);font-size:.8rem;outline:none;resize:none;min-width:0}
+.di input::placeholder,.di textarea::placeholder{color:var(--mu2)}
+.dr{background:none;border:none;color:var(--mu2);cursor:pointer;font-size:.85rem;padding:.1rem .15rem;transition:color .1s;flex-shrink:0;line-height:1}
+.dr:hover{color:var(--rd)}
+.da{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .7rem;font-family:var(--fm);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--mu);border:1px dashed var(--border2);border-radius:var(--r);cursor:pointer;transition:all .15s}
+.da:hover{color:var(--blue);border-color:rgba(33,150,243,.4)}
+.empty{display:flex;align-items:center;justify-content:center;flex:1;flex-direction:column;gap:1rem;padding:4rem;text-align:center}
+.empty h2{font-family:var(--fm);font-weight:700;font-size:1.1rem;text-transform:uppercase}
+.empty p{color:var(--mu);font-size:.82rem;max-width:340px}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--border2);color:var(--tx);padding:.65rem 1.2rem;border-radius:100px;font-family:var(--fm);font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:0;pointer-events:none;transition:all .2s;z-index:9999;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.s{border-color:rgba(52,211,153,.3);color:var(--gr);background:rgba(52,211,153,.08)}
+.toast.e{border-color:rgba(248,113,113,.3);color:var(--rd)}
+.toast.i{border-color:rgba(33,150,243,.3);color:var(--bl);background:rgba(33,150,243,.08)}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.md{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);width:min(680px,100%);max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.mdh{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.mdt{font-family:var(--fm);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}
+.mdc{background:none;border:none;color:var(--mu);cursor:pointer;font-size:1.1rem;padding:.2rem;transition:color .1s}
+.mdc:hover{color:var(--tx)}
+.mdb{padding:1.3rem;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:1rem}
+.mdf{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.5rem;flex-shrink:0}
+.code{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:.9rem;font-family:monospace;font-size:.7rem;color:var(--tx2);overflow:auto;white-space:pre;max-height:260px;line-height:1.5}
+.step{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem;background:var(--surface2);border-radius:var(--r)}
+.stepn{width:1.4rem;height:1.4rem;min-width:1.4rem;background:rgba(33,150,243,.15);border:1px solid rgba(33,150,243,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:800;font-size:.7rem;color:var(--blue)}
+.stept{font-size:.78rem;color:var(--tx2);line-height:1.5}
+.stept strong{color:var(--tx);font-weight:500}
+code{background:var(--surface3);padding:.1rem .3rem;border-radius:2px;font-size:.75rem}
+@media(max-width:900px){.sb{position:static;width:100%;min-width:auto;height:auto;border-right:none;border-bottom:1px solid var(--border)}.main{margin-left:0}.fr.c2,.fr.c3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sb">
+  <div class="sbh">
+    <a href="index.html" class="logo">ARE<span>PROG</span></a>
+    <div class="sub">Gestionnaire Boutique</div>
+  </div>
+  <div class="srch"><input id="si" placeholder="Rechercher..." oninput="qry(this.value)"></div>
+  <div class="stats" id="stats"></div>
+  <div class="plist" id="plist"></div>
+  <div class="sbbot">
+    <button class="sbb p" onclick="newProd()">
+      <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+      Nouveau produit
+    </button>
+    <button class="sbb e" onclick="openMo()">
+      <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      Exporter products.js
+    </button>
+    <button class="sbb g" id="btnPublish" onclick="publishToGitHub()">
+      <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+      Publier sur GitHub
+    </button>
+  </div>
+</aside>
+<main class="main">
+  <div class="tb">
+    <div class="tl">
+      <div class="tt2" id="ttl">Selectionnez un produit</div>
+      <div class="tid" id="tid2"></div>
+      <div class="ud" id="ud"></div>
+    </div>
+    <div class="ta" id="ta"></div>
+  </div>
+  <div class="bnr" id="bnr">
+    <div class="bnrt">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <strong>Enregistre.</strong> Exportez <code>products.js</code> pour mettre a jour le site.
+    </div>
+    <div style="display:flex;gap:.4rem">
+      <button class="btn bg" onclick="qkCopy()">Copier products.js</button>
+      <button class="btn bo" onclick="hideBnr()">Plus tard</button>
+    </div>
+  </div>
+  <div id="mc" style="flex:1;display:flex;flex-direction:column">
+    <div class="empty">
+      <div style="font-size:2.5rem">&#128722;</div>
+      <h2>Gestionnaire de produits</h2>
+      <p>Selectionnez un produit a gauche ou creez-en un nouveau.</p>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;justify-content:center">
+        <button class="btn bp" onclick="newProd()">+ Nouveau produit</button>
+        <button class="btn bo" onclick="openMo()">Exporter products.js</button>
+      </div>
+    </div>
+  </div>
+</main>
+<div class="mo" id="moGh" style="display:none" onclick="if(event.target===this)closeMoGh()">
+  <div class="md">
+    <div class="mdh">
+      <div class="mdt">&#9729; Configuration GitHub</div>
+      <button class="mdc" onclick="closeMoGh()">&#x2715;</button>
+    </div>
+    <div class="mdb">
+      <div id="ghStatus"></div>
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div class="gh-field">
+          <label class="gh-label">Token GitHub (Personal Access Token)</label>
+          <input class="gh-input" type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" oninput="saveGhCfg()">
+          <div class="gh-hint">Creez sur <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens</a> &rarr; cochez <strong>repo</strong> &rarr; generez.</div>
+        </div>
+        <div class="gh-field">
+          <label class="gh-label">Nom d'utilisateur GitHub</label>
+          <input class="gh-input" id="ghUser" placeholder="votre-username" oninput="saveGhCfg()">
+        </div>
+        <div class="gh-field">
+          <label class="gh-label">Nom du repo</label>
+          <input class="gh-input" id="ghRepo" placeholder="areprog" oninput="saveGhCfg()">
+        </div>
+        <div class="gh-field">
+          <label class="gh-label">Chemin du fichier</label>
+          <input class="gh-input" id="ghPath" placeholder="products.js" oninput="saveGhCfg()">
+          <div class="gh-hint">Generalement <code>products.js</code> si le fichier est a la racine.</div>
+        </div>
+        <div class="gh-field">
+          <label class="gh-label">Branche</label>
+          <input class="gh-input" id="ghBranch" placeholder="main" oninput="saveGhCfg()">
+        </div>
+      </div>
+    </div>
+    <div class="mdf">
+      <button class="btn bg" onclick="testGh()">Tester la connexion</button>
+      <button class="btn bp" id="btnDoPublish" onclick="doPublish()">
+        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+        Publier maintenant
+      </button>
+      <button class="btn bo" onclick="closeMoGh()" style="margin-left:auto">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="mo" style="display:none" onclick="if(event.target===this)closeMo()">
+  <div class="md">
+    <div class="mdh"><div class="mdt">Exporter products.js</div><button class="mdc" onclick="closeMo()">&#x2715;</button></div>
+    <div class="mdb">
+      <p style="font-size:.8rem;color:var(--tx2);line-height:1.6">Copiez ce code et remplacez <code>products.js</code> sur votre hebergement.</p>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <div class="step"><div class="stepn">1</div><div class="stept">Cliquez <strong>Copier le code</strong>.</div></div>
+        <div class="step"><div class="stepn">2</div><div class="stept">Ouvrez votre gestionnaire de fichiers (cPanel, FileZilla) et trouvez <code>products.js</code> a la racine.</div></div>
+        <div class="step"><div class="stepn">3</div><div class="stept">Remplacez le contenu et sauvegardez.</div></div>
+      </div>
+      <div class="code" id="ec"></div>
+    </div>
+    <div class="mdf">
+      <button class="btn bg" id="bcpy" onclick="doCpy()">Copier le code</button>
+      <button class="btn bo" onclick="doDl()">Telecharger</button>
+      <button class="btn bo" onclick="closeMo()" style="margin-left:auto">Fermer</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── PRODUITS INLINE ──────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════
+   AREPROG — products.js
+   Fichier de données central pour la boutique.
+   Modifiez ce fichier pour gérer vos produits.
+   Chaque produit est automatiquement affiché dans :
+     → boutique.html (carte dans la grille)
+     → produit.html?id=SLUG (fiche produit complète)
+   ═══════════════════════════════════════════════════════ */
+
+const AREPROG_PRODUCTS = [
+
+  /* ──────────────── PRESTATIONS ──────────────── */
+
+  {
+    id: "stage1",
+    slug: "stage1",
+    category: "prestation",
+    name: "Stage 1",
+    tagline: "Libérez le potentiel caché de votre moteur",
+    badge: "Populaire",
+    badgeStyle: "popular",
+    icon: "⚡",
+    price: 300,
+    priceLabel: "à partir de",
+    priceUnit: "Devis confirmé sous 24h",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_STAGE1",
+    featured: true,
+    variants: [
+      { label: "Diesel", price: 300 },
+      { label: "Essence", price: 320 }
+    ],
+    shortDesc: "Optimisation complète de la cartographie moteur sans modification mécanique. Gains garantis en puissance et couple.",
+    fullDesc: "La reprogrammation Stage 1 consiste à modifier les paramètres du calculateur moteur (ECU) pour optimiser la courbe de puissance, le couple et la consommation dans les limites mécaniques d'origine. Sans aucune pièce à changer — uniquement logiciel.",
+    benefits: [
+      { icon: "⚡", label: "+15 à +30% de puissance", desc: "Gains mesurables sur banc de puissance" },
+      { icon: "🔩", label: "+20 à +40% de couple", desc: "Reprise et souplesse moteur améliorées" },
+      { icon: "♻️", label: "100% réversible", desc: "Fichier d'origine conservé, retour à tout moment" },
+      { icon: "🛡️", label: "Garantie 2 ans", desc: "Sur la prestation et la cartographie" }
+    ],
+    features: [
+      "+15 à +30% de puissance",
+      "Garantie 2 ans — 100% réversible",
+      "Diagnostic inclus avant intervention"
+    ],
+    process: [
+      { step: "01", title: "Diagnostic", desc: "Lecture des défauts moteur, contrôle de l'état général du véhicule avant intervention." },
+      { step: "02", title: "Lecture ECU", desc: "Extraction de la cartographie d'origine via OBD ou en Boot mode si nécessaire." },
+      { step: "03", title: "Flashage", desc: "Écriture du nouveau fichier optimisé directement dans le calculateur." },
+      { step: "04", title: "Validation", desc: "Test sur route avec datalogger. Contrôle de tous les paramètres en charge." }
+    ],
+    faq: [
+      { q: "Est-ce que le Stage 1 risque d'endommager mon moteur ?", a: "Un Stage 1 correctement réalisé reste dans les tolérances mécaniques d'origine. Les constructeurs dimensionnent leurs moteurs avec une marge significative. On travaille dans cet espace. Diagnostic complet avant chaque intervention." },
+      { q: "Ma garantie constructeur est-elle affectée ?", a: "La reprogrammation peut être détectée lors d'un passage en concession. Notre intervention étant 100% réversible, il suffit de repasser au fichier d'origine avant. On conserve votre stock et le remet à tout moment." },
+      { q: "Les gains annoncés sont-ils garantis ?", a: "Les pourcentages sont des moyennes constatées. Les gains réels dépendent de l'état du moteur et du carburant. Ce qui est garanti : une amélioration mesurable. Si le résultat ne convient pas, on ajuste ou on revient à l'origine." },
+      { q: "Combien de temps dure l'intervention ?", a: "Entre 45 min et 1h30 : 15-20 min de diagnostic, 20-45 min de flashage, 15-20 min de validation. Certains calculateurs nécessitent jusqu'à 2h30." }
+    ],
+    relatedIds: ["stage2", "pack-s1-egr", "pack-triple"],
+    seoTitle: "Stage 1 — Reprogrammation moteur AREPROG",
+    seoDesc: "Reprogrammation moteur Stage 1 à domicile. +15 à +30% de puissance, garantie 2 ans, 100% réversible. Devis gratuit sous 24h."
+  },
+
+  {
+    id: "stage2",
+    slug: "stage2",
+    category: "prestation",
+    name: "Stage 2",
+    tagline: "Performance extrême pour les passionnés",
+    badge: null,
+    icon: "🔥",
+    price: 600,
+    priceLabel: "à partir de",
+    priceUnit: "Sur devis selon véhicule",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_STAGE2",
+    featured: false,
+    shortDesc: "Haute performance avec modifications mécaniques. Pour les passionnés qui veulent repousser les limites de leur moteur.",
+    fullDesc: "Le Stage 2 pousse la reprogrammation au niveau supérieur en combinant cartographie avancée et modifications mécaniques (admission sport, échappement renforcé, intercooler amélioré). Résultats spectaculaires, préparation sur-mesure.",
+    benefits: [
+      { icon: "🚀", label: "+30 à +50% de puissance", desc: "Gains importants combinés aux modifs mécaniques" },
+      { icon: "⚙️", label: "Sur-mesure", desc: "Cartographie adaptée à vos modifications spécifiques" },
+      { icon: "🏁", label: "Usage piste possible", desc: "Cartographies spéciales circuit disponibles" },
+      { icon: "🛡️", label: "Garantie 2 ans", desc: "Sur la prestation cartographie" }
+    ],
+    features: [
+      "+30 à +50% de puissance",
+      "Modifications mécaniques incluses",
+      "Cartographie personnalisée"
+    ],
+    process: [
+      { step: "01", title: "Bilan mécanique", desc: "Évaluation complète du véhicule et des modifications existantes." },
+      { step: "02", title: "Devis sur-mesure", desc: "Proposition de modifications mécaniques et tarif personnalisé." },
+      { step: "03", title: "Modifications", desc: "Installation des pièces de performance (admission, échappement, etc.)." },
+      { step: "04", title: "Cartographie & banc", desc: "Mise au point de la cartographie, validation sur banc et route." }
+    ],
+    faq: [
+      { q: "Quelles modifications mécaniques sont nécessaires pour un Stage 2 ?", a: "Selon le véhicule : admission sport, downpipe/décata, intercooler amélioré, durites renforcées. On établit la liste précise lors du devis." },
+      { q: "Peut-on passer du Stage 1 au Stage 2 ?", a: "Oui, c'est même la progression recommandée. Un tarif préférentiel est appliqué si vous avez déjà un Stage 1 AREPROG." },
+      { q: "Le Stage 2 est-il utilisable au quotidien ?", a: "Oui, à condition que les modifications mécaniques soient adaptées à un usage route. On propose des cartographies optimisées pour la route ou pour la piste selon votre usage." }
+    ],
+    relatedIds: ["stage1", "pack-triple"],
+    seoTitle: "Stage 2 — Reprogrammation haute performance | AREPROG",
+    seoDesc: "Reprogrammation Stage 2 avec modifications mécaniques. +30 à +50% de puissance. Préparation sur-mesure à domicile."
+  },
+
+  {
+    id: "e85",
+    slug: "e85",
+    category: "prestation",
+    name: "Conversion E85",
+    tagline: "Jusqu'à 50% d'économies sur le plein",
+    badge: "Éco",
+    badgeStyle: "eco",
+    icon: "🌿",
+    price: 350,
+    priceLabel: "à partir de",
+    priceUnit: "Selon motorisation",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_E85",
+    featured: false,
+    shortDesc: "Convertissez votre essence turbo au bioéthanol E85. Économisez jusqu'à 50% sur le plein avec un carburant écologique.",
+    fullDesc: "La conversion E85 permet à votre moteur essence turbo de fonctionner au bioéthanol. Indice d'octane plus élevé (102 RON), meilleure résistance à la détonation — la cartographie est reprogrammée pour exploiter ces propriétés. Résultat : moins cher, plus propre, parfois plus puissant.",
+    benefits: [
+      { icon: "💶", label: "Économies jusqu'à 50%", desc: "L'E85 coûte environ moitié moins que le SP95/98" },
+      { icon: "🌱", label: "Carburant écologique", desc: "Bioéthanol produit à partir de cultures locales" },
+      { icon: "⚡", label: "Performances préservées", desc: "ION 102 RON — meilleure résistance à la détonation" },
+      { icon: "🔄", label: "Flex-fuel possible", desc: "Possibilité de rouler en mixte E85/SP selon les stations" }
+    ],
+    features: [
+      "Compatible essence turbo",
+      "Retour sur investissement en quelques mois",
+      "Homologation possible"
+    ],
+    process: [
+      { step: "01", title: "Vérification compatibilité", desc: "Contrôle injecteurs, pompe à carburant et circuit — certains véhicules nécessitent une mise à niveau." },
+      { step: "02", title: "Cartographie E85", desc: "Réécriture complète des tables d'injection, allumage et gestion carburant." },
+      { step: "03", title: "Calibration", desc: "Ajustements fins selon l'état du moteur et les températures de fonctionnement." },
+      { step: "04", title: "Validation", desc: "Test au bioéthanol sur route, contrôle des richesses et températures." }
+    ],
+    faq: [
+      { q: "Mon véhicule est-il compatible E85 ?", a: "La plupart des moteurs essence turbo produits après 2000 sont compatibles avec un kit ou une simple reprogrammation. On vérifie gratuitement avant toute intervention." },
+      { q: "Puis-je continuer à mettre du SP95/98 ?", a: "Oui, selon la version : conversion pure E85 ou flex-fuel (compatible les deux). La version flex-fuel est recommandée pour les zones où l'E85 est moins disponible." },
+      { q: "Quel retour sur investissement ?", a: "Avec une consommation de 8L/100 et 15 000 km/an, le ROI est souvent inférieur à 12 mois selon les prix à la pompe." }
+    ],
+    relatedIds: ["stage1", "conso"],
+    seoTitle: "Conversion E85 — Bioéthanol à domicile | AREPROG",
+    seoDesc: "Conversion E85 à domicile — jusqu'à 50% d'économies sur le plein. Compatible essence turbo. Devis gratuit sous 24h."
+  },
+
+  {
+    id: "conso",
+    slug: "conso",
+    category: "prestation",
+    name: "Optim. Consommation",
+    tagline: "Moins à la pompe, sans compromis",
+    badge: null,
+    icon: "⛽",
+    price: 250,
+    priceLabel: "à partir de",
+    priceUnit: "Devis confirmé sous 24h",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_CONSO",
+    featured: false,
+    variants: [
+      { label: "Diesel", price: 250 },
+      { label: "Essence", price: 270 }
+    ],
+    shortDesc: "Reprogrammation orientée économie de carburant. Amélioration du rendement thermique et du couple bas régime.",
+    fullDesc: "La reprogrammation consommation agit sur les courbes d'injection, le point d'allumage et la gestion de la suralimentation pour maximiser le rendement thermique. Idéal pour les grands rouleurs, autoroute et zones péri-urbaines.",
+    benefits: [
+      { icon: "📉", label: "-8 à -15% de consommation", desc: "Gain moyen constaté sur trajets mixtes" },
+      { icon: "🛣️", label: "Idéal grande route", desc: "Couple bas régime optimisé pour l'autoroute" },
+      { icon: "💶", label: "ROI rapide", desc: "Amortissement en quelques milliers de km" },
+      { icon: "🔄", label: "Cumulable", desc: "Compatible avec conversion E85 ou Stage 1" }
+    ],
+    features: [
+      "-8 à -15% de consommation",
+      "Idéal grande route / autoroute",
+      "Cumulable avec d'autres prestations"
+    ],
+    process: [
+      { step: "01", title: "Analyse profil", desc: "Évaluation de votre usage (trajet type, km/an) pour orienter la cartographie." },
+      { step: "02", title: "Lecture ECU", desc: "Extraction de la cartographie d'origine." },
+      { step: "03", title: "Optimisation", desc: "Réécriture des tables injection et allumage orientées rendement." },
+      { step: "04", title: "Validation route", desc: "Test sur votre trajet habituel avec mesure de consommation réelle." }
+    ],
+    faq: [
+      { q: "Peut-on combiner optimisation conso et Stage 1 ?", a: "Oui — on peut trouver un équilibre entre performance et économie. Certains clients optent pour une cartographie intermédiaire dite 'éco-sport'." },
+      { q: "Les gains sont-ils garantis ?", a: "-8 à -15% est une moyenne. Les résultats réels dépendent du style de conduite et des trajets. Garantie de résultat mesurable." }
+    ],
+    relatedIds: ["stage1", "e85"],
+    seoTitle: "Optimisation consommation moteur | AREPROG",
+    seoDesc: "Reprogrammation moteur orientée économie carburant. -8 à -15% de consommation. Diesel & essence. À domicile."
+  },
+
+  {
+    id: "egr",
+    slug: "egr",
+    category: "prestation",
+    name: "Désactivation EGR",
+    tagline: "Préservez la longévité de votre moteur",
+    badge: null,
+    icon: "🔧",
+    price: 150,
+    priceLabel: null,
+    priceUnit: "Tarif fixe",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_EGR",
+    featured: false,
+    shortDesc: "Suppression logicielle de la vanne EGR. Prévient l'encrassement du moteur et préserve sa longévité.",
+    fullDesc: "La vanne EGR (Exhaust Gas Recirculation) réintroduit des gaz d'échappement dans l'admission pour réduire les émissions. À long terme, elle encrasse l'admission, le turbo et les injecteurs. Sa désactivation logicielle supprime ce cycle sans modification physique.",
+    benefits: [
+      { icon: "🧹", label: "Admission propre", desc: "Plus de dépôts de suie dans le collecteur d'admission" },
+      { icon: "⏳", label: "Longévité moteur", desc: "Turbo et injecteurs protégés de l'encrassement" },
+      { icon: "💻", label: "100% logiciel", desc: "Aucune modification physique — réversible" },
+      { icon: "🚗", label: "Diesel & essence", desc: "Compatible la majorité des motorisations turbo" }
+    ],
+    features: [
+      "100% logiciel — réversible",
+      "Diesel & essence turbo",
+      "Suppression du code défaut EGR"
+    ],
+    process: [
+      { step: "01", title: "Diagnostic", desc: "Lecture de l'état de la vanne EGR, vérification de l'absence de panne mécanique active." },
+      { step: "02", title: "Lecture ECU", desc: "Extraction de la cartographie d'origine." },
+      { step: "03", title: "Désactivation", desc: "Suppression logicielle de la boucle EGR dans le calculateur." },
+      { step: "04", title: "Validation", desc: "Effacement des codes défauts et vérification de l'absence de voyants." }
+    ],
+    faq: [
+      { q: "La désactivation EGR est-elle détectable au contrôle technique ?", a: "Non — le contrôle technique français mesure les émissions à l'échappement, pas la présence de la vanne EGR. La désactivation logicielle n'impacte pas les valeurs mesurées." },
+      { q: "Faut-il aussi désactiver physiquement la vanne ?", a: "Non, la désactivation logicielle suffit et est préférable. La vanne reste en place mais est ignorée par le calculateur." },
+      { q: "Peut-on combiner EGR + FAP OFF ?", a: "Oui, et c'est fréquent. On propose un tarif pack pour les deux opérations lors de la même intervention." }
+    ],
+    relatedIds: ["fap", "adblue", "pack-s1-egr"],
+    seoTitle: "Désactivation EGR logicielle | AREPROG",
+    seoDesc: "Désactivation EGR logicielle à domicile. 100% réversible, diesel & essence turbo. Préserve la longévité du moteur."
+  },
+
+  {
+    id: "fap",
+    slug: "fap",
+    category: "prestation",
+    name: "Désactivation FAP",
+    tagline: "Fini les régénérations intempestives",
+    badge: null,
+    icon: "🔧",
+    price: 200,
+    priceLabel: null,
+    priceUnit: "Tarif fixe",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_FAP",
+    featured: false,
+    shortDesc: "Suppression logicielle du filtre à particules. Évitez les régénérations coûteuses et les pannes récurrentes.",
+    fullDesc: "Le filtre à particules (FAP/DPF) piège les particules fines des moteurs diesel. Avec le temps ou sur trajets courts, il se colmate et génère des régénérations forcées, des surconsommations ou des pannes. La suppression logicielle désactive la gestion FAP dans l'ECU.",
+    benefits: [
+      { icon: "🚫", label: "Fin des régénérations", desc: "Plus de phases de nettoyage forcées et de surconsommation associée" },
+      { icon: "🔧", label: "Pas de panne FAP", desc: "Suppression de la source première de pannes diesel" },
+      { icon: "💡", label: "Voyant supprimé", desc: "Plus de témoin FAP allumé" },
+      { icon: "🩺", label: "Diagnostic inclus", desc: "Vérification de l'état général avant intervention" }
+    ],
+    features: [
+      "Diesel — voyant FAP supprimé",
+      "Diagnostic préalable inclus",
+      "Suppression des codes défauts"
+    ],
+    process: [
+      { step: "01", title: "Diagnostic FAP", desc: "Lecture du taux de colmatage, contrôle des capteurs de pression différentielle." },
+      { step: "02", title: "Lecture ECU", desc: "Extraction de la cartographie d'origine." },
+      { step: "03", title: "Suppression", desc: "Désactivation de la gestion FAP, cartographie injection adaptée." },
+      { step: "04", title: "Validation", desc: "Effacement des codes défauts, vérification tableau de bord." }
+    ],
+    faq: [
+      { q: "La suppression FAP est-elle détectable au contrôle technique ?", a: "Le contrôle technique mesure l'opacité des fumées. Un FAP supprimé sur un moteur bien entretenu passe généralement sans problème. Nous conseillons de vérifier avant contrôle." },
+      { q: "Faut-il retirer physiquement le FAP ?", a: "Non obligatoire pour la partie logicielle. Certains clients retirent ensuite physiquement le filtre — nous pouvons vous conseiller sur les options." },
+      { q: "Quelle différence entre FAP et AdBlue ?", a: "Le FAP filtre les particules solides. L'AdBlue (SCR) traite les oxydes d'azote (NOx) via injection d'urée. Ce sont deux systèmes distincts — on peut désactiver l'un ou les deux." }
+    ],
+    relatedIds: ["egr", "adblue", "pack-s1-fap"],
+    seoTitle: "Désactivation FAP logicielle | AREPROG",
+    seoDesc: "Désactivation FAP/DPF logicielle à domicile — moteurs diesel. Fini les régénérations. Voyant supprimé. Diagnostic inclus."
+  },
+
+  {
+    id: "adblue",
+    slug: "adblue",
+    category: "prestation",
+    name: "Désactivation AdBlue",
+    tagline: "Supprimez les alertes et blocages moteur",
+    badge: null,
+    icon: "🔧",
+    price: 250,
+    priceLabel: null,
+    priceUnit: "Tarif fixe",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_ADBLUE",
+    featured: false,
+    shortDesc: "Suppression logicielle du système SCR/AdBlue. Fin des alertes de niveau et des risques de blocage moteur Diesel Euro 6.",
+    fullDesc: "Le système AdBlue (SCR — Selective Catalytic Reduction) injecte une solution d'urée dans les gaz d'échappement pour réduire les NOx. Les pannes de pompe, capteurs ou gicleurs peuvent provoquer des blocages moteur progressifs. La désactivation logicielle supprime entièrement ce système.",
+    benefits: [
+      { icon: "🚨", label: "Fin des alertes AdBlue", desc: "Plus de messages d'alerte niveau ou qualité" },
+      { icon: "🔒", label: "Plus de risque de blocage", desc: "Le blocage moteur progressif lié à l'AdBlue est supprimé" },
+      { icon: "💶", label: "Économies entretien", desc: "Plus de remplissage ni de réparation système SCR" },
+      { icon: "💻", label: "100% logiciel", desc: "Aucune modification physique — réversible" }
+    ],
+    features: [
+      "Diesel Euro 6",
+      "Suppression alerte + risque de blocage",
+      "Compatible SUV, utilitaires, VL"
+    ],
+    process: [
+      { step: "01", title: "Diagnostic SCR", desc: "Lecture des défauts liés au système AdBlue, évaluation de l'état du module." },
+      { step: "02", title: "Lecture ECU", desc: "Extraction de la cartographie." },
+      { step: "03", title: "Suppression SCR", desc: "Désactivation complète du système SCR/AdBlue dans l'ECU." },
+      { step: "04", title: "Validation", desc: "Effacement codes défauts, confirmation de l'absence de messages d'alerte." }
+    ],
+    faq: [
+      { q: "Mon moteur risque-t-il d'être bridé après la suppression AdBlue ?", a: "Non — après la désactivation, la limitation progressive liée au système AdBlue est supprimée. Le moteur fonctionne à pleine puissance en permanence." },
+      { q: "Est-ce compatible avec la désactivation FAP ou EGR ?", a: "Oui, les trois systèmes sont indépendants. On peut tout traiter lors de la même intervention avec un tarif pack." }
+    ],
+    relatedIds: ["egr", "fap", "pack-triple"],
+    seoTitle: "Désactivation AdBlue logicielle | AREPROG",
+    seoDesc: "Suppression SCR/AdBlue logicielle à domicile — Diesel Euro 6. Fin des alertes et blocages moteur. 100% réversible."
+  },
+
+  /* ──────────────── PACKS ──────────────── */
+
+  {
+    id: "pack-s1-egr",
+    slug: "pack-s1-egr",
+    category: "pack",
+    name: "Pack Stage 1 + EGR",
+    tagline: "Performance et longévité en une intervention",
+    badge: "Pack",
+    badgeStyle: "pack",
+    icon: "📦",
+    price: 400,
+    priceLabel: null,
+    priceUnit: "Au lieu de 450€",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_PACK_EGR",
+    featured: false,
+    variants: [
+      { label: "Diesel", price: 400 },
+      { label: "Essence", price: 420 }
+    ],
+    saving: "Économisez 50€ vs séparément",
+    includes: ["Stage 1", "EGR OFF"],
+    shortDesc: "Gain de performances + protection longévité moteur. Intervention unique, tarif réduit.",
+    fullDesc: "Ce pack combine la reprogrammation Stage 1 (gain puissance/couple) avec la désactivation EGR (protection moteur). Une seule venue de notre technicien à votre domicile pour deux prestations complémentaires à prix réduit.",
+    benefits: [
+      { icon: "⚡", label: "Stage 1 inclus", desc: "+15 à +30% de puissance et couple" },
+      { icon: "🧹", label: "EGR OFF inclus", desc: "Admission propre, longévité moteur préservée" },
+      { icon: "💶", label: "50€ économisés", desc: "Par rapport aux deux prestations séparées" },
+      { icon: "🚗", label: "1 seule venue", desc: "Technicien à domicile, tout en une fois" }
+    ],
+    features: [
+      "Stage 1 + Désactivation EGR",
+      "50€ d'économie vs séparément",
+      "1 intervention à domicile"
+    ],
+    faq: [
+      { q: "Les deux prestations sont-elles réalisées lors de la même venue ?", a: "Oui, c'est l'intérêt du pack. Un seul déplacement, deux fichiers écrits lors de la même session." },
+      { q: "Peut-on ajouter la désactivation FAP au pack ?", a: "Oui, nous proposons aussi le pack Triple (Stage 1 + EGR + FAP) avec 100€ d'économie." }
+    ],
+    relatedIds: ["stage1", "egr", "pack-triple"],
+    seoTitle: "Pack Stage 1 + EGR OFF | AREPROG",
+    seoDesc: "Pack Stage 1 + désactivation EGR à domicile. 50€ économisés, 1 seule intervention. Diesel & essence turbo."
+  },
+
+  {
+    id: "pack-s1-fap",
+    slug: "pack-s1-fap",
+    category: "pack",
+    name: "Pack Stage 1 + FAP",
+    tagline: "Boostez votre diesel et éliminez les pannes FAP",
+    badge: "Pack",
+    badgeStyle: "pack",
+    icon: "📦",
+    price: 440,
+    priceLabel: null,
+    priceUnit: "Au lieu de 500€",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_PACK_FAP",
+    featured: false,
+    saving: "Économisez 60€ vs séparément",
+    includes: ["Stage 1", "FAP OFF"],
+    shortDesc: "Performances + fiabilité. Supprimez les régénérations tout en boostant votre diesel.",
+    fullDesc: "Le combo idéal pour les diesels. Stage 1 pour les performances, suppression FAP pour éliminer les régénérations forcées et leurs surconsommations. Diesel uniquement, une seule intervention.",
+    benefits: [
+      { icon: "⚡", label: "Stage 1 inclus", desc: "+15 à +30% de puissance" },
+      { icon: "🚫", label: "FAP OFF inclus", desc: "Fin des régénérations et pannes FAP" },
+      { icon: "💶", label: "60€ économisés", desc: "Par rapport aux deux prestations séparées" },
+      { icon: "🚗", label: "Diesel uniquement", desc: "Optimisé pour moteurs diesel turbo" }
+    ],
+    features: [
+      "Stage 1 + Désactivation FAP",
+      "60€ d'économie vs séparément",
+      "Diesel uniquement"
+    ],
+    faq: [
+      { q: "Ce pack est-il réservé aux diesels ?", a: "Oui, la suppression FAP ne concerne que les moteurs diesel. Pour l'essence, on recommande le pack Stage 1 + EGR." }
+    ],
+    relatedIds: ["stage1", "fap", "pack-triple"],
+    seoTitle: "Pack Stage 1 + FAP OFF | AREPROG",
+    seoDesc: "Pack Stage 1 + désactivation FAP pour diesel. 60€ économisés, une seule intervention à domicile."
+  },
+
+  {
+    id: "pack-triple",
+    slug: "pack-triple",
+    category: "pack",
+    name: "Pack Stage 1 + EGR + FAP",
+    tagline: "Le pack complet — le meilleur rapport qualité/prix",
+    badge: "Best value",
+    badgeStyle: "pack",
+    icon: "⭐",
+    price: 550,
+    priceLabel: null,
+    priceUnit: "Au lieu de 650€",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_PACK_TRIPLE",
+    featured: true,
+    saving: "Économisez 100€ vs séparément",
+    includes: ["Stage 1", "EGR OFF", "FAP OFF"],
+    shortDesc: "Performances + longévité + zéro entretien FAP. Tout en une seule intervention à domicile.",
+    fullDesc: "Le pack ultime pour votre diesel : Stage 1 pour les performances, EGR OFF pour protéger l'admission, FAP OFF pour éliminer les régénérations. 100€ d'économie, un seul déplacement de notre technicien.",
+    benefits: [
+      { icon: "⚡", label: "Stage 1 inclus", desc: "+15 à +30% de puissance et couple" },
+      { icon: "🧹", label: "EGR OFF inclus", desc: "Admission propre, moteur protégé" },
+      { icon: "🚫", label: "FAP OFF inclus", desc: "Fin définitive des régénérations forcées" },
+      { icon: "💶", label: "100€ économisés", desc: "Meilleur rapport qualité/prix du catalogue" }
+    ],
+    features: [
+      "Stage 1 + EGR OFF + FAP OFF",
+      "100€ d'économie vs séparément",
+      "Diesel uniquement — 1 intervention"
+    ],
+    faq: [
+      { q: "Peut-on ajouter AdBlue OFF à ce pack ?", a: "Oui, moyennant un supplément. Contactez-nous pour un devis personnalisé incluant AdBlue." },
+      { q: "Ce pack est-il disponible pour l'essence ?", a: "Partiellement — Stage 1 + EGR est disponible en essence. Le FAP OFF concerne uniquement le diesel." }
+    ],
+    relatedIds: ["stage1", "egr", "fap", "adblue"],
+    seoTitle: "Pack Stage 1 + EGR + FAP — Best value | AREPROG",
+    seoDesc: "Pack complet Stage 1 + EGR OFF + FAP OFF diesel. 100€ économisés, une seule intervention. Meilleur rapport qualité/prix."
+  },
+
+  /* ──────────────── PRODUITS PHYSIQUES ──────────────── */
+
+  {
+    id: "cable-obd2",
+    slug: "cable-obd2",
+    category: "produit",
+    name: "Câble OBD2 Pro",
+    tagline: "Diagnostiquez votre véhicule en autonomie",
+    badge: "Expédition",
+    badgeStyle: "physique",
+    icon: "🔌",
+    price: 45,
+    priceLabel: null,
+    priceUnit: "Livraison incluse",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_CABLE",
+    featured: false,
+    shortDesc: "Câble diagnostic OBD2 universel compatible tous protocoles. Lecture et effacement de codes défauts en totale autonomie.",
+    fullDesc: "Le câble OBD2 Pro AREPROG est compatible avec tous les protocoles OBD2 standard (CAN, ISO, KWP, J1850). Câble USB renforcé de 1,8m, compatible avec les logiciels VCDS, EOBD Facile, Forscan et la majorité des applications Android/iOS.",
+    benefits: [
+      { icon: "🔌", label: "Universel OBD2", desc: "Compatible tous protocoles : CAN, ISO, KWP, J1850" },
+      { icon: "📱", label: "Multi-plateforme", desc: "PC, Android, iOS — compatible tous logiciels OBD" },
+      { icon: "📦", label: "Expédié sous 48h", desc: "Livraison colissimo incluse dans le prix" },
+      { icon: "🛡️", label: "Câble renforcé", desc: "1,8m, connecteurs en métal brossé" }
+    ],
+    features: [
+      "Compatible OBD2 universel",
+      "Câble 1.8m renforcé",
+      "Expédié sous 48h — livraison incluse"
+    ],
+    faq: [
+      { q: "Avec quels logiciels est-il compatible ?", a: "VCDS Lite, EOBD Facile, Forscan, Torque (Android), OBD Fusion (iOS) et la majorité des applications OBD du marché." },
+      { q: "Est-il compatible avec les véhicules récents ?", a: "Oui, tous les véhicules produits après 2004 (Europe) et 1996 (USA) sont équipés du port OBD2 standard." }
+    ],
+    relatedIds: ["vag-com", "odis"],
+    seoTitle: "Câble OBD2 Pro — Diagnostic universel | AREPROG",
+    seoDesc: "Câble OBD2 Pro universel — lecture et effacement de codes défauts. Compatible tous véhicules. Livraison incluse."
+  },
+
+  {
+    id: "vag-com",
+    slug: "vag-com",
+    category: "produit",
+    name: "Interface VAG-COM",
+    tagline: "Le diagnostic constructeur pour le Groupe VAG",
+    badge: "Pro",
+    badgeStyle: "popular",
+    icon: "💾",
+    price: 149,
+    priceLabel: null,
+    priceUnit: "Expédié sous 48h",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_VAGCOM",
+    featured: true,
+    shortDesc: "Interface de diagnostic avancée pour véhicules du Groupe VAG. Accès aux modules cachés, codages et adaptations.",
+    fullDesc: "L'interface VAG-COM donne accès à tous les modules électroniques des véhicules Volkswagen, Audi, Seat, Skoda et Porsche (Groupe VAG). Lecture/effacement codes défauts, codages avancés, adaptations, visualisation des mesures en temps réel.",
+    benefits: [
+      { icon: "🎯", label: "Groupe VAG complet", desc: "VW, Audi, Seat, Skoda, Porsche — tous modules" },
+      { icon: "💻", label: "Logiciel inclus", desc: "VCDS compatible inclus dans le pack" },
+      { icon: "🔄", label: "Mises à jour gratuites", desc: "Accès aux mises à jour logiciel sans surcoût" },
+      { icon: "📦", label: "Expédié sous 48h", desc: "Avec câble USB, documentation et accès logiciel" }
+    ],
+    features: [
+      "Groupe VAG complet (VW, Audi, Seat, Skoda)",
+      "Logiciel + mises à jour inclus",
+      "Accès à tous les modules"
+    ],
+    faq: [
+      { q: "Fonctionne-t-il sur les véhicules récents ?", a: "Oui, compatible jusqu'aux véhicules 2025 avec les dernières mises à jour logiciel." },
+      { q: "Peut-on coder des options avec cet outil ?", a: "Oui — activation de fonctions cachées (DRL, affichage huile, etc.) selon le véhicule." }
+    ],
+    relatedIds: ["cable-obd2", "odis"],
+    seoTitle: "Interface VAG-COM — Diagnostic Groupe VAG | AREPROG",
+    seoDesc: "Interface VAG-COM diagnostic avancé Groupe VAG. VW, Audi, Seat, Skoda. Codages, adaptations, logiciel inclus."
+  },
+
+  /* ──────────────── BONS CADEAUX ──────────────── */
+
+  {
+    id: "gift-100",
+    slug: "gift-100",
+    category: "cadeau",
+    name: "Bon cadeau 100€",
+    tagline: "Offrez une expérience AREPROG",
+    badge: "Cadeau",
+    badgeStyle: "gift",
+    icon: "🎁",
+    price: 100,
+    priceLabel: null,
+    priceUnit: "Valable 1 an",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_GIFT100",
+    featured: false,
+    shortDesc: "Bon cadeau 100€ valable sur l'ensemble des prestations AREPROG. Idéal en contribution.",
+    fullDesc: "Le bon cadeau AREPROG est valable 1 an sur l'ensemble du catalogue de prestations (Stage 1, E85, désactivations, etc.). Après achat, vous recevez le bon par email avec un code unique à transmettre au bénéficiaire.",
+    benefits: [
+      { icon: "🎁", label: "Cadeau original", desc: "Pour les passionnés qui ont déjà tout" },
+      { icon: "📧", label: "Envoi par email", desc: "Bon reçu immédiatement après paiement" },
+      { icon: "📅", label: "Valable 1 an", desc: "Le temps de planifier l'intervention" },
+      { icon: "🔄", label: "Sur tout le catalogue", desc: "Utilisable sur toutes les prestations" }
+    ],
+    features: ["Valable sur toutes les prestations", "Envoi par email sous 24h", "Valable 1 an"],
+    faq: [
+      { q: "Comment le bénéficiaire utilise-t-il le bon ?", a: "Il contacte AREPROG avec le code reçu par email. Le montant est déduit du devis de sa prestation." },
+      { q: "Le bon est-il cumulable ?", a: "Oui, plusieurs bons peuvent être cumulés sur une même prestation." }
+    ],
+    relatedIds: ["gift-200", "gift-300"],
+    seoTitle: "Bon cadeau 100€ AREPROG",
+    seoDesc: "Bon cadeau 100€ valable sur les prestations de reprogrammation moteur AREPROG. Envoi par email, valable 1 an."
+  },
+
+  {
+    id: "gift-200",
+    slug: "gift-200",
+    category: "cadeau",
+    name: "Bon cadeau 200€",
+    tagline: "Le cadeau idéal pour un passionné",
+    badge: "Le + offert",
+    badgeStyle: "gift",
+    icon: "🎁",
+    price: 200,
+    priceLabel: null,
+    priceUnit: "Valable 1 an",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_GIFT200",
+    featured: true,
+    shortDesc: "Bon cadeau 200€ — couvre un Stage 1 sur la plupart des véhicules. Le cadeau idéal pour un passionné.",
+    fullDesc: "200€ couvrent un Stage 1 complet sur de nombreuses motorisations diesel et essence. Le cadeau parfait pour offrir une vraie expérience de performance automobile. Bon reçu par email, valable 1 an sur tout le catalogue.",
+    benefits: [
+      { icon: "🎁", label: "Couvre un Stage 1", desc: "Sur la majorité des véhicules diesel/essence" },
+      { icon: "📧", label: "Envoi par email", desc: "Bon reçu immédiatement après paiement" },
+      { icon: "📅", label: "Valable 1 an", desc: "Le temps de planifier l'intervention" },
+      { icon: "⭐", label: "Le plus offert", desc: "Notre bon cadeau le plus populaire" }
+    ],
+    features: ["Couvre la majorité des Stage 1", "Envoi par email sous 24h", "Valable 1 an"],
+    faq: [
+      { q: "200€ couvrent-ils toujours un Stage 1 complet ?", a: "Sur la majorité des véhicules, oui. Pour les motorisations spécifiques (exotiques, très grosses cylindrées), un complément peut être demandé." }
+    ],
+    relatedIds: ["gift-100", "gift-300", "stage1"],
+    seoTitle: "Bon cadeau 200€ AREPROG — Idéal Stage 1",
+    seoDesc: "Bon cadeau 200€ AREPROG — couvre un Stage 1 complet. Envoi email immédiat, valable 1 an sur tout le catalogue."
+  },
+
+  {
+    id: "gift-300",
+    slug: "gift-300",
+    category: "cadeau",
+    name: "Bon cadeau 300€",
+    tagline: "Le grand cadeau pour les vrais passionnés",
+    badge: "Cadeau",
+    badgeStyle: "gift",
+    icon: "🎁",
+    price: 300,
+    priceLabel: null,
+    priceUnit: "Valable 1 an",
+    stripeLink: "https://buy.stripe.com/VOTRE_LIEN_GIFT300",
+    featured: false,
+    shortDesc: "Bon cadeau 300€ — Stage 1 complet avec options incluses. Le grand cadeau pour les vrais passionnés.",
+    fullDesc: "Le bon cadeau le plus généreux — 300€ couvrent un Stage 1 complet avec options (diagnostic avancé, cartographie spécifique) ou une prestation combinée (Stage 1 + EGR ou FAP). Valable 1 an, envoyé par email.",
+    benefits: [
+      { icon: "🎁", label: "Stage 1 + options", desc: "Couvre un Stage 1 complet avec options" },
+      { icon: "📧", label: "Envoi par email", desc: "Bon reçu immédiatement après paiement" },
+      { icon: "📅", label: "Valable 1 an", desc: "Pour prendre le temps de bien planifier" },
+      { icon: "🔄", label: "Flexible", desc: "Utilisable sur n'importe quelle prestation" }
+    ],
+    features: ["Stage 1 complet avec options", "Envoi par email sous 24h", "Valable 1 an"],
+    faq: [
+      { q: "Ce bon peut-il couvrir un pack ?", a: "Oui, il peut contribuer à un pack — la différence est réglée directement avec le technicien." }
+    ],
+    relatedIds: ["gift-100", "gift-200", "pack-s1-egr"],
+    seoTitle: "Bon cadeau 300€ AREPROG",
+    seoDesc: "Bon cadeau 300€ — Stage 1 complet avec options. Le grand cadeau pour les passionnés. Envoi email, valable 1 an."
+  }
+
+];
+
+/* ════════════════════════════════════════
+   Helpers — utilisés par boutique.html et produit.html
+   ════════════════════════════════════════ */
+
+function getProductById(id) {
+  return AREPROG_PRODUCTS.find(p => p.id === id) || null;
+}
+
+function getProductsByCategory(cat) {
+  return AREPROG_PRODUCTS.filter(p => p.category === cat);
+}
+
+function getRelatedProducts(product, limit = 3) {
+  if (!product.relatedIds) return [];
+  return product.relatedIds
+    .map(id => getProductById(id))
+    .filter(Boolean)
+    .slice(0, limit);
+}
+
+// Catégories ordonnées pour l'affichage boutique
+const SHOP_CATEGORIES = [
+  { id: "prestation", label: "Prestations" },
+  { id: "pack",       label: "Packs combinés" },
+  { id: "produit",    label: "Produits physiques" },
+  { id: "cadeau",     label: "Bons cadeaux" }
+];
+
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+var CAT = {prestation:'Prestation', pack:'Pack', produit:'Produit', cadeau:'Cadeau'};
+var prods = [];
+var cur = null;
+var dirty = false;
+var q = '';
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+(function init() {
+  var s = localStorage.getItem('ap');
+  if (s) { try { prods = JSON.parse(s); } catch(e) { prods = JSON.parse(JSON.stringify(AREPROG_PRODUCTS)); } }
+  else { prods = JSON.parse(JSON.stringify(AREPROG_PRODUCTS)); }
+  prods.forEach(function(p) { if (p.active === undefined) p.active = true; });
+  renderAll();
+})();
+
+function saveLs() { localStorage.setItem('ap', JSON.stringify(prods)); }
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function toast(msg, t) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast on' + (t ? ' '+t : '');
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.className = 'toast'; }, 2800);
+}
+
+// ── DIRTY ────────────────────────────────────────────────────────────────────
+function setDirty(v) {
+  dirty = v;
+  var d = document.getElementById('ud');
+  if (d) d.className = v ? 'ud on' : 'ud';
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function renderAll() {
+  // Stats
+  var tot = prods.length;
+  var act = prods.filter(function(p) { return p.active !== false; }).length;
+  document.getElementById('stats').innerHTML =
+    '<div class="sc"><div class="sv">'+tot+'</div><div class="sl">Total</div></div>' +
+    '<div class="sc"><div class="sv g">'+act+'</div><div class="sl">Actifs</div></div>' +
+    '<div class="sc"><div class="sv d">'+(tot-act)+'</div><div class="sl">Inactifs</div></div>';
+
+  // List
+  var cats = ['prestation','pack','produit','cadeau'];
+  var ql = q.toLowerCase();
+  var html = '';
+  cats.forEach(function(cat) {
+    var items = prods.filter(function(p) { return p.category === cat; });
+    if (ql) items = items.filter(function(p) { return p.name.toLowerCase().indexOf(ql) !== -1 || p.id.indexOf(ql) !== -1; });
+    if (!items.length) return;
+    html += '<div class="ch">'+CAT[cat]+'</div>';
+    items.forEach(function(p) {
+      var act = p.active !== false;
+      // Use data-pid attribute instead of inline onclick with id to avoid quote issues
+      html += '<div class="pi' + (p.id===cur?' act':'') + (act?'':' off') + '" data-pid="'+p.id+'">';
+      html += '<div class="pi-ic">'+(p.icon||'&#128230;')+'</div>';
+      html += '<div class="pi-inf"><div class="pi-nm">'+p.name+'</div>';
+      html += '<div class="pi-rw"><span class="pi-pr">'+p.price+'&#8364;</span>'+(act?'':'<span class="pi-of">Inactif</span>')+'</div></div>';
+      html += '<label class="tog" data-tog="'+p.id+'" onclick="event.stopPropagation()">';
+      html += '<input type="checkbox"'+(act?' checked':'')+' data-togid="'+p.id+'" onchange="togProd(this)">';
+      html += '<div class="tt"></div></label>';
+      html += '</div>';
+    });
+  });
+  if (!html) html = '<div style="padding:1.5rem;text-align:center;font-size:.78rem;color:var(--mu2)">Aucun resultat</div>';
+  document.getElementById('plist').innerHTML = html;
+
+  // Attach click handlers using data attributes (no inline onclick with ids)
+  document.querySelectorAll('[data-pid]').forEach(function(el) {
+    el.addEventListener('click', function() { selProd(this.dataset.pid); });
+  });
+}
+
+// ── TOGGLE ───────────────────────────────────────────────────────────────────
+function togProd(inp) {
+  var id = inp.dataset.togid;
+  var checked = inp.checked;
+  var p = prods.find(function(x) { return x.id === id; });
+  if (!p) return;
+  p.active = checked;
+  saveLs();
+  renderAll();
+  toast(p.name + (checked ? ': Active' : ': Desactive'), checked ? 's' : '');
+  var fa = document.getElementById('f-active');
+  if (fa) fa.checked = checked;
+}
+
+// ── SELECT ───────────────────────────────────────────────────────────────────
+function selProd(id) {
+  if (dirty && cur && cur !== id) {
+    if (!confirm('Modifications non enregistrees. Continuer ?')) return;
+    setDirty(false);
+  }
+  cur = id;
+  var p = prods.find(function(x) { return x.id === id; });
+  if (!p) return;
+  renderAll();
+  document.getElementById('ttl').textContent = p.name;
+  document.getElementById('tid2').textContent = '#'+p.id;
+
+  // topbar actions — use data attributes on buttons
+  var ta = document.getElementById('ta');
+  ta.innerHTML =
+    '<a href="produit.html?id='+p.id+'" target="_blank" class="pl">Voir la fiche</a>' +
+    '<button class="btn bo" id="btn-dup">Dupliquer</button>' +
+    '<button class="btn bd" id="btn-del">Supprimer</button>' +
+    '<button class="btn bp" onclick="saveProd()">&#10003; Enregistrer</button>';
+
+  document.getElementById('btn-dup').addEventListener('click', function() { dupProd(cur); });
+  document.getElementById('btn-del').addEventListener('click', function() { delProd(cur); });
+
+  renderForm(p);
+  setDirty(false);
+  hideBnr();
+}
+
+// ── FORM ─────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderForm(p) {
+  var stripeOk = p.stripeLink && p.stripeLink.indexOf('VOTRE_LIEN') === -1 && p.stripeLink.indexOf('https://') === 0;
+  var sc = stripeOk ? 'fi sok' : 'fi sw';
+  var sh = stripeOk ? '&#10003; Lien configure' : '&#9888; Remplacez VOTRE_LIEN par votre vrai lien Stripe';
+
+  var cats = ['prestation','pack','produit','cadeau'];
+  var catOpts = cats.map(function(c) {
+    return '<option value="'+c+'"'+(p.category===c?' selected':'')+'>'+CAT[c]+'</option>';
+  }).join('');
+
+  var bsOpts = [['','- aucun'],['popular','Bleu'],['eco','Vert'],['gift','Ambre'],['pack','Degrade'],['physique','Gris']].map(function(v) {
+    return '<option value="'+v[0]+'"'+((p.badgeStyle||'')===v[0]?' selected':'')+'>'+v[1]+'</option>';
+  }).join('');
+
+  function mkRows(arr, attr, fields) {
+    return (arr||[]).map(function(item, i) {
+      var ins = '';
+      if (typeof item === 'string') {
+        ins = '<input class="di-v" value="'+esc(item)+'" placeholder="'+esc(fields[0])+'">';
+      } else {
+        fields.forEach(function(f) {
+          var st = (f==='icon'||f==='step') ? ' style="width:52px"' : '';
+          ins += '<input class="di-v" data-f="'+f+'" value="'+esc(item[f]||'')+'" placeholder="'+f+'"'+st+'>';
+        });
+      }
+      return '<div class="di" data-'+attr+'="'+i+'">'+ins+'<button class="dr" data-rm="'+attr+'" onclick="rmRow(this)">&#x2715;</button></div>';
+    }).join('');
+  }
+
+  function mkBen(arr) {
+    return (arr||[]).map(function(b, i) {
+      return '<div class="di" data-ben="'+i+'" style="flex-direction:column;gap:.3rem">'+
+        '<div style="display:flex;gap:.4rem">'+
+        '<input class="di-v" data-f="icon" value="'+esc(b.icon||'')+'" placeholder="emoji" style="width:52px">'+
+        '<input class="di-v" data-f="label" value="'+esc(b.label||'')+'" placeholder="label">'+
+        '<button class="dr" data-rm="ben" onclick="rmRow(this)">&#x2715;</button></div>'+
+        '<input class="di-v" data-f="desc" value="'+esc(b.desc||'')+'" placeholder="description"></div>';
+    }).join('');
+  }
+
+  function mkProc(arr) {
+    return (arr||[]).map(function(s, i) {
+      return '<div class="di" data-proc="'+i+'" style="flex-direction:column;gap:.3rem">'+
+        '<div style="display:flex;gap:.4rem">'+
+        '<input class="di-v" data-f="step" value="'+esc(s.step||'')+'" placeholder="01" style="width:52px">'+
+        '<input class="di-v" data-f="title" value="'+esc(s.title||'')+'" placeholder="titre">'+
+        '<button class="dr" data-rm="proc" onclick="rmRow(this)">&#x2715;</button></div>'+
+        '<textarea class="di-v" data-f="desc" rows="2" placeholder="description">'+esc(s.desc||'')+'</textarea></div>';
+    }).join('');
+  }
+
+  function mkFaq(arr) {
+    return (arr||[]).map(function(f, i) {
+      return '<div class="di" data-faq="'+i+'" style="flex-direction:column;gap:.3rem">'+
+        '<div style="display:flex;gap:.4rem">'+
+        '<input class="di-v" data-f="q" value="'+esc(f.q||'')+'" placeholder="question" style="flex:1">'+
+        '<button class="dr" data-rm="faq" onclick="rmRow(this)">&#x2715;</button></div>'+
+        '<textarea class="di-v" data-f="a" rows="2" placeholder="reponse">'+esc(f.a||'')+'</textarea></div>';
+    }).join('');
+  }
+
+  document.getElementById('mc').innerHTML =
+    '<div class="fw" oninput="setDirty(true)">' +
+
+    // Statut
+    '<div class="fs"><div class="fsh" onclick="togFS(this)"><div class="fst">Statut</div><span class="fsv">&#9662;</span></div>' +
+    '<div class="fsb"><div class="trow"><div class="trow-l"><strong>Produit actif</strong> - visible dans la boutique</div>' +
+    '<label class="tbg"><input type="checkbox" id="f-active"'+(p.active!==false?' checked':'')+' data-actid="'+p.id+'" onchange="togFromForm(this)"><div class="tbgk"></div></label></div>' +
+    '<div class="fh">Si desactive : masque de la boutique, conserve ici.</div></div></div>' +
+
+    // Identite
+    '<div class="fs"><div class="fsh" onclick="togFS(this)"><div class="fst">Identite</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="fr c3">' +
+    '<div class="ff"><label class="fl">ID <span class="rq">*</span></label><input class="fi" id="f-id" value="'+esc(p.id)+'"></div>' +
+    '<div class="ff"><label class="fl">Nom <span class="rq">*</span></label><input class="fi" id="f-name" value="'+esc(p.name)+'"></div>' +
+    '<div class="ff"><label class="fl">Emoji</label><input class="fi" id="f-icon" value="'+esc(p.icon||'')+'" style="font-size:1.2rem"></div>' +
+    '</div><div class="fr c2">' +
+    '<div class="ff"><label class="fl">Categorie</label><select class="fse" id="f-cat">'+catOpts+'</select></div>' +
+    '<div class="ff"><label class="fl">Tagline</label><input class="fi" id="f-tagline" value="'+esc(p.tagline||'')+'"></div>' +
+    '</div><div class="fr c2">' +
+    '<div class="ff"><label class="fl">Badge</label><input class="fi" id="f-badge" value="'+esc(p.badge||'')+'"></div>' +
+    '<div class="ff"><label class="fl">Style badge</label><select class="fse" id="f-badge-style">'+bsOpts+'</select></div>' +
+    '</div><label class="fl"><input type="checkbox" id="f-featured"'+(p.featured?' checked':'')+'>  Produit mis en avant</label>' +
+    '</div></div>' +
+
+    // Prix
+    '<div class="fs"><div class="fsh" onclick="togFS(this)"><div class="fst">Prix & Stripe</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="fr c3">' +
+    '<div class="ff"><label class="fl">Prix (EUR) <span class="rq">*</span></label><input class="fi" type="number" id="f-price" value="'+p.price+'"></div>' +
+    '<div class="ff"><label class="fl">Libelle prix</label><input class="fi" id="f-price-label" value="'+esc(p.priceLabel||'')+'" placeholder="a partir de"></div>' +
+    '<div class="ff"><label class="fl">Sous-texte prix</label><input class="fi" id="f-price-unit" value="'+esc(p.priceUnit||'')+'"></div>' +
+    '</div>' +
+    '<div class="ff"><label class="fl">Lien Stripe</label><input class="'+sc+'" id="f-stripe" value="'+esc(p.stripeLink||'')+'" oninput="chkStr(this)"><div class="fh" id="f-sh">'+sh+'</div></div>' +
+    '<div class="ff"><label class="fl">Economie (packs)</label><input class="fi" id="f-saving" value="'+esc(p.saving||'')+'"></div>' +
+    '<div class="ff"><label class="fl">Inclus dans ce pack</label><div class="dl" id="dl-inc">'+mkRows(p.includes,'inc',['item'])+'</div><button class="da" data-al="dl-inc" data-aa="inc" data-af="item" onclick="addRowBtn(this)">+ Ajouter</button></div>' +
+    '</div></div>' +
+
+    // Variantes
+    '<div class="fs'+(((p.variants||[]).length)?'':' col')+'"><div class="fsh" onclick="togFS(this)"><div class="fst">Variantes (Diesel / Essence...)</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="dl" id="dl-var">'+mkRows(p.variants,'var',['label','price'])+'</div><button class="da" data-al="dl-var" data-aa="var" data-af="label|price" onclick="addRowBtn(this)">+ Ajouter variante</button>' +
+    '</div></div>' +
+
+    // Descriptions
+    '<div class="fs"><div class="fsh" onclick="togFS(this)"><div class="fst">Descriptions</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="ff"><label class="fl">Description courte <span class="rq">*</span></label><textarea class="fta" id="f-short" rows="3">'+esc(p.shortDesc||'')+'</textarea></div>' +
+    '<div class="ff"><label class="fl">Description complete</label><textarea class="fta" id="f-full" rows="4">'+esc(p.fullDesc||'')+'</textarea></div>' +
+    '</div></div>' +
+
+    // Points cles
+    '<div class="fs"><div class="fsh" onclick="togFS(this)"><div class="fst">Points cles</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="dl" id="dl-feat">'+mkRows(p.features,'feat',['val'])+'</div><button class="da" data-al="dl-feat" data-aa="feat" data-af="val" onclick="addRowBtn(this)">+ Ajouter</button>' +
+    '</div></div>' +
+
+    // Avantages
+    '<div class="fs'+((p.benefits||[]).length?'':' col')+'"><div class="fsh" onclick="togFS(this)"><div class="fst">Avantages</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="dl" id="dl-ben">'+mkBen(p.benefits)+'</div><button class="da" onclick="addBen()">+ Ajouter avantage</button>' +
+    '</div></div>' +
+
+    // Processus
+    '<div class="fs'+((p.process||[]).length?'':' col')+'"><div class="fsh" onclick="togFS(this)"><div class="fst">Etapes processus</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="dl" id="dl-proc">'+mkProc(p.process)+'</div><button class="da" onclick="addProc()">+ Ajouter etape</button>' +
+    '</div></div>' +
+
+    // FAQ
+    '<div class="fs'+((p.faq||[]).length?'':' col')+'"><div class="fsh" onclick="togFS(this)"><div class="fst">FAQ</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="dl" id="dl-faq">'+mkFaq(p.faq)+'</div><button class="da" onclick="addFaq()">+ Ajouter question</button>' +
+    '</div></div>' +
+
+    // SEO
+    '<div class="fs col"><div class="fsh" onclick="togFS(this)"><div class="fst">SEO</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="ff"><label class="fl">Titre SEO</label><input class="fi" id="f-seo-title" value="'+esc(p.seoTitle||'')+'"></div>' +
+    '<div class="ff"><label class="fl">Meta description</label><textarea class="fta" id="f-seo-desc" rows="2">'+esc(p.seoDesc||'')+'</textarea></div>' +
+    '</div></div>' +
+
+    // Associes
+    '<div class="fs col"><div class="fsh" onclick="togFS(this)"><div class="fst">Produits associes</div><span class="fsv">&#9662;</span></div><div class="fsb">' +
+    '<div class="dl" id="dl-rel">'+mkRows(p.relatedIds,'rel',['id'])+'</div><button class="da" data-al="dl-rel" data-aa="rel" data-af="id" onclick="addRowBtn(this)">+ Ajouter</button>' +
+    '<div class="fh">IDs des produits lies (ex: stage1, egr)</div>' +
+    '</div></div>' +
+
+    '<div style="padding-bottom:4rem"></div></div>';
+}
+
+function togFS(h) { h.closest('.fs').classList.toggle('col'); }
+
+function chkStr(inp) {
+  var ok = inp.value && inp.value.indexOf('VOTRE_LIEN') === -1 && inp.value.indexOf('https://') === 0;
+  inp.className = ok ? 'fi sok' : 'fi sw';
+  var h = document.getElementById('f-sh');
+  if (h) h.innerHTML = ok ? '&#10003; Lien configure' : '&#9888; Remplacez VOTRE_LIEN';
+}
+
+function togFromForm(inp) {
+  var id = inp.dataset.actid;
+  togProd(inp);
+}
+
+// ── DYNAMIC ROWS ─────────────────────────────────────────────────────────────
+function rmRow(btn) {
+  var attr = btn.dataset.rm;
+  btn.closest('[data-'+attr+']').remove();
+  setDirty(true);
+}
+
+function addRow(listId, attr, fields) {
+  var c = document.getElementById(listId);
+  var i = c.querySelectorAll('[data-'+attr+']').length;
+  var ins = fields.map(function(f) {
+    var st = (f==='icon'||f==='step') ? ' style="width:52px"' : '';
+    return '<input class="di-v" data-f="'+f+'" placeholder="'+f+'"'+st+'>';
+  }).join('');
+  c.insertAdjacentHTML('beforeend', '<div class="di" data-'+attr+'="'+i+'">'+ins+'<button class="dr" data-rm="'+attr+'" onclick="rmRow(this)">&#x2715;</button></div>');
+}
+
+function addBen() {
+  var c = document.getElementById('dl-ben');
+  var i = c.querySelectorAll('[data-ben]').length;
+  c.insertAdjacentHTML('beforeend',
+    '<div class="di" data-ben="'+i+'" style="flex-direction:column;gap:.3rem">' +
+    '<div style="display:flex;gap:.4rem">' +
+    '<input class="di-v" data-f="icon" placeholder="emoji" style="width:52px">' +
+    '<input class="di-v" data-f="label" placeholder="label">' +
+    '<button class="dr" data-rm="ben" onclick="rmRow(this)">&#x2715;</button></div>' +
+    '<input class="di-v" data-f="desc" placeholder="description"></div>');
+}
+
+function addProc() {
+  var c = document.getElementById('dl-proc');
+  var i = c.querySelectorAll('[data-proc]').length;
+  var n = String(i+1).length < 2 ? '0'+(i+1) : String(i+1);
+  c.insertAdjacentHTML('beforeend',
+    '<div class="di" data-proc="'+i+'" style="flex-direction:column;gap:.3rem">' +
+    '<div style="display:flex;gap:.4rem">' +
+    '<input class="di-v" data-f="step" value="'+n+'" style="width:52px">' +
+    '<input class="di-v" data-f="title" placeholder="titre">' +
+    '<button class="dr" data-rm="proc" onclick="rmRow(this)">&#x2715;</button></div>' +
+    '<textarea class="di-v" data-f="desc" rows="2" placeholder="description"></textarea></div>');
+}
+
+function addFaq() {
+  var c = document.getElementById('dl-faq');
+  var i = c.querySelectorAll('[data-faq]').length;
+  c.insertAdjacentHTML('beforeend',
+    '<div class="di" data-faq="'+i+'" style="flex-direction:column;gap:.3rem">' +
+    '<div style="display:flex;gap:.4rem">' +
+    '<input class="di-v" data-f="q" placeholder="question" style="flex:1">' +
+    '<button class="dr" data-rm="faq" onclick="rmRow(this)">&#x2715;</button></div>' +
+    '<textarea class="di-v" data-f="a" rows="2" placeholder="reponse"></textarea></div>');
+}
+
+// ── COLLECT & SAVE ────────────────────────────────────────────────────────────
+function collectForm() {
+  var p = prods.find(function(x) { return x.id === cur; });
+  if (!p) return null;
+  var nid = (document.getElementById('f-id').value||'').trim() || p.id;
+
+  function getRows(attr, fields) {
+    var rows = [];
+    document.querySelectorAll('[data-'+attr+']').forEach(function(el) {
+      if (fields.length === 1) {
+        var v = (el.querySelector('.di-v') || {value:''}).value.trim();
+        if (v) rows.push(v);
+      } else {
+        var obj = {};
+        el.querySelectorAll('.di-v').forEach(function(inp) { obj[inp.dataset.f] = inp.value.trim(); });
+        if (Object.values(obj).some(function(v) { return v; })) rows.push(obj);
+      }
+    });
+    return rows;
+  }
+
+  var variants = getRows('var', ['label','price']).map(function(v) {
+    return {label: v.label||'', price: parseInt(v.price)||0};
+  }).filter(function(v) { return v.label; });
+
+  var features = getRows('feat', ['val']).map(function(v) { return v.val || v; }).filter(Boolean);
+  var includes = getRows('inc', ['item']).map(function(v) { return v.item || v; }).filter(Boolean);
+  var relatedIds = getRows('rel', ['id']).map(function(v) { return v.id || v; }).filter(Boolean);
+  var benefits = getRows('ben', ['icon','label','desc']).filter(function(b) { return b.label; });
+  var process = getRows('proc', ['step','title','desc']).filter(function(s) { return s.title; });
+  var faq = getRows('faq', ['q','a']).filter(function(f) { return f.q; });
+
+  var g = function(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  var gb = function(id) { var el = document.getElementById(id); return el ? el.checked : false; };
+
+  return Object.assign({}, p, {
+    id: nid, slug: nid,
+    active: gb('f-active'),
+    name: g('f-name'),
+    icon: g('f-icon'),
+    category: g('f-cat'),
+    tagline: g('f-tagline'),
+    badge: g('f-badge') || null,
+    badgeStyle: g('f-badge-style') || null,
+    featured: gb('f-featured'),
+    price: parseInt(g('f-price')) || 0,
+    priceLabel: g('f-price-label') || null,
+    priceUnit: g('f-price-unit'),
+    stripeLink: g('f-stripe'),
+    saving: g('f-saving') || undefined,
+    includes: includes.length ? includes : undefined,
+    variants: variants.length ? variants : undefined,
+    shortDesc: g('f-short'),
+    fullDesc: g('f-full'),
+    features: features,
+    benefits: benefits.length ? benefits : undefined,
+    process: process.length ? process : undefined,
+    faq: faq.length ? faq : undefined,
+    relatedIds: relatedIds.length ? relatedIds : undefined,
+    seoTitle: g('f-seo-title'),
+    seoDesc: g('f-seo-desc')
+  });
+}
+
+function saveProd() {
+  var u = collectForm();
+  if (!u) return;
+  var idx = prods.findIndex(function(x) { return x.id === cur; });
+  if (idx === -1) return;
+  prods[idx] = u;
+  cur = u.id;
+  saveLs();
+  renderAll();
+  setDirty(false);
+  document.getElementById('ttl').textContent = u.name;
+  document.getElementById('tid2').textContent = '#'+u.id;
+  toast('Enregistre', 's');
+  document.getElementById('bnr').classList.add('on');
+}
+
+function hideBnr() { document.getElementById('bnr').classList.remove('on'); }
+
+// ── NEW / DUP / DEL ───────────────────────────────────────────────────────────
+function newProd() {
+  var id = 'prod-'+Date.now();
+  prods.push({id:id,slug:id,category:'prestation',name:'Nouveau produit',icon:'&#128230;',tagline:'',badge:null,badgeStyle:null,featured:false,active:true,price:0,priceLabel:null,priceUnit:'Devis 24h',stripeLink:'https://buy.stripe.com/VOTRE_LIEN',shortDesc:'',fullDesc:'',features:[],relatedIds:[],seoTitle:'Nouveau produit - AREPROG',seoDesc:''});
+  saveLs();
+  renderAll();
+  selProd(id);
+  toast('Nouveau produit cree', 's');
+}
+
+function dupProd(id) {
+  var p = prods.find(function(x) { return x.id === id; });
+  if (!p) return;
+  var nid = p.id+'-copie';
+  var copy = JSON.parse(JSON.stringify(p));
+  copy.id = nid; copy.slug = nid; copy.name = p.name+' (copie)'; copy.active = false;
+  prods.push(copy);
+  saveLs(); renderAll(); selProd(nid);
+  toast('Duplique - renommez-le', 'i');
+}
+
+function delProd(id) {
+  if (!confirm('Supprimer ce produit definitivement ?')) return;
+  prods = prods.filter(function(x) { return x.id !== id; });
+  cur = null; saveLs(); renderAll(); setDirty(false);
+  document.getElementById('ttl').textContent = 'Selectionnez un produit';
+  document.getElementById('tid2').textContent = '';
+  document.getElementById('ta').innerHTML = '';
+  document.getElementById('mc').innerHTML = '<div class="empty"><div style="font-size:2.5rem">&#128465;</div><h2>Produit supprime</h2><p>Selectionnez un autre ou creez-en un nouveau.</p></div>';
+  toast('Produit supprime', 'e');
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function genCode() {
+  var active = prods.filter(function(p) { return p.active !== false; });
+  var d = new Date().toLocaleDateString('fr-FR');
+  var lines = [
+    '/* AREPROG - products.js - ' + d + ' */',
+    '',
+    'var AREPROG_PRODUCTS = ' + JSON.stringify(active, null, 2) + ';',
+    '',
+    'function getProductById(id){return AREPROG_PRODUCTS.find(function(p){return p.id===id})||null}',
+    'function getProductsByCategory(cat){return AREPROG_PRODUCTS.filter(function(p){return p.category===cat})}',
+    'function getRelatedProducts(p,l){l=l||3;if(!p.relatedIds)return[];return p.relatedIds.map(getProductById).filter(Boolean).slice(0,l)}',
+    'var SHOP_CATEGORIES=[{id:"prestation",label:"Prestations"},{id:"pack",label:"Packs combines"},{id:"produit",label:"Produits physiques"},{id:"cadeau",label:"Bons cadeaux"}];'
+  ];
+  return lines.join('\n');
+}
+function openMo() {
+  var c = genCode();
+  window._code = c;
+  document.getElementById('ec').textContent = c;
+  document.getElementById('mo').style.display = 'flex';
+}
+function closeMo() { document.getElementById('mo').style.display = 'none'; }
+function doCpy() {
+  navigator.clipboard.writeText(window._code||'').then(function() {
+    toast('Code copie !', 's');
+    var b = document.getElementById('bcpy');
+    if (b) { b.textContent = 'Copie !'; setTimeout(function(){ b.textContent='Copier le code'; }, 2000); }
+  }).catch(function(){ toast('Erreur - utilisez Telecharger', 'e'); });
+}
+function doDl() {
+  var blob = new Blob([window._code||genCode()], {type:'text/javascript'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'products.js'; a.click();
+  toast('Telechargement lance', 's');
+}
+function qkCopy() {
+  window._code = genCode();
+  navigator.clipboard.writeText(window._code).then(function() {
+    hideBnr(); toast('products.js copie ! Collez dans votre hebergeur.', 's');
+  }).catch(function(){ openMo(); });
+}
+function qry(v) { q = v; renderAll(); }
+
+
+// ── GITHUB PUBLISH ────────────────────────────────────────────────────────────
+function loadGhCfg() {
+  var cfg = {};
+  try { cfg = JSON.parse(localStorage.getItem('gh_cfg') || '{}'); } catch(e) {}
+  var el = function(id) { return document.getElementById(id); };
+  if (el('ghToken')) el('ghToken').value = cfg.token || '';
+  if (el('ghUser'))  el('ghUser').value  = cfg.user  || '';
+  if (el('ghRepo'))  el('ghRepo').value  = cfg.repo  || '';
+  if (el('ghPath'))  el('ghPath').value  = cfg.path  || 'products.js';
+  if (el('ghBranch'))el('ghBranch').value= cfg.branch|| 'main';
+}
+
+function saveGhCfg() {
+  var cfg = {
+    token:  (document.getElementById('ghToken') ||{value:''}).value.trim(),
+    user:   (document.getElementById('ghUser')  ||{value:''}).value.trim(),
+    repo:   (document.getElementById('ghRepo')  ||{value:''}).value.trim(),
+    path:   (document.getElementById('ghPath')  ||{value:'products.js'}).value.trim() || 'products.js',
+    branch: (document.getElementById('ghBranch')||{value:'main'}).value.trim() || 'main'
+  };
+  localStorage.setItem('gh_cfg', JSON.stringify(cfg));
+  return cfg;
+}
+
+function getGhCfg() {
+  try { return JSON.parse(localStorage.getItem('gh_cfg') || '{}'); } catch(e) { return {}; }
+}
+
+function openMoGh() {
+  loadGhCfg();
+  document.getElementById('ghStatus').innerHTML = '';
+  document.getElementById('moGh').style.display = 'flex';
+}
+function closeMoGh() { document.getElementById('moGh').style.display = 'none'; }
+
+function setGhStatus(msg, type) {
+  var el = document.getElementById('ghStatus');
+  if (!el) return;
+  el.innerHTML = '<div class="gh-status ' + (type||'info') + '">' + msg + '</div>';
+}
+
+function testGh() {
+  var cfg = saveGhCfg();
+  if (!cfg.token || !cfg.user || !cfg.repo) {
+    setGhStatus('Remplissez tous les champs obligatoires.', 'err'); return;
+  }
+  setGhStatus('Test en cours...', 'info');
+  fetch('https://api.github.com/repos/' + cfg.user + '/' + cfg.repo, {
+    headers: { 'Authorization': 'Bearer ' + cfg.token, 'Accept': 'application/vnd.github+json' }
+  }).then(function(r) {
+    if (r.ok) {
+      setGhStatus('&#10003; Connexion OK — repo "' + cfg.repo + '" accessible.', 'ok');
+    } else if (r.status === 401) {
+      setGhStatus('&#10007; Token invalide ou expiré. Vérifiez votre Personal Access Token.', 'err');
+    } else if (r.status === 404) {
+      setGhStatus('&#10007; Repo introuvable. Verifiez le nom utilisateur et le repo.', 'err');
+    } else {
+      setGhStatus('&#10007; Erreur ' + r.status + '. Vérifiez vos informations.', 'err');
+    }
+  }).catch(function() {
+    setGhStatus('&#10007; Impossible de joindre GitHub. Vérifiez votre connexion.', 'err');
+  });
+}
+
+function publishToGitHub() {
+  var cfg = getGhCfg();
+  if (!cfg.token || !cfg.user || !cfg.repo) {
+    openMoGh();
+    setGhStatus('Configurez d-abord votre connexion GitHub.', 'info');
+    return;
+  }
+  openMoGh();
+  doPublish();
+}
+
+function doPublish() {
+  var cfg = saveGhCfg();
+  if (!cfg.token || !cfg.user || !cfg.repo) {
+    setGhStatus('Remplissez tous les champs.', 'err'); return;
+  }
+  var btn = document.getElementById('btnDoPublish');
+  var sb = document.getElementById('btnPublish');
+  if (btn) btn.textContent = 'Publication...';
+  if (sb) { sb.classList.add('loading'); sb.textContent = '... Publication'; }
+  setGhStatus('Récupération du fichier existant...', 'info');
+
+  var apiUrl = 'https://api.github.com/repos/' + cfg.user + '/' + cfg.repo + '/contents/' + cfg.path;
+  var headers = { 'Authorization': 'Bearer ' + cfg.token, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' };
+
+  // Step 1: GET current file SHA (needed to update)
+  fetch(apiUrl + '?ref=' + cfg.branch, { headers: headers })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(existing) {
+      var sha = existing ? existing.sha : null;
+      setGhStatus('Envoi du fichier...', 'info');
+
+      var code = genCode();
+      var encoded = btoa(unescape(encodeURIComponent(code)));
+      var body = {
+        message: 'Admin AREPROG — mise a jour products.js ' + new Date().toLocaleString('fr-FR'),
+        content: encoded,
+        branch: cfg.branch
+      };
+      if (sha) body.sha = sha;
+
+      return fetch(apiUrl, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
+    })
+    .then(function(r) {
+      if (btn) btn.innerHTML = '<svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg> Publier maintenant';
+      if (sb) { sb.classList.remove('loading'); sb.innerHTML = '<svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg> Publier sur GitHub'; }
+      if (r && (r.status === 200 || r.status === 201)) {
+        setGhStatus('&#10003; products.js publié sur GitHub ! Le site se met à jour en 30 secondes.', 'ok');
+        toast('Site mis a jour !', 's');
+        hideBnr();
+      } else {
+        var status = r ? r.status : 0;
+        setGhStatus('&#10007; Erreur ' + status + ' lors de la publication. Vérifiez le token et les permissions.', 'err');
+      }
+    })
+    .catch(function(e) {
+      if (btn) btn.textContent = 'Publier maintenant';
+      if (sb) { sb.classList.remove('loading'); sb.textContent = 'Publier sur GitHub'; }
+      setGhStatus('&#10007; Erreur réseau : ' + e.message, 'err');
+    });
+}
+
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); if(cur) saveProd(); }
+  if ((e.ctrlKey||e.metaKey) && e.key==='e') { e.preventDefault(); openMo(); }
+  if (e.key==='Escape') closeMo();
+});
+window.addEventListener('beforeunload', function(e) {
+  if (dirty) { e.preventDefault(); e.returnValue=''; }
+});
+
+function addRowBtn(btn) {
+  var listId = btn.dataset.al;
+  var attr = btn.dataset.aa;
+  var fields = btn.dataset.af.split('|');
+  addRow(listId, attr, fields);
+}
+</script>
+</body>
+</html>
