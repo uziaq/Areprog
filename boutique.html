@@ -495,8 +495,12 @@ document.getElementById('btnCheckout').addEventListener('click', function() {
 fetch('products.js?v=' + Date.now(), {cache: 'no-store'})
   .then(function(r) { return r.text(); })
   .then(function(code) {
-    // eslint-disable-next-line no-new-func
-    (new Function(code))();
+    // Remplace const/let par var pour exposition globale
+    var globalCode = code.replace(/\bconst\b/g, 'var').replace(/\blet\b/g, 'var');
+    // Injection dans le scope global via script tag
+    var s = document.createElement('script');
+    s.textContent = globalCode;
+    document.head.appendChild(s);
     renderShop();
     renderCart();
   })
