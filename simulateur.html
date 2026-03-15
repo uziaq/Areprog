@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulateur de gains — AREPROG</title>
+  <meta name="description" content="Simulateur de gains de reprogrammation moteur AREPROG — bientôt disponible. En attendant, demandez une estimation personnalisée gratuite sous 24h."/>
+  <meta name="robots" content="noindex, follow"/>
+  <link rel="canonical" href="https://areprog.fr/simulateur.html"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .page-wrap { padding-top: 62px; min-height: 100vh; display: flex; flex-direction: column; }
+    .sim-placeholder {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .sim-placeholder::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(30,136,229,.07), transparent);
+  pointer-events: none;
+}
+    .sim-icon {
+      font-size: 3.5rem; margin-bottom: 2rem; opacity: .4;
+    }
+    .sim-placeholder h1 {
+      font-family: var(--font-mono,'Barlow Condensed'), sans-serif;
+      font-weight: 800; font-size: clamp(2.5rem,6vw,5rem);
+      text-transform: uppercase; line-height: .95; letter-spacing: -.02em;
+      margin-bottom: 1.5rem;
+    }
+    .sim-placeholder h1 em { font-style: italic; font-weight: 300; color: var(--blue); }
+    .sim-placeholder p { color: var(--muted); max-width: 420px; line-height: 1.7; margin-bottom: 2.5rem; }
+    .coming-soon {
+      display: inline-flex; align-items: center; gap: .7rem;
+      border: 1px solid var(--border2);
+      padding: .6rem 1.3rem; margin-bottom: 2rem;
+    }
+    .coming-soon-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--amber);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .coming-soon-text {
+      font-family: var(--font-mono,'Barlow Condensed'), sans-serif;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--amber);
+    }
+  </style>
+</head>
+<body data-page="simulateur">
+  <div id="nav-container"></div>
+
+  <div class="page-wrap">
+    <div class="sim-placeholder">
+      <div class="coming-soon">
+        <div class="coming-soon-dot"></div>
+        <span class="coming-soon-text">En cours de développement</span>
+      </div>
+      <div class="sim-icon"></div>
+      <h1>Simulateur<br><em>bientôt disponible</em></h1>
+      <p>Le simulateur de gains interactif arrive prochainement. En attendant, contactez-nous directement pour obtenir une estimation personnalisée gratuite.</p>
+      <a href="contact.html" class="btn btn-primary">Demander une estimation</a>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+  <script src="nav.js"></script>
+</body>
+</html>

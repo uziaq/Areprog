@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stage 1 — Reprogrammation moteur | AREPROG</title>
+  <meta name="description" content="Reprogrammation moteur Stage 1 AREPROG : gains puissance et couple diesel et essence turbo. Intervention à domicile, garantie 2 ans, 100% réversible."/>
+  <link rel="canonical" href="https://areprog.fr/stage1.html"/>
+  <meta property="og:title" content="Stage 1 — Reprogrammation moteur AREPROG"/>
+  <meta property="og:description" content="Gains de puissance et couple sur diesel et essence turbo. Intervention à domicile, garantie 2 ans, 100% réversible. Devis gratuit 24h."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://areprog.fr/stage1.html"/>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Reprogrammation moteur Stage 1",
+    "provider": {"@type": "LocalBusiness", "name": "AREPROG", "telephone": "+33667924630", "url": "https://areprog.fr"},
+    "description": "Reprogrammation moteur Stage 1 sans modification mécanique. Gains de puissance et couple sur diesel et essence turbo. Intervention à domicile, garantie 2 ans.",
+    "areaServed": ["Pyrénées-Atlantiques", "Pays Basque", "Yonne"],
+    "offers": {"@type": "Offer", "priceCurrency": "EUR", "priceRange": "200-400", "availability": "https://schema.org/InStock"}
+  }
+  </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .page-wrap { padding-top: var(--nav-h,64px); }
+
+    /* ── HERO ───────────────────────────── */
+    .s1-hero {
+      min-height: 78vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 4rem;
+      padding: 4rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .s1-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 70% at 65% 40%, rgba(33,150,243,.07), transparent),
+                  radial-gradient(ellipse 40% 50% at 10% 80%, rgba(33,150,243,.04), transparent);
+  pointer-events: none;
+}
+    .s1-hero-left { position: relative; z-index: 1; }
+    .s1-hero-label {
+      font-family: var(--font-mono,'Barlow Condensed'), sans-serif;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .s1-hero-label::before { content:''; display:block; width:20px; height:1px; background:var(--blue); }
+    .s1-hero h1 {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 700; font-size: clamp(3rem, 8vw, 6.5rem);
+      line-height: .95; letter-spacing: -.03em;
+      margin-bottom: 1.4rem;
+    }
+    .s1-hero h1 em { font-style: italic; font-weight: 300; color: var(--blue-light,#42A5F5); display: block; }
+    .s1-hero-desc { font-size: 1rem; line-height: 1.75; color: var(--text2,#c8cdd4); max-width: 460px; margin-bottom: 2rem; }
+    .s1-hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .s1-hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .hs-item .hs-val { font-family: var(--font-display,'Barlow Condensed'),sans-serif; font-weight: 700; font-size: 2rem; color: var(--text); line-height: 1; }
+    .hs-item .hs-val span { color: var(--blue-light,#42A5F5); }
+    .hs-item .hs-label { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+    .hs-sep { width: 1px; height: 2rem; background: var(--border2); align-self: center; }
+
+    /* Right - diagnostic card */
+    .s1-hero-right { position: relative; z-index: 1; }
+    .diag-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg, 8px);
+      overflow: hidden;
+    }
+    .diag-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: .9rem 1.3rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .diag-dot { width:8px; height:8px; border-radius:50%; }
+    .diag-title {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: var(--muted); margin-left: .4rem;
+    }
+    .diag-body { padding: 1.2rem; }
+    .diag-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem 0; border-bottom: 1px solid var(--border);
+    }
+    .diag-row:last-child { border-bottom: none; }
+    .diag-key { font-size: .8rem; color: var(--muted); }
+    .diag-val { font-family: var(--font-mono,'Barlow Condensed'),sans-serif; font-weight: 700; font-size: .85rem; color: var(--text); }
+    .diag-val.ok { color: var(--green); font-size: .72rem; background: rgba(52,211,153,.08); padding: .12rem .45rem; border-radius: 100px; }
+    .diag-val.gain { color: var(--blue-light,#42A5F5); }
+    .diag-progress { margin-top: 1.1rem; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .diag-progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--blue), var(--blue-light,#42A5F5)); border-radius: 2px; animation: progAnim 2.5s 1s ease forwards; }
+    @keyframes progAnim { to { width: 100%; } }
+    .diag-progress-labels { display: flex; justify-content: space-between; margin-top: .4rem; font-size: .65rem; color: var(--muted); }
+    .diag-footer { border-top: 1px solid var(--border); padding: 1rem 1.3rem; display: flex; gap: .4rem; flex-wrap: wrap; }
+
+    /* ── WHAT IS S1 ─────────────────────── */
+    .s1-what { background: var(--bg-warm,#111214); padding: 5rem; }
+    .s1-what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 3rem; }
+    .s1-what h2 { font-family: var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:2rem; line-height:1.1; margin-bottom:1.2rem; }
+    .s1-what h2 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); }
+    .s1-what p { color:var(--text2); line-height:1.8; margin-bottom:1rem; font-size:.95rem; }
+    .s1-what strong { color:var(--text); font-weight:500; }
+
+    /* Gauge illustration */
+    .gauge-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+    .gauge-label { font-family: var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+    .gauge-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: .8rem; width: 100%; margin-top: .5rem; }
+    .gauge-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; text-align: center; }
+    .gauge-stat-val { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:1.6rem; color:var(--blue-light,#42A5F5); line-height:1; }
+    .gauge-stat-label { font-size:.68rem; color:var(--muted); margin-top:.3rem; }
+
+    /* ── BENEFITS ───────────────────────── */
+    .s1-benefits { padding: 5rem; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 3rem; }
+    .benefit-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1.8rem; transition: border-color .25s, background .25s, transform .25s;
+    }
+    .benefit-card:hover { border-color: rgba(33,150,243,.3); background: var(--surface2); transform: translateY(-2px); }
+    .benefit-num { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.22em; color:var(--blue); margin-bottom:1rem; }
+    .benefit-title { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:1.1rem; margin-bottom:.6rem; color:var(--text); }
+    .benefit-desc { font-size:.85rem; color:var(--muted); line-height:1.65; }
+
+    /* ── PROCESS ────────────────────────── */
+    .s1-process { background: var(--bg-warm,#111214); padding: 5rem; }
+    .process-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-top: 3rem; position: relative; }
+    .process-steps::before { content:''; position:absolute; top:1.5rem; left:2rem; right:2rem; height:1px; background:linear-gradient(to right, var(--blue), transparent); }
+    .process-step { padding-top: 3.5rem; position: relative; }
+    .step-dot { position:absolute; top:.9rem; left:0; width:1.2rem; height:1.2rem; border:2px solid var(--blue); border-radius:50%; background:var(--bg); }
+    .step-dot::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:.4rem; height:.4rem; background:var(--blue); border-radius:50%; }
+    .step-num { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.18em; color:var(--blue); margin-bottom:.4rem; }
+    .step-title { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:1rem; margin-bottom:.5rem; color:var(--text); }
+    .step-desc { font-size:.82rem; color:var(--muted); line-height:1.6; }
+
+    /* ── COMPATIBLE ─────────────────────── */
+    .s1-compat { padding: 5rem; }
+    .compat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 3rem; align-items: start; }
+    .compat-list { display: flex; flex-direction: column; gap: .5rem; }
+    .compat-item { display: flex; align-items: center; gap: .8rem; padding: .7rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-size: .88rem; color: var(--text2); }
+    .compat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+    .compat-note { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1.2rem; font-size: .85rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── FAQ ────────────────────────────── */
+    .s1-faq { background: var(--bg-warm,#111214); padding: 5rem; }
+    .faq-list { margin-top: 3rem; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { width:100%; padding:1.1rem 0; display:flex; justify-content:space-between; align-items:center; gap:1.5rem; background:transparent; border:none; cursor:pointer; text-align:left; }
+    .faq-q-text { font-family:var(--font-body,'Barlow'),sans-serif; font-weight:500; font-size:.95rem; color:var(--text2); transition:color .2s; }
+    .faq-q:hover .faq-q-text { color:var(--text); }
+    .faq-q-icon { width:1.2rem; height:1.2rem; min-width:1.2rem; border:1px solid var(--border2); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:.75rem; color:var(--muted); transition:all .3s; }
+    .faq-item.open .faq-q-icon { background:var(--blue); border-color:var(--blue); color:#fff; transform:rotate(45deg); }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s; }
+    .faq-item.open .faq-a { max-height:400px; padding-bottom:1.3rem; }
+    .faq-a p { color:var(--muted); line-height:1.75; font-size:.9rem; }
+    .faq-a strong { color:var(--text2); font-weight:500; }
+
+    /* ── CTA ────────────────────────────── */
+    .s1-cta { text-align:center; padding:7rem 5rem; position:relative; overflow:hidden; }
+    .s1-cta::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(33,150,243,.06), transparent);
+  pointer-events: none;
+}
+    .s1-cta h2 { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:clamp(2rem,5vw,3.8rem); line-height:1.05; }
+    .s1-cta h2 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); }
+    .s1-cta p { max-width:440px; margin:1.2rem auto; color:var(--muted); line-height:1.7; }
+    .s1-cta .cta-row { display:flex; gap:.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
+
+    @media (max-width:1024px) {
+      .s1-hero { grid-template-columns:1fr; padding:5rem 3rem 3rem; min-height:auto; gap:3rem; }
+      .s1-hero-right { display:none; }
+    }
+    @media (max-width:900px) {
+      .s1-hero { padding:4rem 1.4rem 3rem; }
+      .s1-what,.s1-benefits,.s1-process,.s1-compat,.s1-faq,.s1-cta { padding:4rem 1.4rem; }
+      .s1-what-grid,.compat-grid { grid-template-columns:1fr; gap:2.5rem; }
+      .benefits-grid { grid-template-columns:1fr 1fr; }
+      .process-steps { grid-template-columns:1fr 1fr; }
+      .process-steps::before { display:none; }
+      .s1-hero-stats { gap:1.2rem; }
+    }
+    @media (max-width:500px) {
+      .benefits-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body data-page="stage1">
+  <div id="nav-container"></div>
+  <div class="page-wrap">
+
+    <!-- HERO -->
+    <header class="s1-hero">
+      <div class="s1-hero-left">
+        <div class="s1-hero-label">Reprogrammation moteur</div>
+        <h1>Stage 1<br><em>Libérez le potentiel</em></h1>
+        <p class="s1-hero-desc">La reprogrammation Stage 1 optimise les cartographies d'usine de votre calculateur moteur — injection, turbo, allumage — sans aucune modification mécanique. Le résultat est immédiat, mesurable, et entièrement réversible.</p>
+        <div class="s1-hero-actions">
+          <a href="contact.html" class="btn btn-primary">Devis gratuit Stage 1</a>
+          <a href="tel:+33667924630" class="btn btn-outline">06 67 92 46 30</a>
+        </div>
+        <div class="s1-hero-stats">
+          <div class="hs-item"><div class="hs-val"><span>+30%</span></div><div class="hs-label">Puissance moyenne</div></div>
+          <div class="hs-sep"></div>
+          <div class="hs-item"><div class="hs-val"><span>+35%</span></div><div class="hs-label">Couple moyen</div></div>
+          <div class="hs-sep"></div>
+          <div class="hs-item"><div class="hs-val"><span>−10%</span></div><div class="hs-label">Consommation</div></div>
+          <div class="hs-sep"></div>
+          <div class="hs-item"><div class="hs-val">2 <span style="font-size:1.1rem">ans</span></div><div class="hs-label">Garantie</div></div>
+        </div>
+      </div>
+      <div class="s1-hero-right">
+        <div class="diag-card">
+          <div class="diag-header">
+            <div class="diag-dot" style="background:#f87171"></div>
+            <div class="diag-dot" style="background:#fbbf24;margin-left:4px"></div>
+            <div class="diag-dot" style="background:#34d399;margin-left:4px"></div>
+            <span class="diag-title">AREPROG — Stage 1 en cours</span>
+          </div>
+          <div class="diag-body">
+            <div class="diag-row"><span class="diag-key">Véhicule</span><span class="diag-val">VW Golf · 2.0 diesel turbo</span></div>
+            <div class="diag-row"><span class="diag-key">Calculateur</span><span class="diag-val ok">Connecté</span></div>
+            <div class="diag-row"><span class="diag-key">Puissance origine</span><span class="diag-val">150 ch</span></div>
+            <div class="diag-row"><span class="diag-key">Couple origine</span><span class="diag-val">340 Nm</span></div>
+            <div class="diag-row"><span class="diag-key">Puissance Stage 1</span><span class="diag-val gain">185 ch <span style="color:var(--green);font-size:.72rem">+23%</span></span></div>
+            <div class="diag-row"><span class="diag-key">Couple Stage 1</span><span class="diag-val gain">420 Nm <span style="color:var(--green);font-size:.72rem">+24%</span></span></div>
+            <div class="diag-row"><span class="diag-key">Flashage ECU</span><span class="diag-val gain">Terminé</span></div>
+            <div class="diag-progress"><div class="diag-progress-fill"></div></div>
+            <div class="diag-progress-labels"><span>Écriture flash</span><span>100%</span></div>
+          </div>
+          <div class="diag-footer">
+            <span class="chip blue">Stage 1</span>
+            <span class="chip blue">Garanti 2 ans</span>
+            <span class="chip">100% réversible</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- WHAT IS STAGE 1 -->
+    <section class="s1-what">
+      <div class="section-tag">Comment ça fonctionne</div>
+      <div class="s1-what-grid">
+        <div>
+          <h2>Ce qu'on modifie,<br><em>et ce qu'on ne touche pas</em></h2>
+          <p>Chaque moteur sort d'usine avec des cartographies <strong>délibérément conservatrices</strong> — calibrées pour fonctionner avec le carburant le moins bon du marché, sous toutes les températures, avec peu d'entretien. Des marges de sécurité existent pour vous, pas pour le moteur.</p>
+          <p>Le Stage 1 travaille sur ces marges. On <strong>ajuste la pression du turbo, la durée et la pression d'injection, les avances à l'allumage</strong> — en restant dans les tolérances mécaniques du moteur d'origine. Aucune pièce n'est remplacée ou modifiée.</p>
+          <p>Le résultat : un moteur qui répond mieux, monte en régime plus franchement, et consomme moins en conduite souple grâce au meilleur rendement thermique. Le tout <strong>entièrement réversible</strong> : votre fichier d'origine est sauvegardé avant toute intervention.</p>
+        </div>
+        <div>
+          <div class="gauge-card">
+            <div class="gauge-label">Gains typiques Stage 1</div>
+            <svg viewBox="0 0 280 180" style="width:100%;max-width:280px">
+              <defs>
+                <radialGradient id="gaugeGlow"><stop offset="0%" stop-color="#2196F3" stop-opacity=".12"/><stop offset="100%" stop-color="#2196F3" stop-opacity="0"/></radialGradient>
+                <filter id="gGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <circle cx="140" cy="130" r="110" fill="url(#gaugeGlow)"/>
+              <!-- Track -->
+              <path d="M 45 165 A 105 105 0 1 1 235 165" fill="none" stroke="rgba(38,40,44,.8)" stroke-width="8" stroke-linecap="round"/>
+              <!-- Before arc -->
+              <path d="M 45 165 A 105 105 0 0 1 140 28" fill="none" stroke="rgba(60,65,72,.9)" stroke-width="8" stroke-linecap="round"/>
+              <!-- After arc Stage 1 -->
+              <path d="M 45 165 A 105 105 0 0 1 218 75" fill="none" stroke="#2196F3" stroke-width="8" stroke-linecap="round" filter="url(#gGlow)"/>
+              <!-- Needle Stage 1 -->
+              <line x1="140" y1="130" x2="216" y2="76" stroke="#2196F3" stroke-width="2" stroke-linecap="round" filter="url(#gGlow)"/>
+              <circle cx="140" cy="130" r="6" fill="#2196F3"/>
+              <circle cx="140" cy="130" r="3" fill="var(--bg)"/>
+              <!-- Labels -->
+              <text x="140" y="110" text-anchor="middle" fill="rgba(200,205,212,.5)" font-family="'Barlow Condensed',sans-serif" font-size="10" letter-spacing="2">PUISSANCE</text>
+              <text x="140" y="148" text-anchor="middle" fill="#2196F3" font-family="'Fraunces',serif" font-size="20" font-weight="700">+30%</text>
+              <!-- Legend -->
+              <rect x="45" y="172" width="8" height="2" rx="1" fill="rgba(60,65,72,.9)"/>
+              <text x="57" y="174" fill="rgba(120,130,140,.7)" font-family="'DM Sans',sans-serif" font-size="9">Origine</text>
+              <rect x="115" y="172" width="8" height="2" rx="1" fill="#2196F3"/>
+              <text x="127" y="174" fill="rgba(120,130,140,.7)" font-family="'DM Sans',sans-serif" font-size="9">Stage 1</text>
+            </svg>
+            <div class="gauge-stats">
+              <div class="gauge-stat"><div class="gauge-stat-val">+30%</div><div class="gauge-stat-label">Puissance</div></div>
+              <div class="gauge-stat"><div class="gauge-stat-val">+35%</div><div class="gauge-stat-label">Couple</div></div>
+              <div class="gauge-stat"><div class="gauge-stat-val">−10%</div><div class="gauge-stat-label">Conso</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <section class="s1-benefits">
+      <div class="section-tag">Ce que vous gagnez</div>
+      <h2 class="section-title">Six bonnes raisons<br><em>de passer au Stage 1</em></h2>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-num">01</div>
+          <div class="benefit-title">Puissance et couple</div>
+          <p class="benefit-desc">Gains moyens de 20 à 35% en puissance et 25 à 40% en couple selon la motorisation. La reprise et les dépassements sont franchement transformés.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">02</div>
+          <div class="benefit-title">Moins à la pompe</div>
+          <p class="benefit-desc">Un meilleur rendement thermique permet de moins solliciter le moteur pour les mêmes résultats. Jusqu'à 10% d'économies en conduite souple.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">03</div>
+          <div class="benefit-title">Agrément transformé</div>
+          <p class="benefit-desc">Réponse à l'accélérateur plus directe, élimination du creux de couple en bas de régime, montée en puissance linéaire et prévisible.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">04</div>
+          <div class="benefit-title">100% réversible</div>
+          <p class="benefit-desc">Le fichier d'origine est sauvegardé avant toute intervention. Retour au stock constructeur en quelques minutes si nécessaire — sans trace.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">05</div>
+          <div class="benefit-title">Aucune pièce modifiée</div>
+          <p class="benefit-desc">Tout se passe au niveau du logiciel. Aucun remplacement de pièce, aucune modification mécanique. L'intervention est propre et discrète.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">06</div>
+          <div class="benefit-title">À votre porte</div>
+          <p class="benefit-desc">AREPROG se déplace chez vous en Pyrénées-Atlantiques, Pays Basque et Yonne. Vous n'avez rien à faire — on arrive avec tout le matériel.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="s1-process">
+      <div class="section-tag">Déroulement</div>
+      <h2 class="section-title">Comment se passe<br><em>l'intervention</em></h2>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 01</div>
+          <div class="step-title">Diagnostic</div>
+          <p class="step-desc">Connexion au calculateur, lecture du fichier d'origine, vérification des codes défaut et des paramètres moteur en temps réel.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 02</div>
+          <div class="step-title">Cartographie</div>
+          <p class="step-desc">Modification des tables d'injection, de pression turbo et d'allumage en fonction de votre motorisation et de vos objectifs.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 03</div>
+          <div class="step-title">Flashage ECU</div>
+          <p class="step-desc">Écriture du nouveau fichier dans le calculateur via interface OBD ou accès direct. Durée : 20 à 45 minutes selon le modèle.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 04</div>
+          <div class="step-title">Validation route</div>
+          <p class="step-desc">Test sur route avec datalogger. Contrôle de tous les paramètres en charge. Ajustements si nécessaire avant validation finale.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPATIBLE -->
+    <section class="s1-compat">
+      <div class="section-tag">Compatibilité</div>
+      <h2 class="section-title">Motorisations<br><em>compatibles</em></h2>
+      <div class="compat-grid">
+        <div>
+          <div class="compat-list">
+            <div class="compat-item"><span class="compat-dot"></span>Diesel turbo — toutes puissances</div>
+            <div class="compat-item"><span class="compat-dot"></span>Essence turbo — de 100 à 400+ ch</div>
+            <div class="compat-item"><span class="compat-dot"></span>Moteurs atmosphériques — gains modérés mais réels</div>
+            <div class="compat-item"><span class="compat-dot"></span>Toutes les grandes marques européennes et asiatiques</div>
+            <div class="compat-item"><span class="compat-dot"></span>Volkswagen, Audi, BMW, Mercedes, Peugeot, Renault…</div>
+            <div class="compat-item"><span class="compat-dot"></span>Toyota, Seat, Skoda, Ford, Opel, Volvo…</div>
+          </div>
+          <div class="compat-note">Votre véhicule n'est pas dans la liste ? Contactez-nous avec la marque, le modèle et la motorisation — on vérifie la faisabilité sous 24h.</div>
+        </div>
+        <div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2rem;">
+            <div class="section-tag" style="margin-bottom:1.2rem;">Ce qu'on vérifie avant</div>
+            <div style="display:flex;flex-direction:column;gap:.8rem;">
+              <div style="font-size:.88rem;color:var(--text2);line-height:1.6;padding:.8rem;background:var(--surface2);border-radius:6px;">Aucun code défaut moteur actif</div>
+              <div style="font-size:.88rem;color:var(--text2);line-height:1.6;padding:.8rem;background:var(--surface2);border-radius:6px;">Entretien à jour (courroie, filtres)</div>
+              <div style="font-size:.88rem;color:var(--text2);line-height:1.6;padding:.8rem;background:var(--surface2);border-radius:6px;">Pas de fuite ou de surconsommation d'huile</div>
+              <div style="font-size:.88rem;color:var(--text2);line-height:1.6;padding:.8rem;background:var(--surface2);border-radius:6px;">Calculateur accessible et reprogrammable</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="s1-faq">
+      <div class="section-tag">Questions fréquentes</div>
+      <h2 class="section-title">Vos questions<br><em>sur le Stage 1</em></h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Est-ce que le Stage 1 risque d'endommager mon moteur ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Un Stage 1 correctement réalisé reste dans les tolérances mécaniques du moteur d'origine. Les constructeurs dimensionnent leurs moteurs avec une marge significative — un même moteur peut équiper plusieurs niveaux de puissance selon le modèle. On travaille dans cet espace, pas au-delà. Avant chaque intervention, on effectue un diagnostic complet pour s'assurer que le moteur est en état d'en bénéficier.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Ma garantie constructeur est-elle affectée ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Techniquement, une reprogrammation peut être détectée par un concessionnaire lors d'une intervention sous garantie. Comme notre intervention est <strong>100% réversible</strong>, il suffit de repasser au fichier d'origine avant un passage en concession. On garde votre fichier stock et on peut le remettre à tout moment.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Les gains annoncés sont-ils garantis ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Les pourcentages affichés sont des <strong>moyennes constatées</strong> sur des motorisations similaires. Les gains réels dépendent de l'état du moteur, du carburant utilisé et des conditions de conduite. Ce qui est garanti : une amélioration mesurable et perceptible. Si le résultat ne vous convient pas, on ajuste la cartographie ou on revient au fichier d'origine.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Peut-on faire un Stage 1 puis évoluer vers un Stage 2 ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Oui, c'est même la progression recommandée. Le Stage 1 est la première étape. Si vous réalisez ensuite des modifications mécaniques (admission, échappement, intercooler), on adapte la cartographie en conséquence avec un Stage 2. Un tarif préférentiel est appliqué pour cette évolution.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Combien de temps dure l'intervention à domicile ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Entre 45 minutes et 1h30 selon le véhicule : 15-20 min de diagnostic, 20-45 min de flashage, 15-20 min de validation sur route. Pour certains calculateurs nécessitant un accès direct à la puce (Boot mode), l'intervention peut durer jusqu'à 2h30.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="s1-cta">
+      <div class="section-tag" style="justify-content:center;">Stage 1 — AREPROG</div>
+      <h2>Prêt à libérer<br><em>votre moteur ?</em></h2>
+      <p>Devis gratuit sous 24h. Intervention à domicile en Pyrénées-Atlantiques, Pays Basque et Yonne.</p>
+      <div class="cta-row">
+        <a href="contact.html" class="btn btn-primary">Demander un devis Stage 1</a>
+        <a href="stage2.html" class="btn btn-outline">Découvrir le Stage 2</a>
+        <a href="tarifs.html" class="btn btn-outline">Voir les tarifs</a>
+      </div>
+    </section>
+
+  </div>
+    <!-- Maillage interne géo -->
+  <div style="padding:1.5rem 5rem;border-top:1px solid var(--border);background:var(--surface);">
+    <p style="font-family:var(--font-mono,'Barlow Condensed'),sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);margin-bottom:.8rem;">Zones d'intervention</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+      <a href="reprogrammation-moteur-bayonne.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Bayonne</a>
+      <a href="reprogrammation-moteur-biarritz.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Biarritz</a>
+      <a href="reprogrammation-moteur-anglet.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Anglet</a>
+      <a href="reprogrammation-moteur-pau.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Pau</a>
+      <a href="reprogrammation-moteur-auxerre.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Auxerre &amp; Yonne</a>
+      <a href="faq.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">FAQ</a>
+      <a href="tarifs.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Tarifs 2026</a>
+      <a href="desactivation-egr.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Désactivation EGR</a>
+      <a href="desactivation-fap.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Désactivation FAP</a>
+      <a href="desactivation-adblue.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Désactivation AdBlue</a>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+  <script src="nav.js"></script>
+  <script src="whatsapp-widget.js"></script>
+  <script>
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
+</body>
+</html>

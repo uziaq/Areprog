@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Commande confirmée — AREPROG</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .page-wrap { padding-top: var(--nav-h, 64px); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .confirm-main {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 4rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .confirm-main::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 60% at 50% 40%, rgba(52,211,153,.06), transparent),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(33,150,243,.04), transparent);
+    }
+
+    .confirm-card {
+      max-width: 580px; width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3.5rem;
+      position: relative; z-index: 1;
+      text-align: center;
+    }
+    .confirm-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; border-radius: 12px 12px 0 0;
+      background: linear-gradient(90deg, var(--green), rgba(52,211,153,.3));
+    }
+
+    .confirm-icon {
+      width: 5rem; height: 5rem;
+      background: rgba(52,211,153,.1);
+      border: 2px solid rgba(52,211,153,.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 2rem;
+      animation: pop .4s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    @keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .confirm-icon svg { color: var(--green); }
+
+    .confirm-tag {
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--green); margin-bottom: .8rem;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+    }
+    .confirm-tag::before, .confirm-tag::after { content: ''; display: block; width: 1.5rem; height: 1px; background: var(--green); opacity: .5; }
+
+    .confirm-title {
+      font-family: var(--font-display, 'Barlow Condensed'), sans-serif;
+      font-weight: 800; font-size: clamp(2rem, 6vw, 3.2rem);
+      line-height: .95; letter-spacing: -.02em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .confirm-title em { font-style: italic; font-weight: 300; color: var(--green); }
+
+    .confirm-desc {
+      color: var(--text2); line-height: 1.7; font-size: .9rem; margin-bottom: 2.5rem;
+    }
+
+    .confirm-steps {
+      display: flex; flex-direction: column; gap: .8rem;
+      text-align: left; margin-bottom: 2.5rem;
+    }
+    .confirm-step {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .step-num {
+      width: 1.8rem; height: 1.8rem; min-width: 1.8rem;
+      background: rgba(33,150,243,.1); border: 1px solid rgba(33,150,243,.2);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-weight: 800; font-size: .78rem; color: var(--blue);
+    }
+    .step-text { font-size: .82rem; color: var(--text2); line-height: 1.5; }
+    .step-text strong { color: var(--text); font-weight: 500; }
+
+    .confirm-actions {
+      display: flex; flex-direction: column; gap: .8rem;
+    }
+    .btn-primary {
+      display: flex; align-items: center; justify-content: center; gap: .6rem;
+      padding: .9rem 1.5rem;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      background: var(--blue); color: #fff; border: none; border-radius: 3px;
+      cursor: pointer; text-decoration: none; transition: background .15s;
+    }
+    .btn-primary:hover { background: var(--blue-light, #42A5F5); }
+    .btn-secondary {
+      display: flex; align-items: center; justify-content: center; gap: .6rem;
+      padding: .9rem 1.5rem;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      background: transparent; color: var(--text2);
+      border: 1px solid var(--border2); border-radius: 3px;
+      cursor: pointer; text-decoration: none; transition: border-color .15s, color .15s;
+    }
+    .btn-secondary:hover { border-color: rgba(33,150,243,.4); color: var(--blue); }
+
+    .confirm-ref {
+      margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+      font-size: .72rem; color: var(--muted2); line-height: 1.7;
+    }
+    .confirm-ref a { color: var(--blue); text-decoration: none; }
+    .confirm-ref a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .confirm-card { padding: 2rem 1.5rem; }
+      .confirm-tag::before, .confirm-tag::after { display: none; }
+    }
+  </style>
+</head>
+<body data-page="boutique">
+<div id="nav-container"></div>
+<div class="page-wrap">
+  <main class="confirm-main">
+    <div class="confirm-card">
+
+      <div class="confirm-icon">
+        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+
+      <div class="confirm-tag">Commande confirmée</div>
+
+      <h1 class="confirm-title">Merci pour<br><em>votre commande</em></h1>
+
+      <p class="confirm-desc">
+        Votre paiement a bien été reçu. Vous recevrez un email de confirmation de la part de Stripe. Notre équipe vous contacte dans les <strong>24 heures</strong> pour planifier l'intervention à votre domicile.
+      </p>
+
+      <div class="confirm-steps">
+        <div class="confirm-step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Email de confirmation Stripe</strong><br>Un reçu de paiement vous a été envoyé par email.</div>
+        </div>
+        <div class="confirm-step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Appel AREPROG sous 24h</strong><br>Nous vous contactons pour valider votre véhicule et convenir d'un créneau.</div>
+        </div>
+        <div class="confirm-step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Intervention à domicile</strong><br>Notre technicien se déplace avec le matériel. Durée : 1h à 2h selon la prestation.</div>
+        </div>
+      </div>
+
+      <div class="confirm-actions">
+        <a href="index.html" class="btn-primary">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Retour à l'accueil
+        </a>
+        <a href="contact.html" class="btn-secondary">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+          Une question ? Contactez-nous
+        </a>
+      </div>
+
+      <div class="confirm-ref">
+        Numéro de commande disponible dans votre email de confirmation Stripe.<br>
+        Téléphone : <a href="tel:+33667924630">06 67 92 46 30</a> · <a href="mailto:contact@areprog.fr">contact@areprog.fr</a>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div id="footer-container"></div>
+<script src="nav.js"></script>
+</body>
+</html>

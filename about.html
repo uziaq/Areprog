@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+ <meta charset="UTF-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ <title>À propos — AREPROG, spécialiste reprogrammation moteur à domicile</title>
+ <meta name="description" content="Découvrez AREPROG, spécialiste de la reprogrammation moteur à domicile dans les Pyrénées-Atlantiques, le Pays Basque et l'Yonne. +500 véhicules reprogrammés, matériel professionnel."/>
+ <link rel="canonical" href="https://areprog.fr/about.html"/>
+ <meta property="og:title" content="À propos d'AREPROG — Reprogrammation moteur à domicile"/>
+ <meta property="og:description" content="Spécialiste reprogrammation moteur à domicile. +500 véhicules, 3 zones d'intervention, matériel professionnel ODIS, WinOLS, datalogger."/>
+ <meta property="og:type" content="website"/>
+ <meta property="og:url" content="https://areprog.fr/about.html"/>
+ <script type="application/ld+json">
+ {
+   "@context": "https://schema.org",
+   "@type": "Organization",
+   "name": "AREPROG",
+   "url": "https://areprog.fr",
+   "telephone": "+33667924630",
+   "description": "Spécialiste de la reprogrammation moteur à domicile dans les Pyrénées-Atlantiques, le Pays Basque et l'Yonne. +500 véhicules reprogrammés.",
+   "areaServed": ["Pyrénées-Atlantiques", "Pays Basque", "Yonne"],
+   "knowsAbout": ["Reprogrammation moteur", "Stage 1", "Stage 2", "Conversion E85", "Désactivation EGR", "Désactivation FAP", "Désactivation AdBlue", "Diagnostic ODIS VAG"]
+ }
+ </script>
+   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="shared.css"/>
+ <style>
+ .page-wrap { padding-top: 62px; }
+
+ /* ── INTRO ──────────────────────────── */
+ .about-intro {
+ min-height: 65vh;
+ display: grid; grid-template-columns: 1fr 1fr;
+ border-bottom: 1px solid var(--border);
+ }
+ .about-intro-text {
+ padding: 6rem;
+ display: flex; flex-direction: column; justify-content: center;
+ border-right: 1px solid var(--border);
+ }
+ .about-intro-text p { color: var(--muted); line-height: 1.8; margin-top: 1.5rem; max-width: 500px; }
+ .about-intro-text p + p { margin-top: 1rem; }
+ .about-intro-visual {
+ display: flex; align-items: center; justify-content: center;
+ background: var(--surface); position: relative; overflow: hidden;
+ }
+ .about-intro-visual::before {
+ content: ''; position: absolute; inset: 0;
+ background: radial-gradient(ellipse 60% 60% at 50% 50%, var(--blue-dim), transparent);
+  pointer-events: none;
+}
+ .about-big-number {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif;
+ font-weight: 800; font-size: 15rem;
+ color: transparent; -webkit-text-stroke: 1px rgba(30,136,229,.2);
+ line-height: 1; user-select: none; letter-spacing: -.04em;
+ }
+
+ /* ── VALUES ─────────────────────────── */
+ .values { padding: 7rem 6rem; }
+ .values-grid {
+ display: grid; grid-template-columns: repeat(3,1fr);
+ gap: 4rem; margin-top: 4rem;
+ }
+ .value-num {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif; font-weight: 800;
+ font-size: .72rem; letter-spacing: .25em; color: var(--blue); margin-bottom: 1.2rem;
+ }
+ .value-title {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif; font-weight: 800;
+ font-size: 1.5rem; text-transform: uppercase; margin-bottom: .8rem;
+ }
+ .value-desc { color: var(--muted); line-height: 1.7; font-size: .9rem; }
+
+ /* ── STORY ──────────────────────────── */
+ .story { background: var(--surface); padding: 7rem 6rem; }
+ .story-grid {
+ display: grid; grid-template-columns: 1fr 1fr;
+ gap: 6rem; margin-top: 4rem;
+ }
+ .story-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1.2rem; font-size: .95rem; }
+ .story-text strong { color: var(--text); font-weight: 500; }
+
+ /* timeline */
+ .timeline-item {
+ display: flex; gap: 1.5rem; padding-bottom: 2rem; position: relative;
+ }
+ .timeline-item::before {
+ content: ''; position: absolute;
+ left: .95rem; top: 2rem; bottom: 0;
+ width: 1px; background: var(--border);
+ }
+ .timeline-item:last-child::before { display: none; }
+ .timeline-dot {
+ width: 2rem; height: 2rem; min-width: 2rem;
+ border: 2px solid var(--blue); border-radius: 50%;
+ display: flex; align-items: center; justify-content: center;
+ background: var(--bg); position: relative; z-index: 1;
+ }
+ .timeline-dot::after {
+ content: ''; width: .6rem; height: .6rem;
+ background: var(--blue); border-radius: 50%;
+ }
+ .timeline-year {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif; font-weight: 800;
+ font-size: .75rem; letter-spacing: .15em; color: var(--blue); margin-bottom: .3rem;
+ }
+ .timeline-event {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif; font-weight: 700;
+ font-size: 1rem; text-transform: uppercase; margin-bottom: .3rem;
+ }
+ .timeline-desc { color: var(--muted); font-size: .82rem; line-height: 1.5; }
+
+ /* ── EQUIPMENT ──────────────────────── */
+ .equipment { padding: 7rem 6rem; }
+ .equip-grid {
+ display: grid; grid-template-columns: repeat(4,1fr);
+ gap: 1px; background: var(--border);
+ border: 1px solid var(--border); border-radius: var(--radius-lg, 8px); margin-top: 4rem;
+ }
+ .equip-item {
+ background: var(--surface); padding: 2rem 1.8rem; transition: background .2s;
+ }
+ .equip-item:hover { background: var(--surface2); }
+ .equip-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+ .equip-name {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif; font-weight: 700;
+ font-size: 1rem; text-transform: uppercase; margin-bottom: .4rem;
+ }
+ .equip-desc { color: var(--muted); font-size: .78rem; line-height: 1.5; }
+
+ /* ── ZONES — 2 zones ────────────────── */
+ .about-zones { background: var(--surface); padding: 7rem 6rem; }
+ .zones-cols {
+ display: grid; grid-template-columns: repeat(2,1fr);
+ gap: 1px; background: var(--border);
+ border: 1px solid var(--border); border-radius: var(--radius-lg, 8px); margin-top: 4rem;
+ }
+ .zone-col { background: var(--bg); padding: 2.5rem; }
+ .zone-col-num {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif; font-weight: 800;
+ font-size: 4rem; color: var(--blue); line-height: 1; margin-bottom: .5rem;
+ }
+ .zone-col-name {
+ font-family: var(--font-mono,'Barlow Condensed'), sans-serif; font-weight: 700;
+ font-size: 1.1rem; text-transform: uppercase; margin-bottom: 1rem;
+ padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+ }
+ .zone-col-city {
+ display: flex; align-items: center; gap: .6rem;
+ font-size: .85rem; color: var(--muted); margin-bottom: .4rem;
+ }
+ .zone-col-city::before { content: '→'; color: var(--blue); font-size: .7rem; }
+
+ /* ── CTA ────────────────────────────── */
+ .about-cta {
+ text-align: center; padding: 8rem 6rem;
+ position: relative; overflow: hidden;
+ }
+ .about-cta::before {
+ content: ''; position: absolute; inset: 0;
+ background: radial-gradient(ellipse 60% 50% at 50% 50%, var(--blue-dim), transparent);
+  pointer-events: none;
+}
+ .about-cta p { max-width: 440px; margin: 1.5rem auto; color: var(--muted); line-height: 1.7; }
+ .about-cta .cta-row { display: flex; gap: 1.2rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+
+ @media (max-width: 900px) {
+ .about-intro { grid-template-columns: 1fr; }
+ .about-intro-text { padding: 4rem 1.5rem; border-right: none; }
+ .about-intro-visual { min-height: 250px; }
+ .about-big-number { font-size: 8rem; }
+ .values, .story, .equipment, .about-zones, .about-cta { padding: 5rem 1.5rem; }
+ .values-grid, .story-grid { grid-template-columns: 1fr; gap: 3rem; }
+ .equip-grid { grid-template-columns: repeat(2,1fr); }
+ .zones-cols { grid-template-columns: 1fr; }
+ }
+ </style>
+</head>
+<body data-page="about">
+ <div id="nav-container"></div>
+
+ <div class="page-wrap">
+ <!-- INTRO -->
+ <div class="about-intro">
+ <div class="about-intro-text">
+ <div class="section-tag">Notre histoire</div>
+ <h1 class="section-title">À <em>propos</em><br>d'AREPROG</h1>
+ <p>AREPROG est né d'une passion pour la mécanique et d'un constat simple : trop de véhicules roulent en dessous de leur vrai potentiel, bridés par des cartographies constructeur conçues pour le marché mondial et non pour votre usage quotidien.</p>
+ <p>Spécialisés dans la reprogrammation moteur à domicile, nous intervenons directement chez vous dans les Pyrénées-Atlantiques, le Pays Basque et l'Yonne — avec le même matériel professionnel qu'un atelier spécialisé.</p>
+ </div>
+ <div class="about-intro-visual">
+ <div class="about-big-number">ECU</div>
+ </div>
+ </div>
+
+ <!-- VALUES -->
+ <section class="values">
+ <div class="section-tag">Nos valeurs</div>
+ <h2 class="section-title">Ce qui nous<br><em>guide</em></h2>
+ <div class="values-grid">
+ <div>
+ <div class="value-num">01</div>
+ <div class="value-title">Transparence totale</div>
+ <p class="value-desc">Avant chaque intervention, nous vous expliquons exactement ce qui sera modifié, les gains attendus et les limites. Pas de promesses exagérées, uniquement des faits vérifiables.</p>
+ </div>
+ <div>
+ <div class="value-num">02</div>
+ <div class="value-title">Qualité & sécurité</div>
+ <p class="value-desc">Chaque cartographie est validée par des tests sur route avant livraison. Le fichier d'origine est systématiquement sauvegardé. Garantie 2 ans sur toutes nos prestations.</p>
+ </div>
+ <div>
+ <div class="value-num">03</div>
+ <div class="value-title">Proximité</div>
+ <p class="value-desc">Nous nous déplaçons chez vous. Pas de file d'attente, pas de véhicule immobilisé. L'intervention se fait devant vous, en moins d'une heure dans la plupart des cas.</p>
+ </div>
+ </div>
+ </section>
+
+ <!-- STORY -->
+ <section class="story">
+ <div class="section-tag">Notre parcours</div>
+ <h2 class="section-title">Comment on<br><em>en est là</em></h2>
+ <div class="story-grid">
+ <div class="story-text">
+ <p>Tout commence par une <strong>passion dévorante pour l'automobile</strong> et la mécanique. Avant AREPROG, des années passées à bricoler, modifier, tester — à comprendre ce qui se passe vraiment dans un calculateur moteur.</p>
+ <p>La reprogrammation moteur n'est pas de la magie : c'est de la <strong>précision, de la connaissance et de l'expérience</strong>. Comprendre les interactions entre cartographies d'injection, d'allumage et de suralimentation demande des heures de formation et des centaines de véhicules traités.</p>
+ <p>AREPROG s'est construit sur ce fondement : <strong>des interventions sérieuses, avec du matériel professionnel</strong>, pour des résultats mesurables. Et toujours à domicile, parce que le temps de nos clients a de la valeur.</p>
+ </div>
+ <div class="timeline">
+ <div class="timeline-item">
+ <div class="timeline-dot"></div>
+ <div>
+ <div class="timeline-year">Début</div>
+ <div class="timeline-event">Premiers flashages dans l'Yonne</div>
+ <p class="timeline-desc">Tout commence dans le département 89. Les premières reprogrammations sont faites sur véhicules personnels et ceux de l'entourage. C'est là que la passion se transforme en méthode.</p>
+ </div>
+ </div>
+ <div class="timeline-item">
+ <div class="timeline-dot"></div>
+ <div>
+ <div class="timeline-year">Formation</div>
+ <div class="timeline-event">Maîtrise des outils professionnels</div>
+ <p class="timeline-desc">Formation intensive sur les logiciels de cartographie et les protocoles ECU. Analyse de centaines de fichiers moteur. Construction d'une vraie expertise technique, pas d'un simple savoir-faire d'utilisateur.</p>
+ </div>
+ </div>
+ <div class="timeline-item">
+ <div class="timeline-dot"></div>
+ <div>
+ <div class="timeline-year">Lancement</div>
+ <div class="timeline-event">AREPROG s'installe dans l'Yonne</div>
+ <p class="timeline-desc">Lancement officiel d'AREPROG avec la zone Yonne comme premier terrain. Les premiers clients font confiance — et le bouche-à-oreille commence.</p>
+ </div>
+ </div>
+ <div class="timeline-item">
+ <div class="timeline-dot"></div>
+ <div>
+ <div class="timeline-year">Expansion</div>
+ <div class="timeline-event">Pays Basque + Pyrénées-Atlantiques + ODIS</div>
+ <p class="timeline-desc">Extension vers le Pays Basque et les Pyrénées-Atlantiques. Acquisition de l'outil de diagnostic officiel ODIS du groupe Volkswagen pour couvrir l'ensemble des marques VAG.</p>
+ </div>
+ </div>
+ <div class="timeline-item">
+ <div class="timeline-dot"></div>
+ <div>
+ <div class="timeline-year">Aujourd'hui</div>
+ <div class="timeline-event">+500 véhicules, 3 zones</div>
+ <p class="timeline-desc">Plus de 500 véhicules reprogrammés. Trois zones d'intervention actives — l'Yonne, les Pyrénées-Atlantiques et le Pays Basque. Un seul technicien, un seul engagement : le travail bien fait.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- EQUIPMENT -->
+ <section class="equipment">
+ <div class="section-tag">Notre matériel</div>
+ <h2 class="section-title">Équipement<br><em>professionnel</em></h2>
+ <div class="equip-grid">
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">ODIS officiel</div>
+ <p class="equip-desc">Diagnostic Volkswagen Group officiel. Accès complet à tous les calculateurs VAG.</p>
+ </div>
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">Interfaces OBD Pro</div>
+ <p class="equip-desc">Interfaces haute vitesse pour tous protocoles (CAN, K-Line, UDS, JTAG).</p>
+ </div>
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">WinOLS / ECM</div>
+ <p class="equip-desc">Logiciels de cartographie professionnels pour lecture, modification et écriture des fichiers ECU.</p>
+ </div>
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">Station de charge</div>
+ <p class="equip-desc">Maintien de tension batterie stable pendant les flashages pour éviter toute interruption.</p>
+ </div>
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">Datalogger</div>
+ <p class="equip-desc">Enregistrement temps réel de tous les paramètres moteur pendant les tests post-flashage.</p>
+ </div>
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">Outils Boot</div>
+ <p class="equip-desc">Accès Boot direct pour les ECU sans accès OBD ou verrouillés (bench mode, Boot mode).</p>
+ </div>
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">Base fichiers</div>
+ <p class="equip-desc">Accès à une large base de fichiers ECU testés et validés sur des milliers de véhicules.</p>
+ </div>
+ <div class="equip-item">
+ <div class="equip-icon"></div>
+ <div class="equip-name">Véhicule atelier</div>
+ <p class="equip-desc">Déplacement à domicile avec tout l'équipement embarqué. Prêt à intervenir dans toute la zone.</p>
+ </div>
+ </div>
+ </section>
+
+ <!-- ZONES — 2 zones -->
+ <section class="about-zones">
+ <div class="section-tag">Où nous intervenons</div>
+ <h2 class="section-title">Nos zones<br><em>d'intervention</em></h2>
+ <div class="zones-cols">
+ <div class="zone-col">
+ <div class="zone-col-num">64 </div>
+ <div class="zone-col-name">Pyrénées-Atlantiques & Pays Basque</div>
+ <div class="zone-col-city">Pau</div>
+ <div class="zone-col-city">Orthez</div>
+ <div class="zone-col-city">Mourenx</div>
+ <div class="zone-col-city">Oloron-Sainte-Marie</div>
+ <div class="zone-col-city">Biarritz</div>
+ <div class="zone-col-city">Bayonne</div>
+ <div class="zone-col-city">Anglet</div>
+ <div class="zone-col-city">Hendaye · Saint-Jean-de-Luz</div>
+ </div>
+ <div class="zone-col">
+ <div class="zone-col-num">89</div>
+ <div class="zone-col-name">Yonne</div>
+ <div class="zone-col-city">Auxerre</div>
+ <div class="zone-col-city">Sens</div>
+ <div class="zone-col-city">Joigny</div>
+ <div class="zone-col-city">Avallon</div>
+ <div class="zone-col-city">Tonnerre</div>
+ <div class="zone-col-city">Communes du département</div>
+ </div>
+ </div>
+ </section>
+
+ <!-- CTA -->
+ <section class="about-cta">
+ <div class="section-tag" style="justify-content:center">Travaillons ensemble</div>
+ <h2 class="section-title">Prêt à nous<br><em>faire confiance ?</em></h2>
+ <p>Devis gratuit, intervention à domicile, résultats garantis 2 ans.</p>
+ <div class="cta-row">
+ <a href="contact.html" class="btn btn-primary">Nous contacter</a>
+ <a href="faq.html" class="btn btn-outline">Voir la FAQ</a>
+ <a href="tarifs.html" class="btn btn-outline">Voir les tarifs</a>
+ </div>
+ </section>
+ </div>
+
+   <!-- Maillage interne géo -->
+  <div style="padding:1.5rem 5rem;border-top:1px solid var(--border);background:var(--surface);">
+    <p style="font-family:var(--font-mono,'Barlow Condensed'),sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);margin-bottom:.8rem;">Zones d'intervention</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+      <a href="reprogrammation-moteur-bayonne.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Bayonne</a>
+      <a href="reprogrammation-moteur-biarritz.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Biarritz</a>
+      <a href="reprogrammation-moteur-anglet.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Anglet</a>
+      <a href="reprogrammation-moteur-pau.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Pau</a>
+      <a href="reprogrammation-moteur-auxerre.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Auxerre &amp; Yonne</a>
+      <a href="faq.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">FAQ</a>
+      <a href="tarifs.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Tarifs 2026</a>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+ <script src="nav.js"></script>
+</body>
+</html>

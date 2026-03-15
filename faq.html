@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQ — Questions fréquentes reprogrammation moteur | AREPROG</title>
+  <meta name="description" content="Toutes les réponses sur la reprogrammation moteur : Stage 1, Stage 2, E85, EGR/FAP/AdBlue, ODIS VAG, légalité, assurance, garantie. FAQ complète AREPROG."/>
+  <link rel="canonical" href="https://areprog.fr/faq.html"/>
+  <meta property="og:title" content="FAQ reprogrammation moteur — Toutes les réponses AREPROG"/>
+  <meta property="og:description" content="Stage 1, Stage 2, E85, EGR/FAP/AdBlue, ODIS VAG, légalité, assurance, garantie — 70+ questions répondues par les experts AREPROG."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://areprog.fr/faq.html"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"C'est quoi exactement la reprogrammation moteur ?","acceptedAnswer":{"@type":"Answer","text":"La reprogrammation moteur consiste à modifier les cartographies logicielles stockées dans le calculateur moteur (ECU) d'origine. Les constructeurs programment ces paramètres de façon conservatrice — il existe toujours une marge d'optimisation sans risque."}},
+      {"@type":"Question","name":"La reprogrammation moteur est-elle légale en France ?","acceptedAnswer":{"@type":"Answer","text":"La reprogrammation moteur n'est pas expressément interdite en France. Un Stage 1 bien réalisé reste dans les normes d'émissions. Les désactivations FAP/AdBlue/EGR ne sont pas conformes pour un usage sur voie publique."}},
+      {"@type":"Question","name":"La reprogrammation moteur affecte-t-elle mon assurance auto ?","acceptedAnswer":{"@type":"Answer","text":"Une reprogrammation modifie les caractéristiques déclarées du véhicule. Nous recommandons de contacter votre assureur pour déclarer la modification et éviter tout risque de refus d'indemnisation en cas de sinistre."}},
+      {"@type":"Question","name":"Peut-on reprogrammer un véhicule en LOA ou en leasing ?","acceptedAnswer":{"@type":"Answer","text":"Techniquement oui. Juridiquement, le véhicule appartient au bailleur. Vérifiez votre contrat et remettez le fichier d'origine avant restitution — AREPROG conserve votre fichier stock."}},
+      {"@type":"Question","name":"Le Stage 1 peut-il endommager mon moteur ?","acceptedAnswer":{"@type":"Answer","text":"Un Stage 1 correctement réalisé reste dans les tolérances mécaniques du moteur d'origine. AREPROG effectue un diagnostic complet avant toute intervention et refuse de reprogrammer un moteur présentant des faiblesses."}},
+      {"@type":"Question","name":"Ma garantie constructeur sera-t-elle annulée après un Stage 1 ?","acceptedAnswer":{"@type":"Answer","text":"Légalement, le concessionnaire doit prouver que la modification est la cause directe de la panne. Les outils VAG/BMW enregistrent un compteur de flash. Notre recommandation : remettre le fichier d'origine avant tout passage en concession."}},
+      {"@type":"Question","name":"Quelles sont vos zones d'intervention exactes ?","acceptedAnswer":{"@type":"Answer","text":"AREPROG intervient au Pays Basque (Bayonne, Biarritz, Anglet...), dans les Pyrénées-Atlantiques (Pau, Orthez, Oloron...) et dans l'Yonne (Auxerre, Sens, Joigny...)."}},
+      {"@type":"Question","name":"Avez-vous des tarifs indicatifs ?","acceptedAnswer":{"@type":"Answer","text":"Un Stage 1 en accès OBD standard se situe généralement entre 200 et 400 €. Le devis est gratuit et sans engagement — réponse sous 24h."}},
+      {"@type":"Question","name":"Qu'est-ce que la conversion E85 par reprogrammation ECU ?","acceptedAnswer":{"@type":"Answer","text":"La conversion E85 native modifie directement le calculateur moteur pour gérer le bioéthanol et tous les mélanges E85/sans-plomb. Contrairement aux boîtiers flex-fuel, le calculateur sait exactement quel carburant il gère."}},
+      {"@type":"Question","name":"Que couvre exactement la garantie 2 ans AREPROG ?","acceptedAnswer":{"@type":"Answer","text":"La garantie couvre la cartographie elle-même, la réinstallation après mise à jour concessionnaire, et les ajustements fins. Elle ne couvre pas les pannes mécaniques préexistantes ni les modifications réalisées par un tiers."}}
+    ]
+  }
+  </script>
+  <style>
+    .page-wrap { padding-top: var(--nav-h, 64px); }
+
+    /* ── HEADER ─────────────────────────── */
+    .faq-header {
+      padding: 4rem 5rem 3rem;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .faq-header::after {
+      content: 'FAQ';
+      position: absolute; right: 3rem; bottom: -1.5rem;
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 14rem; line-height: 1;
+      color: transparent; -webkit-text-stroke: 1px rgba(33,150,243,.07);
+      pointer-events: none; letter-spacing: -.04em;
+    }
+    .faq-header p { max-width: 520px; color: var(--muted); margin-top: 1rem; line-height: 1.7; }
+
+    /* ── SEARCH ─────────────────────────── */
+    .faq-search-bar {
+      padding: 1.5rem 5rem;
+      background: var(--bg-warm,#111214);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: var(--nav-h,64px);
+      z-index: 100;
+    }
+    .search-wrap {
+      position: relative; max-width: 680px;
+    }
+    .search-icon {
+      position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+    .search-icon svg { width: 1rem; height: 1rem; }
+    #faq-search {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-body,'Barlow'),sans-serif;
+      font-size: .9rem; font-weight: 300;
+      padding: .8rem 1rem .8rem 2.8rem;
+      border-radius: 6px;
+      transition: border-color .2s;
+    }
+    #faq-search:focus { outline: none; border-color: var(--blue); }
+    #faq-search::placeholder { color: var(--muted2); }
+    .search-count {
+      position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; color: var(--muted2);
+    }
+    .search-count.active { color: var(--blue); }
+    .no-results {
+      display: none; padding: 2rem 0;
+      font-size: .9rem; color: var(--muted);
+    }
+    .no-results.visible { display: block; }
+
+    /* ── LAYOUT ─────────────────────────── */
+    .faq-body {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 70vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────── */
+    .faq-sidebar {
+      border-right: 1px solid var(--border);
+      padding: 2rem 0;
+      position: sticky;
+      top: calc(var(--nav-h,64px) + 64px);
+      height: calc(100vh - var(--nav-h,64px) - 64px);
+      overflow-y: auto;
+    }
+    .faq-sidebar::-webkit-scrollbar { width: 3px; }
+    .faq-sidebar::-webkit-scrollbar-track { background: transparent; }
+    .faq-sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    .sidebar-label {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--muted2); padding: 0 1.5rem;
+      margin-bottom: .8rem;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .6rem 1.5rem;
+      font-size: .82rem; color: var(--muted);
+      text-decoration: none; cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all .15s;
+    }
+    .sidebar-link:hover { color: var(--text2); background: var(--surface); }
+    .sidebar-link.active { color: var(--blue); border-left-color: var(--blue); background: var(--blue-dim,rgba(33,150,243,.06)); }
+    .sidebar-count {
+      margin-left: auto;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .6rem; font-weight: 700;
+      color: var(--muted2);
+    }
+    .sidebar-link.active .sidebar-count { color: var(--blue); }
+
+    /* ── FAQ CONTENT ─────────────────────── */
+    .faq-content { padding: 3rem 4rem; }
+
+    .faq-section {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: calc(var(--nav-h,64px) + 80px);
+    }
+    .faq-section-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: .5rem;
+    }
+    .faq-section-icon {
+      width: 2rem; height: 2rem;
+      background: var(--blue-dim,rgba(33,150,243,.08));
+      border: 1px solid rgba(33,150,243,.2);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--blue); flex-shrink: 0;
+    }
+    .faq-section-icon svg { width: 1rem; height: 1rem; }
+    .faq-section-title {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 1.2rem;
+      text-transform: uppercase; letter-spacing: .04em;
+      color: var(--text);
+    }
+    .faq-section-badge {
+      margin-left: auto;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+      color: var(--muted2);
+    }
+
+    /* ── ACCORDION ───────────────────────── */
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item.hidden { display: none; }
+    .faq-item.highlight .faq-q-text { color: var(--blue); }
+
+    .faq-q {
+      width: 100%; padding: 1rem 0;
+      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
+      background: transparent; border: none; cursor: pointer; text-align: left;
+    }
+    .faq-q-text {
+      font-family: var(--font-body,'Barlow'),sans-serif;
+      font-weight: 500; font-size: .92rem;
+      color: var(--text2); transition: color .2s; line-height: 1.4;
+    }
+    .faq-q:hover .faq-q-text { color: var(--text); }
+    .faq-q-icon {
+      width: 1.2rem; height: 1.2rem; min-width: 1.2rem;
+      border: 1px solid var(--border2); border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; color: var(--muted); transition: all .3s;
+    }
+    .faq-item.open .faq-q-icon { background: var(--blue); border-color: var(--blue); color: #fff; transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .4s ease, padding .3s;
+    }
+    .faq-item.open .faq-a { max-height: 600px; padding-bottom: 1.2rem; }
+    .faq-a p { color: var(--muted); line-height: 1.8; font-size: .88rem; margin-bottom: .7rem; }
+    .faq-a p:last-child { margin-bottom: 0; }
+    .faq-a strong { color: var(--text2); font-weight: 500; }
+    .faq-a a { color: var(--blue); text-decoration: none; }
+    .faq-a a:hover { text-decoration: underline; }
+    .faq-a .tip {
+      background: var(--blue-dim,rgba(33,150,243,.06));
+      border-left: 2px solid var(--blue);
+      border-radius: 0 4px 4px 0;
+      padding: .7rem 1rem; margin-top: .7rem;
+      font-size: .82rem; color: var(--text2);
+    }
+    .faq-a .warning {
+      background: rgba(245,158,11,.06);
+      border-left: 2px solid #F59E0B;
+      border-radius: 0 4px 4px 0;
+      padding: .7rem 1rem; margin-top: .7rem;
+      font-size: .82rem; color: #F59E0B;
+    }
+
+    /* ── CTA BOTTOM ──────────────────────── */
+    .faq-cta {
+      background: var(--bg-warm,#111214);
+      border-top: 1px solid var(--border);
+      padding: 5rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .faq-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(33,150,243,.06), transparent);
+  pointer-events: none;
+}
+    .faq-cta h2 {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: clamp(2rem,4vw,3.2rem);
+      text-transform: uppercase;
+    }
+    .faq-cta h2 em { font-style: italic; font-weight: 300; color: var(--blue-light,#42A5F5); }
+    .faq-cta p { max-width: 440px; margin: 1rem auto; color: var(--muted); line-height: 1.7; }
+    .faq-cta .cta-row { display: flex; gap: .8rem; justify-content: center; margin-top: 1.8rem; flex-wrap: wrap; }
+
+    @media (max-width: 900px) {
+      .faq-header { padding: 3rem 1.4rem 2.5rem; }
+      .faq-header::after { display: none; }
+      .faq-search-bar { padding: 1.2rem 1.4rem; }
+      .faq-body { grid-template-columns: 1fr; }
+      .faq-sidebar { display: none; }
+      .faq-content { padding: 2rem 1.4rem; }
+      .faq-cta { padding: 4rem 1.4rem; }
+    }
+  </style>
+</head>
+<body data-page="faq">
+  <div id="nav-container"></div>
+  <div class="page-wrap">
+
+    <!-- HEADER -->
+    <div class="faq-header">
+      <div class="section-tag">Questions fréquentes</div>
+      <h1 class="section-title">Tout ce que vous<br><em>voulez savoir</em></h1>
+      <p>Reprogrammation, E85, EGR/FAP/AdBlue, ODIS VAG, tarifs, légalité, garantie — toutes les réponses en un seul endroit.</p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="faq-search-bar">
+      <div class="search-wrap">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <input type="text" id="faq-search" placeholder="Rechercher une question… ex: légalité, garantie, E85, boîte automatique"/>
+        <span class="search-count" id="search-count"></span>
+      </div>
+      <div class="no-results" id="no-results">Aucun résultat pour cette recherche. <a href="contact.html" style="color:var(--blue)">Posez-nous la question directement →</a></div>
+    </div>
+
+    <!-- BODY -->
+    <div class="faq-body">
+
+      <!-- SIDEBAR -->
+      <aside class="faq-sidebar">
+        <div class="sidebar-label">Sections</div>
+        <a class="sidebar-link active" onclick="scrollTo('general')">
+          Général <span class="sidebar-count">10</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('technique')">
+          Technique <span class="sidebar-count">10</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('stage1')">
+          Stage 1 <span class="sidebar-count">7</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('stage2')">
+          Stage 2 <span class="sidebar-count">6</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('e85')">
+          Conversion E85 <span class="sidebar-count">7</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('desactivations')">
+          EGR / FAP / AdBlue <span class="sidebar-count">8</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('odis')">
+          Diagnostic ODIS <span class="sidebar-count">5</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('garantie')">
+          Garantie <span class="sidebar-count">6</span>
+        </a>
+        <a class="sidebar-link" onclick="scrollTo('intervention')">
+          Intervention <span class="sidebar-count">8</span>
+        </a>
+      </aside>
+
+      <!-- CONTENT -->
+      <div class="faq-content" id="faq-content">
+
+        <!-- ══ GÉNÉRAL ══ -->
+        <div class="faq-section" id="general">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <span class="faq-section-title">Général</span>
+            <span class="faq-section-badge">10 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">C'est quoi exactement la reprogrammation moteur ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La reprogrammation moteur consiste à modifier les <strong>cartographies logicielles stockées dans le calculateur moteur (ECU)</strong> d'origine. Ces cartographies contrôlent l'injection de carburant, la pression du turbo, les avances à l'allumage, la richesse du mélange, les limiteurs de régime, etc.</p><p>Les constructeurs programment ces paramètres de façon conservatrice pour deux raisons principales : vendre plusieurs niveaux de puissance sur le même moteur physique (stratégie commerciale), et garantir une durabilité maximale même avec un entretien minimal et du carburant de mauvaise qualité. Il existe donc toujours une marge d'optimisation sans risque.</p><div class="tip">Reprogrammation moteur, chip tuning, ECU tuning, cartographie moteur — ce sont tous des synonymes qui désignent la même intervention.</div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La reprogrammation moteur est-elle légale en France ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La reprogrammation moteur n'est pas expressément interdite en France. Des milliers de véhicules reprogrammés circulent sans problème. Cependant, elle pose des questions de conformité à l'homologation d'origine (Article R321-16 du Code de la Route).</p><p>En pratique : le contrôle technique ne vérifie pas la cartographie, seulement les émissions. La police ne contrôle pas les cartographies sur route. Un Stage 1 bien réalisé reste dans les normes d'émissions. <strong>Aucune sanction systématique n'existe</strong> pour un véhicule reprogrammé en Stage 1.</p><div class="warning">Pour les désactivations FAP, AdBlue ou EGR : ces modifications concernent les systèmes de dépollution et ne sont pas conformes pour un usage sur voie publique. Nous vous informons clairement avant toute intervention.</div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quelle différence entre reprogrammation ECU et boîtier additionnel ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Un <strong>boîtier additionnel</strong> (chip box, boîtier piggyback) se branche entre les capteurs et le calculateur. Il intercepte et modifie les signaux pour tromper l'ECU — par exemple en lui faisant croire que la pression turbo est plus basse qu'elle ne l'est réellement pour qu'il injecte plus de carburant. C'est une solution approximative qui peut provoquer des fumées, une surconsommation et est facilement détectable.</p><p>La <strong>reprogrammation ECU native</strong> modifie directement les cartographies dans le calculateur d'origine. Le moteur sait exactement ce qu'il fait. C'est plus précis, plus propre, plus durable, et invisible à un diagnostic standard de concessionnaire.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Mon véhicule est-il compatible avec la reprogrammation ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La quasi-totalité des véhicules équipés d'un moteur à injection moderne (diesel turbo, essence turbo, essence atmosphérique) et d'un calculateur électronique reprogrammable sont compatibles. Cela représente pratiquement tous les véhicules fabriqués après 2000.</p><p>Nous intervenons sur <strong>toutes les grandes marques européennes, asiatiques et américaines</strong> : Volkswagen, Audi, BMW, Mercedes, Peugeot, Renault, Citroën, Ford, Opel, Toyota, Honda, Seat, Skoda, Volvo... Envoyez-nous la marque, le modèle et la motorisation de votre véhicule — nous confirmons la faisabilité sous 24h.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on reprogrammer une voiture avec boîte automatique ou DSG ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, la reprogrammation moteur est tout à fait compatible avec les boîtes automatiques, DSG, PDK, CVT et autres transmissions automatisées. La cartographie moteur est indépendante de la boîte de vitesses.</p><p>Sur certains véhicules, il est même possible de reprogrammer également le calculateur de boîte de vitesses pour adapter les points de passage en fonction du nouveau couple moteur — c'est une option que nous pouvons évaluer lors du diagnostic.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Est-ce que la reprogrammation se voit au contrôle technique ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Pour un <strong>Stage 1 standard</strong>, non. Le contrôle technique vérifie les émissions de gaz d'échappement, pas les cartographies. Un Stage 1 bien réalisé reste dans les normes d'émissions constructeur et passe sans problème.</p><p>Pour les <strong>désactivations FAP ou AdBlue</strong>, l'analyse des gaz peut détecter l'absence de filtration selon l'équipement du centre de contrôle. Dans ce cas, un retour au fichier d'origine est toujours possible avant le passage.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Pourquoi les constructeurs ne proposent-ils pas ces réglages d'usine ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Pour plusieurs raisons économiques et commerciales. La principale : vendre le <strong>même moteur physique à plusieurs niveaux de puissance</strong> à des prix différents. Un VW Golf 1.5 TSI 130ch et un 150ch partagent souvent exactement le même moteur — seule la cartographie diffère. L'écart de prix peut représenter plusieurs milliers d'euros.</p><p>Les autres raisons : garantir la durabilité avec des carburants de qualité variable dans le monde entier, respecter les normes antipollution dans tous les pays, et prévoir des marges pour les conditions climatiques extrêmes.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on reprogrammer un véhicule hybride ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>C'est possible sur certains hybrides dits "mild hybrid" ou hybrides légers où le moteur thermique reste le moteur principal et dispose d'un ECU standard. Sur les hybrides rechargeable ou full hybride (Prius, etc.), l'architecture est plus complexe — la gestion est partagée entre plusieurs calculateurs et les possibilités de reprogrammation sont plus limitées.</p><p>Nous évaluons chaque cas individuellement. Contactez-nous avec votre modèle exact pour confirmation.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La reprogrammation moteur affecte-t-elle mon assurance auto ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>C'est un point important que nous vous conseillons de ne pas négliger. En France, le contrat d'assurance auto repose sur une <strong>obligation de déclaration des modifications substantielles</strong> du véhicule. Une reprogrammation Stage 1 modifie les caractéristiques du moteur déclarées à la souscription.</p><p>En pratique, la très grande majorité des assurés ne déclarent pas leur reprogrammation et n'ont aucun problème. Toutefois, en cas de sinistre grave avec expertise approfondie, un assureur pourrait invoquer une fausse déclaration pour réduire ou refuser l'indemnisation.</p><p><strong>Notre recommandation :</strong> contactez votre assureur ou votre courtier pour lui signaler la modification. Certaines compagnies l'acceptent sans surprime, d'autres appliquent une légère majoration. Quelques assureurs spécialisés (Matmut, April, Verspieren) sont habitués à ce type de dossier.</p><div class="warning">Ne pas déclarer une modification substantielle peut être qualifié de fausse déclaration et entraîner un refus d'indemnisation en cas de sinistre. Nous vous informons clairement de ce point avant toute intervention.</div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on reprogrammer un véhicule en LOA ou en leasing ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Techniquement, oui — le véhicule se reprogramme de la même façon. Juridiquement, c'est plus délicat : en LOA ou leasing, <strong>le véhicule appartient au bailleur</strong> (organisme de financement), pas à vous. Le contrat de location interdit généralement toute modification substantielle du véhicule sans autorisation préalable.</p><p>Si vous souhaitez reprogrammer un véhicule en LOA, vérifiez les conditions de votre contrat. La solution la plus sécurisée est de faire la reprogrammation, de profiter des gains pendant la durée du leasing, et de remettre le fichier d'origine avant la restitution du véhicule en fin de contrat. AREPROG conserve votre fichier stock et effectue le retour sans frais.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ TECHNIQUE ══ -->
+        <div class="faq-section" id="technique">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <span class="faq-section-title">Technique</span>
+            <span class="faq-section-badge">10 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Qu'est-ce qu'un fichier ECU et comment est-il modifié ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Le fichier ECU est la <strong>mémoire flash du calculateur moteur</strong> — un fichier binaire contenant toutes les cartographies : tables d'injection, courbes de pression turbo, avances à l'allumage, limiteurs, courbes de dépollution, etc. Il est lu via la prise OBD du véhicule (ou directement sur la puce dans certains cas), modifié avec des logiciels professionnels (WinOLS, ECM Titanium), puis réécrit dans le calculateur.</p><div class="tip">AREPROG sauvegarde systématiquement votre fichier d'origine avant toute modification. Retour au stock possible à tout moment.</div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Qu'est-ce que l'accès Boot / Bench mode ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Certains calculateurs récents sont <strong>verrouillés en accès OBD standard</strong>. Pour y accéder, deux méthodes alternatives existent. Le <strong>Boot mode</strong> consiste à connecter des sondes directement sur des points de soudure spécifiques du calculateur — sans le démonter complètement. Le <strong>Bench mode</strong> nécessite de déposer le calculateur du véhicule pour l'intervenir sur table.</p><p>Ces méthodes demandent plus de temps et d'expertise, mais permettent d'intervenir sur des véhicules qui seraient autrement inaccessibles. L'intervention dure généralement entre 2h et 3h30.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Pourquoi faut-il maintenir la tension batterie pendant le flashage ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Une coupure de courant pendant l'écriture du fichier dans le calculateur peut <strong>corrompre définitivement l'ECU</strong> — c'est ce qu'on appelle un "brick". Le calculateur ne répond plus et doit être remplacé, ce qui coûte entre 500 et 3 000 € selon le véhicule.</p><p>AREPROG utilise systématiquement une <strong>station de charge externe</strong> qui maintient une tension stable à 13,5V pendant toute la durée du flashage, quelle que soit la décharge de la batterie d'origine.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La reprogrammation nécessite-t-elle du carburant spécifique après ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Pour un Stage 1 diesel : <strong>aucun changement</strong>, vous continuez avec votre carburant habituel. Pour un Stage 1 essence turbo : il est recommandé d'utiliser du <strong>SP98 plutôt que SP95</strong> pour profiter pleinement des gains et éviter le cliquetis (détonation). Sur la plupart des véhicules essence reprogrammés, le SP98 est conseillé voire nécessaire.</p><p>Pour la conversion E85 : vous pouvez utiliser de l'E85, du SP95/98, ou n'importe quel mélange. La gestion est automatique.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Qu'est-ce qu'un datalogger et pourquoi est-il utilisé après le flashage ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Un datalogger est un outil qui enregistre en temps réel tous les paramètres moteur pendant un test sur route : températures, pressions, régimes, richesse du mélange, détonation, boost turbo, lambda, etc. Après chaque flashage, AREPROG effectue un essai sur route avec datalogger pour <strong>vérifier que tous les paramètres sont dans les plages attendues</strong> et qu'aucune correction n'est nécessaire avant de valider l'intervention.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quelle est la différence entre reprogrammation "à la chaîne" et sur mesure ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La <strong>reprogrammation à la chaîne</strong> consiste à télécharger un fichier générique depuis une base de données et à le flasher sans diagnostic ni adaptation. C'est rapide et peu coûteux, mais dangereux : le fichier n'est pas adapté à l'état réel du moteur, aux conditions locales, ni aux éventuelles modifications existantes.</p><p>La <strong>reprogrammation sur mesure</strong> (celle pratiquée par AREPROG) commence par un diagnostic complet, lit le fichier d'origine du véhicule spécifique, l'adapte aux besoins et à l'état du moteur, et valide les résultats sur route. C'est la seule approche sérieuse et sécurisée.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Que se passe-t-il si le concessionnaire fait une mise à jour moteur après la reprogrammation ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Si le concessionnaire effectue une mise à jour logicielle (TSB — Technical Service Bulletin) sur le calculateur, la cartographie AREPROG sera écrasée par la nouvelle version constructeur. Le véhicule reviendra alors à son état d'origine (ou légèrement modifié par la mise à jour).</p><p>Dans ce cas, contactez-nous : nous reprogrammons à nouveau sur la base du nouveau fichier constructeur. <strong>Cette opération est incluse dans notre garantie</strong> si elle intervient dans les 2 ans suivant notre intervention.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Est-ce que la reprogrammation affecte les systèmes de sécurité du véhicule (ABS, ESP) ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Non. La reprogrammation Stage 1 agit exclusivement sur le <strong>calculateur moteur (ECU)</strong>. Les calculateurs de sécurité — ABS, ESP, airbags, direction assistée — sont des unités séparées et ne sont pas touchés. Toutes les fonctions de protection et de sécurité active restent pleinement opérationnelles après l'intervention.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on reprogrammer un diesel Euro 5 ou Euro 6 sans problème ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui. Les moteurs diesel Euro 5 et Euro 6 sont parmi les plus courants que nous traitons. Le Stage 1 agit sur les paramètres d'injection et de turbo, indépendamment de la norme d'émissions. Un Stage 1 bien réalisé <strong>ne dégrade pas les émissions au-delà des seuils Euro 5/6</strong> — le moteur reste dans les plages de fonctionnement prévues par le constructeur.</p><p>Pour les désactivations EGR, FAP ou AdBlue sur des moteurs Euro 6 : ces systèmes sont plus complexes et mieux surveillés par l'ECU. L'intervention est possible mais demande plus de maîtrise — nous vérifions systématiquement la faisabilité avant de nous engager.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quelle différence entre une reprogrammation à domicile et en atelier avec banc de puissance ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Le banc de puissance (ou banc à rouleaux) permet de mesurer la puissance et le couple aux roues de façon très précise dans un environnement contrôlé. C'est un outil de validation utile, mais il n'est <strong>pas indispensable à une reprogrammation de qualité</strong>.</p><p>AREPROG valide les résultats sur route avec un datalogger professionnel qui enregistre en temps réel tous les paramètres moteur (boost, lambda, avance, température, détonation...). Cette méthode reflète les conditions réelles d'utilisation du véhicule et permet d'affiner la cartographie dans les conditions où le conducteur roulera effectivement.</p><p>L'avantage de l'intervention à domicile est avant tout pratique : pas de déplacement, pas de journée en atelier, intervention réalisée là où vous êtes.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ STAGE 1 ══ -->
+        <div class="faq-section" id="stage1">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <span class="faq-section-title">Stage 1</span>
+            <span class="faq-section-badge">7 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Le Stage 1 peut-il endommager mon moteur ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Un Stage 1 correctement réalisé <strong>reste dans les tolérances mécaniques du moteur d'origine</strong>. Les constructeurs dimensionnent leurs moteurs avec une marge importante — un même moteur physique peut souvent supporter 30% de puissance supplémentaire sans modification mécanique. C'est précisément dans cet espace que travaille le Stage 1.</p><p>Le risque existe uniquement si le moteur est dans un mauvais état (usure, entretien insuffisant, défauts existants). C'est pourquoi AREPROG effectue un diagnostic complet avant toute intervention et refuse de reprogrammer un moteur présentant des faiblesses.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Les gains annoncés (+30% puissance, +35% couple) sont-ils garantis ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Ces pourcentages sont des <strong>moyennes constatées</strong> sur des motorisations similaires. Les gains réels dépendent du type de moteur, de son état, du carburant utilisé et des conditions de conduite. Un diesel turbo 150ch gagnera davantage en proportion qu'un diesel 250ch déjà bien optimisé d'usine.</p><p>Ce qui est garanti : une <strong>amélioration mesurable et perceptible</strong>. Si vous ne constatez pas d'amélioration ou si le résultat ne vous convient pas, on ajuste la cartographie ou on revient au fichier d'origine.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Ma garantie constructeur sera-t-elle annulée après un Stage 1 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Légalement, un concessionnaire ne peut pas refuser une garantie uniquement parce que le véhicule a été reprogrammé — il doit prouver que la modification est la cause directe de la panne (règlement européen 461/2010). En pratique, certains concessionnaires tentent de refuser la prise en charge dès qu'une modification est détectée.</p><p>Point important : les outils de diagnostic constructeur (notamment sur les groupes VAG, BMW et Mercedes) enregistrent un <strong>compteur de flash et une signature numérique</strong> dans l'ECU. La détection est donc possible si le concessionnaire cherche activement. Notre intervention reste 100% réversible logiciellement — mais ce n'est pas une garantie d'invisibilité absolue.</p><p><strong>Notre recommandation :</strong> contactez-nous avant tout passage en concession pour remettre le fichier d'origine. Cette précaution élimine le risque dans la grande majorité des cas.</p><div class="tip">Avant toute intervention garantie chez le concessionnaire, appelez-nous : remise au stock en quelques minutes à domicile.</div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Le Stage 1 améliore-t-il vraiment la consommation ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, dans les bonnes conditions. Un meilleur couple en bas de régime permet de <strong>monter les rapports plus tôt</strong> et de rouler à des régimes plus bas pour la même vitesse. Le rendement thermique amélioré réduit aussi la consommation en charge partielle.</p><p>Les gains de consommation sont plus marqués pour les <strong>trajets autoroutiers réguliers</strong> que pour la conduite urbaine. Si vous profitez des performances supplémentaires de façon sportive, la consommation augmentera naturellement. Le choix vous appartient.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Y a-t-il un kilométrage minimum ou maximum pour faire un Stage 1 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Il n'y a <strong>pas de kilométrage minimum</strong>. Un véhicule neuf peut être reprogrammé dès la livraison. Il n'y a pas non plus de kilométrage maximum absolu, mais l'état mécanique est déterminant : un moteur à 200 000 km en bon état d'entretien peut être reprogrammé sans problème, là où un moteur à 80 000 km mal entretenu ne devrait pas l'être.</p><p>Ce qui compte : entretien à jour, courroie/chaîne de distribution en bon état, pas de fuite ni de surconsommation d'huile, aucun code défaut actif.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on faire un Stage 1 puis évoluer vers un Stage 2 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, c'est même la progression recommandée. Le Stage 1 est la première étape logique. Si vous réalisez ensuite des modifications mécaniques (admission, downpipe, intercooler), on adapte la cartographie pour en tirer pleinement parti avec un Stage 2.</p><p><strong>Un tarif préférentiel</strong> est appliqué pour les clients AREPROG souhaitant évoluer de Stage 1 vers Stage 2.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Combien de temps dure l'intervention Stage 1 à domicile ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>En général <strong>entre 1h et 1h30</strong> : 15-20 minutes de diagnostic et lecture ECU, 20-45 minutes de flashage selon le calculateur, 15-20 minutes de validation sur route avec datalogger. Pour les accès Boot ou Bench (calculateurs verrouillés), prévoir 2h30 à 3h30.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ STAGE 2 ══ -->
+        <div class="faq-section" id="stage2">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <span class="faq-section-title">Stage 2</span>
+            <span class="faq-section-badge">6 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quelles modifications mécaniques sont nécessaires avant un Stage 2 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Le Stage 2 ne se justifie que si certaines modifications mécaniques ont été réalisées en amont pour augmenter la capacité thermique et aéraulique du moteur. Les plus courantes : <strong>downpipe sport ou décata</strong> (pour réduire la contre-pression d'échappement), <strong>admission améliorée</strong> (boîte à air sport, filtre admission), <strong>intercooler plus performant</strong> pour refroidir l'air comprimé.</p><p>Sur certains moteurs très sollicités, des éléments internes (injecteurs haute pression, pompe à carburant renforcée) peuvent être nécessaires. On évalue tout cela lors du diagnostic préalable.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on faire un Stage 2 directement sans Stage 1 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, si les modifications mécaniques sont déjà en place. Dans ce cas, on lit le fichier d'origine (ou existant), on effectue un diagnostic, et on réalise directement une cartographie Stage 2. Il n'est pas obligatoire d'être passé par AREPROG pour le Stage 1.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Le Stage 2 est-il réversible ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Côté <strong>logiciel, oui</strong> : AREPROG conserve le fichier d'origine et peut le remettre à tout moment. Côté <strong>mécanique</strong> : les modifications physiques que vous avez réalisées (downpipe, admission...) sont indépendantes de notre intervention. Si vous souhaitez revenir à l'état 100% stock, il faudra également remonter les pièces d'origine.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quels sont les gains réels d'un Stage 2 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Les gains d'un Stage 2 dépendent entièrement des modifications mécaniques réalisées et du moteur de base. Sur un diesel turbo bien préparé, on peut atteindre <strong>+40 à +60% de puissance</strong> par rapport au stock. Sur un essence turbo avec downpipe et admission, les gains sont souvent entre +40 et +80% selon la plateforme.</p><p>Ces chiffres ne sont pas garantis à l'avance — ils dépendent de la qualité des pièces installées et de l'état du moteur. On valide les gains sur route avec datalogger après l'intervention.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Qu'est-ce que le Stage 2+ ou Stage 3 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Le Stage 2+ et le Stage 3 désignent des préparations allant au-delà des modifications "bolt-on" : turbo renforcé ou échangé, injection haute pression remplacée, travaux internes moteur (pistons forgés, bielles renforcées...). C'est du sur-mesure complet qui sort des sentiers balisés.</p><p>Nous évaluons ces projets au cas par cas. Contactez-nous avec le détail complet de votre préparation pour un diagnostic préalable.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La boîte de vitesses DSG peut-elle être reprogrammée en même temps ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, sur les véhicules VAG (VW, Audi, Seat, Skoda) notamment, la reprogrammation de la boîte DSG/S-Tronic est possible en complément du Stage 2. Elle adapte les points de changement de rapport, les temps de réponse et les couples de serrage d'embrayage au nouveau niveau de couple moteur. C'est fortement recommandé sur les moteurs produisant un couple important après Stage 2.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ E85 ══ -->
+        <div class="faq-section" id="e85">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+            </div>
+            <span class="faq-section-title">Conversion E85</span>
+            <span class="faq-section-badge">7 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Qu'est-ce que la conversion E85 par reprogrammation ECU ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La conversion E85 native modifie directement le calculateur moteur pour gérer le bioéthanol et tous les mélanges E85/sans-plomb. Contrairement aux <strong>boîtiers flex-fuel</strong> qui trompent l'ECU en falsifiant les valeurs des capteurs, la conversion native permet au calculateur de savoir exactement quel carburant il gère — et d'adapter l'injection, les avances et la correction lambda en conséquence.</p><p>Résultat : une gestion optimale en toutes conditions, y compris le démarrage à froid et les mélanges variables.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Combien coûte réellement le carburant E85 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Le prix de l'E85 varie selon les régions, les saisons et les cours mondiaux du bioéthanol. À titre indicatif, il oscille généralement entre <strong>0,75 et 1,00 €/L</strong>, contre 1,65 à 1,95 €/L pour le SP95 — mais ces fourchettes évoluent. Consultez <strong>prix-carburants.gouv.fr</strong> pour les prix en temps réel près de chez vous.</p><p>La consommation augmente d'environ 20 à 25% en volume (l'éthanol a un pouvoir calorifique inférieur). En tenant compte de cette surconsommation, l'économie réelle est de l'ordre de <strong>30 à 45% sur le coût au kilomètre</strong>.</p><p>Exemple concret (prix indicatifs) : un véhicule qui consomme 7L/100 en SP95 à 1,80€ = 12,60€/100km. Après conversion, il consomme ~8,7L/100 en E85 à 0,85€ = 7,40€/100km. Soit une économie de plus de 40%.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on mettre du sans-plomb après la conversion E85 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, sans aucune restriction ni manipulation. Après la conversion native, vous pouvez mettre du SP95, SP98, E10, E85 ou <strong>n'importe quel mélange des deux</strong> dans le réservoir. Le calculateur détecte automatiquement la composition du mélange via le capteur lambda et adapte la gestion en temps réel. Pas besoin de vider le réservoir ni de faire de reset.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">L'E85 abîme-t-il le moteur ou l'injection ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Non, à condition que la conversion soit correctement réalisée. L'éthanol est un carburant propre qui brûle mieux que l'essence et est moins polluant en particules. Il a même un <strong>effet nettoyant sur les injecteurs et l'injection</strong>. Son seul inconvénient est d'être légèrement hygroscopique (absorbe l'humidité), ce qui peut poser problème dans les régions très froides avec un réservoir plein d'E85 pur laissé immobile plusieurs semaines.</p><div class="tip">Conseil : si votre véhicule doit rester garé plus de 3 semaines par grand froid, préférez laisser un mélange avec du sans-plomb plutôt que de l'E85 pur.</div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La conversion E85 est-elle compatible avec un Stage 1 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, et c'est une excellente combinaison. Le Stage 1 optimise les performances et le rendement du moteur, la conversion E85 réduit le coût du carburant. Les deux interventions peuvent être réalisées <strong>lors d'une même session</strong>, ce qui évite un second déplacement et réduit le coût total.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Où trouver de l'E85 dans les Pyrénées-Atlantiques et l'Yonne ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>L'E85 est disponible dans de nombreuses stations du Pays Basque, de la région paloise et de l'Yonne : stations Total, Intermarché, Leclerc, Carrefour, E.Leclerc... Le réseau s'est considérablement développé ces dernières années. Pour trouver la station la plus proche, le site <strong>prix-carburants.gouv.fr</strong> permet de filtrer par type de carburant et par commune.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Mon moteur diesel peut-il être converti en E85 ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Non. La conversion E85 est <strong>exclusivement réservée aux moteurs essence</strong>. Le bioéthanol est incompatible avec les moteurs diesel — leur principe de fonctionnement (auto-allumage par compression) est fondamentalement différent. Il existe des solutions de "superéthanol diesel" additifs, mais ce ne sont pas des conversions ECU et ce n'est pas une prestation AREPROG.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ DÉSACTIVATIONS ══ -->
+        <div class="faq-section" id="desactivations">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            </div>
+            <span class="faq-section-title">EGR / FAP / AdBlue</span>
+            <span class="faq-section-badge">8 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Pourquoi désactiver l'EGR sur un diesel ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La vanne EGR (Exhaust Gas Recirculation) réinjecte une partie des gaz d'échappement dans l'admission pour réduire les émissions de NOx. Sur les diesels, ce mécanisme provoque progressivement des <strong>dépôts de suie dans l'admission</strong>, sur les soupapes, les injecteurs et le corps papillon. Résultat : perte de puissance, à-coups, surconsommation, et pannes coûteuses à terme.</p><p>La désactivation logicielle EGR supprime ce cycle sans retirer aucune pièce. C'est une mesure de préservation du moteur, notamment recommandée après 80 000 km.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Faut-il retirer physiquement le FAP avant la désactivation logicielle ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, <strong>impérativement</strong>. La désactivation logicielle FAP n'a de sens que si le filtre a été retiré physiquement au préalable. Si le FAP est encore en place, le calculateur continue à le surveiller normalement. La suppression logicielle intervient pour que le calculateur cesse de chercher un filtre absent et n'entre pas en mode dégradé.</p><p>Nous vérifions toujours que le FAP a bien été retiré avant d'effectuer la suppression logicielle.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on cumuler désactivation EGR, FAP et AdBlue lors de la même intervention ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, toutes ces désactivations s'effectuent dans le même fichier ECU. Il est courant de réaliser <strong>EGR + FAP ensemble</strong> sur un diesel préparé pour la piste ou l'export. Si l'AdBlue est également concerné, les trois peuvent être traités lors d'une même session, souvent accompagnée d'un Stage 1.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La désactivation AdBlue est-elle une solution si ma pompe est en panne ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, c'est l'un des cas d'usage les plus fréquents. Une pompe AdBlue défaillante peut coûter entre <strong>800 et 2 500 €</strong> selon le véhicule. Sur certains modèles anciens ou à fort kilométrage, ce coût de réparation dépasse la valeur du véhicule. La désactivation logicielle AdBlue est alors une alternative viable qui élimine définitivement le problème et le risque de blocage moteur.</p><div class="warning">Non conforme pour un usage sur voie publique en France. Nous vous informons des implications légales avant toute intervention.</div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Ces désactivations sont-elles réversibles ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Du côté <strong>logiciel, oui</strong> : AREPROG conserve votre fichier d'origine. La remise au stock peut s'effectuer en moins d'une heure lors d'une nouvelle intervention à domicile. Côté mécanique, si le FAP a été physiquement retiré, son remontage est une opération séparée qui ne dépend pas de nous.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La désactivation EGR améliore-t-elle les performances ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Sur un moteur déjà fortement encrassé, oui — supprimer la recirculation de gaz brûlés améliore la qualité du mélange air/carburant. Sur un moteur propre et récent, l'effet sur les performances est marginal. L'intérêt principal reste la <strong>protection long terme de l'admission</strong> et la fiabilité du moteur, pas le gain de puissance.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Mon véhicule peut-il passer le contrôle technique après désactivation FAP ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>C'est variable selon l'équipement du centre de contrôle. Certains centres détectent l'absence de FAP via l'opacimètre (mesure des particules), d'autres non. En cas de doute, la solution est de <strong>remettre le fichier d'origine</strong> avant le contrôle technique. AREPROG conserve votre fichier stock et peut le réinstaller rapidement.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Pourquoi mon moteur se met-il en sécurité quand l'AdBlue est bas ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>C'est une contrainte imposée par la réglementation Euro 6. Le système SCR/AdBlue doit être opérationnel pour que le véhicule soit conforme aux normes d'émissions de NOx. Si le niveau est bas ou si une panne est détectée, le calculateur réduit d'abord la puissance, puis interdit le redémarrage après l'arrêt du moteur pour forcer le remplissage.</p><p>Cette contrainte peut être supprimée via la désactivation logicielle AdBlue — pour les usages hors voie publique uniquement.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ ODIS ══ -->
+        <div class="faq-section" id="odis">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <span class="faq-section-title">Diagnostic ODIS VAG</span>
+            <span class="faq-section-badge">5 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Qu'est-ce qui différencie ODIS d'un diagnostic OBD générique ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Un outil OBD générique (Carly, VCDS basique, etc.) ne lit que les données standardisées accessibles via le protocole OBD-II. ODIS est connecté aux <strong>serveurs Volkswagen Group en temps réel</strong> et accède à l'intégralité des données constructeur : tous les calculateurs (pas seulement le moteur), les paramètres propriétaires, les codages avancés, les adaptations, les procédures officielles de test et les mises à jour TSB.</p><p>C'est la même chose que ce que fait votre concessionnaire agréé — mais à domicile et à tarif indépendant.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quelles marques sont accessibles avec ODIS ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>ODIS couvre l'ensemble du <strong>groupe Volkswagen</strong> : Volkswagen, Audi, Seat, Skoda, ainsi que Porsche et Cupra. Toutes les gammes et générations sont couvertes, y compris les modèles très récents avec les nouvelles architectures électroniques (MQB Evo, PPE, etc.).</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on activer des fonctions cachées avec ODIS ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui. ODIS permet d'effectuer des <strong>codages avancés</strong> qui activent des fonctionnalités désactivées d'usine sur certains marchés : affichage de la consommation instantanée, activation du démarrage confort, modification des comportements des feux, activation de menus cachés dans l'écran d'info-divertissement, etc. Les possibilités varient selon le modèle et les options installées.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">ODIS peut-il être utilisé pour adapter un calculateur remplacé ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, c'est une utilisation très courante. Après le remplacement d'un calculateur moteur, de boîte de vitesses ou d'un autre module électronique, ODIS permet d'effectuer les <strong>procédures d'appariement et d'adaptation</strong> nécessaires pour que le nouveau calculateur communique correctement avec le reste du véhicule. Sans cette étape, le calculateur de remplacement peut ne pas fonctionner correctement.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on effectuer des mises à jour logicielles officielles constructeur avec ODIS ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui. ODIS est connecté aux serveurs VAG et peut télécharger et appliquer les <strong>Technical Service Bulletins (TSB)</strong> — les mises à jour logicielles officielles publiées par Volkswagen Group pour corriger des problèmes connus ou améliorer le fonctionnement des calculateurs. C'est exactement ce que fait un concessionnaire lors d'une campagne de rappel ou d'une révision.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ GARANTIE ══ -->
+        <div class="faq-section" id="garantie">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span class="faq-section-title">Garantie</span>
+            <span class="faq-section-badge">6 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Que couvre exactement la garantie 2 ans AREPROG ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La garantie AREPROG couvre : la <strong>cartographie elle-même</strong> (si un problème lié directement à nos réglages se manifeste, on intervient sans frais), la <strong>réinstallation en cas de mise à jour concessionnaire</strong> qui écraserait notre fichier, et les <strong>ajustements fins</strong> si la cartographie nécessite une correction suite à un changement de carburant ou une modification du véhicule.</p><p>La garantie ne couvre pas les pannes mécaniques préexistantes, les dommages résultant d'un mauvais entretien, ni les modifications réalisées par un tiers après notre intervention.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Que se passe-t-il si le concessionnaire fait une mise à jour et écrase la cartographie ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Si la mise à jour intervient dans les 2 ans suivant notre intervention, nous reprogrammons votre véhicule sur la base du nouveau fichier constructeur <strong>sans frais supplémentaires</strong>. Il suffit de nous contacter pour convenir d'un nouveau rendez-vous à domicile.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">AREPROG est-il responsable en cas de panne moteur après reprogrammation ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Dans le cas (rare) où notre cartographie serait directement en cause dans un problème moteur, nous intervenons en priorité pour analyser la situation. Si notre responsabilité est établie, on prend en charge la remise au stock et on traite le dossier sérieusement.</p><p>C'est pourquoi nous effectuons systématiquement un <strong>diagnostic complet avant toute intervention</strong>. Un moteur présentant des faiblesses ou des défauts préexistants ne sera pas reprogrammé — cette décision nous protège autant qu'elle vous protège.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">La garantie est-elle transférable si je revends le véhicule ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La garantie AREPROG est liée au véhicule (numéro de châssis et calculateur) et non au propriétaire. En cas de revente, la garantie suit le véhicule pour la durée restante. L'acheteur peut bénéficier d'un retour au stock gratuit s'il le souhaite.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Que se passe-t-il si je change de véhicule ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>La garantie est liée au véhicule, pas à votre identité. Pour votre nouveau véhicule, une nouvelle intervention sera nécessaire. En tant que <strong>client fidèle AREPROG</strong>, vous bénéficiez d'un tarif préférentiel sur toute nouvelle prestation. Mentionnez-le lors de votre demande de devis.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Y a-t-il une garantie sur le retour au stock si je souhaite revendre ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui. Le <strong>retour au fichier d'origine</strong> est possible à tout moment pendant la durée de la garantie, sans frais. Si vous souhaitez remettre le véhicule en état 100% stock avant une revente ou une intervention concessionnaire, contactez-nous pour convenir d'un rendez-vous.</p></div>
+          </div>
+        </div>
+
+        <!-- ══ INTERVENTION ══ -->
+        <div class="faq-section" id="intervention">
+          <div class="faq-section-header">
+            <div class="faq-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span class="faq-section-title">Intervention à domicile</span>
+            <span class="faq-section-badge">8 questions</span>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Comment se déroule une prise de rendez-vous ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>C'est simple : <a href="contact.html">remplissez notre formulaire</a> ou appelez le 06 67 92 46 30 en précisant la marque, le modèle, la motorisation et le kilométrage de votre véhicule. Nous vous confirmons la faisabilité et les gains estimés sous 24h, puis convenons d'un créneau à votre adresse.</p><p>Délai habituel : intervention possible <strong>sous 7 jours</strong> selon la zone et les disponibilités.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Que dois-je préparer avant l'arrivée du technicien ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Très peu de choses : votre véhicule avec <strong>le plein fait</strong> (ou un niveau suffisant pour un test sur route), les clés, et si possible le carnet d'entretien. Un espace dégagé autour du véhicule est apprécié mais pas indispensable. Votre présence est recommandée — on vous explique tout ce qu'on fait en temps réel.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quelles sont vos zones d'intervention exactes ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a">
+              <p>AREPROG intervient dans trois zones :</p>
+              <p><strong>Pays Basque :</strong> <a href="reprogrammation-moteur-bayonne.html">Bayonne</a>, <a href="reprogrammation-moteur-biarritz.html">Biarritz</a>, <a href="reprogrammation-moteur-anglet.html">Anglet</a>, Hendaye, Saint-Jean-de-Luz, Hasparren et communes alentours.</p>
+              <p><strong>Pyrénées-Atlantiques :</strong> <a href="reprogrammation-moteur-pau.html">Pau</a>, Orthez, Mourenx, Oloron-Sainte-Marie, Nay, Lescar et environs.</p>
+              <p><strong>Yonne :</strong> <a href="reprogrammation-moteur-auxerre.html">Auxerre</a>, Sens, Joigny, Avallon, Tonnerre et communes du département 89.</p>
+              <div class="tip">Vous n'êtes pas dans ces zones ? Contactez-nous quand même — on étudie chaque demande.</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Quels sont vos modes de paiement acceptés ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Nous acceptons le <strong>virement bancaire</strong> (préféré), les <strong>espèces</strong> et les <strong>chèques</strong>. Le règlement s'effectue après l'intervention et la validation des résultats sur route. Aucun acompte n'est demandé pour les interventions standard.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Avez-vous des tarifs indicatifs ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Les tarifs varient en fonction du véhicule (marque, modèle, motorisation) et du type d'accès au calculateur (OBD standard ou Boot/Bench pour les ECU verrouillés). Nous ne pratiquons pas de tarifs fixes affichés car chaque intervention est différente.</p><p>Pour vous donner une idée générale : un <strong>Stage 1 en accès OBD standard</strong> se situe dans une fourchette courante du marché entre 200 et 400 €. Les interventions Boot/Bench, plus longues et techniques, sont naturellement plus élevées. La conversion E85 seule est souvent comparable à un Stage 1.</p><p><strong>Le devis est gratuit et sans engagement</strong> — envoyez-nous vos informations via le <a href="contact.html">formulaire de contact</a> et nous vous répondons avec un tarif précis sous 24h. Pas de surprise à l'arrivée.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Que se passe-t-il si l'intervention échoue ou si le résultat n'est pas satisfaisant ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Si le résultat n'est pas conforme à ce qui a été annoncé, on ajuste la cartographie sur place ou lors d'un second passage. Si l'intervention ne peut pas aboutir (calculateur inaccessible, moteur en mauvais état constaté en cours), <strong>aucune facturation n'est effectuée</strong>. On ne fait pas payer ce qu'on ne peut pas livrer.</p></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q"><span class="faq-q-text">Peut-on assister à l'intervention ?</span><span class="faq-q-icon">+</span></button>
+            <div class="faq-a"><p>Oui, et on vous y encourage. On vous explique chaque étape — diagnostic, lecture du fichier, modification, flashage, validation sur route. Vous voyez exactement ce qui est fait sur votre véhicule. La transparence est une valeur fondamentale chez AREPROG.</p></div>
+          </div>
+        </div>
+
+      </div><!-- /faq-content -->
+    </div><!-- /faq-body -->
+
+    <!-- CTA -->
+    <div class="faq-cta">
+      <div class="section-tag" style="justify-content:center;">Toujours une question ?</div>
+      <h2>Vous n'avez pas trouvé<br><em>votre réponse ?</em></h2>
+      <p>Posez-nous directement la question. Réponse garantie sous 24h, sans engagement.</p>
+      <div class="cta-row">
+        <a href="contact.html" class="btn btn-primary">Nous écrire</a>
+        <a href="tel:+33667924630" class="btn btn-outline">06 67 92 46 30</a>
+      </div>
+    </div>
+
+  </div>
+    <!-- Maillage interne géo -->
+  <div style="padding:1.5rem 5rem;border-top:1px solid var(--border);background:var(--surface);">
+    <p style="font-family:var(--font-mono,'Barlow Condensed'),sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);margin-bottom:.8rem;">Zones d'intervention</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+      <a href="reprogrammation-moteur-bayonne.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Bayonne</a>
+      <a href="reprogrammation-moteur-biarritz.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Biarritz</a>
+      <a href="reprogrammation-moteur-anglet.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Anglet</a>
+      <a href="reprogrammation-moteur-pau.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Pau</a>
+      <a href="reprogrammation-moteur-auxerre.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Auxerre &amp; Yonne</a>
+      <a href="faq.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">FAQ</a>
+      <a href="tarifs.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Tarifs 2026</a>
+      <a href="about.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">À propos</a>
+      <a href="odis.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Diagnostic ODIS</a>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+  <script src="nav.js"></script>
+  <script src="whatsapp-widget.js"></script>
+  <script>
+    // ── ACCORDION ────────────────────────────────────
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    // ── SIDEBAR SCROLL SPY ────────────────────────────
+    function scrollTo(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    const sections = document.querySelectorAll('.faq-section');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          sidebarLinks.forEach(l => l.classList.remove('active'));
+          const id = e.target.id;
+          const active = document.querySelector(`.sidebar-link[onclick="scrollTo('${id}')"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-120px 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+
+    // ── SEARCH ───────────────────────────────────────
+    const searchInput = document.getElementById('faq-search');
+    const searchCount = document.getElementById('search-count');
+    const noResults   = document.getElementById('no-results');
+    const allItems    = document.querySelectorAll('.faq-item');
+    const allSections = document.querySelectorAll('.faq-section');
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+
+      if (!q) {
+        allItems.forEach(i => i.classList.remove('hidden', 'highlight'));
+        allSections.forEach(s => s.style.display = '');
+        searchCount.textContent = '';
+        searchCount.classList.remove('active');
+        noResults.classList.remove('visible');
+        return;
+      }
+
+      let count = 0;
+
+      allItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(q)) {
+          item.classList.remove('hidden');
+          item.classList.add('highlight');
+          count++;
+        } else {
+          item.classList.add('hidden');
+          item.classList.remove('highlight');
+        }
+      });
+
+      // Hide empty sections
+      allSections.forEach(section => {
+        const visible = section.querySelectorAll('.faq-item:not(.hidden)');
+        section.style.display = visible.length === 0 ? 'none' : '';
+      });
+
+      searchCount.textContent = count > 0 ? `${count} résultat${count > 1 ? 's' : ''}` : '';
+      searchCount.classList.toggle('active', count > 0);
+      noResults.classList.toggle('visible', count === 0);
+    });
+  </script>
+</body>
+</html>

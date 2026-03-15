@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+ <meta charset="UTF-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ <title>Conversion E85 Bioéthanol — Reprogrammation ECU native | AREPROG</title>
+ <meta name="description" content="Conversion E85 bioéthanol par reprogrammation ECU native. Roulez au bioéthanol sans boîtier externe. Économies de 40% sur le carburant. À domicile."/>
+ <link rel="canonical" href="https://areprog.fr/conversion-e85.html"/>
+ <meta property="og:title" content="Conversion E85 Bioéthanol — Reprogrammation ECU native AREPROG"/>
+ <meta property="og:description" content="Conversion E85 native sans boîtier flex-fuel. Économies de 40% sur le carburant. Intervention à domicile en Pays Basque, 64 et Yonne."/>
+ <meta property="og:type" content="website"/>
+ <meta property="og:url" content="https://areprog.fr/conversion-e85.html"/>
+ <script type="application/ld+json">
+ {
+   "@context": "https://schema.org",
+   "@type": "Service",
+   "name": "Conversion E85 bioéthanol par reprogrammation ECU",
+   "provider": {"@type": "LocalBusiness", "name": "AREPROG", "telephone": "+33667924630", "url": "https://areprog.fr"},
+   "description": "Conversion E85 native par reprogrammation ECU — sans boîtier additionnel. Gestion optimale de tous les mélanges E85/SP. Économies 30 à 45% sur le carburant.",
+   "areaServed": ["Pyrénées-Atlantiques", "Pays Basque", "Yonne"],
+   "offers": {"@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock"}
+ }
+ </script>
+   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="shared.css"/>
+ <style>
+ .page-wrap { padding-top: var(--nav-h,64px); }
+ .service-hero { min-height:72vh; display:flex; flex-direction:column; justify-content:flex-end; padding:0 5rem 5rem; position:relative; overflow:hidden; }
+ .service-hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse 60% 70% at 65% 35%, rgba(33,150,243,.09), transparent), linear-gradient(to bottom, transparent 35%, rgba(13,14,16,.96) 100%); }
+ .service-hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(38,40,44,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(38,40,44,.35) 1px, transparent 1px); background-size:70px 70px; mask-image:radial-gradient(ellipse 85% 70% at 65% 30%, black, transparent); }
+ .service-hero-label { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin-bottom:1rem; position:relative; z-index:1; display:flex; align-items:center; gap:.6rem; }
+ .service-hero-label::before { content:''; display:block; width:20px; height:1px; background:var(--blue); }
+ .service-hero h1 { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:clamp(3rem,8vw,6.5rem); line-height:.95; letter-spacing:-.03em; position:relative; z-index:1; margin-bottom:1.4rem; }
+ .service-hero h1 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); display:block; }
+ .service-hero-sub { max-width:560px; color:var(--text2); font-size:1rem; line-height:1.75; position:relative; z-index:1; margin-bottom:2rem; }
+ .service-hero-actions { display:flex; gap:.8rem; flex-wrap:wrap; position:relative; z-index:1; margin-bottom:1.8rem; }
+ .service-hero-stats { display:flex; gap:2.5rem; position:relative; z-index:1; }
+ .hero-stat-val { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:2.2rem; color:var(--text); line-height:1; }
+ .hero-stat-val span { color:var(--blue-light,#42A5F5); }
+ .hero-stat-label { font-size:.75rem; color:var(--muted); margin-top:.2rem; }
+ .hero-stat-sep { width:1px; height:2.5rem; background:var(--border2); align-self:center; }
+
+ /* CONTENT SECTIONS */
+ .service-intro { padding:5rem; }
+ .service-intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; margin-top:3rem; align-items:start; }
+ .service-intro h2 { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:2rem; line-height:1.1; margin-bottom:1.2rem; }
+ .service-intro h2 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); }
+ .service-intro p { color:var(--text2); line-height:1.8; margin-bottom:1rem; font-size:.95rem; }
+ .service-intro strong { color:var(--text); font-weight:500; }
+
+ .prereq-box { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:1.8rem; }
+ .prereq-title { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin-bottom:1.2rem; }
+ .prereq-item { display:flex; gap:.8rem; align-items:flex-start; padding:.6rem 0; border-bottom:1px solid var(--border); }
+ .prereq-item:last-child { border-bottom:none; }
+ .prereq-check { width:1.2rem; height:1.2rem; min-width:1.2rem; background:rgba(33,150,243,.12); border:1px solid rgba(33,150,243,.3); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:.6rem; color:var(--blue); margin-top:.1rem; }
+ .prereq-text { font-size:.88rem; color:var(--text2); line-height:1.5; }
+
+ /* GAINS TABLE */
+ .gains-section { background:var(--bg-warm,#111214); padding:5rem; }
+ .gains-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-top:3rem; }
+ .gain-card { background:var(--surface); padding:2rem; }
+ .gain-card-val { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:2.8rem; color:var(--blue-light,#42A5F5); line-height:1; margin-bottom:.4rem; }
+ .gain-card-label { font-size:.78rem; color:var(--muted); }
+ .gain-card-desc { font-size:.82rem; color:var(--muted); margin-top:.5rem; line-height:1.5; }
+
+ /* PROCESS */
+ .process-section { padding:5rem; }
+ .process-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:3rem; position:relative; }
+ .process-steps::before { content:''; position:absolute; top:1.5rem; left:2rem; right:2rem; height:1px; background:linear-gradient(to right, var(--blue), transparent); }
+ .process-step { padding-top:4rem; position:relative; }
+ .step-dot { position:absolute; top:.9rem; left:0; width:1.2rem; height:1.2rem; border:2px solid var(--blue); border-radius:50%; background:var(--bg); }
+ .step-dot::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:.4rem; height:.4rem; background:var(--blue); border-radius:50%; }
+ .step-num { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.2em; color:var(--blue); margin-bottom:.5rem; }
+ .step-title { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-weight:700; font-size:.92rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:.5rem; }
+ .step-desc { font-size:.82rem; color:var(--muted); line-height:1.6; }
+
+ /* FAQ */
+ .service-faq { background:var(--bg-warm,#111214); padding:5rem; }
+ .faq-list { margin-top:3rem; }
+ .faq-item { border-bottom:1px solid var(--border); }
+ .faq-q { width:100%; padding:1.1rem 0; display:flex; justify-content:space-between; align-items:center; gap:1.5rem; background:transparent; border:none; cursor:pointer; text-align:left; }
+ .faq-q-text { font-family:var(--font-body,'Barlow'),sans-serif; font-weight:500; font-size:.95rem; color:var(--text2); transition:color .2s; }
+ .faq-q:hover .faq-q-text { color:var(--text); }
+ .faq-q-icon { width:1.2rem; height:1.2rem; min-width:1.2rem; border:1px solid var(--border2); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:.75rem; color:var(--muted); transition:all .3s; }
+ .faq-item.open .faq-q-icon { background:var(--blue); border-color:var(--blue); color:#fff; transform:rotate(45deg); }
+ .faq-a { max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s; }
+ .faq-item.open .faq-a { max-height:400px; padding-bottom:1.3rem; }
+ .faq-a p { color:var(--muted); line-height:1.75; font-size:.9rem; }
+ .faq-a strong { color:var(--text2); font-weight:500; }
+
+ /* CTA */
+ .service-cta { text-align:center; padding:7rem 5rem; position:relative; overflow:hidden; }
+ .service-cta::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(33,150,243,.06), transparent);
+  pointer-events: none;
+}
+ .service-cta h2 { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:clamp(2rem,5vw,3.8rem); line-height:1.05; }
+ .service-cta h2 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); }
+ .service-cta p { max-width:440px; margin:1.2rem auto; color:var(--muted); line-height:1.7; }
+ .service-cta .cta-row { display:flex; gap:.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
+
+ @media (max-width:900px) {
+ .service-hero { padding:0 1.4rem 4rem; }
+ .service-intro,.gains-section,.process-section,.service-faq,.service-cta { padding:4rem 1.4rem; }
+ .service-intro-grid { grid-template-columns:1fr; gap:2.5rem; }
+ .gains-grid { grid-template-columns:repeat(2,1fr); }
+ .process-steps { grid-template-columns:repeat(2,1fr); }
+ .process-steps::before { display:none; }
+ .service-hero-stats { gap:1.5rem; flex-wrap:wrap; }
+ }
+ </style>
+</head>
+<body data-page="e85">
+ <div id="nav-container"></div>
+ <div class="page-wrap">
+
+ <header class="service-hero">
+ <div class="service-hero-bg"></div>
+ <div class="service-hero-grid"></div>
+ <div class="service-hero-label">Bioéthanol · Conversion native</div>
+ <h1>Conversion<br><em>E85 Bioéthanol</em></h1>
+ <p class="service-hero-sub">L'E85 bioéthanol coûte environ deux fois moins cher que le sans-plomb. La conversion par reprogrammation ECU native permet à votre moteur essence de rouler au bioéthanol — sans boîtier externe, sans fragilité électronique, avec une gestion optimale en toutes conditions.</p>
+ <div class="service-hero-actions">
+ <a href="contact.html" class="btn btn-primary">Devis gratuit E85</a>
+ <a href="tel:+33667924630" class="btn btn-outline">06 67 92 46 30</a>
+ </div>
+ <div class="service-hero-stats">
+ <div><div class="hero-stat-val"><span>−40%</span></div><div class="hero-stat-label">Coût carburant</div></div>
+ <div class="hero-stat-sep"></div>
+ <div><div class="hero-stat-val"><span>0</span></div><div class="hero-stat-label">Boîtier externe</div></div>
+ <div class="hero-stat-sep"></div>
+ <div><div class="hero-stat-val">2 <span style="font-size:1.2rem">ans</span></div><div class="hero-stat-label">Garantie incluse</div></div>
+ </div>
+ </header>
+
+ <section class="service-intro">
+ <div class="section-tag">Comment ça fonctionne</div>
+ <div class="service-intro-grid">
+ <div>
+ <h2>Natif, sans boîtier,<br><em>sans compromis</em></h2>
+ <p>La conversion E85 native consiste à reprogrammer directement le calculateur moteur pour gérer le bioéthanol et tous les mélanges E85/sans-plomb. <strong>Aucun boîtier externe</strong>, aucune pièce à entretenir ou à remplacer — la gestion du carburant est intégrée dans l'ECU d'origine.</p>
+<p>Le calculateur adapte en temps réel la durée d'injection, la richesse du mélange et les avances à l'allumage selon la proportion d'éthanol détectée. Le résultat est optimal en toutes conditions — y compris au démarrage à froid et avec des mélanges variables.</p>
+<p>Cette approche est nettement supérieure aux boîtiers flex-fuel qui simulent des valeurs pour tromper le calculateur. Ici, <strong>le calculateur sait exactement ce qu'il fait</strong>.</p>
+ </div>
+ <div>
+ <div class="prereq-box">
+ <div class="prereq-title">Avantages de la conversion E85</div>
+ <div class="prereq-item">
+ <div class="prereq-check">&#10003;</div>
+ <div class="prereq-text"><strong>Économies immédiates</strong> — L'E85 coûte environ deux fois moins cher que le sans-plomb. Les économies sont visibles dès le premier plein.</div>
+ </div>
+ <div class="prereq-item">
+ <div class="prereq-check">&#10003;</div>
+ <div class="prereq-text"><strong>Aucun boîtier externe</strong> — Pas de câblage additionnel, pas de composant qui peut tomber en panne ou se déconnecter.</div>
+ </div>
+ <div class="prereq-item">
+ <div class="prereq-check">&#10003;</div>
+ <div class="prereq-text"><strong>Tous les mélanges gérés</strong> — E85 pur, SP95 pur, ou n'importe quelle combinaison — le calculateur s'adapte automatiquement.</div>
+ </div>
+ <div class="prereq-item">
+ <div class="prereq-check">&#10003;</div>
+ <div class="prereq-text"><strong>Démarrage à froid natif</strong> — Contrairement aux boîtiers, la gestion du froid est intégrée. Pas d'à-coups au démarrage hivernal.</div>
+ </div>
+ <div class="prereq-item">
+ <div class="prereq-check">&#10003;</div>
+ <div class="prereq-text"><strong>100% réversible</strong> — Retour au sans-plomb standard possible à tout moment, sans manipulation.</div>
+ </div>
+ </div>
+ <p style="font-size:.8rem;color:var(--muted);margin-top:1rem;line-height:1.5;">Compatible avec tous les moteurs essence turbo et atmosphériques. Peut être combiné avec un Stage 1 lors de la même intervention.</p>
+ </div>
+ </div>
+ </section>
+
+ <section class="gains-section">
+ <div class="section-tag">Gains estimés</div>
+ <h2 class="section-title">Ce que vous <em>gagnez</em></h2>
+ <div class="gains-grid">
+ <div class="gain-card">
+ <div class="gain-card-val">−40%</div>
+ <div class="gain-card-label">Coût carburant</div>
+ <div class="gain-card-desc">L'E85 coûte environ deux fois moins cher que le sans-plomb à la pompe.</div>
+ </div>
+ <div class="gain-card">
+ <div class="gain-card-val">−20%</div>
+ <div class="gain-card-label">Consommation</div>
+ <div class="gain-card-desc">La consommation augmente légèrement en volume mais le coût au km reste bien inférieur.</div>
+ </div>
+ <div class="gain-card">
+ <div class="gain-card-val">0</div>
+ <div class="gain-card-label">Boîtier externe</div>
+ <div class="gain-card-desc">Conversion native ECU — aucune pièce additionnelle, aucun câblage.</div>
+ </div>
+ <div class="gain-card">
+ <div class="gain-card-val">2 ans</div>
+ <div class="gain-card-label">Garantie</div>
+ <div class="gain-card-desc">Sur la cartographie et l'intervention complète.</div>
+ </div>
+ </div>
+ </section>
+
+ <section class="process-section">
+ <div class="section-tag">Comment ça se passe</div>
+ <h2 class="section-title">Le déroulement<br><em>de l'intervention</em></h2>
+ <div class="process-steps">
+ <div class="process-step">
+ <div class="step-dot"></div>
+ <div class="step-num">Étape 01</div>
+ <div class="step-title">Diagnostic</div>
+ <p class="step-desc">Lecture du calculateur, vérification des codes défaut, analyse des données moteur en temps réel.</p>
+ </div>
+ <div class="process-step">
+ <div class="step-dot"></div>
+ <div class="step-num">Étape 02</div>
+ <div class="step-title">Validation des modifs</div>
+ <p class="step-desc">On vérifie que les modifications mécaniques sont compatibles et correctement installées avant de cartographier.</p>
+ </div>
+ <div class="process-step">
+ <div class="step-dot"></div>
+ <div class="step-num">Étape 03</div>
+ <div class="step-title">Reprogrammation</div>
+ <p class="step-desc">Écriture du fichier Stage 2 adapté à votre configuration. Durée : 30 à 60 min selon calculateur.</p>
+ </div>
+ <div class="process-step">
+ <div class="step-dot"></div>
+ <div class="step-num">Étape 04</div>
+ <div class="step-title">Validation route</div>
+ <p class="step-desc">Test sur route avec datalogger. Vérification de tous les paramètres moteur. Ajustements si nécessaire.</p>
+ </div>
+ </div>
+ </section>
+
+     <section class="service-faq">
+      <div class="section-tag">Questions fréquentes</div>
+      <h2 class="section-title">Vos questions<br><em>La conversion e85</em></h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Mon véhicule est-il compatible avec la conversion E85 ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>La conversion E85 est disponible sur les <strong>moteurs essence turbo et atmosphériques</strong>. Elle n'est pas applicable aux moteurs diesel, hybrides ou électriques. Envoyez-nous la marque, le modèle et la motorisation de votre véhicule — on confirme la faisabilité sous 24h.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Peut-on utiliser du sans-plomb normal après la conversion ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Oui, sans aucune restriction. Après la conversion, vous pouvez mettre du SP95, du SP98, du E85 ou n'importe quel mélange des deux dans votre réservoir. Le calculateur s'adapte automatiquement. Aucune manipulation, aucun reset nécessaire.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">La conversion E85 augmente-t-elle la consommation ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Légèrement en volume, oui — l'éthanol a un pouvoir calorifique inférieur à l'essence, donc le moteur en consomme un peu plus. Mais comme l'E85 coûte environ deux fois moins cher que le SP95, le <strong>coût au kilomètre reste nettement inférieur</strong>. En pratique, les conducteurs économisent entre 30 et 45% sur leur budget carburant.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Peut-on combiner la conversion E85 avec un Stage 1 ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Oui, et c'est même une excellente combinaison. Le Stage 1 optimise les performances générales du moteur, et la conversion E85 s'appuie dessus pour une gestion optimale du bioéthanol. Les deux peuvent être réalisés lors d'une même intervention.</p></div>
+        </div>
+      </div>
+    </section>
+
+ <section class="service-cta">
+ <div class="section-tag" style="justify-content:center;">Stage 2 — AREPROG</div>
+ <h2>Prêt à passer<br><em>au niveau supérieur ?</em></h2>
+ <p>Devis gratuit. On évalue votre configuration et on vous propose la meilleure cartographie possible.</p>
+ <div class="cta-row">
+ <a href="contact.html" class="btn btn-primary">Demander un devis E85</a>
+ <a href="stage1.html" class="btn btn-outline">Découvrir le Stage 1</a>
+ <a href="tarifs.html" class="btn btn-outline">Voir les tarifs</a>
+ </div>
+ </section>
+
+ </div>
+   <!-- Maillage interne géo -->
+  <div style="padding:1.5rem 5rem;border-top:1px solid var(--border);background:var(--surface);">
+    <p style="font-family:var(--font-mono,'Barlow Condensed'),sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);margin-bottom:.8rem;">Zones d'intervention</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+      <a href="reprogrammation-moteur-bayonne.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Bayonne</a>
+      <a href="reprogrammation-moteur-biarritz.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Biarritz</a>
+      <a href="reprogrammation-moteur-anglet.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Anglet</a>
+      <a href="reprogrammation-moteur-pau.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Pau</a>
+      <a href="reprogrammation-moteur-auxerre.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Auxerre &amp; Yonne</a>
+      <a href="faq.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">FAQ</a>
+      <a href="tarifs.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Tarifs 2026</a>
+      <a href="desactivation-egr.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Désactivation EGR</a>
+      <a href="desactivation-fap.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Désactivation FAP</a>
+      <a href="desactivation-adblue.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Désactivation AdBlue</a>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+ <script src="nav.js"></script>
+ <script src="whatsapp-widget.js"></script>
+ <script>
+ document.querySelectorAll('.faq-q').forEach(btn => {
+ btn.addEventListener('click', () => {
+ const item = btn.closest('.faq-item');
+ const isOpen = item.classList.contains('open');
+ document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+ if (!isOpen) item.classList.add('open');
+ });
+ });
+ </script>
+</body>
+</html>

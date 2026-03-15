@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Page en cours de développement — ne pas indexer
+Disallow: /simulateur.html
+
+# Sitemap
+Sitemap: https://areprog.fr/sitemap.xml
