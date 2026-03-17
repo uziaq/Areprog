@@ -3,7 +3,7 @@
 
   <!-- Page d'accueil -->
   <url>
-    <loc>https://areprog.fr/index.html</loc>
+    <loc>https://areprog.fr/</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
@@ -11,31 +11,31 @@
 
   <!-- Pages locales — priorité maximale pour le SEO géo -->
   <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-bayonne.html</loc>
+    <loc>https://areprog.fr/reprogrammation-moteur-bayonne</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-pau.html</loc>
+    <loc>https://areprog.fr/reprogrammation-moteur-pau</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-biarritz.html</loc>
+    <loc>https://areprog.fr/reprogrammation-moteur-biarritz</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-anglet.html</loc>
+    <loc>https://areprog.fr/reprogrammation-moteur-anglet</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-auxerre.html</loc>
+    <loc>https://areprog.fr/reprogrammation-moteur-auxerre</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
@@ -43,49 +43,49 @@
 
   <!-- Pages services principales -->
   <url>
-    <loc>https://areprog.fr/stage1.html</loc>
+    <loc>https://areprog.fr/stage1</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/conversion-e85.html</loc>
+    <loc>https://areprog.fr/conversion-e85</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/stage2.html</loc>
+    <loc>https://areprog.fr/stage2</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/desactivation-egr.html</loc>
+    <loc>https://areprog.fr/desactivation-egr</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/desactivation-fap.html</loc>
+    <loc>https://areprog.fr/desactivation-fap</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/desactivation-adblue.html</loc>
+    <loc>https://areprog.fr/desactivation-adblue</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/optimisation-consommation.html</loc>
+    <loc>https://areprog.fr/optimisation-consommation</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/odis.html</loc>
+    <loc>https://areprog.fr/odis</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
@@ -93,30 +93,36 @@
 
   <!-- Pages informatives -->
   <url>
-    <loc>https://areprog.fr/tarifs.html</loc>
+    <loc>https://areprog.fr/tarifs</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/faq.html</loc>
+    <loc>https://areprog.fr/faq</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/contact.html</loc>
+    <loc>https://areprog.fr/contact</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/about.html</loc>
+    <loc>https://areprog.fr/about</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.50</priority>
   </url>
+  <url>
+    <loc>https://areprog.fr/boutique</loc>
+    <lastmod>2026-03-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.70</priority>
+  </url>
 
-  <!-- simulateur.html intentionnellement exclu (noindex) -->
+  <!-- simulateur.html et admin.html intentionnellement exclus -->
 
 </urlset>

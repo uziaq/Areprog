@@ -1,4 +1,17 @@
-/products.js
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
+/*
+  # Sécurité - En-têtes HTTP
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-XSS-Protection: 1; mode=block
+
+  # Content Security Policy
+  # Autorise : scripts inline (pour le JSON-LD), Google Fonts, le domaine propre
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none';
+
+  # HSTS - forcer HTTPS (1 an)
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+/admin.html
+  X-Robots-Tag: noindex, nofollow

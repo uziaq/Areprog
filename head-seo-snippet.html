@@ -1,0 +1,90 @@
+<!--
+  ══════════════════════════════════════════════════════
+  SNIPPET HEAD SEO AMÉLIORÉ — À utiliser sur chaque page
+  Remplacez les valeurs entre {{ }} selon la page
+  ══════════════════════════════════════════════════════
+-->
+
+<!-- BASE -->
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{{ TITRE DE LA PAGE }} | AREPROG</title>
+<meta name="description" content="{{ DESCRIPTION 150-160 CARACTÈRES }}"/>
+<link rel="canonical" href="https://areprog.fr/{{ slug-de-la-page }}"/>
+
+<!-- FAVICON (à créer : un favicon 32x32 au format .ico ou .svg) -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+
+<!-- OPEN GRAPH (partage réseaux sociaux) -->
+<meta property="og:title" content="{{ TITRE DE LA PAGE }} | AREPROG"/>
+<meta property="og:description" content="{{ DESCRIPTION COURTE POUR LES RÉSEAUX }}"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://areprog.fr/{{ slug-de-la-page }}"/>
+<meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:locale" content="fr_FR"/>
+<meta property="og:site_name" content="AREPROG"/>
+
+<!-- TWITTER/X CARD -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="{{ TITRE DE LA PAGE }} | AREPROG"/>
+<meta name="twitter:description" content="{{ DESCRIPTION COURTE }}"/>
+<meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
+
+<!-- SCHEMA.ORG LocalBusiness enrichi (index.html uniquement) -->
+<!--
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "AREPROG",
+  "description": "Reprogrammation moteur à domicile — Stage 1, Stage 2, conversion E85, désactivations EGR/FAP/AdBlue, diagnostic ODIS VAG.",
+  "url": "https://areprog.fr",
+  "telephone": "+33667924630",
+  "priceRange": "€€",
+  "openingHours": ["Mo-Fr 08:00-19:00", "Sa 09:00-17:00"],
+  "image": "https://areprog.fr/og-image.jpg",
+  "areaServed": [
+    {"@type": "State", "name": "Pyrénées-Atlantiques"},
+    {"@type": "State", "name": "Yonne"},
+    {"@type": "City", "name": "Bayonne"},
+    {"@type": "City", "name": "Pau"},
+    {"@type": "City", "name": "Auxerre"}
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services de reprogrammation moteur",
+    "itemListElement": [
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Stage 1"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Stage 2"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Conversion E85"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Désactivation EGR"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Désactivation FAP"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Désactivation AdBlue"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Diagnostic ODIS VAG"}}
+    ]
+  },
+  "serviceType": ["Reprogrammation moteur Stage 1","Stage 2","Conversion E85","Désactivation EGR","Désactivation FAP","Désactivation AdBlue","Diagnostic ODIS VAG"]
+}
+</script>
+-->
+
+<!-- NOTE SUR LE FAVICON :
+  Créez un simple favicon.svg avec les initiales "AP" ou votre logo.
+  Exemple minimal :
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <rect width="32" height="32" rx="4" fill="#2196F3"/>
+    <text x="16" y="22" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">A</text>
+  </svg>
+-->
+
+<!-- NOTE SUR L'IMAGE OG (og-image.jpg) :
+  Créez une image 1200x630px avec :
+  - Logo AREPROG
+  - Accroche principale
+  - Fond sombre dans le style du site
+  Placez-la à la racine du site.
+-->
