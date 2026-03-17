@@ -161,19 +161,7 @@
 </div>
 <div id="footer-container"></div>
 <script src="nav.js"></script>
-<script>
-  (function() {
-    var s = document.createElement('script');
-    s.src = 'products.js?v=' + Date.now();
-    s.onload = function() {
-      var params = new URLSearchParams(window.location.search);
-      var id = params.get('id');
-      if (!id) renderNotFound('');
-      else { var p = getProductById(id); if (p) renderPage(p); else renderNotFound(id); }
-    };
-    document.head.appendChild(s);
-  })();
-</script>
+<script src="products.js"></script>
 <script>
 /* ═══════════════════════════════════
    produit.html — Template universel
@@ -441,7 +429,16 @@ function renderNotFound(id) {
     </div>`;
 }
 
-// Init handled by cache-busting loader above
+// ── INIT ──────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+if (!id) {
+  renderNotFound('');
+} else {
+  const product = getProductById(id);
+  if (product) renderPage(product);
+  else renderNotFound(id);
+}
 </script>
 </body>
 </html>

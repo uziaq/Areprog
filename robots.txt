@@ -1,8 +1,7 @@
 User-agent: *
 Allow: /
 
-# Pages à ne pas indexer
-Disallow: /simulateur.html
+# Pages privées — noindex géré via meta robots dans chaque page
 Disallow: /admin.html
 Disallow: /confirmation.html
 

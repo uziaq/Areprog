@@ -1,296 +1,386 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
- <meta charset="UTF-8"/>
- <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
- <title>Désactivation AdBlue — Suppression SCR logicielle | AREPROG</title>
- <meta name="description" content="Désactivation AdBlue logicielle à domicile — suppression SCR/AdBlue dans le calculateur diesel Euro 6. Fin alertes et blocages moteur. Pays Basque, 64, Yonne. AREPROG."/>
- <link rel="canonical" href="https://areprog.fr/desactivation-adblue.html"/>
- <meta property="og:title" content="Désactivation AdBlue logicielle — AREPROG"/>
- <meta property="og:description" content="Suppression SCR/AdBlue dans l'ECU. Fin des alertes de niveau et blocages moteur. Diesel Euro 6. Intervention à domicile Pays Basque, 64, Yonne."/>
- <meta property="og:type" content="website"/>
- <meta property="og:url" content="https://areprog.fr/desactivation-adblue.html"/>
- <script type="application/ld+json">
- {
-   "@context": "https://schema.org",
-   "@type": "Service",
-   "name": "Désactivation AdBlue logicielle",
-   "provider": {"@type": "LocalBusiness", "name": "AREPROG", "telephone": "+33667924630", "url": "https://areprog.fr"},
-   "description": "Suppression logicielle du système SCR/AdBlue dans l'ECU. Fin des alertes de niveau et risques de blocage moteur. Diesel Euro 6. Intervention à domicile.",
-   "areaServed": ["Pyrénées-Atlantiques", "Pays Basque", "Yonne"],
-   "offers": {"@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock"}
- }
- </script>
-   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Désactivation AdBlue SCR logicielle | AREPROG</title>
+  <meta name="description" content="Suppression SCR/AdBlue logicielle. Fin des alertes de niveau et risques de blocage moteur Euro 6. À domicile."/>
+  <link rel="canonical" href="https://areprog.fr/desactivation-adblue.html"/>
+  <meta property="og:title" content="Désactivation AdBlue SCR logicielle | AREPROG"/>
+  <meta property="og:description" content="Suppression SCR/AdBlue logicielle. Fin des alertes de niveau et risques de blocage moteur Euro 6. À domicile."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://areprog.fr/desactivation-adblue.html"/>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Service","name":"Désactivation AdBlue","provider":{"@type":"LocalBusiness","name":"AREPROG","telephone":"+33667924630","url":"https://areprog.fr"},"description":"Suppression SCR/AdBlue logicielle. Fin des alertes de niveau et risques de blocage moteur Euro 6. À domicile.","areaServed":["Pyrénées-Atlantiques","Pays Basque","Yonne"],"offers":{"@type":"Offer","priceCurrency":"EUR","availability":"https://schema.org/InStock"}}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
   <link rel="stylesheet" href="shared.css"/>
- <style>
- .page-wrap { padding-top: var(--nav-h,64px); }
- .service-hero { min-height:72vh; display:flex; flex-direction:column; justify-content:flex-end; padding:0 5rem 5rem; position:relative; overflow:hidden; }
- .service-hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse 60% 70% at 65% 35%, rgba(33,150,243,.09), transparent), linear-gradient(to bottom, transparent 35%, rgba(13,14,16,.96) 100%); }
- .service-hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(38,40,44,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(38,40,44,.35) 1px, transparent 1px); background-size:70px 70px; mask-image:radial-gradient(ellipse 85% 70% at 65% 30%, black, transparent); }
- .service-hero-label { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin-bottom:1rem; position:relative; z-index:1; display:flex; align-items:center; gap:.6rem; }
- .service-hero-label::before { content:''; display:block; width:20px; height:1px; background:var(--blue); }
- .service-hero h1 { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:clamp(3rem,8vw,6.5rem); line-height:.95; letter-spacing:-.03em; position:relative; z-index:1; margin-bottom:1.4rem; }
- .service-hero h1 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); display:block; }
- .service-hero-sub { max-width:560px; color:var(--text2); font-size:1rem; line-height:1.75; position:relative; z-index:1; margin-bottom:2rem; }
- .service-hero-actions { display:flex; gap:.8rem; flex-wrap:wrap; position:relative; z-index:1; margin-bottom:1.8rem; }
- .service-hero-stats { display:flex; gap:2.5rem; position:relative; z-index:1; }
- .hero-stat-val { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:2.2rem; color:var(--text); line-height:1; }
- .hero-stat-val span { color:var(--blue-light,#42A5F5); }
- .hero-stat-label { font-size:.75rem; color:var(--muted); margin-top:.2rem; }
- .hero-stat-sep { width:1px; height:2.5rem; background:var(--border2); align-self:center; }
+  <style>
+    :root { --accent: #FB923C; --accent-rgb: 251,146,60; --accent-light: #FDBA74; }
+    .page-wrap { padding-top: var(--nav-h,64px); }
 
- /* CONTENT SECTIONS */
- .service-intro { padding:5rem; }
- .service-intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; margin-top:3rem; align-items:start; }
- .service-intro h2 { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:2rem; line-height:1.1; margin-bottom:1.2rem; }
- .service-intro h2 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); }
- .service-intro p { color:var(--text2); line-height:1.8; margin-bottom:1rem; font-size:.95rem; }
- .service-intro strong { color:var(--text); font-weight:500; }
+    /* HERO */
+    .sv-hero { min-height: 78vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 4rem; padding: 4rem 5rem; position: relative; overflow: hidden; }
+    .sv-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 65% 40%, rgba(var(--accent-rgb),.08), transparent), radial-gradient(ellipse 40% 50% at 10% 80%, rgba(var(--accent-rgb),.04), transparent); pointer-events: none; }
+    .sv-hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(38,40,44,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(38,40,44,.35) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 85% 70% at 65% 30%, black, transparent); pointer-events: none; }
+    .sv-hero-left { position: relative; z-index: 1; }
+    .sv-label { font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: .6rem; }
+    .sv-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--accent); }
+    .sv-hero h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem,8vw,6.5rem); line-height: .92; letter-spacing: -.03em; margin-bottom: 1.4rem; text-transform: uppercase; }
+    .sv-hero h1 em { font-style: italic; font-weight: 300; color: var(--accent-light); display: block; }
+    .sv-desc { font-size: 1rem; line-height: 1.75; color: var(--text2); max-width: 460px; margin-bottom: 2rem; }
+    .sv-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .sv-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .hs-item .hs-val { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--text); line-height: 1; }
+    .hs-item .hs-val span { color: var(--accent-light); }
+    .hs-item .hs-label { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+    .hs-sep { width: 1px; height: 2rem; background: var(--border2); align-self: center; }
 
- .prereq-box { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:1.8rem; }
- .prereq-title { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin-bottom:1.2rem; }
- .prereq-item { display:flex; gap:.8rem; align-items:flex-start; padding:.6rem 0; border-bottom:1px solid var(--border); }
- .prereq-item:last-child { border-bottom:none; }
- .prereq-check { width:1.2rem; height:1.2rem; min-width:1.2rem; background:rgba(33,150,243,.12); border:1px solid rgba(33,150,243,.3); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:.6rem; color:var(--blue); margin-top:.1rem; }
- .prereq-text { font-size:.88rem; color:var(--text2); line-height:1.5; }
+    /* HERO RIGHT — info card */
+    .sv-hero-right { position: relative; z-index: 1; }
+    .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .info-card-head { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 1rem 1.3rem; display: flex; align-items: center; justify-content: space-between; }
+    .info-card-title { font-family: var(--font-mono); font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+    .info-card-badge { font-family: var(--font-mono); font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 3px; background: rgba(var(--accent-rgb),.15); border: 1px solid rgba(var(--accent-rgb),.3); color: var(--accent-light); }
+    .info-card-body { padding: 1.3rem; display: flex; flex-direction: column; gap: .8rem; }
+    .info-row { display: flex; align-items: center; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid var(--border); }
+    .info-row:last-child { border-bottom: none; }
+    .info-key { font-size: .8rem; color: var(--muted); }
+    .info-val { font-family: var(--font-mono); font-weight: 700; font-size: .82rem; color: var(--text2); }
+    .info-val.ok { color: var(--green); font-size: .7rem; background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.2); padding: .12rem .5rem; border-radius: 100px; }
+    .info-val.accent { color: var(--accent-light); }
+    .info-card-footer { border-top: 1px solid var(--border); padding: 1rem 1.3rem; display: flex; gap: .4rem; flex-wrap: wrap; background: var(--bg); }
 
- /* GAINS TABLE */
- .gains-section { background:var(--bg-warm,#111214); padding:5rem; }
- .gains-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-top:3rem; }
- .gain-card { background:var(--surface); padding:2rem; }
- .gain-card-val { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:2.8rem; color:var(--blue-light,#42A5F5); line-height:1; margin-bottom:.4rem; }
- .gain-card-label { font-size:.78rem; color:var(--muted); }
- .gain-card-desc { font-size:.82rem; color:var(--muted); margin-top:.5rem; line-height:1.5; }
+    /* INTRO */
+    .sv-intro { padding: 5rem; background: var(--bg-warm); border-bottom: 1px solid var(--border); }
+    .sv-intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 3rem; align-items: start; }
+    .sv-intro h2 { font-family: var(--font-display); font-weight: 700; font-size: 2rem; line-height: 1.1; margin-bottom: 1.2rem; }
+    .sv-intro h2 em { font-style: italic; font-weight: 300; color: var(--accent-light); }
+    .sv-intro p { color: var(--text2); line-height: 1.8; margin-bottom: 1rem; font-size: .95rem; }
+    .sv-intro strong { color: var(--text); font-weight: 500; }
+    .sv-stats-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .sv-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem; text-align: center; }
+    .sv-stat-val { font-family: var(--font-display); font-weight: 800; font-size: 2rem; color: var(--accent-light); line-height: 1; }
+    .sv-stat-label { font-size: .7rem; color: var(--muted); margin-top: .3rem; line-height: 1.3; }
 
- /* PROCESS */
- .process-section { padding:5rem; }
- .process-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:3rem; position:relative; }
- .process-steps::before { content:''; position:absolute; top:1.5rem; left:2rem; right:2rem; height:1px; background:linear-gradient(to right, var(--blue), transparent); }
- .process-step { padding-top:4rem; position:relative; }
- .step-dot { position:absolute; top:.9rem; left:0; width:1.2rem; height:1.2rem; border:2px solid var(--blue); border-radius:50%; background:var(--bg); }
- .step-dot::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:.4rem; height:.4rem; background:var(--blue); border-radius:50%; }
- .step-num { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.2em; color:var(--blue); margin-bottom:.5rem; }
- .step-title { font-family:var(--font-mono,'Barlow Condensed'),sans-serif; font-weight:700; font-size:.92rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:.5rem; }
- .step-desc { font-size:.82rem; color:var(--muted); line-height:1.6; }
+    /* BENEFITS */
+    .sv-benefits { padding: 5rem; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 3rem; }
+    .benefit-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.8rem; transition: border-color .25s, background .25s, transform .25s; }
+    .benefit-card:hover { border-color: rgba(var(--accent-rgb),.3); background: var(--surface2); transform: translateY(-2px); }
+    .benefit-num { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .22em; color: var(--accent); margin-bottom: 1rem; }
+    .benefit-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: .6rem; color: var(--text); text-transform: uppercase; }
+    .benefit-desc { font-size: .85rem; color: var(--muted); line-height: 1.65; }
 
- /* FAQ */
- .service-faq { background:var(--bg-warm,#111214); padding:5rem; }
- .faq-list { margin-top:3rem; }
- .faq-item { border-bottom:1px solid var(--border); }
- .faq-q { width:100%; padding:1.1rem 0; display:flex; justify-content:space-between; align-items:center; gap:1.5rem; background:transparent; border:none; cursor:pointer; text-align:left; }
- .faq-q-text { font-family:var(--font-body,'Barlow'),sans-serif; font-weight:500; font-size:.95rem; color:var(--text2); transition:color .2s; }
- .faq-q:hover .faq-q-text { color:var(--text); }
- .faq-q-icon { width:1.2rem; height:1.2rem; min-width:1.2rem; border:1px solid var(--border2); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:.75rem; color:var(--muted); transition:all .3s; }
- .faq-item.open .faq-q-icon { background:var(--blue); border-color:var(--blue); color:#fff; transform:rotate(45deg); }
- .faq-a { max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s; }
- .faq-item.open .faq-a { max-height:400px; padding-bottom:1.3rem; }
- .faq-a p { color:var(--muted); line-height:1.75; font-size:.9rem; }
- .faq-a strong { color:var(--text2); font-weight:500; }
+    /* PROCESS */
+    .sv-process { background: var(--bg-warm); padding: 5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .process-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-top: 3rem; position: relative; }
+    .process-steps::before { content: ''; position: absolute; top: 1.5rem; left: 2rem; right: 2rem; height: 1px; background: linear-gradient(to right, var(--accent), transparent); pointer-events: none; }
+    .process-step { padding-top: 3.5rem; position: relative; }
+    .step-dot { position: absolute; top: .9rem; left: 0; width: 1.2rem; height: 1.2rem; border: 2px solid var(--accent); border-radius: 50%; background: var(--bg); }
+    .step-dot::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: .4rem; height: .4rem; background: var(--accent); border-radius: 50%; }
+    .step-num { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .18em; color: var(--accent); margin-bottom: .4rem; }
+    .step-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; margin-bottom: .5rem; color: var(--text); text-transform: uppercase; }
+    .step-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; }
 
- /* CTA */
- .service-cta { text-align:center; padding:7rem 5rem; position:relative; overflow:hidden; }
- .service-cta::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(33,150,243,.06), transparent);
-  pointer-events: none;
-}
- .service-cta h2 { font-family:var(--font-display,'Barlow Condensed'),sans-serif; font-weight:700; font-size:clamp(2rem,5vw,3.8rem); line-height:1.05; }
- .service-cta h2 em { font-style:italic; font-weight:300; color:var(--blue-light,#42A5F5); }
- .service-cta p { max-width:440px; margin:1.2rem auto; color:var(--muted); line-height:1.7; }
- .service-cta .cta-row { display:flex; gap:.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
+    /* COMPAT */
+    .sv-compat { padding: 5rem; }
+    .compat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; align-items: start; }
+    .compat-list { display: flex; flex-direction: column; gap: .5rem; }
+    .compat-item { display: flex; align-items: center; gap: .8rem; padding: .8rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-size: .88rem; color: var(--text2); transition: border-color .15s; }
+    .compat-item:hover { border-color: rgba(var(--accent-rgb),.3); }
+    .compat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .compat-note { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1.2rem; font-size: .85rem; color: var(--muted); line-height: 1.65; }
+    .compat-checks { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; display: flex; flex-direction: column; gap: .6rem; }
+    .compat-check { font-size: .88rem; color: var(--text2); line-height: 1.5; padding: .7rem .9rem; background: var(--surface2); border-radius: 4px; display: flex; align-items: center; gap: .7rem; }
+    .compat-check::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
 
- @media (max-width:900px) {
- .service-hero { padding:0 1.4rem 4rem; }
- .service-intro,.gains-section,.process-section,.service-faq,.service-cta { padding:4rem 1.4rem; }
- .service-intro-grid { grid-template-columns:1fr; gap:2.5rem; }
- .gains-grid { grid-template-columns:repeat(2,1fr); }
- .process-steps { grid-template-columns:repeat(2,1fr); }
- .process-steps::before { display:none; }
- .service-hero-stats { gap:1.5rem; flex-wrap:wrap; }
- }
- </style>
+    /* FAQ */
+    .sv-faq { background: var(--bg-warm); padding: 5rem; border-top: 1px solid var(--border); }
+    .faq-list { margin-top: 3rem; max-width: 760px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { width: 100%; padding: 1.1rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; background: transparent; border: none; cursor: pointer; text-align: left; }
+    .faq-q-text { font-weight: 500; font-size: .95rem; color: var(--text2); transition: color .2s; }
+    .faq-q:hover .faq-q-text { color: var(--text); }
+    .faq-q-icon { width: 1.2rem; height: 1.2rem; min-width: 1.2rem; border: 1px solid var(--border2); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: .8rem; color: var(--muted); transition: all .3s; }
+    .faq-item.open .faq-q-icon { background: var(--accent); border-color: var(--accent); color: #fff; transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s; }
+    .faq-item.open .faq-a { max-height: 400px; padding-bottom: 1.3rem; }
+    .faq-a p { color: var(--muted); line-height: 1.75; font-size: .9rem; }
+    .faq-a strong { color: var(--text2); font-weight: 500; }
+
+    /* BOUTIQUE CTA */
+    .sv-boutique { padding: 4rem 5rem; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .sv-boutique-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .sv-boutique-left h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; text-transform: uppercase; margin-bottom: .4rem; }
+    .sv-boutique-left h3 em { font-style: italic; font-weight: 300; color: var(--accent-light); }
+    .sv-boutique-left p { font-size: .88rem; color: var(--muted); }
+    .sv-boutique-price { text-align: right; }
+    .sv-boutique-from { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
+    .sv-boutique-amount { font-family: var(--font-display); font-weight: 800; font-size: 3rem; color: var(--text); line-height: 1; letter-spacing: -.02em; }
+    .sv-boutique-amount sup { font-size: 1.2rem; font-weight: 700; vertical-align: top; margin-top: .6rem; display: inline-block; }
+
+    /* CTA */
+    .sv-cta { text-align: center; padding: 7rem 5rem; position: relative; overflow: hidden; }
+    .sv-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(var(--accent-rgb),.06), transparent); pointer-events: none; }
+    .sv-cta h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(2rem,5vw,3.8rem); line-height: 1.05; text-transform: uppercase; position: relative; }
+    .sv-cta h2 em { font-style: italic; font-weight: 300; color: var(--accent-light); }
+    .sv-cta p { max-width: 440px; margin: 1.2rem auto; color: var(--muted); line-height: 1.7; position: relative; }
+    .cta-row { display: flex; gap: .8rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; position: relative; }
+
+    /* GEO */
+    .geo-bar { padding: 1.5rem 5rem; border-top: 1px solid var(--border); background: var(--surface); }
+    .geo-label { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted2); margin-bottom: .8rem; }
+    .geo-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .geo-tag { font-size: .78rem; color: var(--muted); text-decoration: none; padding: .3rem .7rem; border: 1px solid var(--border); border-radius: 4px; transition: border-color .15s, color .15s; }
+    .geo-tag:hover { border-color: rgba(var(--accent-rgb),.3); color: var(--accent-light); }
+
+    /* RESPONSIVE */
+    @media (max-width:1024px) {
+      .sv-hero { grid-template-columns: 1fr; padding: 5rem 3rem 3rem; min-height: auto; gap: 3rem; }
+      .sv-hero-right { display: none; }
+      .sv-intro-grid,.compat-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    @media (max-width:900px) {
+      .sv-hero,.sv-intro,.sv-benefits,.sv-process,.sv-compat,.sv-faq,.sv-boutique,.sv-cta,.geo-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .benefits-grid { grid-template-columns: 1fr 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+      .process-steps::before { display: none; }
+      .sv-boutique-inner { flex-direction: column; align-items: flex-start; }
+      .sv-boutique-price { text-align: left; }
+    }
+    @media (max-width:500px) {
+      .benefits-grid { grid-template-columns: 1fr; }
+      .sv-stats-card { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-<body data-page="desact-adblue">
- <div id="nav-container"></div>
- <div class="page-wrap">
+<body data-page="adblue">
+  <div id="nav-container"></div>
+  <div class="page-wrap">
 
- <header class="service-hero">
- <div class="service-hero-bg"></div>
- <div class="service-hero-grid"></div>
- <div class="service-hero-label">Désactivation · Système SCR</div>
- <h1>Désactivation<br><em>AdBlue</em></h1>
- <p class="service-hero-sub">La désactivation logicielle du système AdBlue (SCR) supprime les demandes de remplissage, les mises en sécurité moteur liées à la pompe ou au niveau de réducteur, et les défauts associés. Réservé à des usages spécifiques hors voie publique.</p>
- <div class="service-hero-actions">
- <a href="contact.html" class="btn btn-primary">Devis désactivation AdBlue</a>
- <a href="tel:+33667924630" class="btn btn-outline">06 67 92 46 30</a>
- </div>
- <div class="service-hero-stats">
- <div><div class="hero-stat-val"><span>0</span></div><div class="hero-stat-label">Alerte AdBlue</div></div>
- <div class="hero-stat-sep"></div>
- <div><div class="hero-stat-val"><span>100%</span></div><div class="hero-stat-label">Réversible</div></div>
- <div class="hero-stat-sep"></div>
- <div><div class="hero-stat-val">2 <span style="font-size:1.2rem">ans</span></div><div class="hero-stat-label">Garantie incluse</div></div>
- </div>
- </header>
-
- <section class="service-intro">
- <div class="section-tag">Le système SCR / AdBlue</div>
- <div class="service-intro-grid">
- <div>
- <h2>Fin des alertes,<br><em>moteur libre</em></h2>
- <p>L'AdBlue est un réducteur utilisé par le système SCR (Selective Catalytic Reduction) pour réduire les émissions de NOx sur les moteurs diesel Euro 6. Une pompe l'injecte dans les gaz d'échappement avant le catalyseur. Lorsque le niveau est bas ou que la pompe tombe en panne, <strong>le moteur se met progressivement en sécurité</strong> puis refuse de démarrer.</p>
-<p>La désactivation logicielle AdBlue supprime toutes les demandes de remplissage, les alertes de niveau, les mises en sécurité liées à la pompe ou au doseur, et les codes défaut associés. Le calculateur ne surveille plus le système SCR.</p>
-<p>Cette intervention est destinée aux véhicules <strong>hors homologation, à l'export, en circuit</strong> ou dont la pompe AdBlue est défaillante et dont le remplacement serait disproportionné au regard de la valeur du véhicule.</p>
- </div>
- <div>
- <div class="prereq-box">
- <div class="prereq-title">Cas d'usage courants</div>
- <div class="prereq-item">
- <div class="prereq-check">&#10003;</div>
- <div class="prereq-text"><strong>Pompe AdBlue défaillante</strong> — Le remplacement d'une pompe peut dépasser 1 500 €. La désactivation est une alternative viable.</div>
- </div>
- <div class="prereq-item">
- <div class="prereq-check">&#10003;</div>
- <div class="prereq-text"><strong>Véhicule à l'export</strong> — Dans de nombreux pays, l'AdBlue est indisponible ou peu fiable. La désactivation est indispensable.</div>
- </div>
- <div class="prereq-item">
- <div class="prereq-check">&#10003;</div>
- <div class="prereq-text"><strong>Usage circuit / hors route</strong> — Véhicule sorti de l'homologation voie publique — les contraintes SCR ne s'appliquent plus.</div>
- </div>
- <div class="prereq-item">
- <div class="prereq-check">&#10003;</div>
- <div class="prereq-text"><strong>Alertes et blocages répétitifs</strong> — Certains véhicules déclenchent des mises en sécurité abusives liées à un capteur défaillant.</div>
- </div>
- <div class="prereq-item">
- <div class="prereq-check">&#10003;</div>
- <div class="prereq-text"><strong>Véhicules agricoles & industriels</strong> — Usage hors voie publique où les contraintes Euro 6 ne s'appliquent pas.</div>
- </div>
- </div>
- <p style="font-size:.8rem;color:var(--muted);margin-top:1rem;line-height:1.5;">Non conforme pour un usage sur voie publique en France. AREPROG vous informe des implications légales avant toute intervention.</p>
- </div>
- </div>
- </section>
-
- <section class="gains-section">
- <div class="section-tag">Gains estimés</div>
- <h2 class="section-title">Ce que vous <em>gagnez</em></h2>
- <div class="gains-grid">
- <div class="gain-card">
- <div class="gain-card-val">0</div>
- <div class="gain-card-label">Alerte AdBlue</div>
- <div class="gain-card-desc">Plus de demande de remplissage, plus de mise en sécurité moteur.</div>
- </div>
- <div class="gain-card">
- <div class="gain-card-val">0</div>
- <div class="gain-card-label">Risque de blocage</div>
- <div class="gain-card-desc">Le moteur ne peut plus être immobilisé par le système SCR.</div>
- </div>
- <div class="gain-card">
- <div class="gain-card-val">100%</div>
- <div class="gain-card-label">Réversible</div>
- <div class="gain-card-desc">Fichier d'origine conservé. Retour au stock possible à tout moment.</div>
- </div>
- <div class="gain-card">
- <div class="gain-card-val">2 ans</div>
- <div class="gain-card-label">Garantie</div>
- <div class="gain-card-desc">Sur la cartographie et l'intervention complète.</div>
- </div>
- </div>
- </section>
-
- <section class="process-section">
- <div class="section-tag">Comment ça se passe</div>
- <h2 class="section-title">Le déroulement<br><em>de l'intervention</em></h2>
- <div class="process-steps">
- <div class="process-step">
- <div class="step-dot"></div>
- <div class="step-num">Étape 01</div>
- <div class="step-title">Diagnostic</div>
- <p class="step-desc">Lecture du calculateur, vérification des codes défaut, analyse des données moteur en temps réel.</p>
- </div>
- <div class="process-step">
- <div class="step-dot"></div>
- <div class="step-num">Étape 02</div>
- <div class="step-title">Validation des modifs</div>
- <p class="step-desc">On vérifie que les modifications mécaniques sont compatibles et correctement installées avant de cartographier.</p>
- </div>
- <div class="process-step">
- <div class="step-dot"></div>
- <div class="step-num">Étape 03</div>
- <div class="step-title">Reprogrammation</div>
- <p class="step-desc">Écriture du fichier Stage 2 adapté à votre configuration. Durée : 30 à 60 min selon calculateur.</p>
- </div>
- <div class="process-step">
- <div class="step-dot"></div>
- <div class="step-num">Étape 04</div>
- <div class="step-title">Validation route</div>
- <p class="step-desc">Test sur route avec datalogger. Vérification de tous les paramètres moteur. Ajustements si nécessaire.</p>
- </div>
- </div>
- </section>
-
-     <section class="service-faq">
-      <div class="section-tag">Questions fréquentes</div>
-      <h2 class="section-title">Vos questions<br><em>La désactivation adblue</em></h2>
-      <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-q"><span class="faq-q-text">La désactivation AdBlue est-elle légale sur route ?</span><span class="faq-q-icon">+</span></button>
-          <div class="faq-a"><p>Non, la désactivation du système SCR/AdBlue n'est pas conforme pour une circulation sur voie publique en France. Elle est destinée à des usages spécifiques : export, circuit, usage agricole ou industriel, ou véhicule dont la pompe est défaillante et non remplaçable. Nous vous informons clairement avant toute intervention.</p></div>
+    <!-- HERO -->
+    <header class="sv-hero">
+      <div class="sv-hero-left">
+        <div class="sv-label">Désactivation logicielle</div>
+        <h1>⚠️ Désactivation AdBlue<em>Supprimez les alertes et le risque de blocage moteur</em></h1>
+        <p class="sv-desc">Le système AdBlue (SCR) injecte une solution d'urée dans les gaz d'échappement pour réduire les NOx. Une panne de pompe, capteur ou gicleur peut entraîner un bridage progressif puis un blocage moteur. La désactivation logicielle supprime ce risque.</p>
+        <div class="sv-actions">
+          <a href="boutique.html#adblue" class="btn btn-primary">Commander en ligne</a>
+          <a href="contact.html" class="btn btn-outline">Devis gratuit</a>
+          <a href="tel:+33667924630" class="btn btn-outline">06 67 92 46 30</a>
         </div>
-        <div class="faq-item">
-          <button class="faq-q"><span class="faq-q-text">Que se passe-t-il si je ne désactive pas et que la pompe tombe en panne ?</span><span class="faq-q-icon">+</span></button>
-          <div class="faq-a"><p>Sur les véhicules Euro 6, le moteur se <strong>met progressivement en sécurité</strong> si le niveau AdBlue est insuffisant ou si le système détecte une anomalie — réduction de puissance, puis impossibilité de redémarrer après l'arrêt. Le remplacement d'une pompe AdBlue coûte souvent entre 800 et 2 000 €.</p></div>
+        <div class="sv-stats"><div class="hs-item"><div class="hs-val"><span>0</span></div><div class="hs-label">Alerte niveau</div></div><div class="hs-sep"></div><div class="hs-item"><div class="hs-val"><span>250€</span></div><div class="hs-label">Tarif fixe</div></div><div class="hs-sep"></div><div class="hs-item"><div class="hs-val"><span>Euro 6</span></div><div class="hs-label">Diesel compatibles</div></div><div class="hs-sep"></div><div class="hs-item"><div class="hs-val"><span>2 ans</span></div><div class="hs-label">Garantie</div></div></div>
+      </div>
+      <div class="sv-hero-right">
+        <div class="info-card">
+          <div class="info-card-head">
+            <span class="info-card-title">Désactivation AdBlue — AREPROG</span>
+            <span class="info-card-badge">À domicile</span>
+          </div>
+          <div class="info-card-body">
+            <div class="info-row"><span class="info-key">Type d'intervention</span><span class="info-val accent">Désactivation logicielle</span></div>
+            <div class="info-row"><span class="info-key">Modification mécanique</span><span class="info-val ok">Aucune</span></div>
+            <div class="info-row"><span class="info-key">Réversible</span><span class="info-val ok">Oui — 100%</span></div>
+            <div class="info-row"><span class="info-key">Durée intervention</span><span class="info-val">45 min – 1h30</span></div>
+            <div class="info-row"><span class="info-key">Garantie</span><span class="info-val">2 ans incluse</span></div>
+            <div class="info-row"><span class="info-key">Devis</span><span class="info-val ok">Gratuit 24h</span></div>
+          </div>
+          <div class="info-card-footer">
+            <span class="chip blue">Désactivation AdBlue</span>
+            <span class="chip blue">À domicile</span>
+            <span class="chip blue">Garanti 2 ans</span>
+          </div>
         </div>
-        <div class="faq-item">
-          <button class="faq-q"><span class="faq-q-text">Peut-on remettre le système AdBlue après désactivation ?</span><span class="faq-q-icon">+</span></button>
-          <div class="faq-a"><p>Oui, si la pompe et les composants sont remis en état, on peut remettre le fichier d'origine et le système AdBlue reprendra son fonctionnement normal. La désactivation est entièrement réversible côté logiciel.</p></div>
+      </div>
+    </header>
+
+    <!-- INTRO -->
+    <section class="sv-intro">
+      <div class="label">Désactivation logicielle</div>
+      <div class="sv-intro-grid">
+        <div>
+          <h2>En quoi consiste<br><em>le Désactivation AdBlue ?</em></h2>
+          <p>Le SCR (Selective Catalytic Reduction) injecte de l'urée (AdBlue) dans les gaz d'échappement pour transformer les NOx en azote et eau. Sur les véhicules Euro 6, une jauge surveille le niveau d'AdBlue et peut déclencher un bridage puis un blocage si le réservoir est vide ou si le système présente une anomalie.</p>
+          <p>La désactivation logicielle supprime entièrement la gestion SCR dans le calculateur. Plus d'alerte de niveau, plus de bridage progressif, plus de risque de blocage. Le système physique reste en place mais est ignoré par l'ECU.</p>
         </div>
-        <div class="faq-item">
-          <button class="faq-q"><span class="faq-q-text">Peut-on coupler désactivation AdBlue et désactivation FAP/EGR ?</span><span class="faq-q-icon">+</span></button>
-          <div class="faq-a"><p>Oui, les trois désactivations sont compatibles et souvent réalisées ensemble sur des diesels Euro 6 en usage hors homologation. Chaque désactivation s'effectue dans le même fichier ECU lors d'une seule intervention.</p></div>
+        <div>
+          <div class="sv-stats-card">
+            <div class="sv-stat"><div class="sv-stat-val">0</div><div class="sv-stat-label">Alerte niveau</div></div><div class="sv-stat"><div class="sv-stat-val">250€</div><div class="sv-stat-label">Tarif fixe</div></div><div class="sv-stat"><div class="sv-stat-val">Euro 6</div><div class="sv-stat-label">Diesel compatibles</div></div><div class="sv-stat"><div class="sv-stat-val">2 ans</div><div class="sv-stat-label">Garantie</div></div>
+          </div>
         </div>
       </div>
     </section>
 
- <section class="service-cta">
- <div class="section-tag" style="justify-content:center;">Stage 2 — AREPROG</div>
- <h2>Prêt à passer<br><em>au niveau supérieur ?</em></h2>
- <p>Devis gratuit. On évalue votre configuration et on vous propose la meilleure cartographie possible.</p>
- <div class="cta-row">
- <a href="contact.html" class="btn btn-primary">Demander un devis Stage 2</a>
- <a href="stage1.html" class="btn btn-outline">Découvrir le Stage 1 d'abord</a>
- <a href="tarifs.html" class="btn btn-outline">Voir les tarifs</a>
- </div>
- </section>
+    <!-- BENEFITS -->
+    <section class="sv-benefits">
+      <div class="label">Pourquoi choisir Désactivation AdBlue</div>
+      <h2 class="section-title" style="margin-top:.5rem">Les avantages <em>concrets</em></h2>
+      <div class="benefits-grid">
+        <div class="benefit-card reveal">
+          <div class="benefit-num">01</div>
+          <div class="benefit-title">Fin des alertes AdBlue</div>
+          <p class="benefit-desc">Plus jamais de message d'alerte niveau ou qualité AdBlue sur votre tableau de bord.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-num">02</div>
+          <div class="benefit-title">Risque de blocage supprimé</div>
+          <p class="benefit-desc">Le bridage progressif et le blocage moteur liés à l'AdBlue sont définitivement éliminés.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-num">03</div>
+          <div class="benefit-title">Économies entretien</div>
+          <p class="benefit-desc">Plus de remplissage AdBlue, plus de maintenance du système SCR (pompe, injecteur, capteurs).</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-num">04</div>
+          <div class="benefit-title">Pleine puissance en permanence</div>
+          <p class="benefit-desc">Sans le risque de bridage AdBlue, votre moteur tourne à pleine puissance en toutes circonstances.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-num">05</div>
+          <div class="benefit-title">100% logiciel</div>
+          <p class="benefit-desc">Aucune modification physique. Réversible à tout moment.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-num">06</div>
+          <div class="benefit-title">Combinable</div>
+          <p class="benefit-desc">Compatible avec la suppression FAP et EGR. Tarif pack pour les trois en une intervention.</p>
+        </div></div>
+    </section>
 
- </div>
-   <!-- Maillage interne géo -->
-  <div style="padding:1.5rem 5rem;border-top:1px solid var(--border);background:var(--surface);">
-    <p style="font-family:var(--font-mono,'Barlow Condensed'),sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);margin-bottom:.8rem;">Zones d'intervention</p>
-    <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
-      <a href="reprogrammation-moteur-bayonne.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Bayonne</a>
-      <a href="reprogrammation-moteur-biarritz.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Biarritz</a>
-      <a href="reprogrammation-moteur-anglet.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Anglet</a>
-      <a href="reprogrammation-moteur-pau.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Pau</a>
-      <a href="reprogrammation-moteur-auxerre.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Auxerre &amp; Yonne</a>
-      <a href="faq.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">FAQ</a>
-      <a href="tarifs.html" style="font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .7rem;border:1px solid var(--border);border-radius:4px;">Tarifs 2026</a>
+    <!-- PROCESS -->
+    <section class="sv-process">
+      <div class="label">Déroulement</div>
+      <h2 class="section-title" style="margin-top:.5rem">Comment se passe <em>l'intervention</em></h2>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 01</div>
+          <div class="step-title">Diagnostic SCR</div>
+          <p class="step-desc">Lecture des défauts liés au système AdBlue, évaluation de l'état du module SCR.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 02</div>
+          <div class="step-title">Lecture ECU</div>
+          <p class="step-desc">Extraction de la cartographie d'origine.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 03</div>
+          <div class="step-title">Suppression SCR</div>
+          <p class="step-desc">Désactivation complète du système SCR/AdBlue dans l'ECU.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 04</div>
+          <div class="step-title">Validation</div>
+          <p class="step-desc">Effacement des codes défauts. Confirmation de l'absence de messages d'alerte.</p>
+        </div></div>
+    </section>
+
+    <!-- COMPAT -->
+    <section class="sv-compat">
+      <div class="label">Compatibilité</div>
+      <h2 class="section-title" style="margin-top:.5rem">Motorisations <em>compatibles</em></h2>
+      <div class="compat-grid">
+        <div>
+          <div class="compat-list"><div class="compat-item"><span class="compat-dot"></span>Tous diesel Euro 6 équipés AdBlue</div><div class="compat-item"><span class="compat-dot"></span>VW TDI, Audi TDI (2015+)</div><div class="compat-item"><span class="compat-dot"></span>BMW xDrive diesel (2014+)</div><div class="compat-item"><span class="compat-dot"></span>Mercedes CDI BlueTEC (2014+)</div><div class="compat-item"><span class="compat-dot"></span>Utilitaires, SUV, berlines Euro 6</div></div>
+          <div class="compat-note">Votre véhicule n'est pas dans la liste ? Contactez-nous avec la marque, le modèle et la motorisation — on vérifie la faisabilité sous 24h, gratuitement.</div>
+        </div>
+        <div class="compat-checks">
+          <div style="font-family:var(--font-mono);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem;">Ce qu'on vérifie avant</div>
+          <div class="compat-check">Aucun code défaut moteur actif</div>
+          <div class="compat-check">Entretien à jour (courroie, filtres)</div>
+          <div class="compat-check">Pas de fuite ou surconsommation d'huile</div>
+          <div class="compat-check">Calculateur accessible et flashable</div>
+          <div class="compat-check">Batterie en bon état</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="sv-faq">
+      <div class="label">Questions fréquentes</div>
+      <h2 class="section-title" style="margin-top:.5rem">Vos questions sur <em>Désactivation AdBlue</em></h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Mon moteur sera-t-il bridé après la suppression AdBlue ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Non — au contraire. Après la désactivation, la limitation progressive liée au système AdBlue est supprimée. Le moteur fonctionne à pleine puissance en permanence.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Est-ce compatible avec la désactivation FAP ou EGR ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Oui, les trois systèmes sont indépendants. On peut tout traiter lors de la même intervention avec un tarif pack. Contactez-nous pour un devis global.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span class="faq-q-text">Mon système AdBlue est déjà en panne — peut-on désactiver quand même ?</span><span class="faq-q-icon">+</span></button>
+          <div class="faq-a"><p>Oui. C'est souvent le déclencheur : un système AdBlue défaillant ou en bridage. La désactivation logicielle résout le problème quel que soit l'état du système physique.</p></div>
+        </div></div>
+    </section>
+
+    <!-- BOUTIQUE CTA -->
+    <div class="sv-boutique">
+      <div class="sv-boutique-inner">
+        <div class="sv-boutique-left">
+          <h3>Commander <em>Désactivation AdBlue</em> en ligne</h3>
+          <p>Paiement sécurisé Stripe — nous vous contactons sous 24h pour planifier l'intervention.</p>
+        </div>
+        <div class="sv-boutique-price">
+          <div class="sv-boutique-from">À partir de</div>
+          <div class="sv-boutique-amount">0 <sup>€</sup></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;flex-shrink:0;">
+          <a href="boutique.html" class="btn btn-primary">Commander en ligne</a>
+          <a href="contact.html" class="btn btn-outline">Devis gratuit d'abord</a>
+        </div>
+      </div>
     </div>
-  </div>
 
+    <!-- CTA -->
+    <section class="sv-cta">
+      <div class="label" style="justify-content:center">Désactivation AdBlue — AREPROG</div>
+      <h2>Éliminez définitivement les problèmes AdBlue<em>?</em></h2>
+      <p>Intervention à tarif fixe, à votre domicile. Devis gratuit sous 24h.</p>
+      <div class="cta-row">
+        <a href="contact.html" class="btn btn-primary">Demander un devis</a>
+        <a href="desactivation-fap.html" class="btn btn-outline">Désactivation FAP</a><a href="desactivation-egr.html" class="btn btn-outline">Désactivation EGR</a><a href="tarifs.html" class="btn btn-outline">Tarifs</a>
+      </div>
+    </section>
+
+    <!-- GEO -->
+    <div class="geo-bar">
+      <div class="geo-label">Zones d'intervention</div>
+      <div class="geo-tags">
+        <a href="reprogrammation-moteur-bayonne.html" class="geo-tag">Bayonne</a>
+        <a href="reprogrammation-moteur-biarritz.html" class="geo-tag">Biarritz</a>
+        <a href="reprogrammation-moteur-anglet.html" class="geo-tag">Anglet</a>
+        <a href="reprogrammation-moteur-pau.html" class="geo-tag">Pau</a>
+        <a href="reprogrammation-moteur-auxerre.html" class="geo-tag">Auxerre &amp; Yonne</a>
+        <a href="tarifs.html" class="geo-tag">Tarifs 2026</a>
+        <a href="faq.html" class="geo-tag">FAQ</a>
+        <a href="boutique.html" class="geo-tag">Boutique</a>
+      </div>
+    </div>
+
+  </div>
   <div id="footer-container"></div>
- <script src="nav.js"></script>
- <script src="whatsapp-widget.js"></script>
- <script>
- document.querySelectorAll('.faq-q').forEach(btn => {
- btn.addEventListener('click', () => {
- const item = btn.closest('.faq-item');
- const isOpen = item.classList.contains('open');
- document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
- if (!isOpen) item.classList.add('open');
- });
- });
- </script>
+  <script src="nav.js"></script>
+  <script>
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>

@@ -35,6 +35,9 @@ const NAV_HTML = `
  <li class="dropdown-group-label">Pyrénées-Atlantiques</li>
  <li><a href="reprogrammation-moteur-pau.html">Pau</a></li>
  <li class="dropdown-divider"></li>
+ <li class="dropdown-group-label">Landes</li>
+ <li><a href="reprogrammation-moteur-dax.html">Dax & Landes</a></li>
+ <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Yonne</li>
  <li><a href="reprogrammation-moteur-auxerre.html">Auxerre & Yonne</a></li>
  </ul>
@@ -45,9 +48,9 @@ const NAV_HTML = `
  <li><a href="boutique.html" data-page="boutique" style="color:var(--blue);font-weight:600">🛒 Boutique</a></li>
  </ul>
  <a href="contact.html" class="nav-cta">Devis gratuit</a>
- <div class="nav-burger" id="burger">
+ <button class="nav-burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navMobile">
  <span></span><span></span><span></span>
- </div>
+ </button>
 </nav>
 <div class="nav-mobile" id="navMobile">
  <a href="index.html" data-page="index">Accueil</a>
@@ -59,6 +62,7 @@ const NAV_HTML = `
  <a href="reprogrammation-moteur-biarritz.html" class="nav-mobile-sub">Biarritz</a>
  <a href="reprogrammation-moteur-anglet.html" class="nav-mobile-sub">Anglet</a>
  <a href="reprogrammation-moteur-pau.html" class="nav-mobile-sub">Pau</a>
+ <a href="reprogrammation-moteur-dax.html" class="nav-mobile-sub">Dax & Landes</a>
  <a href="reprogrammation-moteur-auxerre.html" class="nav-mobile-sub">Auxerre & Yonne</a>
  </div>
  <div class="nav-mobile-group">
@@ -103,6 +107,7 @@ const FOOTER_HTML = `
  <a href="reprogrammation-moteur-biarritz.html">Biarritz</a>
  <a href="reprogrammation-moteur-anglet.html">Anglet</a>
  <a href="reprogrammation-moteur-pau.html">Pau & Pyrénées-Atlantiques</a>
+ <a href="reprogrammation-moteur-dax.html">Dax & Landes</a>
  <a href="reprogrammation-moteur-auxerre.html">Auxerre & Yonne</a>
  </div>
  <div class="footer-col">
@@ -148,7 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
  const burger = document.getElementById('burger');
  const mobile = document.getElementById('navMobile');
  if (burger && mobile) {
- burger.addEventListener('click', () => mobile.classList.toggle('open'));
+ burger.addEventListener('click', () => {
+   const isOpen = mobile.classList.toggle('open');
+   burger.setAttribute('aria-expanded', isOpen);
+   burger.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+ });
  mobile.querySelectorAll('a').forEach(a => {
  a.addEventListener('click', () => mobile.classList.remove('open'));
  });
@@ -172,11 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
  }
  });
 
- // ── Inject WhatsApp widget (sauf page contact)
- if (page !== 'contact') {
- const waScript = document.createElement('script');
- waScript.src = 'whatsapp-widget.js';
- document.body.appendChild(waScript);
- }
+ // WhatsApp widget : chargé directement via <script src="whatsapp-widget.js"> dans chaque page HTML
 
 });

@@ -226,7 +226,7 @@
 <div class="toast" id="toast"></div>
 <div id="footer-container"></div>
 <script src="nav.js"></script>
-
+<script src="products.js"></script>
 <script>
 /* AREPROG Boutique v4 — dynamique depuis products.js, filtre active */
 
@@ -491,17 +491,9 @@ document.getElementById('btnCheckout').addEventListener('click', function() {
   window.location.href = 'contact.html?msg=' + encodeURIComponent('Bonjour,\n\nJe souhaite commander :\n' + lines + '\n\nTotal estimé : ' + total + '€\n\nMerci de me contacter.');
 });
 
-// ── INIT via fetch (contourne le cache GitHub Pages) ──────────────────────────
-fetch('products.js?v=' + Date.now(), {cache: 'no-store'})
-  .then(function(r) { return r.text(); })
-  .then(function(code) {
-    eval(code);
-    renderShop();
-    renderCart();
-  })
-  .catch(function(err) {
-    console.error('Erreur chargement products.js:', err);
-  });
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderShop();
+renderCart();
 </script>
 </body>
 </html>
