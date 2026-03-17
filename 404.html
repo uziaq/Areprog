@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, follow"/>
+  <title>Page introuvable — AREPROG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .err-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .err-code {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(6rem, 20vw, 14rem);
+      line-height: 1;
+      letter-spacing: -.03em;
+      text-transform: uppercase;
+      color: var(--surface2);
+      user-select: none;
+      position: relative;
+    }
+    .err-code::after {
+      content: '404';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%);
+    }
+    .err-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      text-transform: uppercase;
+      margin: 1rem 0 .75rem;
+    }
+    .err-desc { color: var(--muted); max-width: 420px; margin-bottom: 2.5rem; line-height: 1.7; }
+    .err-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body data-page="404">
+  <div id="nav-container"></div>
+  <main class="err-wrap">
+    <div class="err-code">404</div>
+    <h1 class="err-title">Page <em>introuvable</em></h1>
+    <p class="err-desc">Cette page n'existe pas ou a été déplacée. Retournez à l'accueil ou consultez nos services.</p>
+    <div class="err-links">
+      <a href="index.html" class="btn btn-primary">Retour à l'accueil</a>
+      <a href="contact.html" class="btn btn-outline">Demander un devis</a>
+      <a href="faq.html" class="btn btn-outline">FAQ</a>
+    </div>
+  </main>
+  <div id="footer-container"></div>
+  <script src="nav.js"></script>
+</body>
+</html>
