@@ -2,7 +2,12 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
   <title>FAQ — Questions fréquentes reprogrammation moteur | AREPROG</title>
   <meta name="description" content="Toutes les réponses sur la reprogrammation moteur : Stage 1, Stage 2, E85, EGR/FAP/AdBlue, ODIS VAG, légalité, assurance, garantie. FAQ complète AREPROG."/>
   <link rel="canonical" href="https://areprog.fr/faq.html"/>
@@ -12,8 +17,15 @@
   <meta property="og:url" content="https://areprog.fr/faq.html"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
+    <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -244,12 +256,47 @@
     .faq-cta p { max-width: 440px; margin: 1rem auto; color: var(--muted); line-height: 1.7; }
     .faq-cta .cta-row { display: flex; gap: .8rem; justify-content: center; margin-top: 1.8rem; flex-wrap: wrap; }
 
+    /* ── MOBILE SECTIONS PILLS ──────────── */
+    .faq-mobile-sections {
+      display: none;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+      padding: .8rem 1.4rem;
+      gap: .5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-warm);
+      position: sticky;
+      top: calc(var(--nav-h,64px) + 52px);
+      z-index: 99;
+      scrollbar-width: none;
+    }
+    .faq-mobile-sections::-webkit-scrollbar { display: none; }
+    .faq-ms-pill {
+      display: inline-block;
+      padding: .35rem .85rem;
+      font-family: var(--font-mono,'Barlow Condensed'), sans-serif;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      text-decoration: none;
+      transition: all .15s;
+      margin-right: .4rem;
+    }
+    .faq-ms-pill:hover, .faq-ms-pill.active {
+      color: var(--blue);
+      border-color: rgba(33,150,243,.4);
+      background: rgba(33,150,243,.06);
+    }
+
     @media (max-width: 900px) {
       .faq-header { padding: 3rem 1.4rem 2.5rem; }
       .faq-header::after { display: none; }
       .faq-search-bar { padding: 1.2rem 1.4rem; }
       .faq-body { grid-template-columns: 1fr; }
       .faq-sidebar { display: none; }
+      .faq-mobile-sections { display: block; }
       .faq-content { padding: 2rem 1.4rem; }
       .faq-cta { padding: 4rem 1.4rem; }
     }
@@ -280,37 +327,50 @@
       <div class="no-results" id="no-results">Aucun résultat pour cette recherche. <a href="contact.html" style="color:var(--blue)">Posez-nous la question directement →</a></div>
     </div>
 
+    <!-- MOBILE SECTIONS NAV — visible uniquement sur mobile -->
+    <div class="faq-mobile-sections">
+      <a href="#general" class="faq-ms-pill active" data-target="general">Général</a>
+      <a href="#technique" class="faq-ms-pill" data-target="technique">Technique</a>
+      <a href="#stage1" class="faq-ms-pill" data-target="stage1">Stage 1</a>
+      <a href="#stage2" class="faq-ms-pill" data-target="stage2">Stage 2</a>
+      <a href="#e85" class="faq-ms-pill" data-target="e85">E85</a>
+      <a href="#desactivations" class="faq-ms-pill" data-target="desactivations">EGR/FAP</a>
+      <a href="#odis" class="faq-ms-pill" data-target="odis">ODIS</a>
+      <a href="#garantie" class="faq-ms-pill" data-target="garantie">Garantie</a>
+      <a href="#intervention" class="faq-ms-pill" data-target="intervention">Intervention</a>
+    </div>
+
     <!-- BODY -->
     <div class="faq-body">
 
       <!-- SIDEBAR -->
       <aside class="faq-sidebar">
         <div class="sidebar-label">Sections</div>
-        <a class="sidebar-link active" onclick="scrollTo('general')">
+        <a class="sidebar-link active" href="#general" data-target="general" data-target="general">
           Général <span class="sidebar-count">10</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('technique')">
+        <a class="sidebar-link" href="#technique" data-target="technique" data-target="technique">
           Technique <span class="sidebar-count">10</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('stage1')">
+        <a class="sidebar-link" href="#stage1" data-target="stage1" data-target="stage1">
           Stage 1 <span class="sidebar-count">7</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('stage2')">
+        <a class="sidebar-link" href="#stage2" data-target="stage2" data-target="stage2">
           Stage 2 <span class="sidebar-count">6</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('e85')">
+        <a class="sidebar-link" href="#e85" data-target="e85" data-target="e85">
           Conversion E85 <span class="sidebar-count">7</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('desactivations')">
+        <a class="sidebar-link" href="#desactivations" data-target="desactivations" data-target="desactivations">
           EGR / FAP / AdBlue <span class="sidebar-count">8</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('odis')">
+        <a class="sidebar-link" href="#odis" data-target="odis" data-target="odis">
           Diagnostic ODIS <span class="sidebar-count">5</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('garantie')">
+        <a class="sidebar-link" href="#garantie" data-target="garantie" data-target="garantie">
           Garantie <span class="sidebar-count">6</span>
         </a>
-        <a class="sidebar-link" onclick="scrollTo('intervention')">
+        <a class="sidebar-link" href="#intervention" data-target="intervention" data-target="intervention">
           Intervention <span class="sidebar-count">8</span>
         </a>
       </aside>
@@ -798,27 +858,53 @@
       });
     });
 
-    // ── SIDEBAR SCROLL SPY ────────────────────────────
-    function scrollTo(id) {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // ── SIDEBAR + MOBILE PILLS SMOOTH SCROLL ─────────
+    document.querySelectorAll('[data-target]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = link.dataset.target;
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Open a specific question if coming from an anchor hash
+    function openFromHash() {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const section = document.getElementById(hash.slice(1));
+      if (section) {
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Open first question in that section
+          const firstQ = section.querySelector('.faq-q');
+          if (firstQ && !section.querySelector('.faq-item.open')) firstQ.click();
+        }, 300);
+      }
     }
+    openFromHash();
 
+    // ── SCROLL SPY — update active link in sidebar + mobile pills
     const sections = document.querySelectorAll('.faq-section');
-    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const navLinks = document.querySelectorAll('[data-target]');
 
-    const observer = new IntersectionObserver((entries) => {
+    const spy = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          sidebarLinks.forEach(l => l.classList.remove('active'));
+          navLinks.forEach(l => l.classList.remove('active'));
           const id = e.target.id;
-          const active = document.querySelector(`.sidebar-link[onclick="scrollTo('${id}')"]`);
-          if (active) active.classList.add('active');
+          document.querySelectorAll(`[data-target="${id}"]`).forEach(l => {
+            l.classList.add('active');
+            // Auto-scroll mobile pill into view
+            if (l.classList.contains('faq-ms-pill')) {
+              l.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+          });
         }
       });
     }, { rootMargin: '-120px 0px -60% 0px', threshold: 0 });
 
-    sections.forEach(s => observer.observe(s));
+    sections.forEach(s => spy.observe(s));
 
     // ── SEARCH ───────────────────────────────────────
     const searchInput = document.getElementById('faq-search');

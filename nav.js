@@ -9,7 +9,6 @@ const NAV_HTML = `
  <ul class="nav-links">
  <li><a href="index.html" data-page="index">Accueil</a></li>
  <li><a href="simulateur.html" data-page="simulateur">Simulateur</a></li>
- <li><a href="odis.html" data-page="odis">Diag ODIS <span class="nav-badge">VAG</span></a></li>
  <li class="nav-dropdown">
  <a href="#" class="nav-dropdown-toggle" data-page="services">Services ▾</a>
  <ul class="nav-dropdown-menu">
@@ -22,6 +21,8 @@ const NAV_HTML = `
  <li><a href="desactivation-egr.html">EGR</a></li>
  <li><a href="desactivation-fap.html">FAP</a></li>
  <li><a href="desactivation-adblue.html">AdBlue</a></li>
+ <li class="dropdown-divider"></li>
+ <li><a href="odis.html">Diagnostic ODIS <span class="nav-badge">VAG</span></a></li>
  </ul>
  </li>
  <li class="nav-dropdown">
@@ -45,7 +46,6 @@ const NAV_HTML = `
  <li><a href="about.html" data-page="about">À propos</a></li>
  <li><a href="faq.html" data-page="faq">FAQ</a></li>
  <li><a href="contact.html" data-page="contact">Contact</a></li>
- <li><a href="boutique.html" data-page="boutique" style="color:var(--blue);font-weight:600">🛒 Boutique</a></li>
  </ul>
  <a href="contact.html" class="nav-cta">Devis gratuit</a>
  <button class="nav-burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navMobile">
@@ -55,7 +55,6 @@ const NAV_HTML = `
 <div class="nav-mobile" id="navMobile">
  <a href="index.html" data-page="index">Accueil</a>
  <a href="simulateur.html" data-page="simulateur">Simulateur de gains</a>
- <a href="odis.html" data-page="odis">Diagnostic ODIS VAG</a>
  <div class="nav-mobile-group">
  <div class="nav-mobile-group-label">Zones d'intervention</div>
  <a href="reprogrammation-moteur-bayonne.html" class="nav-mobile-sub">Bayonne</a>
@@ -78,7 +77,6 @@ const NAV_HTML = `
  <a href="about.html" data-page="about">À propos</a>
  <a href="faq.html" data-page="faq">FAQ</a>
  <a href="contact.html" data-page="contact">Nous contacter</a>
- <a href="boutique.html" data-page="boutique" style="color:var(--blue);font-weight:600">🛒 Boutique</a>
 </div>
 `;
 
@@ -112,10 +110,10 @@ const FOOTER_HTML = `
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Navigation</div>
+ <a href="tarifs.html">Tarifs 2026</a>
  <a href="simulateur.html">Simulateur de gains</a>
- <a href="boutique.html">Boutique</a>
- <a href="about.html">À propos</a>
  <a href="faq.html">FAQ</a>
+ <a href="about.html">À propos</a>
  <a href="contact.html">Devis gratuit</a>
  </div>
  </div>

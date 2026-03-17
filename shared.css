@@ -195,10 +195,15 @@ nav {
 .nav-mobile {
   display: none;
   position: fixed; top: var(--nav-h); left: 0; right: 0;
+  /* clamp height so it doesn't overflow screen and is scrollable */
+  max-height: calc(100vh - var(--nav-h));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   z-index: 499; padding: .5rem 0;
   box-shadow: 0 16px 40px rgba(0,0,0,.5);
+  overscroll-behavior: contain;
 }
 .nav-mobile.open { display: block; }
 .nav-mobile a {

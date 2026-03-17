@@ -2,11 +2,21 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
   <title>Nous contacter — AREPROG Reprogrammation moteur Pau Bayonne</title>
   <meta name="description" content="Contactez AREPROG pour un devis gratuit de reprogrammation moteur à domicile. Pyrénées-Atlantiques, Pays Basque, Yonne. Réponse sous 24h."/>
   <meta name="keywords" content="reprogrammation moteur Pau, chip tuning Bayonne, reprogrammation ECU Biarritz, Stage 1 Pyrénées-Atlantiques, reprogrammation moteur domicile"/>
   <link rel="canonical" href="https://areprog.fr/contact.html"/>
+    <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -48,7 +58,9 @@
   <meta property="og:url" content="https://areprog.fr/contact.html"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
   <style>
     .page-wrap { padding-top: 62px; }
@@ -275,7 +287,7 @@
       </div>
       <div class="contact-header-info">
         <div class="contact-info-item">
-          <div class="contact-info-icon"></div>
+          <div class="contact-info-icon">📞</div>
           <div>
             <div class="contact-info-label">Téléphone</div>
             <div class="contact-info-val"><a href="tel:+33667924630">06 67 92 46 30</a></div>
@@ -283,14 +295,14 @@
           </div>
         </div>
         <div class="contact-info-item">
-          <div class="contact-info-icon"></div>
+          <div class="contact-info-icon">📍</div>
           <div>
             <div class="contact-info-label">Zones d'intervention</div>
             <div class="contact-info-val">Pays Basque · Pyrénées-Atlantiques</div>
             <div class="contact-info-sub">+ Yonne (89) · 3 zones couvertes</div>
           </div>
         </div>
-        <a href="https://wa.me/33621146499?text=Bonjour%20AREPROG%2C%20je%20souhaite%20un%20devis%20pour%20la%20reprogrammation%20de%20mon%20v%C3%A9hicule." target="_blank" class="whatsapp-direct">
+        <a href="https://wa.me/33667924630?text=Bonjour%20AREPROG%2C%20je%20souhaite%20un%20devis%20pour%20la%20reprogrammation%20de%20mon%20v%C3%A9hicule." target="_blank" rel="noopener noreferrer" class="whatsapp-direct">
           <div class="whatsapp-direct-icon"></div>
           <div class="whatsapp-direct-text">
             <strong>Écrire sur WhatsApp</strong>
@@ -319,7 +331,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Téléphone *</label>
+              <label class="form-label" for="f-tel">Téléphone *</label>
               <input type="tel" class="form-input" id="f-tel" placeholder="06 XX XX XX XX"/>
             </div>
             <div class="form-group">
@@ -330,22 +342,22 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Marque *</label>
+              <label class="form-label" for="f-marque">Marque *</label>
               <input type="text" class="form-input" id="f-marque" placeholder="ex: Volkswagen, BMW…"/>
             </div>
             <div class="form-group">
-              <label class="form-label">Modèle *</label>
+              <label class="form-label" for="f-modele">Modèle *</label>
               <input type="text" class="form-input" id="f-modele" placeholder="ex: Golf, Série 3…"/>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Motorisation</label>
+              <label class="form-label" for="f-moteur">Motorisation</label>
               <input type="text" class="form-input" id="f-moteur" placeholder="ex: 2.0 TDI 150ch"/>
             </div>
             <div class="form-group">
-              <label class="form-label">Kilométrage</label>
+              <label class="form-label" for="f-km">Kilométrage</label>
               <input type="number" class="form-input" id="f-km" placeholder="ex: 85000"/>
             </div>
           </div>
@@ -415,7 +427,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Message / précisions</label>
+            <label class="form-label" for="f-message">Message / précisions</label>
             <textarea class="form-textarea" id="f-message" placeholder="État du véhicule, modifications existantes, objectifs…"></textarea>
           </div>
 
@@ -424,7 +436,7 @@
             <button class="btn-submit" id="btn-send" onclick="sendWhatsApp()">Envoyer ma demande →</button>
             <div class="or-divider">ou</div>
             <!-- Secondary: direct WhatsApp -->
-            <a href="https://wa.me/33621146499?text=Bonjour%20AREPROG%2C%20je%20souhaite%20un%20devis%20pour%20la%20reprogrammation%20de%20mon%20v%C3%A9hicule." target="_blank" class="btn-whatsapp">
+            <a href="https://wa.me/33667924630?text=Bonjour%20AREPROG%2C%20je%20souhaite%20un%20devis%20pour%20la%20reprogrammation%20de%20mon%20v%C3%A9hicule." target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
                Écrire directement sur WhatsApp
             </a>
             <div class="form-note">Réponse garantie sous 24h · Sans engagement</div>
@@ -452,16 +464,17 @@
         <div>
           <div class="sidebar-block-title">Zones couvertes</div>
           <div class="zone-list">
-            <div class="zone-pill"><span class="zone-pill-num">64 </span><span>Pyrénées-Atlantiques & Pays Basque</span></div>
+            <div class="zone-pill"><span class="zone-pill-num">64</span><span>Pyrénées-Atlantiques & Pays Basque</span></div>
+            <div class="zone-pill"><span class="zone-pill-num">40</span><span>Landes (Dax)</span></div>
             <div class="zone-pill"><span class="zone-pill-num">89</span><span>Yonne</span></div>
           </div>
         </div>
         <div>
           <div class="sidebar-block-title">Questions fréquentes</div>
-          <a href="faq.html#general" class="faq-link">Est-ce légal ? <span>→</span></a>
-          <a href="faq.html#technique" class="faq-link">Combien de temps ? <span>→</span></a>
+          <a href="faq.html#general" class="faq-link" onclick="sessionStorage.setItem('faq-open','legal')">Est-ce légal ? <span>→</span></a>
+          <a href="faq.html#intervention" class="faq-link" onclick="sessionStorage.setItem('faq-open','duree')">Combien de temps ? <span>→</span></a>
           <a href="faq.html#garantie" class="faq-link">Quelle garantie ? <span>→</span></a>
-          <a href="faq.html#stages" class="faq-link">Stage 1 ou Stage 2 ? <span>→</span></a>
+          <a href="faq.html#stage1" class="faq-link">Stage 1 ou Stage 2 ? <span>→</span></a>
           <a href="faq.html" class="faq-link" style="color:var(--blue)">Toutes les FAQ <span>→</span></a>
         </div>
         <div>
