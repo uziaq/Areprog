@@ -2,12 +2,19 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
   <title>Commande confirmée — AREPROG</title>
   <meta name="robots" content="noindex, nofollow"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
   <style>
     .page-wrap { padding-top: var(--nav-h, 64px); min-height: 100vh; display: flex; flex-direction: column; }
@@ -129,6 +136,11 @@
       .confirm-tag::before, .confirm-tag::after { display: none; }
     }
   </style>
+  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
 </head>
 <body data-page="boutique">
 <div id="nav-container"></div>
@@ -178,13 +190,4 @@
 
       <div class="confirm-ref">
         Numéro de commande disponible dans votre email de confirmation Stripe.<br>
-        Téléphone : <a href="tel:+33667924630">06 67 92 46 30</a> · <a href="mailto:contact@areprog.fr">contact@areprog.fr</a>
-      </div>
-
-    </div>
-  </main>
-</div>
-<div id="footer-container"></div>
-<script src="nav.js"></script>
-</body>
-</html>
+        Téléphone : <a href="tel:+33667924630">06 67 92 46 30</a> · <a href="/cdn-cgi/l/email-protection#5f3c30312b3e3c2b1f3e2d3a2f2d303871392d"><span class="__cf_email__" data-cfemail="9efdf1f0eafffdeadeffecfbeeecf1f9b0f8ec">[email&#160;protected]</

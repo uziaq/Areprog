@@ -30,12 +30,12 @@ const AREPROG_PRODUCTS = [
     "benefits": [
       {
         "icon": "⚡",
-        "label": "+15 à +30% de puissance",
+        "label": "+20 à +55 ch de puissance",
         "desc": "Gains mesurables sur banc de puissance"
       },
       {
         "icon": "🔩",
-        "label": "+20 à +40% de couple",
+        "label": "+40 à +90 Nm de couple",
         "desc": "Reprise et souplesse moteur améliorées"
       },
       {
@@ -50,7 +50,7 @@ const AREPROG_PRODUCTS = [
       }
     ],
     "features": [
-      "+15 à +30% de puissance",
+      "+20 à +55 ch de puissance",
       "Garantie 2 ans — 100% réversible",
       "Diagnostic inclus avant intervention"
     ],
@@ -100,7 +100,7 @@ const AREPROG_PRODUCTS = [
       "pack-triple"
     ],
     "seoTitle": "Stage 1 — Reprogrammation moteur AREPROG",
-    "seoDesc": "Reprogrammation moteur Stage 1 à domicile. +15 à +30% de puissance, garantie 2 ans, 100% réversible. Devis gratuit sous 24h.",
+    "seoDesc": "Reprogrammation moteur Stage 1 à domicile. +20 à +55 ch de puissance, garantie 2 ans, 100% réversible. Devis gratuit sous 24h.",
     "active": true
   },
   {
@@ -121,7 +121,7 @@ const AREPROG_PRODUCTS = [
     "benefits": [
       {
         "icon": "🚀",
-        "label": "+30 à +50% de puissance",
+        "label": "jusqu'à +100 ch de puissance",
         "desc": "Gains importants combinés aux modifs mécaniques"
       },
       {
@@ -141,7 +141,7 @@ const AREPROG_PRODUCTS = [
       }
     ],
     "features": [
-      "+30 à +50% de puissance",
+      "jusqu'à +100 ch de puissance",
       "Modifications mécaniques incluses",
       "Cartographie personnalisée"
     ],
@@ -186,7 +186,7 @@ const AREPROG_PRODUCTS = [
       "pack-triple"
     ],
     "seoTitle": "Stage 2 — Reprogrammation haute performance | AREPROG",
-    "seoDesc": "Reprogrammation Stage 2 avec modifications mécaniques. +30 à +50% de puissance. Préparation sur-mesure à domicile.",
+    "seoDesc": "Reprogrammation Stage 2 avec modifications mécaniques. Jusqu'à +100 ch de puissance. Préparation sur-mesure à domicile.",
     "active": true
   },
   {
@@ -660,7 +660,7 @@ const AREPROG_PRODUCTS = [
       {
         "icon": "⚡",
         "label": "Stage 1 inclus",
-        "desc": "+15 à +30% de puissance et couple"
+        "desc": "+20 à +55 ch de puissance"
       },
       {
         "icon": "🧹",
@@ -727,7 +727,7 @@ const AREPROG_PRODUCTS = [
       {
         "icon": "⚡",
         "label": "Stage 1 inclus",
-        "desc": "+15 à +30% de puissance"
+        "desc": "+20 à +55 ch de puissance"
       },
       {
         "icon": "🚫",
@@ -791,7 +791,7 @@ const AREPROG_PRODUCTS = [
       {
         "icon": "⚡",
         "label": "Stage 1 inclus",
-        "desc": "+15 à +30% de puissance et couple"
+        "desc": "+20 à +55 ch de puissance"
       },
       {
         "icon": "🧹",
