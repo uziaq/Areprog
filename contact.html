@@ -131,6 +131,7 @@
       font-weight: 800; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 2rem;
     }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
     .form-group { display: flex; flex-direction: column; gap: .45rem; margin-bottom: 1.1rem; }
     .form-label {
       font-family: var(--font-mono,'Barlow Condensed'), sans-serif;
@@ -268,7 +269,7 @@
       .contact-header-text { padding: 4rem 1.5rem; border-right: none; }
       .contact-header-info { padding: 3rem 1.5rem; }
       .contact-form-wrap { padding: 3rem 1.5rem; border-right: none; }
-      .form-row { grid-template-columns: 1fr; }
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
       .contact-sidebar { padding: 3rem 1.5rem; }
       .prestation-grid { grid-template-columns: 1fr; }
     }
@@ -304,7 +305,7 @@
       <div class="contact-header-text">
         <div class="section-tag">Parlons-en</div>
         <h1 class="section-title">Nous<br><em>contacter</em></h1>
-        <p>Devis gratuit sous 24h. Décrivez votre véhicule et vos objectifs, on vous répond avec une estimation précise.</p>
+        <p>Devis, prise de RDV ou simple question — décrivez votre situation et on vous répond sous 24h.</p>
       </div>
       <div class="contact-header-info">
         <div class="contact-info-item">
@@ -323,7 +324,7 @@
             <div class="contact-info-sub">+ Yonne (89) · 3 zones couvertes</div>
           </div>
         </div>
-        <a href="https://wa.me/33667924630?text=Bonjour%20AREPROG%2C%20je%20souhaite%20un%20devis%20pour%20la%20reprogrammation%20de%20mon%20v%C3%A9hicule." target="_blank" rel="noopener noreferrer" class="whatsapp-direct">
+        <a href="https://wa.me/33667924630?text=Bonjour%20AREPROG%20%F0%9F%91%8B%20Je%20souhaite%20vous%20contacter%20au%20sujet%20de%20mon%20v%C3%A9hicule." target="_blank" rel="noopener noreferrer" class="whatsapp-direct">
           <div class="whatsapp-direct-icon">💬</div>
           <div class="whatsapp-direct-text">
             <strong>Écrire sur WhatsApp</strong>
@@ -337,7 +338,7 @@
     <div class="contact-body">
       <div class="contact-form-wrap">
         <div id="form-wrap">
-          <div class="form-title">Demande de devis gratuit</div>
+          <div class="form-title">Contactez-nous</div>
 
           <div class="form-row">
             <div class="form-group">
@@ -361,7 +362,7 @@
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="form-row form-row-3">
             <div class="form-group">
               <label class="form-label" for="f-marque">Marque *</label>
               <input type="text" class="form-input" id="f-marque" placeholder="ex: Volkswagen, BMW…"/>
@@ -369,6 +370,10 @@
             <div class="form-group">
               <label class="form-label" for="f-modele">Modèle *</label>
               <input type="text" class="form-input" id="f-modele" placeholder="ex: Golf, Série 3…"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-immat">Immatriculation (facultatif)</label>
+              <input type="text" class="form-input" id="f-immat" placeholder="ex: AB-123-CD" style="text-transform:uppercase"/>
             </div>
           </div>
 
@@ -454,10 +459,10 @@
 
           <div class="form-actions">
             <!-- Primary: send via WhatsApp -->
-            <button class="btn-submit" id="btn-send" onclick="sendWhatsApp()">Envoyer ma demande →</button>
+            <button class="btn-submit" id="btn-send" onclick="sendWhatsApp()">Envoyer mon message →</button>
             <div class="or-divider">ou</div>
             <!-- Secondary: direct WhatsApp -->
-            <a href="https://wa.me/33667924630?text=Bonjour%20AREPROG%2C%20je%20souhaite%20un%20devis%20pour%20la%20reprogrammation%20de%20mon%20v%C3%A9hicule." target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+            <a href="https://wa.me/33667924630?text=Bonjour%20AREPROG%20%F0%9F%91%8B%20Je%20souhaite%20vous%20contacter%20au%20sujet%20de%20mon%20v%C3%A9hicule." target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
                Écrire directement sur WhatsApp
             </a>
             <div class="form-note">Réponse garantie sous 24h · Sans engagement</div>
@@ -524,6 +529,7 @@
       const modele  = document.getElementById('f-modele').value.trim();
       const moteur  = document.getElementById('f-moteur').value.trim();
       const km      = document.getElementById('f-km').value.trim();
+      const immat   = document.getElementById('f-immat').value.trim().toUpperCase();
       const zone    = document.getElementById('f-zone').value;
       const message = document.getElementById('f-message').value.trim();
 
@@ -541,18 +547,32 @@
         .map(el => el.querySelector('.prestation-check-label').textContent).join(', ');
 
       // Build WhatsApp message
-      let msg = `Bonjour AREPROG ! \n\n`;
-      msg += `*Demande de devis*\n`;
-      msg += `—————————\n`;
-      msg += ` ${prenom}\n`;
-      if (tel)       msg += ` ${tel}\n`;
-      msg += `\n *Véhicule*\n`;
-      msg += `${marque} ${modele}`;
-      if (moteur)    msg += ` — ${moteur}`;
-      if (km)        msg += `\nKilométrage : ${parseInt(km).toLocaleString('fr')} km`;
-      if (zone)      msg += `\n\n Zone : ${zone}`;
-      if (prestations) msg += `\n\n *Prestations souhaitées*\n${prestations}`;
-      if (message)   msg += `\n\n *Message*\n${message}`;
+      // Déterminer l'objet selon ce qui est rempli
+      let objet = 'Prise de contact';
+      if (prestations) objet = 'Demande de devis';
+      else if (message && message.toLowerCase().includes('rdv')) objet = 'Demande de RDV';
+
+      let msg = `Bonjour AREPROG !\n\n`;
+      msg += `*${objet}*\n`;
+      msg += `—————————————\n`;
+      msg += `👤 ${prenom}`;
+      if (document.getElementById('f-nom').value.trim()) msg += ` ${document.getElementById('f-nom').value.trim()}`;
+      msg += `\n`;
+      if (tel) msg += `📞 ${tel}\n`;
+
+      // Véhicule (si renseigné)
+      if (marque || modele || immat) {
+        msg += `\n🚗 *Véhicule*\n`;
+        if (marque || modele) msg += `${marque} ${modele}`.trim();
+        if (immat)   msg += ` · ${immat}`;
+        if (moteur)  msg += `\n⚙️ ${moteur}`;
+        if (km)      msg += `\n📊 ${parseInt(km).toLocaleString('fr')} km`;
+        msg += `\n`;
+      }
+
+      if (zone)        msg += `\n📍 Zone : ${zone}`;
+      if (prestations) msg += `\n\n🔧 *Prestations souhaitées*\n${prestations}`;
+      if (message)     msg += `\n\n💬 *Message*\n${message}`;
       msg += `\n\nMerci !`;
 
       const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
