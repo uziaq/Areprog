@@ -2,16 +2,22 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+ <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="X-Content-Type-Options" content="nosniff"/>
-  <meta name="referrer" content="strict-origin-when-cross-origin"/>
   <title>Simulateur de gains — AREPROG</title>
   <meta name="description" content="Simulateur de gains de reprogrammation moteur AREPROG — bientôt disponible. En attendant, demandez une estimation personnalisée gratuite sous 24h."/>
   <meta name="robots" content="noindex, follow"/>
   <link rel="canonical" href="https://areprog.fr/simulateur.html"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:locale" content="fr_FR"/>
+  <meta property="og:site_name" content="AREPROG"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
@@ -19,7 +25,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
   <style>
-    .page-wrap { padding-top: 62px; min-height: 100vh; display: flex; flex-direction: column; }
+    .page-wrap { padding-top: var(--nav-h, 64px); min-height: 100vh; display: flex; flex-direction: column; }
     .sim-placeholder {
       flex: 1;
       display: flex; flex-direction: column;
@@ -61,11 +67,6 @@
       color: var(--amber);
     }
   </style>
-  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
 </head>
 <body data-page="simulateur">
   <div id="nav-container"></div>

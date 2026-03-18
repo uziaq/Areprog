@@ -8,7 +8,6 @@ const NAV_HTML = `
  <a href="index.html" class="nav-logo">ARE<span>PROG</span></a>
  <ul class="nav-links">
  <li><a href="index.html" data-page="index">Accueil</a></li>
- <li><a href="simulateur.html" data-page="simulateur">Simulateur</a></li>
  <li class="nav-dropdown">
  <a href="#" class="nav-dropdown-toggle" data-page="services">Services ▾</a>
  <ul class="nav-dropdown-menu">
@@ -54,7 +53,6 @@ const NAV_HTML = `
 </nav>
 <div class="nav-mobile" id="navMobile">
  <a href="index.html" data-page="index">Accueil</a>
- <a href="simulateur.html" data-page="simulateur">Simulateur de gains</a>
  <div class="nav-mobile-group">
  <div class="nav-mobile-group-label">Zones d'intervention</div>
  <a href="reprogrammation-moteur-bayonne.html" class="nav-mobile-sub">Bayonne</a>
@@ -121,6 +119,7 @@ const FOOTER_HTML = `
  <span>© ${new Date().getFullYear()} AREPROG — Reprogrammation moteur à domicile</span>
  <div class="footer-bottom-links">
  <a href="mentions-legales.html">Mentions légales</a>
+   <a href="politique-confidentialite.html">Confidentialité</a>
  <a href="sitemap.xml">Plan du site</a>
  </div>
  </div>

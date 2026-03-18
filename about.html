@@ -2,13 +2,15 @@
 <html lang="fr">
 <head>
  <meta charset="UTF-8"/>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+ <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
  <title>À propos — AREPROG, spécialiste reprogrammation moteur à domicile</title>
  <meta name="description" content="Découvrez AREPROG, spécialiste de la reprogrammation moteur à domicile dans les Pyrénées-Atlantiques, le Pays Basque et l'Yonne. +500 véhicules reprogrammés, matériel professionnel."/>
  <link rel="canonical" href="https://areprog.fr/about.html"/>
+  <meta name="robots" content="index, follow"/>
  <meta property="og:title" content="À propos d'AREPROG — Reprogrammation moteur à domicile"/>
  <meta property="og:description" content="Spécialiste reprogrammation moteur à domicile. +500 véhicules, 3 zones d'intervention, matériel professionnel ODIS, WinOLS, datalogger."/>
  <meta property="og:type" content="website"/>
@@ -16,6 +18,8 @@
    <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
+  <meta property="og:locale" content="fr_FR"/>
+  <meta property="og:site_name" content="AREPROG"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
   <script type="application/ld+json">
@@ -37,7 +41,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
  <style>
- .page-wrap { padding-top: 62px; }
+ .page-wrap { padding-top: var(--nav-h, 64px); }
 
  /* ── INTRO ──────────────────────────── */
  .about-intro {
@@ -188,6 +192,27 @@
  .zones-cols { grid-template-columns: 1fr; }
  }
  </style>
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Accueil",
+      "item": "https://areprog.fr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "À propos",
+      "item": "https://areprog.fr/about.html"
+    }
+  ]
+}
+  </script>
 </head>
 <body data-page="about">
  <div id="nav-container"></div>
