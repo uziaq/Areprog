@@ -1,0 +1,46 @@
+# ═══════════════════════════════════════════════════════════════
+# AREPROG — _redirects (Netlify)
+# Redirections 301 permanentes : URLs .html → URLs propres
+# À placer à la racine du repo GitHub
+# ═══════════════════════════════════════════════════════════════
+
+# Pages locales — priorité SEO maximale
+/reprogrammation-moteur-bayonne.html    /reprogrammation-moteur-bayonne    301!
+/reprogrammation-moteur-biarritz.html   /reprogrammation-moteur-biarritz   301!
+/reprogrammation-moteur-anglet.html     /reprogrammation-moteur-anglet     301!
+/reprogrammation-moteur-pau.html        /reprogrammation-moteur-pau        301!
+/reprogrammation-moteur-dax.html        /reprogrammation-moteur-dax        301!
+/reprogrammation-moteur-auxerre.html    /reprogrammation-moteur-auxerre    301!
+
+# Pages services
+/stage1.html                            /stage1                            301!
+/stage2.html                            /stage2                            301!
+/conversion-e85.html                    /conversion-e85                    301!
+/optimisation-consommation.html         /optimisation-consommation         301!
+/desactivation-egr.html                 /desactivation-egr                 301!
+/desactivation-fap.html                 /desactivation-fap                 301!
+/desactivation-adblue.html              /desactivation-adblue              301!
+/odis.html                              /odis                              301!
+
+# Pages informatives
+/tarifs.html                            /tarifs                            301!
+/faq.html                               /faq                               301!
+/about.html                             /about                             301!
+/contact.html                           /contact                           301!
+/simulateur.html                        /simulateur                        301!
+
+# Pages e-commerce
+/boutique.html                          /boutique                          301!
+/produit.html                           /produit                           301!
+/confirmation.html                      /confirmation                      301!
+
+# Pages légales
+/mentions-legales.html                  /mentions-legales                  301!
+/politique-confidentialite.html         /politique-confidentialite         301!
+
+# ═══════════════════════════════════════════════════════════════
+# NOTE : Netlify sert automatiquement page.html quand /page
+# est demandé (Pretty URLs natif). Ces règles gèrent uniquement
+# les anciennes URLs .html déjà indexées par Google.
+# Le ! force la redirection même si le fichier existe.
+# ═══════════════════════════════════════════════════════════════
