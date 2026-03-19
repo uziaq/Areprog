@@ -6,6 +6,7 @@
  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+  <meta name="robots" content="index, follow"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <!-- SEO tags injectés dynamiquement -->
   <title id="page-title">Produit — AREPROG</title>
@@ -163,6 +164,7 @@
   <meta property="og:site_name" content="AREPROG"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:url" content="https://areprog.fr/produit"/>
 </head>
 <body data-page="boutique">
 <div id="nav-container"></div>
@@ -257,7 +259,7 @@ function renderPage(p) {
       <div class="faq-list">
         ${p.faq.map(f=>`
           <div class="faq-item">
-            <button class="faq-q"><span class="faq-q-text">${f.q}</span><span class="faq-q-icon">+</span></button>
+            <button class="faq-q" aria-expanded="false"><span class="faq-q-text">${f.q}</span><span class="faq-q-icon" aria-hidden="true">+</span></button>
             <div class="faq-a"><p>${f.a}</p></div>
           </div>`).join('')}
       </div>

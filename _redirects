@@ -44,3 +44,11 @@
 # les anciennes URLs .html déjà indexées par Google.
 # Le ! force la redirection même si le fichier existe.
 # ═══════════════════════════════════════════════════════════════
+
+# Nouvelles pages SEO
+/chip-tuning-pays-basque.html           /chip-tuning-pays-basque           301!
+/reprogrammation-moteur-saint-jean-de-luz.html  /reprogrammation-moteur-saint-jean-de-luz  301!
+/guide-reprogrammation-moteur.html      /guide-reprogrammation-moteur      301!
+
+# Wildcard SPA fallback (toujours en dernier)
+/*  /index.html  200

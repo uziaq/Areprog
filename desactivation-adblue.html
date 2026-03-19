@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Désactivation AdBlue SCR logicielle | AREPROG</title>
-  <meta name="description" content="Suppression SCR/AdBlue logicielle. Fin des alertes de niveau et risques de blocage moteur Euro 6. À domicile."/>
+  <meta name="description" content="Désactivation AdBlue SCR logicielle à domicile. Fin des alertes de niveau et risques de blocage moteur Diesel Euro 6. Réversible. Devis gratuit 24h."/>
   <link rel="canonical" href="https://areprog.fr/desactivation-adblue.html"/>
   <meta name="robots" content="index, follow"/>
   <meta property="og:title" content="Désactivation AdBlue SCR logicielle | AREPROG"/>
@@ -31,144 +31,9 @@
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
-  <style>
+  <link rel="stylesheet" href="services.css"/>
+    <style>
     :root { --accent: #FB923C; --accent-rgb: 251,146,60; --accent-light: #FDBA74; }
-    .page-wrap { padding-top: var(--nav-h,64px); }
-
-    /* HERO */
-    .sv-hero { min-height: 78vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 4rem; padding: 4rem 5rem; position: relative; overflow: hidden; }
-    .sv-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 65% 40%, rgba(var(--accent-rgb),.08), transparent), radial-gradient(ellipse 40% 50% at 10% 80%, rgba(var(--accent-rgb),.04), transparent); pointer-events: none; }
-    .sv-hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(38,40,44,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(38,40,44,.35) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 85% 70% at 65% 30%, black, transparent); pointer-events: none; }
-    .sv-hero-left { position: relative; z-index: 1; }
-    .sv-label { font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: .6rem; }
-    .sv-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--accent); }
-    .sv-hero h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem,8vw,6.5rem); line-height: .92; letter-spacing: -.03em; margin-bottom: 1.4rem; text-transform: uppercase; }
-    .sv-hero h1 em { font-style: italic; font-weight: 300; color: var(--accent-light); display: block; }
-    .sv-desc { font-size: 1rem; line-height: 1.75; color: var(--text2); max-width: 460px; margin-bottom: 2rem; }
-    .sv-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
-    .sv-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
-    .hs-item .hs-val { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--text); line-height: 1; }
-    .hs-item .hs-val span { color: var(--accent-light); }
-    .hs-item .hs-label { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
-    .hs-sep { width: 1px; height: 2rem; background: var(--border2); align-self: center; }
-
-    /* HERO RIGHT — info card */
-    .sv-hero-right { position: relative; z-index: 1; }
-    .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-    .info-card-head { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 1rem 1.3rem; display: flex; align-items: center; justify-content: space-between; }
-    .info-card-title { font-family: var(--font-mono); font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
-    .info-card-badge { font-family: var(--font-mono); font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 3px; background: rgba(var(--accent-rgb),.15); border: 1px solid rgba(var(--accent-rgb),.3); color: var(--accent-light); }
-    .info-card-body { padding: 1.3rem; display: flex; flex-direction: column; gap: .8rem; }
-    .info-row { display: flex; align-items: center; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid var(--border); }
-    .info-row:last-child { border-bottom: none; }
-    .info-key { font-size: .8rem; color: var(--muted); }
-    .info-val { font-family: var(--font-mono); font-weight: 700; font-size: .82rem; color: var(--text2); }
-    .info-val.ok { color: var(--green); font-size: .7rem; background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.2); padding: .12rem .5rem; border-radius: 100px; }
-    .info-val.accent { color: var(--accent-light); }
-    .info-card-footer { border-top: 1px solid var(--border); padding: 1rem 1.3rem; display: flex; gap: .4rem; flex-wrap: wrap; background: var(--bg); }
-
-    /* INTRO */
-    .sv-intro { padding: 5rem; background: var(--bg-warm); border-bottom: 1px solid var(--border); }
-    .sv-intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 3rem; align-items: start; }
-    .sv-intro h2 { font-family: var(--font-display); font-weight: 700; font-size: 2rem; line-height: 1.1; margin-bottom: 1.2rem; }
-    .sv-intro h2 em { font-style: italic; font-weight: 300; color: var(--accent-light); }
-    .sv-intro p { color: var(--text2); line-height: 1.8; margin-bottom: 1rem; font-size: .95rem; }
-    .sv-intro strong { color: var(--text); font-weight: 500; }
-    .sv-stats-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .sv-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem; text-align: center; }
-    .sv-stat-val { font-family: var(--font-display); font-weight: 800; font-size: 2rem; color: var(--accent-light); line-height: 1; }
-    .sv-stat-label { font-size: .7rem; color: var(--muted); margin-top: .3rem; line-height: 1.3; }
-
-    /* BENEFITS */
-    .sv-benefits { padding: 5rem; }
-    .benefits-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 3rem; }
-    .benefit-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.8rem; transition: border-color .25s, background .25s, transform .25s; }
-    .benefit-card:hover { border-color: rgba(var(--accent-rgb),.3); background: var(--surface2); transform: translateY(-2px); }
-    .benefit-num { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .22em; color: var(--accent); margin-bottom: 1rem; }
-    .benefit-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: .6rem; color: var(--text); text-transform: uppercase; }
-    .benefit-desc { font-size: .85rem; color: var(--muted); line-height: 1.65; }
-
-    /* PROCESS */
-    .sv-process { background: var(--bg-warm); padding: 5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .process-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-top: 3rem; position: relative; }
-    .process-steps::before { content: ''; position: absolute; top: 1.5rem; left: 2rem; right: 2rem; height: 1px; background: linear-gradient(to right, var(--accent), transparent); pointer-events: none; }
-    .process-step { padding-top: 3.5rem; position: relative; }
-    .step-dot { position: absolute; top: .9rem; left: 0; width: 1.2rem; height: 1.2rem; border: 2px solid var(--accent); border-radius: 50%; background: var(--bg); }
-    .step-dot::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: .4rem; height: .4rem; background: var(--accent); border-radius: 50%; }
-    .step-num { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .18em; color: var(--accent); margin-bottom: .4rem; }
-    .step-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; margin-bottom: .5rem; color: var(--text); text-transform: uppercase; }
-    .step-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; }
-
-    /* COMPAT */
-    .sv-compat { padding: 5rem; }
-    .compat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; align-items: start; }
-    .compat-list { display: flex; flex-direction: column; gap: .5rem; }
-    .compat-item { display: flex; align-items: center; gap: .8rem; padding: .8rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-size: .88rem; color: var(--text2); transition: border-color .15s; }
-    .compat-item:hover { border-color: rgba(var(--accent-rgb),.3); }
-    .compat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-    .compat-note { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1.2rem; font-size: .85rem; color: var(--muted); line-height: 1.65; }
-    .compat-checks { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; display: flex; flex-direction: column; gap: .6rem; }
-    .compat-check { font-size: .88rem; color: var(--text2); line-height: 1.5; padding: .7rem .9rem; background: var(--surface2); border-radius: 4px; display: flex; align-items: center; gap: .7rem; }
-    .compat-check::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
-
-    /* FAQ */
-    .sv-faq { background: var(--bg-warm); padding: 5rem; border-top: 1px solid var(--border); }
-    .faq-list { margin-top: 3rem; max-width: 760px; }
-    .faq-item { border-bottom: 1px solid var(--border); }
-    .faq-q { width: 100%; padding: 1.1rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; background: transparent; border: none; cursor: pointer; text-align: left; }
-    .faq-q-text { font-weight: 500; font-size: .95rem; color: var(--text2); transition: color .2s; }
-    .faq-q:hover .faq-q-text { color: var(--text); }
-    .faq-q-icon { width: 1.2rem; height: 1.2rem; min-width: 1.2rem; border: 1px solid var(--border2); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: .8rem; color: var(--muted); transition: all .3s; }
-    .faq-item.open .faq-q-icon { background: var(--accent); border-color: var(--accent); color: #fff; transform: rotate(45deg); }
-    .faq-a { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s; }
-    .faq-item.open .faq-a { max-height: 400px; padding-bottom: 1.3rem; }
-    .faq-a p { color: var(--muted); line-height: 1.75; font-size: .9rem; }
-    .faq-a strong { color: var(--text2); font-weight: 500; }
-
-    /* BOUTIQUE CTA */
-    .sv-boutique { padding: 4rem 5rem; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .sv-boutique-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
-    .sv-boutique-left h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; text-transform: uppercase; margin-bottom: .4rem; }
-    .sv-boutique-left h3 em { font-style: italic; font-weight: 300; color: var(--accent-light); }
-    .sv-boutique-left p { font-size: .88rem; color: var(--muted); }
-    .sv-boutique-price { text-align: right; }
-    .sv-boutique-from { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
-    .sv-boutique-amount { font-family: var(--font-display); font-weight: 800; font-size: 3rem; color: var(--text); line-height: 1; letter-spacing: -.02em; }
-    .sv-boutique-amount sup { font-size: 1.2rem; font-weight: 700; vertical-align: top; margin-top: .6rem; display: inline-block; }
-
-    /* CTA */
-    .sv-cta { text-align: center; padding: 7rem 5rem; position: relative; overflow: hidden; }
-    .sv-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(var(--accent-rgb),.06), transparent); pointer-events: none; }
-    .sv-cta h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(2rem,5vw,3.8rem); line-height: 1.05; text-transform: uppercase; position: relative; }
-    .sv-cta h2 em { font-style: italic; font-weight: 300; color: var(--accent-light); }
-    .sv-cta p { max-width: 440px; margin: 1.2rem auto; color: var(--muted); line-height: 1.7; position: relative; }
-    .cta-row { display: flex; gap: .8rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; position: relative; }
-
-    /* GEO */
-    .geo-bar { padding: 1.5rem 5rem; border-top: 1px solid var(--border); background: var(--surface); }
-    .geo-label { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted2); margin-bottom: .8rem; }
-    .geo-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
-    .geo-tag { font-size: .78rem; color: var(--muted); text-decoration: none; padding: .3rem .7rem; border: 1px solid var(--border); border-radius: 4px; transition: border-color .15s, color .15s; }
-    .geo-tag:hover { border-color: rgba(var(--accent-rgb),.3); color: var(--accent-light); }
-
-    /* RESPONSIVE */
-    @media (max-width:1024px) {
-      .sv-hero { grid-template-columns: 1fr; padding: 5rem 3rem 3rem; min-height: auto; gap: 3rem; }
-      .sv-hero-right { display: none; }
-      .sv-intro-grid,.compat-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    }
-    @media (max-width:900px) {
-      .sv-hero,.sv-intro,.sv-benefits,.sv-process,.sv-compat,.sv-faq,.sv-boutique,.sv-cta,.geo-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
-      .benefits-grid { grid-template-columns: 1fr 1fr; }
-      .process-steps { grid-template-columns: 1fr 1fr; }
-      .process-steps::before { display: none; }
-      .sv-boutique-inner { flex-direction: column; align-items: flex-start; }
-      .sv-boutique-price { text-align: left; }
-    }
-    @media (max-width:500px) {
-      .benefits-grid { grid-template-columns: 1fr; }
-      .sv-stats-card { grid-template-columns: 1fr; }
-    }
   </style>
 
   <script type="application/ld+json">
@@ -343,15 +208,15 @@
       <h2 class="section-title" style="margin-top:.5rem">Vos questions sur <em>Désactivation AdBlue</em></h2>
       <div class="faq-list">
         <div class="faq-item">
-          <button class="faq-q"><span class="faq-q-text">Mon moteur sera-t-il bridé après la suppression AdBlue ?</span><span class="faq-q-icon">+</span></button>
+          <button class="faq-q" aria-expanded="false"><span class="faq-q-text">Mon moteur sera-t-il bridé après la suppression AdBlue ?</span><span class="faq-q-icon" aria-hidden="true">+</span></button>
           <div class="faq-a"><p>Non — au contraire. Après la désactivation, la limitation progressive liée au système AdBlue est supprimée. Le moteur fonctionne à pleine puissance en permanence.</p></div>
         </div>
         <div class="faq-item">
-          <button class="faq-q"><span class="faq-q-text">Est-ce compatible avec la désactivation FAP ou EGR ?</span><span class="faq-q-icon">+</span></button>
+          <button class="faq-q" aria-expanded="false"><span class="faq-q-text">Est-ce compatible avec la désactivation FAP ou EGR ?</span><span class="faq-q-icon" aria-hidden="true">+</span></button>
           <div class="faq-a"><p>Oui, les trois systèmes sont indépendants. On peut tout traiter lors de la même intervention avec un tarif pack. Contactez-nous pour un devis global.</p></div>
         </div>
         <div class="faq-item">
-          <button class="faq-q"><span class="faq-q-text">Mon système AdBlue est déjà en panne — peut-on désactiver quand même ?</span><span class="faq-q-icon">+</span></button>
+          <button class="faq-q" aria-expanded="false"><span class="faq-q-text">Mon système AdBlue est déjà en panne — peut-on désactiver quand même ?</span><span class="faq-q-icon" aria-hidden="true">+</span></button>
           <div class="faq-a"><p>Oui. C'est souvent le déclencheur : un système AdBlue défaillant ou en bridage. La désactivation logicielle résout le problème quel que soit l'état du système physique.</p></div>
         </div></div>
     </section>
@@ -403,13 +268,20 @@
   </div>
   <div id="footer-container"></div>
   <script src="nav.js"></script>
+  <script src="whatsapp-widget.js"></script>
   <script>
     document.querySelectorAll('.faq-q').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = btn.closest('.faq-item');
         const isOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-        if (!isOpen) item.classList.add('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
       });
     });
     const observer = new IntersectionObserver(entries => {

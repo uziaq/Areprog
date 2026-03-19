@@ -112,6 +112,7 @@ const FOOTER_HTML = `
  <a href="/simulateur">Simulateur de gains</a>
  <a href="/faq">FAQ</a>
  <a href="/about">À propos</a>
+ <a href="/chip-tuning-pays-basque">Chip Tuning Pays Basque</a>
  <a href="/contact">Devis gratuit</a>
  </div>
  </div>
