@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8"/>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulateur de gains moteur — Estimez vos gains Stage 1 & E85 | AREPROG</title>
-  <meta name="description" content="Simulez vos gains de puissance, couple et économies carburant avec la reprogrammation moteur AREPROG. Stage 1, E85, diesel & essence. Estimation gratuite en ligne."/>
-  <link rel="canonical" href="https://areprog.fr/simulateur.html"/>
-  <meta name="robots" content="index, follow"/>
+  <meta name="description"
+    content="Simulez vos gains de puissance, couple et économies carburant avec la reprogrammation moteur AREPROG. Stage 1, E85, diesel & essence. Estimation gratuite en ligne." />
+  <link rel="canonical" href="https://areprog.fr/simulateur.html" />
+  <meta name="robots" content="index, follow" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Simulateur de gains reprogrammation moteur — AREPROG"/>
-  <meta property="og:description" content="Estimez vos gains de puissance, couple et économies carburant. Stage 1, E85, diesel & essence. Gratuit en ligne."/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://areprog.fr/simulateur.html"/>
-  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta property="og:locale" content="fr_FR"/>
-  <meta property="og:site_name" content="AREPROG"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:title" content="Simulateur de gains reprogrammation moteur — AREPROG" />
+  <meta property="og:description"
+    content="Estimez vos gains de puissance, couple et économies carburant. Stage 1, E85, diesel & essence. Gratuit en ligne." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://areprog.fr/simulateur.html" />
+  <meta property="og:image" content="https://areprog.fr/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="AREPROG" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg" />
 
   <!-- Schema.org -->
   <script type="application/ld+json">
@@ -55,16 +58,23 @@
   </script>
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
-  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
-  <link rel="stylesheet" href="shared.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap" />
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap" />
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap" />
+  </noscript>
+  <link rel="stylesheet" href="shared.css" />
 
   <style>
     /* ── PAGE WRAPPER ──────────────────────── */
-    .page-wrap { padding-top: var(--nav-h, 64px); }
+    .page-wrap {
+      padding-top: var(--nav-h, 64px);
+    }
 
     /* ── HERO HEADER ───────────────────────── */
     .sim-header {
@@ -74,29 +84,44 @@
       overflow: hidden;
       background: var(--bg);
     }
+
     .sim-header::before {
       content: '';
-      position: absolute; inset: 0;
+      position: absolute;
+      inset: 0;
       background:
-        radial-gradient(ellipse 55% 70% at 75% 50%, rgba(33,150,243,.08), transparent),
-        radial-gradient(ellipse 30% 40% at 5% 90%, rgba(33,150,243,.04), transparent);
+        radial-gradient(ellipse 55% 70% at 75% 50%, rgba(33, 150, 243, .08), transparent),
+        radial-gradient(ellipse 30% 40% at 5% 90%, rgba(33, 150, 243, .04), transparent);
       pointer-events: none;
     }
+
     .sim-header::after {
       content: 'ECU';
-      position: absolute; right: 3rem; bottom: -2rem;
-      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
-      font-weight: 800; font-size: 14rem; line-height: 1;
-      color: transparent; -webkit-text-stroke: 1px rgba(33,150,243,.06);
-      pointer-events: none; letter-spacing: -.04em;
+      position: absolute;
+      right: 3rem;
+      bottom: -2rem;
+      font-family: var(--font-display, 'Barlow Condensed'), sans-serif;
+      font-weight: 800;
+      font-size: 14rem;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(33, 150, 243, .06);
+      pointer-events: none;
+      letter-spacing: -.04em;
     }
+
     .sim-header-inner {
-      position: relative; z-index: 1;
-      display: flex; align-items: flex-end; justify-content: space-between;
-      gap: 3rem; flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 3rem;
+      flex-wrap: wrap;
     }
+
     .sim-header-left h1 {
-      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-family: var(--font-display, 'Barlow Condensed'), sans-serif;
       font-weight: 800;
       font-size: clamp(2.5rem, 6vw, 5rem);
       text-transform: uppercase;
@@ -104,50 +129,94 @@
       letter-spacing: -.02em;
       margin-top: 1rem;
     }
+
     .sim-header-left h1 em {
-      font-style: italic; font-weight: 300;
+      font-style: italic;
+      font-weight: 300;
       color: var(--blue-light, #42A5F5);
       display: block;
     }
+
     .sim-header-left p {
-      color: var(--muted); line-height: 1.7;
-      max-width: 500px; margin-top: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 500px;
+      margin-top: 1rem;
       font-size: .95rem;
     }
+
     .sim-header-stats {
-      display: flex; gap: 2rem;
-      flex-shrink: 0; flex-wrap: wrap;
+      display: flex;
+      gap: 2rem;
+      flex-shrink: 0;
+      flex-wrap: wrap;
     }
-    .sim-header-stat { text-align: right; }
+
+    .sim-header-stat {
+      text-align: right;
+    }
+
     .sim-header-stat .val {
-      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
-      font-weight: 800; font-size: 2rem;
-      color: var(--blue-light, #42A5F5); line-height: 1;
+      font-family: var(--font-display, 'Barlow Condensed'), sans-serif;
+      font-weight: 800;
+      font-size: 2rem;
+      color: var(--blue-light, #42A5F5);
+      line-height: 1;
     }
+
     .sim-header-stat .lbl {
-      font-size: .7rem; color: var(--muted);
-      letter-spacing: .1em; text-transform: uppercase;
+      font-size: .7rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
       margin-top: .2rem;
     }
-    .sim-header-sep { width: 1px; height: 2.5rem; background: var(--border2); align-self: center; }
+
+    .sim-header-sep {
+      width: 1px;
+      height: 2.5rem;
+      background: var(--border2);
+      align-self: center;
+    }
 
     /* ── TRUST BAR ─────────────────────────── */
     .sim-trust {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       padding: .9rem 5rem;
-      display: flex; align-items: center; gap: 2rem;
-      overflow-x: auto; white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      overflow-x: auto;
+      white-space: nowrap;
     }
+
     .sim-trust-item {
-      display: flex; align-items: center; gap: .5rem;
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-size: .65rem; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text2);
       flex-shrink: 0;
     }
-    .sim-trust-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
-    .sim-trust-sep { width: 1px; height: 1rem; background: var(--border2); flex-shrink: 0; }
+
+    .sim-trust-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .sim-trust-sep {
+      width: 1px;
+      height: 1rem;
+      background: var(--border2);
+      flex-shrink: 0;
+    }
 
     /* ── MAIN LAYOUT ───────────────────────── */
     .sim-body {
@@ -162,28 +231,55 @@
       display: flex;
       flex-direction: column;
     }
+
     .sim-iframe-header {
       padding: 1.5rem 2.5rem 1.2rem;
       border-bottom: 1px solid var(--border);
       background: var(--surface);
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
+
     .sim-iframe-title {
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-size: .68rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
       color: var(--blue);
-      display: flex; align-items: center; gap: .6rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
     }
-    .sim-iframe-title::before { content: ''; display: block; width: 1rem; height: 1px; background: var(--blue); }
+
+    .sim-iframe-title::before {
+      content: '';
+      display: block;
+      width: 1rem;
+      height: 1px;
+      background: var(--blue);
+    }
+
     .sim-iframe-live {
-      display: flex; align-items: center; gap: .5rem;
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-size: .6rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
       color: var(--green);
     }
+
     .sim-iframe-live::before {
-      content: ''; display: block;
-      width: 6px; height: 6px; border-radius: 50%;
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
       background: var(--green);
       animation: pulse 2s ease-in-out infinite;
     }
@@ -198,31 +294,46 @@
 
     /* Loading overlay */
     .sim-iframe-loading {
-      position: absolute; inset: 0;
+      position: absolute;
+      inset: 0;
       background: var(--bg);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       gap: 1.2rem;
       z-index: 2;
       transition: opacity .4s ease;
     }
+
     .sim-iframe-loading.hidden {
       opacity: 0;
       pointer-events: none;
     }
+
     .sim-loading-spinner {
-      width: 2.5rem; height: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
       border: 2px solid var(--border2);
       border-top-color: var(--blue);
       border-radius: 50%;
       animation: spin .7s linear infinite;
     }
+
     .sim-loading-text {
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-size: .68rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
       color: var(--muted);
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     /* Iframe itself */
     #sim-iframe {
@@ -245,13 +356,29 @@
       padding: 4rem 2rem;
       gap: 1.2rem;
     }
-    .sim-iframe-fallback.visible { display: flex; }
-    .sim-iframe-fallback-icon { font-size: 3rem; opacity: .4; }
-    .sim-iframe-fallback h3 {
-      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
-      font-weight: 800; font-size: 1.8rem; text-transform: uppercase;
+
+    .sim-iframe-fallback.visible {
+      display: flex;
     }
-    .sim-iframe-fallback p { color: var(--muted); max-width: 380px; line-height: 1.65; font-size: .9rem; }
+
+    .sim-iframe-fallback-icon {
+      font-size: 3rem;
+      opacity: .4;
+    }
+
+    .sim-iframe-fallback h3 {
+      font-family: var(--font-display, 'Barlow Condensed'), sans-serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      text-transform: uppercase;
+    }
+
+    .sim-iframe-fallback p {
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.65;
+      font-size: .9rem;
+    }
 
     /* ── SIDEBAR ───────────────────────────── */
     .sim-sidebar {
@@ -260,106 +387,221 @@
       background: var(--surface);
       overflow-y: auto;
     }
+
     .sim-sidebar-block {
       padding: 1.8rem 1.5rem;
       border-bottom: 1px solid var(--border);
     }
-    .sim-sidebar-block:last-child { border-bottom: none; }
-    .sim-block-title {
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-size: .62rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
-      color: var(--blue); margin-bottom: 1.1rem;
-      display: flex; align-items: center; gap: .5rem;
+
+    .sim-sidebar-block:last-child {
+      border-bottom: none;
     }
-    .sim-block-title::before { content: ''; display: block; width: .8rem; height: 1px; background: var(--blue); }
+
+    .sim-block-title {
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .sim-block-title::before {
+      content: '';
+      display: block;
+      width: .8rem;
+      height: 1px;
+      background: var(--blue);
+    }
 
     /* Gain meters */
     .gain-meters {
-      display: flex; flex-direction: column; gap: .8rem;
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
     }
-    .gain-meter { }
+
+    .gain-meter {}
+
     .gain-meter-head {
-      display: flex; justify-content: space-between;
+      display: flex;
+      justify-content: space-between;
       margin-bottom: .4rem;
     }
+
     .gain-meter-label {
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
       color: var(--muted2);
     }
+
     .gain-meter-val {
-      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
-      font-weight: 800; font-size: .85rem;
+      font-family: var(--font-display, 'Barlow Condensed'), sans-serif;
+      font-weight: 800;
+      font-size: .85rem;
       color: var(--blue-light, #42A5F5);
     }
+
     .gain-meter-bar {
-      height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
     }
+
     .gain-meter-fill {
-      height: 100%; border-radius: 2px;
+      height: 100%;
+      border-radius: 2px;
       background: linear-gradient(90deg, var(--blue), var(--blue-light, #42A5F5));
       transition: width .6s ease;
     }
 
     /* Quick links */
     .sim-quick-links {
-      display: flex; flex-direction: column; gap: .4rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
     }
+
     .sim-quick-link {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: .65rem .9rem;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 4px;
       text-decoration: none;
-      font-size: .82rem; color: var(--text2);
+      font-size: .82rem;
+      color: var(--text2);
       transition: border-color .15s, color .15s, background .15s;
     }
+
     .sim-quick-link:hover {
-      border-color: rgba(33,150,243,.4); color: var(--blue-light, #42A5F5);
-      background: rgba(33,150,243,.04);
+      border-color: rgba(33, 150, 243, .4);
+      color: var(--blue-light, #42A5F5);
+      background: rgba(33, 150, 243, .04);
     }
-    .sim-quick-link-arrow { color: var(--muted2); font-size: .7rem; transition: transform .15s; }
-    .sim-quick-link:hover .sim-quick-link-arrow { transform: translateX(3px); color: var(--blue); }
-    .sim-quick-link-icon { font-size: .95rem; flex-shrink: 0; }
+
+    .sim-quick-link-arrow {
+      color: var(--muted2);
+      font-size: .7rem;
+      transition: transform .15s;
+    }
+
+    .sim-quick-link:hover .sim-quick-link-arrow {
+      transform: translateX(3px);
+      color: var(--blue);
+    }
+
+    .sim-quick-link-icon {
+      font-size: .95rem;
+      flex-shrink: 0;
+    }
 
     /* CTA card */
     .sim-cta-card {
-      background: linear-gradient(135deg, rgba(33,150,243,.12) 0%, rgba(33,150,243,.04) 100%);
-      border: 1px solid rgba(33,150,243,.25);
+      background: linear-gradient(135deg, rgba(33, 150, 243, .12) 0%, rgba(33, 150, 243, .04) 100%);
+      border: 1px solid rgba(33, 150, 243, .25);
       border-radius: 6px;
       padding: 1.3rem;
       text-align: center;
     }
+
     .sim-cta-card-title {
-      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
-      font-weight: 800; font-size: 1.2rem; text-transform: uppercase;
+      font-family: var(--font-display, 'Barlow Condensed'), sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      text-transform: uppercase;
       margin-bottom: .4rem;
     }
-    .sim-cta-card-title em { font-style: italic; font-weight: 300; color: var(--blue-light, #42A5F5); }
-    .sim-cta-card-desc { font-size: .78rem; color: var(--muted); line-height: 1.55; margin-bottom: 1rem; }
-    .sim-cta-card .btn { width: 100%; justify-content: center; }
+
+    .sim-cta-card-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--blue-light, #42A5F5);
+    }
+
+    .sim-cta-card-desc {
+      font-size: .78rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+
+    .sim-cta-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
 
     /* FAQ mini */
-    .sim-faq-mini { display: flex; flex-direction: column; gap: 0; }
-    .sim-faq-item { border-bottom: 1px solid var(--border); }
-    .sim-faq-item:last-child { border-bottom: none; }
+    .sim-faq-mini {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .sim-faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sim-faq-item:last-child {
+      border-bottom: none;
+    }
+
     .sim-faq-q {
-      width: 100%; padding: .7rem 0;
-      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-      background: transparent; border: none; cursor: pointer; text-align: left;
-      font-size: .78rem; color: var(--text2); font-family: var(--font-body,'Barlow'),sans-serif;
-      font-weight: 500; transition: color .15s;
+      width: 100%;
+      padding: .7rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-size: .78rem;
+      color: var(--text2);
+      font-family: var(--font-body, 'Barlow'), sans-serif;
+      font-weight: 500;
+      transition: color .15s;
     }
-    .sim-faq-q:hover { color: var(--text); }
+
+    .sim-faq-q:hover {
+      color: var(--text);
+    }
+
     .sim-faq-icon {
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-weight: 700; font-size: .9rem; color: var(--blue);
-      flex-shrink: 0; transition: transform .25s;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--blue);
+      flex-shrink: 0;
+      transition: transform .25s;
     }
-    .sim-faq-item.open .sim-faq-icon { transform: rotate(45deg); }
-    .sim-faq-a { display: none; padding-bottom: .8rem; font-size: .75rem; color: var(--muted); line-height: 1.6; }
-    .sim-faq-item.open .sim-faq-a { display: block; }
+
+    .sim-faq-item.open .sim-faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .sim-faq-a {
+      display: none;
+      padding-bottom: .8rem;
+      font-size: .75rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .sim-faq-item.open .sim-faq-a {
+      display: block;
+    }
 
     /* ── BOTTOM INFO BAND ──────────────────── */
     .sim-info-band {
@@ -367,57 +609,130 @@
       border-top: 1px solid var(--border);
       padding: 2.5rem 5rem;
       display: grid;
-      grid-template-columns: repeat(4,1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 2rem;
     }
-    .sim-info-item { }
-    .sim-info-icon { font-size: 1.4rem; margin-bottom: .7rem; }
-    .sim-info-title {
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-weight: 700; font-size: .78rem; text-transform: uppercase;
-      letter-spacing: .08em; color: var(--text); margin-bottom: .3rem;
+
+    .sim-info-item {}
+
+    .sim-info-icon {
+      font-size: 1.4rem;
+      margin-bottom: .7rem;
     }
-    .sim-info-desc { font-size: .78rem; color: var(--muted); line-height: 1.55; }
+
+    .sim-info-title {
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-weight: 700;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text);
+      margin-bottom: .3rem;
+    }
+
+    .sim-info-desc {
+      font-size: .78rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
 
     /* ── GEO BAR ───────────────────────────── */
     .geo-bar {
-      padding: 1.2rem 5rem; border-top: 1px solid var(--border);
+      padding: 1.2rem 5rem;
+      border-top: 1px solid var(--border);
       background: var(--surface);
     }
+
     .geo-bar-label {
-      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
-      font-size: .58rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--muted2); margin-bottom: .7rem;
+      font-family: var(--font-mono, 'Barlow Condensed'), sans-serif;
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-bottom: .7rem;
     }
-    .geo-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+    .geo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+
     .geo-tag {
-      font-size: .78rem; color: var(--muted);
-      text-decoration: none; padding: .3rem .7rem;
-      border: 1px solid var(--border); border-radius: 4px;
+      font-size: .78rem;
+      color: var(--muted);
+      text-decoration: none;
+      padding: .3rem .7rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
       transition: border-color .15s, color .15s;
     }
-    .geo-tag:hover { border-color: rgba(33,150,243,.35); color: var(--blue-light, #42A5F5); }
+
+    .geo-tag:hover {
+      border-color: rgba(33, 150, 243, .35);
+      color: var(--blue-light, #42A5F5);
+    }
 
     /* ── RESPONSIVE ────────────────────────── */
     @media (max-width: 1100px) {
-      .sim-body { grid-template-columns: 1fr 290px; }
+      .sim-body {
+        grid-template-columns: 1fr 290px;
+      }
     }
+
     @media (max-width: 900px) {
-      .sim-header, .sim-trust, .sim-info-band, .geo-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
-      .sim-header::after { display: none; }
-      .sim-header-stats { display: none; }
-      .sim-body { grid-template-columns: 1fr; }
-      .sim-iframe-section { border-right: none; }
-      .sim-sidebar { border-top: 1px solid var(--border); }
-      .sim-info-band { grid-template-columns: 1fr 1fr; padding: 2rem 1.4rem; }
-      #sim-iframe { min-height: 480px; }
+
+      .sim-header,
+      .sim-trust,
+      .sim-info-band,
+      .geo-bar {
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+      }
+
+      .sim-header::after {
+        display: none;
+      }
+
+      .sim-header-stats {
+        display: none;
+      }
+
+      .sim-body {
+        grid-template-columns: 1fr;
+      }
+
+      .sim-iframe-section {
+        border-right: none;
+      }
+
+      .sim-sidebar {
+        border-top: 1px solid var(--border);
+      }
+
+      .sim-info-band {
+        grid-template-columns: 1fr 1fr;
+        padding: 2rem 1.4rem;
+      }
+
+      #sim-iframe {
+        min-height: 480px;
+      }
     }
+
     @media (max-width: 500px) {
-      .sim-info-band { grid-template-columns: 1fr; }
-      #sim-iframe { min-height: 400px; }
+      .sim-info-band {
+        grid-template-columns: 1fr;
+      }
+
+      #sim-iframe {
+        min-height: 400px;
+      }
     }
   </style>
 </head>
+
 <body data-page="simulateur">
   <div id="nav-container"></div>
 
@@ -429,7 +744,8 @@
         <div class="sim-header-left">
           <div class="section-tag">Outil en ligne gratuit</div>
           <h1>Simulateur<br><em>de gains moteur</em></h1>
-          <p>Estimez en quelques secondes les gains de puissance, de couple et d'économies carburant après reprogrammation Stage 1 ou conversion E85 de votre véhicule.</p>
+          <p>Estimez en quelques secondes les gains de puissance, de couple et d'économies carburant après
+            reprogrammation Stage 1 ou conversion E85 de votre véhicule.</p>
         </div>
         <div class="sim-header-stats">
           <div class="sim-header-stat">
@@ -493,21 +809,17 @@
             ════════════════════════════════════════════════════════
           -->
           <iframe
-            id="sim-iframe"
-            src=""
-            title="Simulateur de gains reprogrammation moteur AREPROG"
-            loading="lazy"
-            allow="fullscreen"
-            allowfullscreen
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-            aria-label="Simulateur de gains moteur interactif"
-          ></iframe>
+            src="https://api.olsx.eu/iframe?token=157|sqS8GwFH7tv89HQzl1FyHVYzbS0iBlXNzMuzg3YD6dcd2ee9&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=off&mailcontact=arthur%40areprog.fr"
+            id="iframe-olsx" style="width: 100%; border: none;">
+          </iframe>
 
           <!-- Fallback si l'iframe ne charge pas ou si src est vide -->
           <div class="sim-iframe-fallback" id="iframeFallback">
             <div class="sim-iframe-fallback-icon">⚙️</div>
-            <h3>Simulateur <em style="font-style:italic;font-weight:300;color:var(--blue-light,#42A5F5)">bientôt disponible</em></h3>
-            <p>Notre simulateur interactif est en cours de déploiement. En attendant, demandez une estimation personnalisée directement par téléphone ou via WhatsApp — réponse garantie sous 24h.</p>
+            <h3>Simulateur <em style="font-style:italic;font-weight:300;color:var(--blue-light,#42A5F5)">bientôt
+                disponible</em></h3>
+            <p>Notre simulateur interactif est en cours de déploiement. En attendant, demandez une estimation
+              personnalisée directement par téléphone ou via WhatsApp — réponse garantie sous 24h.</p>
             <div style="display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem;">
               <a href="contact.html" class="btn btn-primary">Devis gratuit → 24h</a>
               <a href="tel:+33667924630" class="btn btn-outline">📞 06 67 92 46 30</a>
@@ -529,14 +841,18 @@
                 <span class="gain-meter-label">Puissance Stage 1</span>
                 <span class="gain-meter-val">+15 à +30%</span>
               </div>
-              <div class="gain-meter-bar"><div class="gain-meter-fill" style="width:72%"></div></div>
+              <div class="gain-meter-bar">
+                <div class="gain-meter-fill" style="width:72%"></div>
+              </div>
             </div>
             <div class="gain-meter">
               <div class="gain-meter-head">
                 <span class="gain-meter-label">Couple Stage 1</span>
                 <span class="gain-meter-val">+20 à +40%</span>
               </div>
-              <div class="gain-meter-bar"><div class="gain-meter-fill" style="width:82%"></div></div>
+              <div class="gain-meter-bar">
+                <div class="gain-meter-fill" style="width:82%"></div>
+              </div>
             </div>
             <div class="gain-meter">
               <div class="gain-meter-head">
@@ -544,7 +860,8 @@
                 <span class="gain-meter-val">−40 à −50%</span>
               </div>
               <div class="gain-meter-bar">
-                <div class="gain-meter-fill" style="width:90%;background:linear-gradient(90deg,var(--green),#6EE7B7)"></div>
+                <div class="gain-meter-fill" style="width:90%;background:linear-gradient(90deg,var(--green),#6EE7B7)">
+                </div>
               </div>
             </div>
             <div class="gain-meter">
@@ -595,7 +912,8 @@
           <div class="sim-cta-card">
             <div class="sim-cta-card-title">Devis<br><em>personnalisé</em></div>
             <p class="sim-cta-card-desc">
-              Pour une estimation précise adaptée à votre véhicule, contactez-nous directement. Réponse garantie sous 24h, gratuit &amp; sans engagement.
+              Pour une estimation précise adaptée à votre véhicule, contactez-nous directement. Réponse garantie sous
+              24h, gratuit &amp; sans engagement.
             </p>
             <a href="contact.html" class="btn btn-primary">Demander un devis →</a>
           </div>
@@ -611,7 +929,8 @@
                 Le Stage 1 abîme-t-il le moteur ?
                 <span class="sim-faq-icon">+</span>
               </button>
-              <div class="sim-faq-a">Non. Un Stage 1 sérieux reste dans les tolérances mécaniques d'origine. Diagnostic complet avant chaque intervention.</div>
+              <div class="sim-faq-a">Non. Un Stage 1 sérieux reste dans les tolérances mécaniques d'origine. Diagnostic
+                complet avant chaque intervention.</div>
             </div>
 
             <div class="sim-faq-item">
@@ -619,7 +938,8 @@
                 La reprogrammation est-elle réversible ?
                 <span class="sim-faq-icon">+</span>
               </button>
-              <div class="sim-faq-a">Oui, 100%. Votre fichier d'origine est conservé et peut être réinstallé à tout moment, gratuitement.</div>
+              <div class="sim-faq-a">Oui, 100%. Votre fichier d'origine est conservé et peut être réinstallé à tout
+                moment, gratuitement.</div>
             </div>
 
             <div class="sim-faq-item">
@@ -627,7 +947,8 @@
                 L'E85 convient-il à mon essence turbo ?
                 <span class="sim-faq-icon">+</span>
               </button>
-              <div class="sim-faq-a">La quasi-totalité des essences turbo post-2000 est compatible. On vérifie gratuitement avant toute intervention.</div>
+              <div class="sim-faq-a">La quasi-totalité des essences turbo post-2000 est compatible. On vérifie
+                gratuitement avant toute intervention.</div>
             </div>
 
             <div class="sim-faq-item">
@@ -635,11 +956,14 @@
                 Combien de temps dure l'intervention ?
                 <span class="sim-faq-icon">+</span>
               </button>
-              <div class="sim-faq-a">Entre 45 min et 1h30 en standard. Certains calculateurs nécessitent jusqu'à 2h30.</div>
+              <div class="sim-faq-a">Entre 45 min et 1h30 en standard. Certains calculateurs nécessitent jusqu'à 2h30.
+              </div>
             </div>
 
           </div>
-          <a href="faq.html" style="display:inline-block;margin-top:1rem;font-family:var(--font-mono,'Barlow Condensed'),sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);text-decoration:none;">Voir toutes les FAQ →</a>
+          <a href="faq.html"
+            style="display:inline-block;margin-top:1rem;font-family:var(--font-mono,'Barlow Condensed'),sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);text-decoration:none;">Voir
+            toutes les FAQ →</a>
         </div>
 
       </aside><!-- /sim-sidebar -->
@@ -660,7 +984,8 @@
       <div class="sim-info-item">
         <div class="sim-info-icon">🛡️</div>
         <div class="sim-info-title">Garantie 2 ans</div>
-        <div class="sim-info-desc">Sur la cartographie et la prestation. Réintervention incluse si mise à jour constructeur.</div>
+        <div class="sim-info-desc">Sur la cartographie et la prestation. Réintervention incluse si mise à jour
+          constructeur.</div>
       </div>
       <div class="sim-info-item">
         <div class="sim-info-icon">⏱️</div>
@@ -693,11 +1018,11 @@
 
   <script>
     // ── IFRAME LOADING MANAGEMENT ─────────────────
-    (function() {
-      var iframe    = document.getElementById('sim-iframe');
-      var loading   = document.getElementById('iframeLoading');
-      var fallback  = document.getElementById('iframeFallback');
-      var wrapper   = document.getElementById('iframeWrapper');
+    (function () {
+      var iframe = document.getElementById('sim-iframe');
+      var loading = document.getElementById('iframeLoading');
+      var fallback = document.getElementById('iframeFallback');
+      var wrapper = document.getElementById('iframeWrapper');
 
       // If no src set → show fallback immediately
       if (!iframe.src || iframe.src === window.location.href || iframe.src === '') {
@@ -708,12 +1033,12 @@
       }
 
       // Hide loading when iframe loaded
-      iframe.addEventListener('load', function() {
+      iframe.addEventListener('load', function () {
         loading.classList.add('hidden');
       });
 
       // Timeout fallback — if iframe doesn't load in 8s
-      var timeout = setTimeout(function() {
+      var timeout = setTimeout(function () {
         if (!loading.classList.contains('hidden')) {
           loading.classList.add('hidden');
           fallback.classList.add('visible');
@@ -721,12 +1046,12 @@
         }
       }, 8000);
 
-      iframe.addEventListener('load', function() {
+      iframe.addEventListener('load', function () {
         clearTimeout(timeout);
       });
 
       // Error fallback
-      iframe.addEventListener('error', function() {
+      iframe.addEventListener('error', function () {
         clearTimeout(timeout);
         loading.classList.add('hidden');
         fallback.classList.add('visible');
@@ -735,11 +1060,11 @@
     })();
 
     // ── SIDEBAR FAQ MINI ──────────────────────────
-    document.querySelectorAll('.sim-faq-q').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+    document.querySelectorAll('.sim-faq-q').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         var item = btn.closest('.sim-faq-item');
         var isOpen = item.classList.contains('open');
-        document.querySelectorAll('.sim-faq-item.open').forEach(function(i) {
+        document.querySelectorAll('.sim-faq-item.open').forEach(function (i) {
           i.classList.remove('open');
         });
         if (!isOpen) item.classList.add('open');
@@ -747,14 +1072,14 @@
     });
 
     // ── ANIMATE GAIN METERS ON SCROLL ────────────
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
         if (e.isIntersecting) {
-          e.target.querySelectorAll('.gain-meter-fill').forEach(function(fill) {
+          e.target.querySelectorAll('.gain-meter-fill').forEach(function (fill) {
             var w = fill.style.width;
             fill.style.width = '0%';
-            requestAnimationFrame(function() {
-              setTimeout(function() { fill.style.width = w; }, 100);
+            requestAnimationFrame(function () {
+              setTimeout(function () { fill.style.width = w; }, 100);
             });
           });
           observer.unobserve(e.target);
@@ -766,4 +1091,5 @@
     if (gainBlock) observer.observe(gainBlock);
   </script>
 </body>
+
 </html>
