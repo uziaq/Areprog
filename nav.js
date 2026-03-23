@@ -44,7 +44,7 @@ const NAV_HTML = `
  </li>
  <li><a href="/about" data-page="about">À propos</a></li>
  <li><a href="/faq" data-page="faq">FAQ</a></li>
- <li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
+<li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
  <li><a href="/contact" data-page="contact">Contact</a></li>
  </ul>
  <a href="/contact" class="nav-cta">Devis gratuit</a>
@@ -75,7 +75,7 @@ const NAV_HTML = `
  </div>
  <a href="/about" data-page="about">À propos</a>
  <a href="/faq" data-page="faq">FAQ</a>
- <a href="/simulateur" data-page="simulateur">Simulateur</a>
+ <li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
  <a href="/contact" data-page="contact">Nous contacter</a>
 </div>
 `;
