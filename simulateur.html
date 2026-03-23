@@ -289,7 +289,10 @@
       flex: 1;
       position: relative;
       background: var(--bg);
-      min-height: 500px;
+      height: 750px;
+      min-height: 750px;
+      max-height: 750px;
+      overflow: hidden;
     }
 
     /* Loading overlay */
@@ -339,11 +342,13 @@
     #sim-iframe {
       display: block;
       width: 100%;
-      height: 100%;
-      min-height: 600px;
+      height: 750px;
+      min-height: 750px;
+      max-height: 750px;
       border: none;
       position: relative;
       z-index: 1;
+      overflow: hidden;
     }
 
     /* Iframe error fallback */
@@ -810,7 +815,8 @@
           -->
           <iframe id="sim-iframe"
             src="https://api.olsx.eu/iframe?token=165|nY954hlsQT6tK8OLuaZtdtnj7zS0HYzBRIWsYYQk7966bc37&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=off&mailcontact=arthur%40areprog.fr"
-            title="Simulateur de gains reprogrammation moteur AREPROG" loading="lazy" allow="fullscreen" allowfullscreen
+            title="Simulateur de gains reprogrammation moteur AREPROG" loading="lazy"
+            scrolling="no"
             sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
             aria-label="Simulateur de gains moteur interactif"></iframe>
 
@@ -1091,8 +1097,7 @@
     var gainBlock = document.querySelector('.gain-meters');
     if (gainBlock) observer.observe(gainBlock);
   </script>
-  <script src="https://api.olsx.eu/assets/iframe-resizer-parent.min.js"></script>
-<script src="https://api.olsx.eu/assets/iframe-olsx.js"></script>
+
 </body>
 
 </html>
