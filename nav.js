@@ -75,7 +75,7 @@ const NAV_HTML = `
  </div>
  <a href="/about" data-page="about">À propos</a>
  <a href="/faq" data-page="faq">FAQ</a>
- <li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
+ <a href="/simulateur" data-page="simulateur">Simulateur</a>
  <a href="/contact" data-page="contact">Nous contacter</a>
 </div>
 `;
