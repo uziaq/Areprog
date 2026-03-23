@@ -808,10 +808,11 @@
               loading="lazy"     — chargement différé (recommandé)
             ════════════════════════════════════════════════════════
           -->
-          <iframe
-            src="https://api.olsx.eu/iframe?token=157|sqS8GwFH7tv89HQzl1FyHVYzbS0iBlXNzMuzg3YD6dcd2ee9&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=off&mailcontact=arthur%40areprog.fr"
-            id="iframe-olsx" style="width: 100%; border: none;">
-          </iframe>
+          <iframe id="sim-iframe"
+            src="https://api.olsx.eu/iframe?token=158|vFCes3RqEd2VIcnWxgmF6yhhpCy1SFeNQVD5xgsc26601c81&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=off&mailcontact=arthur%40areprog.fr"
+            title="Simulateur de gains reprogrammation moteur AREPROG" loading="lazy" allow="fullscreen" allowfullscreen
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+            aria-label="Simulateur de gains moteur interactif"></iframe>
 
           <!-- Fallback si l'iframe ne charge pas ou si src est vide -->
           <div class="sim-iframe-fallback" id="iframeFallback">
@@ -1090,6 +1091,8 @@
     var gainBlock = document.querySelector('.gain-meters');
     if (gainBlock) observer.observe(gainBlock);
   </script>
+  <script src="https://api.olsx.eu/assets/iframe-resizer-parent.min.js"></script>
+  <script src="https://api.olsx.eu/assets/iframe-olsx.js"></script>
 </body>
 
 </html>
