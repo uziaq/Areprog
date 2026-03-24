@@ -51,4 +51,4 @@
 /guide-reprogrammation-moteur.html      /guide-reprogrammation-moteur      301!
 
 # Wildcard SPA fallback (toujours en dernier)
-/*  /index.html  200
+/*  /404.html  404
