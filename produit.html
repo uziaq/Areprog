@@ -164,6 +164,8 @@
   <meta property="og:locale" content="fr_FR"/>
   <meta property="og:site_name" content="AREPROG"/>
   <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" id="tw-title" content=""/>
+  <meta name="twitter:description" id="tw-desc" content=""/>
   <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
   <meta property="og:url" content="https://areprog.fr/produit"/>
 </head>
@@ -201,8 +203,10 @@ function renderPage(p) {
   document.getElementById('page-title').textContent = p.seoTitle || p.name + ' — AREPROG';
   document.getElementById('page-desc').content = p.seoDesc || p.shortDesc;
   document.getElementById('page-canonical').href = 'https://areprog.fr/produit?id=' + p.id;
-  document.getElementById('og-title').content = p.seoTitle || p.name;
-  document.getElementById('og-desc').content = p.seoDesc || p.shortDesc;
+  document.getElementById('tw-title').content = document.getElementById('og-title').content
+    document.getElementById('og-title').content = p.seoTitle || p.name;
+  document.getElementById('tw-desc').content = document.getElementById('og-desc').content
+    document.getElementById('og-desc').content = p.seoDesc || p.shortDesc;
 
   // ── RELATED ─────────────────────────
   const related = getRelatedProducts(p, 3);
