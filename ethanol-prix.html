@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SP95 à 2€/L — Passez à l'E85 et économisez | AREPROG</title>
+  <meta name="description" content="SP95 dépasse les 2€/L et ça continue de monter. Passez à la reprogrammation éthanol E85 — carburant à 0,77€/L. Intervention à domicile Pays Basque, Pau, Auxerre."/>
+  <link rel="canonical" href="https://areprog.fr/ethanol-prix"/>
+  <meta name="robots" content="index, follow"/>
+  <meta property="og:title" content="SP95 à 2€/L — Passez à l'E85 et économisez | AREPROG"/>
+  <meta property="og:description" content="Le SP95 ne cesse d'augmenter. L'E85 est à 0,77€/L. Conversion éthanol à domicile — économisez jusqu'à 1 200€/an."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://areprog.fr/ethanol-prix"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:locale" content="fr_FR"/>
+  <meta property="og:site_name" content="AREPROG"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="services.css"/>
+  <style>
+    :root {
+      --accent: #34D399;
+      --accent-rgb: 52,211,153;
+      --accent-light: #6EE7B7;
+      --danger: #F87171;
+      --danger-rgb: 248,113,113;
+      --amber: #F59E0B;
+      --amber-rgb: 245,158,11;
+    }
+
+    /* ── TICKER ALERTE PRIX ── */
+    .price-ticker {
+      background: linear-gradient(90deg, rgba(248,113,113,.12), rgba(245,158,11,.08), rgba(248,113,113,.12));
+      border-bottom: 1px solid rgba(248,113,113,.3);
+      padding: .55rem 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .price-ticker::before, .price-ticker::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .price-ticker::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+    .price-ticker::after { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+    .ticker-track {
+      display: flex;
+      gap: 0;
+      animation: ticker 28s linear infinite;
+      width: max-content;
+    }
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: .6rem;
+      padding: 0 2rem;
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--danger);
+      white-space: nowrap;
+    }
+    .ticker-item.e85 { color: var(--accent); }
+    .ticker-item .t-arrow { font-size: .9rem; }
+    .ticker-sep {
+      color: var(--muted2);
+      padding: 0 .5rem;
+    }
+
+    /* ── HERO URGENCE ── */
+    .ep-hero {
+      padding: 5rem 5rem 4rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .ep-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 50%, rgba(248,113,113,.06), transparent),
+        radial-gradient(ellipse 50% 80% at 10% 20%, rgba(52,211,153,.05), transparent);
+      pointer-events: none;
+    }
+    .ep-hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(38,40,44,.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(38,40,44,.3) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 85% 70% at 80% 30%, black, transparent);
+      pointer-events: none;
+    }
+
+    .ep-hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 5rem;
+      align-items: center;
+      position: relative; z-index: 1;
+      max-width: 1200px;
+    }
+
+    .ep-urgency-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(248,113,113,.1);
+      border: 1px solid rgba(248,113,113,.35);
+      color: var(--danger);
+      font-family: var(--font-mono);
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      padding: .3rem .8rem;
+      border-radius: 3px;
+      margin-bottom: 1.2rem;
+    }
+    .ep-urgency-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--danger);
+      border-radius: 50%;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .ep-hero h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      line-height: .9;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .ep-hero h1 .strike {
+      position: relative;
+      color: var(--danger);
+      display: inline-block;
+    }
+    .ep-hero h1 .strike::after {
+      content: '';
+      position: absolute;
+      left: -2% ; right: -2%;
+      top: 50%; height: 4px;
+      background: var(--danger);
+      transform: rotate(-3deg) translateY(-50%);
+      border-radius: 2px;
+    }
+    .ep-hero h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent-light);
+      display: block;
+    }
+
+    .ep-subtitle {
+      font-size: 1.05rem;
+      color: var(--text2);
+      line-height: 1.75;
+      max-width: 480px;
+      margin-bottom: 2rem;
+    }
+
+    /* Comparateur de prix hero */
+    .price-compare-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .pcc-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: .9rem 1.4rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .pcc-title {
+      font-family: var(--font-mono);
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .pcc-live {
+      display: flex; align-items: center; gap: .4rem;
+      font-family: var(--font-mono);
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent);
+    }
+    .pcc-live::before {
+      content: '';
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    .pcc-body { padding: 1.4rem; display: flex; flex-direction: column; gap: .8rem; }
+
+    .fuel-row {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .fuel-row.bad {
+      background: rgba(248,113,113,.05);
+      border-color: rgba(248,113,113,.2);
+    }
+    .fuel-row.good {
+      background: rgba(52,211,153,.05);
+      border-color: rgba(52,211,153,.2);
+    }
+
+    .fuel-name {
+      font-family: var(--font-mono);
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      min-width: 60px;
+    }
+    .fuel-row.bad .fuel-name { color: var(--danger); }
+    .fuel-row.good .fuel-name { color: var(--accent); }
+
+    .fuel-bar-wrap { flex: 1; height: 6px; background: var(--surface3); border-radius: 4px; overflow: hidden; }
+    .fuel-bar {
+      height: 100%; border-radius: 4px;
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .fuel-row.bad .fuel-bar { background: var(--danger); }
+    .fuel-row.good .fuel-bar { background: var(--accent); }
+
+    .fuel-price {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 800;
+      letter-spacing: -.02em; line-height: 1;
+      min-width: 80px; text-align: right;
+    }
+    .fuel-row.bad .fuel-price { color: var(--danger); }
+    .fuel-row.good .fuel-price { color: var(--accent); }
+
+    .fuel-trend {
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em;
+      padding: .15rem .4rem;
+      border-radius: 3px;
+    }
+    .fuel-row.bad .fuel-trend {
+      background: rgba(248,113,113,.15);
+      color: var(--danger);
+    }
+    .fuel-row.good .fuel-trend {
+      background: rgba(52,211,153,.15);
+      color: var(--accent);
+    }
+
+    .pcc-delta {
+      margin-top: .3rem;
+      padding: 1rem 1.2rem;
+      background: linear-gradient(135deg, rgba(52,211,153,.08), rgba(52,211,153,.04));
+      border: 1px solid rgba(52,211,153,.2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .pcc-delta-label {
+      font-family: var(--font-mono);
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .pcc-delta-val {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 800;
+      color: var(--accent-light);
+      letter-spacing: -.02em;
+    }
+    .pcc-date {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: .58rem;
+      color: var(--muted2);
+      margin-top: .8rem;
+      letter-spacing: .08em;
+    }
+
+    /* ── SIMULATEUR CALCUL URGENCE ── */
+    .ep-calc {
+      padding: 5rem;
+      background: var(--bg-warm);
+      border-bottom: 1px solid var(--border);
+    }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 3rem;
+      align-items: start;
+    }
+
+    .calc-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .calc-form-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .calc-form-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+
+    .calc-field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .calc-field input, .calc-field select {
+      width: 100%;
+      background: var(--surface3);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      padding: .65rem .9rem;
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+    .calc-field input:focus, .calc-field select:focus {
+      border-color: var(--accent);
+    }
+
+    .calc-btn {
+      width: 100%;
+      padding: .9rem;
+      background: var(--accent);
+      color: #0d1410;
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      border: none; border-radius: 4px;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      margin-top: .5rem;
+    }
+    .calc-btn:hover { background: var(--accent-light); }
+    .calc-btn:active { transform: scale(.98); }
+
+    .calc-results {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .4s, transform .4s;
+    }
+    .result-card.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .result-card.highlight {
+      border-color: rgba(52,211,153,.3);
+      background: rgba(52,211,153,.04);
+    }
+
+    .result-label {
+      font-family: var(--font-mono);
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .result-val {
+      font-family: var(--font-display);
+      font-size: 2.5rem; font-weight: 800;
+      line-height: 1; letter-spacing: -.02em;
+      color: var(--text);
+    }
+    .result-card.highlight .result-val { color: var(--accent-light); }
+    .result-sub {
+      font-size: .8rem; color: var(--muted);
+      margin-top: .3rem; line-height: 1.5;
+    }
+
+    /* ── SECTION ALERTE HAUSSE ── */
+    .ep-alert {
+      padding: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .alert-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .alert-card {
+      border-radius: 10px;
+      padding: 2rem;
+      border: 1px solid;
+      position: relative;
+      overflow: hidden;
+    }
+    .alert-card.danger {
+      background: rgba(248,113,113,.05);
+      border-color: rgba(248,113,113,.2);
+    }
+    .alert-card.good {
+      background: rgba(52,211,153,.05);
+      border-color: rgba(52,211,153,.2);
+    }
+    .alert-card-label {
+      font-family: var(--font-mono);
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .alert-card.danger .alert-card-label { color: var(--danger); }
+    .alert-card.good .alert-card-label { color: var(--accent); }
+    .alert-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem; font-weight: 700;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .alert-card.danger h3 { color: var(--danger); }
+    .alert-card.good h3 { color: var(--accent-light); }
+    .alert-card p {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .price-progression {
+      margin-top: 1.2rem;
+      display: flex; flex-direction: column; gap: .4rem;
+    }
+    .price-point {
+      display: flex; align-items: center; gap: .8rem;
+      font-family: var(--font-mono);
+      font-size: .72rem;
+    }
+    .price-point .pp-date { color: var(--muted2); min-width: 85px; }
+    .price-point .pp-val { font-weight: 700; }
+    .danger .price-point .pp-val { color: var(--danger); }
+    .good .price-point .pp-val { color: var(--accent); }
+    .price-point .pp-bar-wrap { flex: 1; height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+    .price-point .pp-bar { height: 100%; border-radius: 2px; }
+    .danger .price-point .pp-bar { background: var(--danger); }
+    .good .price-point .pp-bar { background: var(--accent); }
+
+    /* ── WHY NOW ── */
+    .ep-why {
+      background: var(--bg-warm);
+      padding: 5rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .why-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      transition: border-color .25s, transform .25s;
+    }
+    .why-card:hover {
+      border-color: rgba(52,211,153,.3);
+      transform: translateY(-3px);
+    }
+    .why-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .why-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: .7rem;
+    }
+    .why-card p {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .why-highlight {
+      margin-top: .8rem;
+      padding: .5rem .8rem;
+      background: rgba(52,211,153,.08);
+      border: 1px solid rgba(52,211,153,.2);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: .68rem; font-weight: 700;
+      color: var(--accent-light);
+      letter-spacing: .08em;
+    }
+
+    /* ── PROCESS ── */
+    .ep-process {
+      padding: 5rem;
+    }
+    .ep-process .process-steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* ── COMPAT ── */
+    .ep-compat {
+      background: var(--bg-warm);
+      border-top: 1px solid var(--border);
+      padding: 5rem;
+    }
+    .ep-compat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 3rem;
+    }
+    .brand-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+    .brand-chip {
+      font-family: var(--font-mono);
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em;
+      padding: .35rem .8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text2);
+      transition: border-color .2s, color .2s;
+    }
+    .brand-chip:hover {
+      border-color: rgba(52,211,153,.3);
+      color: var(--accent-light);
+    }
+
+    /* ── FAQ ── */
+    .ep-faq {
+      padding: 5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── CTA FINAL ── */
+    .ep-final-cta {
+      text-align: center;
+      padding: 7rem 5rem;
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .ep-final-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(52,211,153,.06), transparent);
+      pointer-events: none;
+    }
+    .ep-final-cta .big-number {
+      font-family: var(--font-display);
+      font-size: clamp(4rem,12vw,9rem);
+      font-weight: 800;
+      line-height: .9;
+      color: rgba(52,211,153,.08);
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      letter-spacing: -.05em;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .ep-final-cta-inner { position: relative; z-index: 1; }
+    .ep-final-cta h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2rem,5vw,4rem);
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .ep-final-cta h2 em {
+      font-style: italic; font-weight: 300;
+      color: var(--accent-light);
+    }
+    .ep-final-cta p {
+      max-width: 440px; margin: 0 auto 2.5rem;
+      color: var(--muted); line-height: 1.7;
+    }
+    .cta-row { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .ep-hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .calc-grid { grid-template-columns: 1fr; }
+      .alert-grid { grid-template-columns: 1fr; }
+      .ep-compat-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .ep-hero, .ep-calc, .ep-alert, .ep-why, .ep-process, .ep-compat, .ep-faq, .ep-final-cta { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .why-grid { grid-template-columns: 1fr 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr !important; }
+      .process-steps::before { display: none; }
+    }
+    @media (max-width: 500px) {
+      .why-grid { grid-template-columns: 1fr; }
+      .ep-hero h1 { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<body data-page="e85">
+  <div id="nav-container"></div>
+  <div class="page-wrap">
+
+    <!-- ── TICKER PRIX ── -->
+    <div class="price-ticker">
+      <div class="ticker-track" id="tickerTrack">
+        <!-- dupliqué via JS pour loop infini -->
+        <span class="ticker-item">⬆ SP95 <strong>2,00 €/L</strong> <span class="t-arrow">↑</span></span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">⬆ SP98 <strong>2,06 €/L</strong> <span class="t-arrow">↑</span></span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item e85">⬇ E85 <strong>0,77 €/L</strong> stable</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Écart SP95 / E85 : <strong>+1,23 €/L</strong></span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Sur 15 000 km/an : économie jusqu'à <strong>1 200 €</strong></span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">⬆ SP95 <strong>2,00 €/L</strong> <span class="t-arrow">↑</span></span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">⬆ SP98 <strong>2,06 €/L</strong> <span class="t-arrow">↑</span></span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item e85">⬇ E85 <strong>0,77 €/L</strong> stable</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Écart SP95 / E85 : <strong>+1,23 €/L</strong></span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Sur 15 000 km/an : économie jusqu'à <strong>1 200 €</strong></span>
+        <span class="ticker-sep">·</span>
+      </div>
+    </div>
+
+    <!-- ── HERO ── -->
+    <header class="ep-hero">
+      <div class="ep-hero-inner">
+        <div class="ep-hero-left">
+          <div class="ep-urgency-badge">Alerte prix carburant — Mars 2026</div>
+          <h1>
+            <span class="strike">SP95 à 2€</span><br>
+            <em>Passez à l'E85</em>
+          </h1>
+          <p class="ep-subtitle">
+            Le SP95 vient de franchir le seuil des <strong>2,00 €/L</strong> et la hausse continue. L'E85 s'affiche à <strong>0,77 €/L</strong>. AREPROG reprogramme votre calculateur pour rouler au bioéthanol — à domicile, en 1h.
+          </p>
+          <div class="sv-actions">
+            <a href="/contact" class="btn btn-primary">Vérifier ma compatibilité</a>
+            <a href="#simulateur" class="btn btn-outline">Calculer mes économies</a>
+            <a href="tel:+33667924630" class="btn btn-outline">06 67 92 46 30</a>
+          </div>
+          <div class="sv-stats">
+            <div class="hs-item">
+              <div class="hs-val"><span>−61%</span></div>
+              <div class="hs-label">Prix E85 vs SP95</div>
+            </div>
+            <div class="hs-sep"></div>
+            <div class="hs-item">
+              <div class="hs-val"><span>0,77€</span></div>
+              <div class="hs-label">E85 / litre ce jour</div>
+            </div>
+            <div class="hs-sep"></div>
+            <div class="hs-item">
+              <div class="hs-val"><span>1 200€</span></div>
+              <div class="hs-label">Économie / an estimée</div>
+            </div>
+            <div class="hs-sep"></div>
+            <div class="hs-item">
+              <div class="hs-val"><span>1h</span></div>
+              <div class="hs-label">Durée d'intervention</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comparateur prix -->
+        <div class="price-compare-card">
+          <div class="pcc-header">
+            <span class="pcc-title">Prix carburants moyens France</span>
+            <span class="pcc-live">Données du jour</span>
+          </div>
+          <div class="pcc-body">
+            <div class="fuel-row bad">
+              <span class="fuel-name">SP95</span>
+              <div class="fuel-bar-wrap"><div class="fuel-bar" id="barSP95" style="width:0%"></div></div>
+              <span class="fuel-price">2,00€</span>
+              <span class="fuel-trend">↑ +8%</span>
+            </div>
+            <div class="fuel-row bad">
+              <span class="fuel-name">SP98</span>
+              <div class="fuel-bar-wrap"><div class="fuel-bar" id="barSP98" style="width:0%"></div></div>
+              <span class="fuel-price">2,06€</span>
+              <span class="fuel-trend">↑ +7%</span>
+            </div>
+            <div class="fuel-row bad" style="opacity:.7">
+              <span class="fuel-name">E10</span>
+              <div class="fuel-bar-wrap"><div class="fuel-bar" style="width:0%" id="barE10"></div></div>
+              <span class="fuel-price">1,96€</span>
+              <span class="fuel-trend">↑ +6%</span>
+            </div>
+            <div class="fuel-row good">
+              <span class="fuel-name">E85</span>
+              <div class="fuel-bar-wrap"><div class="fuel-bar" id="barE85" style="width:0%"></div></div>
+              <span class="fuel-price">0,77€</span>
+              <span class="fuel-trend">↓ stable</span>
+            </div>
+            <div class="pcc-delta">
+              <span class="pcc-delta-label">Vous économisez / litre</span>
+              <span class="pcc-delta-val">− 1,23 €</span>
+            </div>
+            <div class="pcc-date">Source : prix-carburants.gouv.fr — 26 mars 2026</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── SIMULATEUR ── -->
+    <section class="ep-calc" id="simulateur">
+      <div class="label">Simulateur économies</div>
+      <div class="calc-grid">
+        <div>
+          <h2 style="font-family:var(--font-display);font-weight:700;font-size:2rem;line-height:1.1;margin-bottom:1.2rem;">Calculez vos <em style="font-style:italic;font-weight:300;color:var(--accent-light);">économies réelles</em></h2>
+          <p style="color:var(--text2);line-height:1.8;margin-bottom:1rem;font-size:.95rem;">Entrez vos données de conduite pour obtenir une estimation personnalisée basée sur les prix actuels du SP95 et de l'E85.</p>
+          <p style="color:var(--muted);font-size:.85rem;line-height:1.7;">Les calculs intègrent la sur-consommation volumique de l'E85 (+22%) et le coût de la conversion AREPROG pour vous donner le retour sur investissement réel.</p>
+
+          <div class="calc-form" style="margin-top:2rem;">
+            <div class="calc-form-header">Vos données de conduite</div>
+            <div class="calc-form-body">
+              <div class="calc-field">
+                <label>Kilométrage annuel</label>
+                <input type="number" id="km" value="15000" min="5000" max="100000" step="1000"/>
+              </div>
+              <div class="calc-field">
+                <label>Consommation actuelle (L/100km)</label>
+                <input type="number" id="conso" value="7" min="4" max="20" step="0.5"/>
+              </div>
+              <div class="calc-field">
+                <label>Coût conversion AREPROG estimé</label>
+                <select id="conv">
+                  <option value="300">~300€ (véhicule standard)</option>
+                  <option value="400">~400€ (véhicule premium)</option>
+                  <option value="500">~500€ (véhicule haute puissance)</option>
+                </select>
+              </div>
+              <button class="calc-btn" onclick="calculer()">→ Calculer mes économies</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-results" id="results">
+          <div class="result-card" id="rc1">
+            <div class="result-label">Coût annuel actuel SP95</div>
+            <div class="result-val" id="coutSP95">—</div>
+            <div class="result-sub">Basé sur 2,00 €/L</div>
+          </div>
+          <div class="result-card" id="rc2">
+            <div class="result-label">Coût annuel avec E85</div>
+            <div class="result-val" id="coutE85">—</div>
+            <div class="result-sub">Basé sur 0,77 €/L (+22% conso volumique)</div>
+          </div>
+          <div class="result-card highlight" id="rc3">
+            <div class="result-label">🎉 Économie annuelle estimée</div>
+            <div class="result-val" id="economie">—</div>
+            <div class="result-sub" id="roi">Entrez vos données pour calculer</div>
+          </div>
+          <div style="padding:.8rem 0;">
+            <a href="/contact" class="btn btn-primary" style="display:block;text-align:center;padding:.9rem;">Demander un devis gratuit</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ALERTE HAUSSE ── -->
+    <section class="ep-alert">
+      <div class="label">Contexte marché</div>
+      <h2 style="font-family:var(--font-display);font-weight:700;font-size:2rem;line-height:1.1;margin:.5rem 0 .5rem;">Pourquoi le SP95 monte <em style="font-style:italic;font-weight:300;color:var(--danger);">et ne va pas baisser</em></h2>
+      <p style="color:var(--muted);max-width:600px;font-size:.9rem;line-height:1.7;">Tensions géopolitiques, volatilité du brut, taxes : les raisons de la hausse sont structurelles. L'E85, lui, est produit localement à partir de cultures françaises.</p>
+      <div class="alert-grid">
+        <div class="alert-card danger reveal">
+          <div class="alert-card-label">⚠ SP95 — En hausse</div>
+          <h3>+8% en 3 semaines</h3>
+          <p>Le SP95 a gagné près de 15 centimes depuis début mars 2026. Les tensions sur le marché pétrolier international et la volatilité du cours du brut poussent les prix à la pompe vers le haut.</p>
+          <div class="price-progression">
+            <div class="price-point">
+              <span class="pp-date">Début mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:85%"></div></div>
+              <span class="pp-val">1,87 €/L</span>
+            </div>
+            <div class="price-point">
+              <span class="pp-date">18 mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:92%"></div></div>
+              <span class="pp-val">1,94 €/L</span>
+            </div>
+            <div class="price-point">
+              <span class="pp-date">25 mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:97%"></div></div>
+              <span class="pp-val">1,99 €/L</span>
+            </div>
+            <div class="price-point">
+              <span class="pp-date">26 mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:100%"></div></div>
+              <span class="pp-val">2,00 €/L</span>
+            </div>
+          </div>
+        </div>
+        <div class="alert-card good reveal">
+          <div class="alert-card-label">✓ E85 — Stable & local</div>
+          <h3>0,77€/L — Stable</h3>
+          <p>Produit à partir de betterave sucrière et céréales françaises, le bioéthanol ne dépend pas du cours du pétrole. Son prix est structurellement bas et prévisible — un avantage décisif face à l'instabilité des marchés.</p>
+          <div class="price-progression">
+            <div class="price-point">
+              <span class="pp-date">Début mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:38%"></div></div>
+              <span class="pp-val">0,79 €/L</span>
+            </div>
+            <div class="price-point">
+              <span class="pp-date">18 mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:37%"></div></div>
+              <span class="pp-val">0,80 €/L</span>
+            </div>
+            <div class="price-point">
+              <span class="pp-date">25 mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:36%"></div></div>
+              <span class="pp-val">0,78 €/L</span>
+            </div>
+            <div class="price-point">
+              <span class="pp-date">26 mars</span>
+              <div class="pp-bar-wrap"><div class="pp-bar" style="width:36%"></div></div>
+              <span class="pp-val">0,77 €/L</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── POURQUOI MAINTENANT ── -->
+    <section class="ep-why">
+      <div class="label">Pourquoi maintenant</div>
+      <h2 style="font-family:var(--font-display);font-weight:700;font-size:2rem;line-height:1.1;margin:.5rem 0 3rem;">3 raisons d'agir <em style="font-style:italic;font-weight:300;color:var(--accent-light);">dès aujourd'hui</em></h2>
+      <div class="why-grid">
+        <div class="why-card reveal">
+          <div class="why-icon">📈</div>
+          <h3>L'écart ne va pas se réduire</h3>
+          <p>Chaque centime de hausse du SP95 augmente vos économies futures avec l'E85. Plus vous attendez, plus vous perdez d'argent que la conversion aurait économisé.</p>
+          <div class="why-highlight">Chaque mois sans conversion = argent perdu</div>
+        </div>
+        <div class="why-card reveal">
+          <div class="why-icon">⚡</div>
+          <h3>ROI accéléré par la hausse</h3>
+          <p>Avec un SP95 à 2€/L et un E85 à 0,77€/L, le retour sur investissement d'une conversion à 300-400€ est atteint en <strong style="color:var(--text);">moins de 8 mois</strong> pour 15 000 km/an.</p>
+          <div class="why-highlight">ROI dès le 8ème mois estimé</div>
+        </div>
+        <div class="why-card reveal">
+          <div class="why-icon">🏠</div>
+          <h3>Intervention à domicile</h3>
+          <p>Pas de déplacement, pas de journée bloquée. AREPROG se déplace chez vous dans tout le Pays Basque, Pau et la Yonne. L'intervention dure 45min à 1h30.</p>
+          <div class="why-highlight">Disponible sous 48-72h</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROCESS ── -->
+    <section class="ep-process">
+      <div class="label">Déroulement</div>
+      <h2 class="section-title" style="margin-top:.5rem">Comment se passe <em style="font-style:italic;font-weight:300;color:var(--accent-light)">l'intervention</em></h2>
+      <div class="process-steps" style="margin-top:3rem;">
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 01</div>
+          <div class="step-title">Devis gratuit en 24h</div>
+          <p class="step-desc">Envoyez marque, modèle et motorisation. On vérifie la compatibilité et vous envoie un devis sous 24h, sans engagement.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 02</div>
+          <div class="step-title">Intervention à domicile</div>
+          <p class="step-desc">On vient chez vous avec l'équipement. Lecture ECU, vérification état moteur, diagnostic complet avant toute modification.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 03</div>
+          <div class="step-title">Reprogrammation E85</div>
+          <p class="step-desc">Réécriture complète des tables d'injection, allumage et gestion carburant. Conversion native ECU — pas de boîtier externe.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-dot"></div>
+          <div class="step-num">Étape 04</div>
+          <div class="step-title">Validation & route</div>
+          <p class="step-desc">Test au bioéthanol sur route. Contrôle richesses, températures, consommation réelle. Garantie 2 ans incluse.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COMPAT ── -->
+    <section class="ep-compat">
+      <div class="label">Compatibilité</div>
+      <h2 style="font-family:var(--font-display);font-weight:700;font-size:2rem;line-height:1.1;margin:.5rem 0;">Votre véhicule est-il <em style="font-style:italic;font-weight:300;color:var(--accent-light)">compatible ?</em></h2>
+      <div class="ep-compat-grid">
+        <div>
+          <p style="color:var(--text2);line-height:1.8;margin-bottom:1.5rem;font-size:.95rem;">La majorité des moteurs essence turbo produits après 2000 sont compatibles. AREPROG vérifie gratuitement en 24h.</p>
+          <div class="compat-list">
+            <div class="compat-item"><span class="compat-dot"></span>VW / Audi TSI 1.0, 1.2, 1.4, 1.5, 1.8, 2.0</div>
+            <div class="compat-item"><span class="compat-dot"></span>Peugeot / Citroën THP 1.2, 1.6 PureTech</div>
+            <div class="compat-item"><span class="compat-dot"></span>Renault TCe 1.0, 1.3 — Megane, Clio, Captur</div>
+            <div class="compat-item"><span class="compat-dot"></span>BMW TwinPower Turbo — Série 1, 3, 5</div>
+            <div class="compat-item"><span class="compat-dot"></span>Ford EcoBoost 1.0, 1.5</div>
+            <div class="compat-item"><span class="compat-dot"></span>Mercedes-Benz turbo essence (sur étude)</div>
+          </div>
+          <div class="brand-chips">
+            <span class="brand-chip">Volkswagen</span>
+            <span class="brand-chip">Audi</span>
+            <span class="brand-chip">SEAT</span>
+            <span class="brand-chip">Skoda</span>
+            <span class="brand-chip">Peugeot</span>
+            <span class="brand-chip">Citroën</span>
+            <span class="brand-chip">Renault</span>
+            <span class="brand-chip">BMW</span>
+            <span class="brand-chip">Ford</span>
+            <span class="brand-chip">Opel</span>
+          </div>
+        </div>
+        <div class="compat-checks">
+          <div style="font-family:var(--font-mono);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem;">Ce qu'on vérifie avant toute intervention</div>
+          <div class="compat-check">Aucun code défaut moteur actif</div>
+          <div class="compat-check">Entretien à jour (courroie, filtres)</div>
+          <div class="compat-check">Pas de fuite ou surconsommation d'huile</div>
+          <div class="compat-check">Calculateur accessible et flashable</div>
+          <div class="compat-check">Batterie et alternateur en bon état</div>
+          <div class="compat-check">Injecteurs et pompe compatibles E85</div>
+          <div class="compat-note" style="margin-top:1.2rem;">Votre modèle n'est pas dans la liste ? Contactez-nous avec la marque, le modèle et la motorisation — on vérifie la faisabilité sous 24h, <strong style="color:var(--text);">gratuitement.</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section class="ep-faq sv-faq">
+      <div class="label">Questions fréquentes</div>
+      <h2 class="section-title" style="margin-top:.5rem">Vos questions sur <em style="font-style:italic;font-weight:300;color:var(--accent-light)">la conversion E85</em></h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-text">La conversion est-elle réversible ?</span>
+            <span class="faq-q-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a"><p>Oui, à 100%. On peut restaurer la cartographie d'origine à tout moment. Pratique si vous vendez le véhicule ou souhaitez revenir en arrière.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-text">L'E85 est-il disponible partout dans ma région ?</span>
+            <span class="faq-q-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a"><p>Le réseau E85 s'est considérablement développé — plus de 3 500 stations en France proposent l'E85. Dans le Pays Basque et les Pyrénées-Atlantiques, la couverture est bonne. On peut aussi vous proposer une version flex-fuel pour alterner E85 et SP95 sans contrainte.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-text">Ma consommation va-t-elle augmenter ?</span>
+            <span class="faq-q-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a"><p>L'E85 a une densité énergétique moindre : la consommation volumique augmente d'environ 20-25%. Mais comme l'E85 est 61% moins cher que le SP95, le bilan économique reste très largement positif. Exemple : 7L/100km au SP95 devient ~8,5L/100km à l'E85, mais vous passez de 1,40€/100km à 0,65€/100km.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-text">La garantie constructeur est-elle impactée ?</span>
+            <span class="faq-q-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a"><p>Techniquement, toute modification du calculateur peut affecter la garantie constructeur. Pour les véhicules hors garantie, aucun problème. On vous conseille sur votre situation spécifique lors du devis.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-text">Combien coûte la conversion ?</span>
+            <span class="faq-q-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a"><p>La conversion démarre à partir de 300€ selon le véhicule. Avec le SP95 à 2€/L et l'E85 à 0,77€/L, cette somme est récupérée en moins de 8 mois pour un kilométrage de 15 000 km/an. Devis précis et gratuit sous 24h.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA FINAL ── -->
+    <section class="ep-final-cta">
+      <div class="big-number">−61%</div>
+      <div class="ep-final-cta-inner">
+        <div class="label" style="justify-content:center">Conversion E85 à domicile — AREPROG</div>
+        <h2 style="margin-top:.8rem">Le SP95 monte.<br><em>Votre plein, lui, peut baisser.</em></h2>
+        <p>Devis gratuit sous 24h. Intervention à domicile dans tout le Pays Basque, les Pyrénées-Atlantiques et la Yonne.</p>
+        <div class="cta-row">
+          <a href="/contact" class="btn btn-primary">Demander un devis gratuit</a>
+          <a href="/simulateur" class="btn btn-outline">Simulateur complet</a>
+          <a href="tel:+33667924630" class="btn btn-outline">06 67 92 46 30</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- GEO -->
+    <div class="geo-bar">
+      <div class="geo-label">Zones d'intervention</div>
+      <div class="geo-tags">
+        <a href="/reprogrammation-moteur-bayonne" class="geo-tag">Bayonne</a>
+        <a href="/reprogrammation-moteur-biarritz" class="geo-tag">Biarritz</a>
+        <a href="/reprogrammation-moteur-anglet" class="geo-tag">Anglet</a>
+        <a href="/reprogrammation-moteur-pau" class="geo-tag">Pau</a>
+        <a href="/reprogrammation-moteur-auxerre" class="geo-tag">Auxerre &amp; Yonne</a>
+        <a href="/conversion-e85" class="geo-tag">Conversion E85</a>
+        <a href="/tarifs" class="geo-tag">Tarifs 2026</a>
+        <a href="/contact" class="geo-tag">Devis gratuit</a>
+      </div>
+    </div>
+
+  </div>
+  <div id="footer-container"></div>
+  <script src="nav.js"></script>
+  <script src="whatsapp-widget.js"></script>
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-q').setAttribute('aria-expanded','false');
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded','true');
+        }
+      });
+    });
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Animate bars on load
+    setTimeout(() => {
+      document.getElementById('barSP95').style.width = '100%';
+      document.getElementById('barSP98').style.width = '100%';
+      document.getElementById('barE10').style.width = '97%';
+      document.getElementById('barE85').style.width = '38%';
+    }, 400);
+
+    // Simulateur
+    function calculer() {
+      const km = parseFloat(document.getElementById('km').value) || 15000;
+      const conso = parseFloat(document.getElementById('conso').value) || 7;
+      const conv = parseFloat(document.getElementById('conv').value) || 300;
+      const prixSP95 = 2.00;
+      const prixE85 = 0.77;
+      const surConso = 1.22; // +22% volumique
+
+      const litresSP95 = km * conso / 100;
+      const litresE85 = litresSP95 * surConso;
+      const coutSP95 = litresSP95 * prixSP95;
+      const coutE85 = litresE85 * prixE85;
+      const gain = coutSP95 - coutE85;
+      const roi = conv / (gain / 12);
+
+      document.getElementById('coutSP95').textContent = coutSP95.toFixed(0) + ' €';
+      document.getElementById('coutE85').textContent = coutE85.toFixed(0) + ' €';
+      document.getElementById('economie').textContent = '+' + gain.toFixed(0) + ' €/an';
+      document.getElementById('roi').textContent = `Retour sur investissement estimé en ${roi.toFixed(1)} mois (conversion à ${conv}€)`;
+
+      ['rc1','rc2','rc3'].forEach((id, i) => {
+        setTimeout(() => {
+          document.getElementById(id).classList.add('visible');
+        }, i * 120);
+      });
+    }
+
+    // Init simulateur au chargement
+    calculer();
+  </script>
+</body>
+</html>
