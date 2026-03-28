@@ -156,12 +156,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
-  <url>
-    <loc>https://areprog.fr/boutique</loc>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.70</priority>
-  </url>
+
   <url>
     <loc>https://areprog.fr/about</loc>
     <lastmod>2026-03-28</lastmod>
@@ -170,7 +165,8 @@
   </url>
 
   <!-- ── Exclus intentionnellement ───────────────────────
-       simulateur  → noindex (robots.txt Disallow)
+       boutique     → supprimée
+       simulateur   → noindex (robots.txt Disallow)
        confirmation → noindex (robots.txt Disallow)
        produit      → noindex
        404          → noindex
