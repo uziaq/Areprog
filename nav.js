@@ -45,6 +45,7 @@ const NAV_HTML = `
  <li><a href="/reprogrammation-moteur-auxerre">Auxerre & Yonne</a></li>
  </ul>
  </li>
+ <li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
  <li><a href="/tarifs" data-page="tarifs">Tarifs</a></li>
  <li><a href="/about" data-page="about">À propos</a></li>
  <li><a href="/faq" data-page="faq">FAQ</a></li>
