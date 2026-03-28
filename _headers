@@ -1,40 +1,62 @@
-# ═══════════════════════════════════════════════
-# AREPROG — _headers (Netlify / Cloudflare Pages)
-# ═══════════════════════════════════════════════
+# ============================================================
+# AREPROG — Netlify _headers
+# Headers de sécurité appliqués à toutes les pages
+# ============================================================
+
 /*
-  X-Content-Type-Options: nosniff
-  X-Frame-Options: SAMEORIGIN
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  # HTTPS strict — force HTTPS pendant 1 an, incluant sous-domaines
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://js.stripe.com https://api.olsx.eu; style-src 'self' 'unsafe-inline' https://api.olsx.eu https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.stripe.com https://checkout.stripe.com https://api.olsx.eu; frame-src https://js.stripe.com https://hooks.stripe.com https://api.olsx.eu; frame-ancestors 'none';
 
-/*.css
-  Cache-Control: public, max-age=2592000, immutable
+  # Empêche le clickjacking (iframes malveillants)
+  X-Frame-Options: DENY
 
-/*.js
-  Cache-Control: public, max-age=2592000, immutable
+  # Empêche le sniffing MIME (attaques via fichiers uploadés)
+  X-Content-Type-Options: nosniff
 
-/*.jpg
-  Cache-Control: public, max-age=15552000
+  # Contrôle le referrer envoyé lors des clics sortants
+  Referrer-Policy: strict-origin-when-cross-origin
 
-/*.png
-  Cache-Control: public, max-age=15552000
+  # Désactive les fonctionnalités navigateur non utilisées
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
 
-/*.svg
+  # Content Security Policy — autorise uniquement les ressources légitimes
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://wa.me; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://wa.me https://formspree.io
+
+  # Empêche la détection automatique du type de contenu par IE
+  X-DNS-Prefetch-Control: on
+
+# Cache long sur les assets statiques (images, CSS, JS, fonts)
+/**.css
   Cache-Control: public, max-age=31536000, immutable
 
-/*.ico
+/**.js
   Cache-Control: public, max-age=31536000, immutable
 
-/*.html
+/**.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/**.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/**.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/**.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/**.ico
+  Cache-Control: public, max-age=31536000, immutable
+
+/**.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache court sur les pages HTML (pour pouvoir les mettre à jour)
+/**.html
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Sitemap et robots — pas de cache long
+/sitemap.xml
   Cache-Control: public, max-age=3600
 
-/admin.html
-  X-Robots-Tag: noindex, nofollow
-
-/confirmation.html
-  X-Robots-Tag: noindex, nofollow
-
-/simulateur.html
-  X-Robots-Tag: noindex, nofollow
+/robots.txt
+  Cache-Control: public, max-age=86400
