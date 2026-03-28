@@ -112,3 +112,10 @@ https://www.areprog.fr/*  https://areprog.fr/:splat  301!
 #    Netlify sert automatiquement /slug → /slug.html si le fichier existe
 #    Cette règle est en dernier recours pour tout ce qui n'est pas capté au-dessus
 /*  /:splat.html  200
+
+# ── Pages locales nouvelles (mars 2026)
+/reprogrammation-hendaye           /reprogrammation-moteur-hendaye         301!
+/hendaye                           /reprogrammation-moteur-hendaye         301!
+/reprogrammation-moteur-hendaye.html /reprogrammation-moteur-hendaye       301!
+
+

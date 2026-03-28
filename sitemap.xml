@@ -1,175 +1,181 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- ════════════════════════════════════════════════════
+       AREPROG — sitemap.xml
+       Mis à jour : mars 2026
+       URLs propres (sans .html) — valides sur Netlify
+       Sur GitHub Pages, utiliser les URLs avec .html
+  ════════════════════════════════════════════════════ -->
+
   <!-- Page d'accueil -->
   <url>
     <loc>https://areprog.fr/</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Pages locales — priorité maximale pour le SEO géo -->
+  <!-- ── Pages locales (priorité max — SEO géo) ──────── -->
   <url>
     <loc>https://areprog.fr/reprogrammation-moteur-bayonne</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation-moteur-pau</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation-moteur-biarritz</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation-moteur-anglet</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/reprogrammation-moteur-saint-jean-de-luz</loc>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation-moteur-dax</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation-moteur-auxerre</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
 
-  <!-- Pages services principales -->
+
+  <!-- ── Pages locales supplémentaires ───────────────── -->
+  <url>
+    <loc>https://areprog.fr/reprogrammation-moteur-hendaye</loc>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- ── Pages services principales ──────────────────── -->
   <url>
     <loc>https://areprog.fr/stage1</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://areprog.fr/conversion-e85</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/chip-tuning-pays-basque</loc>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://areprog.fr/stage2</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/desactivation-egr</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/desactivation-fap</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/desactivation-adblue</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/optimisation-consommation</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://areprog.fr/odis</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
 
-  <!-- Pages informatives -->
+  <!-- ── Pages informatives et conversion ─────────────── -->
   <url>
     <loc>https://areprog.fr/tarifs</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://areprog.fr/guide-reprogrammation-moteur</loc>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/ethanol-prix</loc>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://areprog.fr/faq</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://areprog.fr/contact</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/boutique</loc>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.70</priority>
   </url>
   <url>
     <loc>https://areprog.fr/about</loc>
-    <lastmod>2026-03-19</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.55</priority>
   </url>
 
-  <!-- Pages e-commerce -->
-  <url>
-    <loc>https://areprog.fr/boutique</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.70</priority>
-  </url>
-
-  <!-- Pages légales -->
-  <url>
-    <loc>https://areprog.fr/mentions-legales</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.20</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/politique-confidentialite</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.20</priority>
-  </url>
-
-
-  <!-- Nouvelle page SEO -->
-  <url>
-    <loc>https://areprog.fr/chip-tuning-pays-basque</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-
-  <!-- Pages SEO supplémentaires -->
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-saint-jean-de-luz</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/guide-reprogrammation-moteur</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- Exclus intentionnellement (noindex) :
-       simulateur, confirmation, produit, 404 -->
+  <!-- ── Exclus intentionnellement ───────────────────────
+       simulateur  → noindex (robots.txt Disallow)
+       confirmation → noindex (robots.txt Disallow)
+       produit      → noindex
+       404          → noindex
+       mentions-legales         → noindex dans le HTML
+       politique-confidentialite → noindex dans le HTML
+  ─────────────────────────────────────────────────────── -->
 
 </urlset>
