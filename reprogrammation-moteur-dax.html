@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <!-- ═══ SEO ═══ -->
-  <title>Reprogrammation Moteur Dax & Landes — Stage 1 | AREPROG</title>
+  <title>Reprogrammation moteur à domicile Dax & Landes — Stage 1 | AREPROG</title>
   <meta name="description" content="Reprogrammation moteur à domicile à Dax et dans les Landes — Stage 1, E85, EGR/FAP/AdBlue, ODIS VAG. Devis gratuit 24h. Intervention sous 7 jours."/>
   <link rel="canonical" href="https://areprog.fr/reprogrammation-moteur-dax"/>
   <meta name="robots" content="index, follow"/>
@@ -17,7 +17,7 @@
   <meta property="og:description" content="Stage 1, E85, EGR/FAP/AdBlue, ODIS VAG à domicile à Dax et dans les Landes. Devis gratuit 24h."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://areprog.fr/reprogrammation-moteur-dax"/>
-  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.webp"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
   <meta property="og:locale" content="fr_FR"/>
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="Reprogrammation Moteur Dax & Landes — Stage 1 | AREPROG"/>
   <meta name="twitter:description" content="Stage 1, E85, EGR/FAP/AdBlue, ODIS VAG à domicile à Dax et dans les Landes. Devis gratuit 24h."/>
-  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta name="twitter:image" content="https://areprog.fr/og-image.webp"/>
 
   <script type="application/ld+json">
   {
@@ -67,7 +67,7 @@
       "opens": "08:00",
       "closes": "19:00"
     }],
-    "sameAs": "https://areprog.fr"
+    "sameAs": []
   }
   </script>
 
@@ -90,156 +90,31 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
 
-  <style>
-    .page-wrap { padding-top: var(--nav-h, 64px); }
-
-    .seo-hero {
-      min-height: 72vh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 6rem 5rem;
-      position: relative; overflow: hidden;
-    }
-    .seo-hero-bg {
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 55% 60% at 75% 40%, rgba(30,136,229,.1), transparent),
-        linear-gradient(to bottom, transparent 40%, rgba(14,15,17,.92) 100%);
-    }
-    .seo-hero-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(37,39,41,.4) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37,39,41,.4) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, black, transparent);
-    }
-    .seo-breadcrumb {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .68rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 1.5rem;
-      display: flex; align-items: center; gap: .5rem; position: relative; z-index: 1;
-    }
-    .seo-breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
-    .seo-breadcrumb a:hover { color: var(--blue); }
-    .seo-breadcrumb span { color: var(--border2); }
-    .seo-hero h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800; font-size: clamp(2.8rem, 7vw, 7rem);
-      text-transform: uppercase; line-height: .9; letter-spacing: -.02em;
-      position: relative; z-index: 1;
-      animation: fadeUp .8s .2s ease both;
-    }
-    .seo-hero h1 em { font-style: italic; font-weight: 300; color: var(--blue); }
-    .seo-hero-sub {
-      max-width: 580px; margin-top: 1.5rem; color: var(--muted);
-      font-size: 1rem; line-height: 1.7;
-      position: relative; z-index: 1;
-      animation: fadeUp .8s .4s ease both;
-    }
-    .seo-hero-actions {
-      display: flex; gap: 1rem; margin-top: 2.2rem; flex-wrap: wrap;
-      position: relative; z-index: 1;
-      animation: fadeUp .8s .55s ease both;
-    }
-    .seo-hero-chips {
-      display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1.5rem;
-      position: relative; z-index: 1;
-      animation: fadeUp .8s .65s ease both;
-    }
-
-    .seo-intro { padding: 6rem; background: var(--surface); }
-    .seo-intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 3rem; align-items: start; }
-    .seo-intro p { color: var(--muted); line-height: 1.85; font-size: .95rem; margin-bottom: 1.1rem; }
-    .seo-intro strong { color: var(--text); font-weight: 500; }
-    .seo-intro h2 { font-family: 'Barlow Condensed',sans-serif; font-weight:800; font-size:2rem; text-transform:uppercase; margin-bottom:1.5rem; }
-    .seo-intro h2 em { font-style:italic; font-weight:300; color:var(--blue); }
-
-    .quick-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .qs-item { background: var(--bg); padding: 1.5rem; }
-    .qs-val { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:2.2rem; color:var(--blue); line-height:1; }
-    .qs-label { font-size:.72rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; margin-top:.3rem; }
-
-    .seo-services { padding: 6rem; }
-    .services-list { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
-    .service-block {
-      display: grid; grid-template-columns: 280px 1fr;
-      border: 1px solid var(--border); border-bottom: none;
-    }
-    .service-block:last-child { border-bottom: 1px solid var(--border); }
-    .service-block:hover .service-block-label { background: var(--surface2); }
-    .service-block-label {
-      padding: 2.5rem; background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; justify-content: space-between;
-      transition: background .2s;
-    }
-    .service-block-num { font-family: 'Barlow Condensed',sans-serif; font-weight:800; font-size:.65rem; letter-spacing:.25em; color:var(--blue); margin-bottom:.8rem; }
-    .service-block-name { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.5rem; text-transform:uppercase; line-height:.95; }
-    .service-block-tag { margin-top:1.2rem; font-size:.72rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; }
-    .service-block-content { padding: 2.5rem; }
-    .service-block-content h3 { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1rem; text-transform:uppercase; letter-spacing:.08em; color:var(--blue); margin-bottom:.8rem; }
-    .service-block-content p { color:var(--muted); line-height:1.75; font-size:.9rem; margin-bottom:.9rem; }
-    .service-block-content strong { color:var(--text); font-weight:500; }
-    .service-gains-row { display:flex; gap:1.5rem; margin-top:1.2rem; flex-wrap:wrap; }
-    .sg-val { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.6rem; color:var(--blue); line-height:1; }
-    .sg-label { font-size:.68rem; color:var(--muted); letter-spacing:.08em; }
-
-    .seo-faq { background:var(--surface); padding:6rem; }
-    .faq-list { margin-top:3rem; }
-    .faq-item { border-bottom:1px solid var(--border); }
-    .faq-q { width:100%; padding:1.2rem 0; display:flex; justify-content:space-between; align-items:center; gap:1.5rem; background:transparent; border:none; cursor:pointer; text-align:left; }
-    .faq-q-text { font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:.95rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text); transition:color .2s; }
-    .faq-q:hover .faq-q-text { color:var(--blue); }
-    .faq-q-icon { width:1.3rem; height:1.3rem; min-width:1.3rem; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.75rem; color:var(--muted); transition:all .3s; }
-    .faq-item.open .faq-q-icon { background:var(--blue); border-color:var(--blue); color:#fff; transform:rotate(45deg); }
-    .faq-a { max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s; }
-    .faq-item.open .faq-a { max-height:400px; padding-bottom:1.3rem; }
-    .faq-a p { color:var(--muted); line-height:1.75; font-size:.9rem; }
-    .faq-a strong { color:var(--text); font-weight:500; }
-
-    .seo-zone { padding:6rem; }
-    .zone-content { display:grid; grid-template-columns:1fr 1fr; gap:5rem; margin-top:3rem; align-items:start; }
-    .zone-cities-grid { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:1.5rem; }
-    .zone-city { padding:.7rem 1rem; border:1px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:.85rem; text-transform:uppercase; color:var(--muted); transition:border-color .2s, color .2s; }
-    .zone-city:hover { border-color:var(--blue); color:var(--text); }
-    .zone-city.main { border-color:var(--blue); color:var(--blue); }
-
-    .seo-cross-links { padding: 5rem 6rem; border-top: 1px solid var(--border); background: var(--bg-warm); }
-    .cross-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
-    .cross-link-card {
-      display: block; padding: 1.2rem 1.5rem;
-      background: var(--surface); border: 1px solid var(--border);
-      text-decoration: none; transition: border-color .2s, background .2s;
-    }
-    .cross-link-card:hover { border-color: var(--blue); background: var(--surface2); }
-    .cross-link-dept { font-family:'Barlow Condensed',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin-bottom:.4rem; }
-    .cross-link-city { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1.1rem; text-transform:uppercase; color:var(--text); }
-    .cross-link-arrow { font-size:.78rem; color:var(--muted); margin-top:.3rem; }
-
-    .seo-cta {
-      text-align:center; padding:8rem 6rem;
-      position:relative; overflow:hidden;
-      background:var(--surface);
-    }
-    .seo-cta::before {
-      content:''; position:absolute; inset:0;
-      background:radial-gradient(ellipse 60% 50% at 50% 50%, var(--blue-dim), transparent);
-      pointer-events: none;
-    }
-    .seo-cta h2 { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:clamp(2.5rem,6vw,5rem); text-transform:uppercase; line-height:.95; position: relative; z-index: 1; }
-    .seo-cta h2 em { font-style:italic; font-weight:300; color:var(--blue); }
-    .seo-cta p { max-width:480px; margin:1.5rem auto; color:var(--muted); line-height:1.7; position: relative; z-index: 1; }
-    .seo-cta .cta-row { display:flex; gap:1rem; justify-content:center; margin-top:2.2rem; flex-wrap:wrap; position: relative; z-index: 1; }
-
-    @media (max-width: 900px) {
-      .seo-hero { padding: 0 1.5rem 4rem; min-height: 60vh; }
-      .seo-intro, .seo-services, .seo-faq, .seo-zone, .seo-cta, .seo-cross-links { padding: 4rem 1.5rem; }
-      .seo-intro-grid, .zone-content { grid-template-columns: 1fr; gap: 3rem; }
-      .service-block { grid-template-columns: 1fr; }
-      .service-block-label { border-right: none; border-bottom: 1px solid var(--border); }
-      .zone-cities-grid { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="reprogrammation-moteur-dax.css"/>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Intervenez-vous à domicile à Dax et dans les Landes ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, Dax et l'ensemble du département des Landes font partie de notre zone d'intervention. AREPROG se déplace avec tout le matériel directement chez vous. Délai moyen : sous 7 jours. Du lundi au samedi de 8h à 19h."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien coûte une reprogrammation Stage 1 à Dax ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Un Stage 1 à Dax coûte entre 300 et 380€ selon le véhicule, déplacement inclus. Devis gratuit et sans engagement sous 24h."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body data-page="seo-dax">
   <div id="nav-container"></div>
@@ -634,5 +509,10 @@
     );
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
+  <!-- Barre appel mobile -->
+  <a href="tel:+33667924630" class="mobile-call-bar" aria-label="Appeler AREPROG">
+    <span>📞</span>
+    <span>06 67 92 46 30<span class="mobile-call-bar-sub">Devis gratuit · Réponse sous 24h</span></span>
+  </a>
 </body>
 </html>

@@ -14,6 +14,7 @@ const NAV_HTML = `
  <li><a href="/stage1">Stage 1</a></li>
  <li><a href="/stage2">Stage 2</a></li>
  <li><a href="/conversion-e85">Conversion E85</a></li>
+ <li><a href="/ethanol-prix">Prix E85 en temps réel</a></li>
  <li><a href="/optimisation-consommation">Optimisation consommation</a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Désactivations</li>
@@ -31,6 +32,7 @@ const NAV_HTML = `
  <li><a href="/reprogrammation-moteur-bayonne">Bayonne</a></li>
  <li><a href="/reprogrammation-moteur-biarritz">Biarritz</a></li>
  <li><a href="/reprogrammation-moteur-anglet">Anglet</a></li>
+ <li><a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Pyrénées-Atlantiques</li>
  <li><a href="/reprogrammation-moteur-pau">Pau</a></li>
@@ -42,9 +44,9 @@ const NAV_HTML = `
  <li><a href="/reprogrammation-moteur-auxerre">Auxerre & Yonne</a></li>
  </ul>
  </li>
+ <li><a href="/tarifs" data-page="tarifs">Tarifs</a></li>
  <li><a href="/about" data-page="about">À propos</a></li>
  <li><a href="/faq" data-page="faq">FAQ</a></li>
-<li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
  <li><a href="/contact" data-page="contact">Contact</a></li>
  </ul>
  <a href="/contact" class="nav-cta">Devis gratuit</a>
@@ -59,6 +61,7 @@ const NAV_HTML = `
  <a href="/reprogrammation-moteur-bayonne" class="nav-mobile-sub">Bayonne</a>
  <a href="/reprogrammation-moteur-biarritz" class="nav-mobile-sub">Biarritz</a>
  <a href="/reprogrammation-moteur-anglet" class="nav-mobile-sub">Anglet</a>
+ <a href="/reprogrammation-moteur-saint-jean-de-luz" class="nav-mobile-sub">Saint-Jean-de-Luz</a>
  <a href="/reprogrammation-moteur-pau" class="nav-mobile-sub">Pau</a>
  <a href="/reprogrammation-moteur-dax" class="nav-mobile-sub">Dax & Landes</a>
  <a href="/reprogrammation-moteur-auxerre" class="nav-mobile-sub">Auxerre & Yonne</a>
@@ -68,11 +71,14 @@ const NAV_HTML = `
  <a href="/stage1" class="nav-mobile-sub">Stage 1</a>
  <a href="/stage2" class="nav-mobile-sub">Stage 2</a>
  <a href="/conversion-e85" class="nav-mobile-sub">Conversion E85</a>
+ <a href="/ethanol-prix" class="nav-mobile-sub">Prix E85 en temps réel</a>
  <a href="/optimisation-consommation" class="nav-mobile-sub">Optimisation consommation</a>
  <a href="/desactivation-egr" class="nav-mobile-sub">Désactivation EGR</a>
  <a href="/desactivation-fap" class="nav-mobile-sub">Désactivation FAP</a>
  <a href="/desactivation-adblue" class="nav-mobile-sub">Désactivation AdBlue</a>
+ <a href="/odis" class="nav-mobile-sub">Diagnostic ODIS VAG</a>
  </div>
+ <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
  <a href="/about" data-page="about">À propos</a>
  <a href="/faq" data-page="faq">FAQ</a>
  <a href="/simulateur" data-page="simulateur">Simulateur</a>
@@ -104,6 +110,7 @@ const FOOTER_HTML = `
  <a href="/reprogrammation-moteur-bayonne">Bayonne</a>
  <a href="/reprogrammation-moteur-biarritz">Biarritz</a>
  <a href="/reprogrammation-moteur-anglet">Anglet</a>
+ <a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a>
  <a href="/reprogrammation-moteur-pau">Pau & Pyrénées-Atlantiques</a>
  <a href="/reprogrammation-moteur-dax">Dax & Landes</a>
  <a href="/reprogrammation-moteur-auxerre">Auxerre & Yonne</a>
@@ -112,9 +119,11 @@ const FOOTER_HTML = `
  <div class="footer-col-title">Navigation</div>
  <a href="/tarifs">Tarifs 2026</a>
  <a href="/simulateur">Simulateur de gains</a>
+ <a href="/ethanol-prix">Prix E85 en temps réel</a>
  <a href="/faq">FAQ</a>
  <a href="/about">À propos</a>
  <a href="/chip-tuning-pays-basque">Chip Tuning Pays Basque</a>
+ <a href="/guide-reprogrammation-moteur">Guide reprogrammation</a>
  <a href="/contact">Devis gratuit</a>
  </div>
  </div>

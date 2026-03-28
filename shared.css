@@ -494,3 +494,44 @@ footer { display: block; border-top: 1px solid var(--border); }
   .footer-top { grid-template-columns: 1fr; }
   section { padding: 3.5rem 1.2rem; }
 }
+
+/* ══════════════════════════════════════
+   BARRE D'APPEL MOBILE STICKY (toutes pages)
+══════════════════════════════════════ */
+.mobile-call-bar {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mobile-call-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 8000;
+    background: #34D399;
+    color: #0d1410;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    padding: 1rem 1.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    box-shadow: 0 -4px 24px rgba(52,211,153,.25);
+    border-top: 1px solid rgba(52,211,153,.3);
+    transition: background .15s;
+  }
+  .mobile-call-bar:active { background: #6EE7B7; }
+  .mobile-call-bar-sub {
+    font-size: .65rem;
+    font-weight: 400;
+    font-family: 'Barlow', sans-serif;
+    letter-spacing: .08em;
+    opacity: .75;
+    display: block;
+    text-transform: none;
+  }
+  footer { padding-bottom: 4.5rem !important; }
+}
