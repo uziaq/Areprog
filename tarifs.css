@@ -1,0 +1,275 @@
+.page-wrap { padding-top: var(--nav-h,64px); }
+
+    /* ── HEADER ─────────────────────────── */
+    .tarifs-header {
+      padding: 5rem 5rem 4rem;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      background: var(--bg);
+    }
+    .tarifs-header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 55% 60% at 75% 50%, rgba(33,150,243,.07), transparent);
+  pointer-events: none;
+}
+    .tarifs-header::after {
+      content: '2026';
+      position: absolute; right: 3rem; bottom: -2rem;
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 13rem; line-height: 1;
+      color: transparent; -webkit-text-stroke: 1px rgba(33,150,243,.07);
+      pointer-events: none; letter-spacing: -.04em;
+    }
+    .tarifs-header p { max-width: 520px; color: var(--muted); margin-top: 1rem; line-height: 1.7; }
+
+    /* ── NOTICE ─────────────────────────── */
+    .tarifs-notice {
+      background: rgba(33,150,243,.06);
+      border-bottom: 1px solid rgba(33,150,243,.15);
+      padding: 1rem 5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .tarifs-notice p {
+      font-size: .82rem; color: var(--text2); line-height: 1.5;
+    }
+    .tarifs-notice strong { color: var(--text); font-weight: 500; }
+    .notice-icon {
+      width: 1.6rem; height: 1.6rem; min-width: 1.6rem;
+      border: 1px solid rgba(33,150,243,.3);
+      border-radius: 50%; background: rgba(33,150,243,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: .8rem; color: var(--blue);
+    }
+
+    /* ── LAYOUT ─────────────────────────── */
+    .tarifs-body { padding: 4rem 5rem; display: flex; flex-direction: column; gap: 4rem; }
+
+    /* ── SECTION TITLE ───────────────────── */
+    .tarifs-section-title {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .25em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: .7rem;
+    }
+    .tarifs-section-title::before {
+      content: ''; display: block; width: 1.5rem; height: 1px; background: var(--blue);
+    }
+
+    /* ── MAIN SERVICES GRID ──────────────── */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .service-tarif-card {
+      background: var(--surface); padding: 2rem;
+      position: relative; transition: background .2s;
+    }
+    .service-tarif-card:hover { background: var(--surface2); }
+    .service-tarif-card.featured {
+      background: var(--surface2);
+      border-left: 2px solid var(--blue);
+    }
+    .stc-label {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: .6rem;
+    }
+    .stc-name {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 1.3rem;
+      text-transform: uppercase; color: var(--text);
+      margin-bottom: .6rem; line-height: 1.1;
+    }
+    .stc-desc { font-size: .8rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.4rem; }
+    .stc-price {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 2.2rem;
+      color: var(--text); line-height: 1;
+    }
+    .stc-price span { font-size: 1rem; font-weight: 300; color: var(--muted); }
+    .stc-free {
+      display: inline-flex; align-items: center;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+      color: var(--green);
+      background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.2);
+      padding: .25rem .7rem; border-radius: 100px;
+    }
+    .stc-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .58rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      padding: .2rem .6rem; border-radius: 3px;
+      background: var(--blue); color: #fff;
+    }
+    .stc-link {
+      display: inline-flex; align-items: center; gap: .3rem;
+      margin-top: 1rem;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--blue); text-decoration: none; transition: gap .2s;
+    }
+    .stc-link:hover { gap: .5rem; }
+
+    /* ── DESACTIVATIONS TABLE ────────────── */
+    .tarifs-table {
+      width: 100%; border-collapse: collapse;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .tarifs-table thead tr {
+      background: var(--surface2);
+    }
+    .tarifs-table th {
+      padding: .9rem 1.2rem; text-align: left;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted2); border-bottom: 1px solid var(--border);
+    }
+    .tarifs-table td {
+      padding: .9rem 1.2rem;
+      font-size: .85rem; color: var(--text2);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .tarifs-table tr:last-child td { border-bottom: none; }
+    .tarifs-table tr:hover td { background: var(--surface); }
+    .tarifs-table .td-name {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-weight: 700; font-size: .92rem; color: var(--text);
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+    .tarifs-table .td-price {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 1.1rem; color: var(--blue-light,#42A5F5);
+      white-space: nowrap;
+    }
+    .tarifs-table .td-free { color: var(--green); font-weight: 600; font-size: .82rem; }
+
+    /* ── PACKS GRID ──────────────────────── */
+    .packs-grid {
+      display: grid; grid-template-columns: repeat(2,1fr);
+      gap: .8rem;
+    }
+    .pack-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.6rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; transition: border-color .2s, background .2s;
+    }
+    .pack-card:hover { border-color: rgba(33,150,243,.3); background: var(--surface2); }
+    .pack-left { flex: 1; }
+    .pack-name {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-weight: 700; font-size: .95rem; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--text); margin-bottom: .4rem;
+    }
+    .pack-content { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+    .pack-price {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 1.5rem; color: var(--blue-light,#42A5F5);
+      white-space: nowrap; text-align: right;
+    }
+    .pack-price small { display: block; font-size: .68rem; color: var(--muted); font-weight: 300; margin-top: .1rem; }
+
+    /* ── OPTIONS LOGICIELLES ─────────────── */
+    .options-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .option-card {
+      background: var(--surface); padding: 1.4rem;
+      transition: background .2s;
+    }
+    .option-card:hover { background: var(--surface2); }
+    .option-name {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-weight: 700; font-size: .88rem; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--text); margin-bottom: .35rem;
+    }
+    .option-desc { font-size: .75rem; color: var(--muted); line-height: 1.5; margin-bottom: .8rem; }
+    .option-price {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 1.2rem; color: var(--blue-light,#42A5F5);
+    }
+    .option-price .option-alone {
+      font-size: .68rem; color: var(--muted2); font-weight: 300;
+      display: block; margin-top: .1rem;
+    }
+
+    /* ── SUPPLEMENTS ─────────────────────── */
+    .suppl-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .suppl-card {
+      background: var(--surface); padding: 1.4rem;
+      transition: background .2s;
+    }
+    .suppl-card:hover { background: var(--surface2); }
+    .suppl-name {
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-weight: 700; font-size: .82rem; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--text2); margin-bottom: .3rem;
+    }
+    .suppl-desc { font-size: .72rem; color: var(--muted); line-height: 1.4; margin-bottom: .7rem; }
+    .suppl-price {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 1.1rem; color: var(--text);
+    }
+    .suppl-price.free { color: var(--green); }
+    .suppl-price.plus { color: var(--amber); }
+
+    /* ── LEGAL ───────────────────────────── */
+    .tarifs-legal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.5rem 2rem;
+    }
+    .tarifs-legal p { font-size: .8rem; color: var(--muted); line-height: 1.7; margin-bottom: .4rem; }
+    .tarifs-legal p:last-child { margin-bottom: 0; }
+    .tarifs-legal strong { color: var(--text2); font-weight: 500; }
+
+    /* ── CTA ────────────────────────────── */
+    .tarifs-cta {
+      text-align: center; padding: 5rem;
+      background: var(--bg-warm,#111214);
+      border-top: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .tarifs-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(33,150,243,.06), transparent);
+  pointer-events: none;
+}
+    .tarifs-cta h2 {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: clamp(2rem,4vw,3.2rem); text-transform: uppercase;
+    }
+    .tarifs-cta h2 em { font-style: italic; font-weight: 300; color: var(--blue-light,#42A5F5); }
+    .tarifs-cta p { max-width: 440px; margin: 1rem auto; color: var(--muted); line-height: 1.7; }
+    .tarifs-cta .cta-row { display: flex; gap: .8rem; justify-content: center; margin-top: 1.8rem; flex-wrap: wrap; }
+
+    @media (max-width: 1100px) {
+      .options-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 900px) {
+      .tarifs-header, .tarifs-body, .tarifs-notice, .tarifs-cta { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .tarifs-header::after { display: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .packs-grid { grid-template-columns: 1fr; }
+      .options-grid { grid-template-columns: 1fr 1fr; }
+      .suppl-grid { grid-template-columns: repeat(2,1fr); }
+      .tarifs-table { font-size: .8rem; }
+      .tarifs-table th, .tarifs-table td { padding: .7rem .9rem; }
+    }
+    @media (max-width: 500px) {
+      .options-grid { grid-template-columns: 1fr; }
+      .suppl-grid { grid-template-columns: 1fr; }
+    }

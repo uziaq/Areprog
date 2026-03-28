@@ -1,0 +1,173 @@
+.page-wrap { padding-top: var(--nav-h, 64px); }
+
+    .odis-hero {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 6rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .odis-hero::before {
+      content: '';
+      position: absolute; top: 0; right: 0; bottom: 0; left: 50%;
+      background: linear-gradient(135deg, var(--blue-dim) 0%, transparent 70%);
+    }
+    .odis-official-badge {
+      display: inline-flex; align-items: center; gap: .8rem;
+      border: 1px solid var(--blue);
+      padding: .5rem 1.1rem; margin-bottom: 1.5rem;
+    }
+    .odis-official-badge span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--blue);
+    }
+    .odis-official-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--green); border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .odis-hero h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      text-transform: uppercase; line-height: .9;
+      letter-spacing: -.02em;
+      animation: fadeUp .8s .2s ease both;
+    }
+    .odis-hero h1 em { font-style: italic; font-weight: 300; color: var(--blue); }
+    .odis-hero p { color: var(--muted); line-height: 1.7; margin-top: 1.5rem; animation: fadeUp .8s .4s ease both; }
+    .odis-visual { position: relative; z-index: 1; animation: fadeUp .8s .3s ease both; }
+
+    .odis-screen {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+    .odis-screen-bar {
+      display: flex; align-items: center; gap: .6rem;
+      margin-bottom: 1.5rem;
+    }
+    .odis-screen-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .odis-screen-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); margin-left: .5rem;
+    }
+    .odis-diag-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .6rem 0; border-bottom: 1px solid var(--border);
+      font-size: .82rem;
+    }
+    .odis-diag-row:last-child { border-bottom: none; }
+    .odis-diag-key { color: var(--muted); font-size: .78rem; }
+    .odis-diag-ok {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .72rem;
+      font-weight: 700; letter-spacing: .12em;
+      color: var(--green); background: rgba(34,197,94,.1);
+      padding: .15rem .5rem;
+    }
+    .odis-diag-prog { color: var(--blue); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; }
+    .odis-progress-bar { margin-top: 1.5rem; height: 3px; background: var(--border); }
+    .odis-progress-fill {
+      height: 100%; width: 72%;
+      background: linear-gradient(to right, var(--blue), #1565C0);
+      box-shadow: 0 0 8px var(--blue-glow);
+    }
+    .odis-progress-label {
+      display: flex; justify-content: space-between; margin-top: .5rem;
+      font-size: .7rem; color: var(--muted);
+    }
+
+    /* WHAT IS ODIS */
+    .odis-what { padding: 6rem; }
+    .odis-what-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; margin-top: 4rem; align-items: start;
+    }
+    .odis-what p { color: var(--muted); line-height: 1.8; margin-bottom: 1.2rem; font-size: .95rem; }
+    .odis-what strong { color: var(--text); font-weight: 500; }
+
+    /* VAG brands — only 4 */
+    .vag-brands {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+      border: 1px solid var(--border); background: var(--border);
+    }
+    .vag-brand {
+      background: var(--surface); padding: 2.2rem 1.8rem;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: .7rem; transition: background .2s;
+    }
+    .vag-brand:hover { background: var(--surface2); }
+    .vag-brand-logo-hidden {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 2rem;
+      letter-spacing: -.02em; color: var(--blue);
+    }
+    .vag-brand-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 1.2rem;
+      text-transform: uppercase; letter-spacing: .05em;
+    }
+    .vag-brand-sub { font-size: .75rem; color: var(--muted); }
+
+    /* ADVANTAGES */
+    .odis-adv { background: var(--surface); padding: 6rem; }
+    .odis-adv-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
+      margin-top: 4rem; background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .odis-adv-card { background: var(--bg); padding: 2.5rem; transition: background .2s; }
+    .odis-adv-card:hover { background: var(--surface2); }
+    .odis-adv-icon { width:2rem; height:2rem; color:var(--blue); margin-bottom:1.1rem; } .odis-adv-icon svg { width:100%; height:100%; }
+    .odis-adv-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.2rem;
+      text-transform: uppercase; margin-bottom: .6rem;
+    }
+    .odis-adv-desc { color: var(--muted); font-size: .88rem; line-height: 1.7; }
+
+    /* VS TABLE */
+    .odis-vs { padding: 6rem; }
+    .vs-table { width: 100%; border-collapse: collapse; margin-top: 3rem; }
+    .vs-table th, .vs-table td {
+      padding: 1.1rem 1.5rem; text-align: left;
+      border-bottom: 1px solid var(--border); font-size: .88rem;
+    }
+    .vs-table th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: .72rem;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); background: var(--surface);
+    }
+    .vs-table th:nth-child(2) { color: var(--blue); }
+    .vs-table tr:hover td { background: var(--surface); }
+    .vs-ok { color: var(--green); font-weight: 600; }
+    .vs-no { color: var(--muted2); }
+    .vs-partial { color: var(--amber); }
+
+    /* CTA */
+    .odis-cta {
+      text-align: center; padding: 8rem 6rem;
+      position: relative; overflow: hidden;
+    }
+    .odis-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, var(--blue-dim), transparent);
+  pointer-events: none;
+}
+    .odis-cta p { max-width: 480px; margin: 1.5rem auto; color: var(--muted); line-height: 1.7; }
+    .odis-cta .cta-row { display: flex; gap: 1.2rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+
+    @media (max-width: 900px) {
+      .odis-hero { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 1.5rem; }
+      .odis-what, .odis-adv, .odis-vs, .odis-cta { padding: 5rem 1.5rem; }
+      .odis-what-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .odis-adv-grid { grid-template-columns: 1fr; }
+      .vs-table { font-size: .78rem; }
+      .vs-table th, .vs-table td { padding: .8rem 1rem; }
+    }
