@@ -273,3 +273,127 @@
       .options-grid { grid-template-columns: 1fr; }
       .suppl-grid { grid-template-columns: 1fr; }
     }
+    /* ── NOUVEAUX COMPOSANTS CONVERSION (mars 2026) ────── */
+
+    .tarifs-section { display: flex; flex-direction: column; gap: 0; }
+    .tarifs-section-note {
+      font-size: .82rem; color: var(--muted); line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+    .tarifs-section-note strong { color: var(--text2); font-weight: 500; }
+
+    /* Table principale avec CTA par ligne */
+    .tarifs-table-main .td-name { font-size: 1rem; }
+
+    /* Colonnes width */
+    .th-price { width: 160px; text-align: right; }
+    .th-cta   { width: 140px; }
+
+    /* Ligne mise en avant */
+    .tr-featured td { background: rgba(33,150,243,.04); }
+    .tr-featured:hover td { background: rgba(33,150,243,.08) !important; }
+    .tr-free td { background: rgba(52,211,153,.03); }
+
+    /* Infos sous le nom */
+    .td-sub {
+      font-size: .72rem; color: var(--muted2); margin-top: .2rem;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      letter-spacing: .06em;
+    }
+
+    /* Badge dans la cellule */
+    .td-badge {
+      display: inline-block; margin-left: .6rem;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .52rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      padding: .15rem .5rem; border-radius: 3px;
+      background: var(--blue); color: #fff;
+      vertical-align: middle;
+    }
+
+    /* Gains inline */
+    .td-gains { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; }
+    .td-gain-item {
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 700; font-size: .82rem; color: var(--green);
+    }
+    .td-gain-sep { color: var(--muted2); font-size: .7rem; }
+
+    /* Prix dans table */
+    .tarifs-table .td-price {
+      text-align: right;
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 800; font-size: 1.25rem; color: var(--text);
+      white-space: nowrap;
+    }
+    .td-price-max {
+      font-size: .8rem; font-weight: 300; color: var(--muted);
+    }
+    .td-free-badge {
+      display: inline-flex; align-items: center;
+      font-family: var(--font-mono,'Barlow Condensed'),sans-serif;
+      font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+      color: var(--green);
+      background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.2);
+      padding: .25rem .7rem; border-radius: 100px;
+    }
+
+    /* CTA dans chaque ligne */
+    .td-action { text-align: right; vertical-align: middle; }
+    .btn-devis {
+      display: inline-block;
+      padding: .5rem 1rem;
+      font-family: var(--font-display,'Barlow Condensed'),sans-serif;
+      font-weight: 700; font-size: .75rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      background: var(--blue); color: #fff;
+      border-radius: 4px; text-decoration: none;
+      white-space: nowrap; transition: background .15s;
+    }
+    .btn-devis:hover { background: #1565C0; }
+    .btn-devis-green { background: var(--green); color: #0d1410; }
+    .btn-devis-green:hover { background: #6EE7B7; color: #0d1410; }
+    .btn-devis-outline {
+      background: transparent; color: var(--blue);
+      border: 1px solid var(--blue);
+    }
+    .btn-devis-outline:hover { background: var(--blue-dim); }
+
+    /* Avertissement désactivations */
+    .tarifs-warning {
+      margin-top: 1rem;
+      padding: .9rem 1.2rem;
+      background: rgba(245,158,11,.06); border: 1px solid rgba(245,158,11,.2);
+      border-radius: 4px;
+      font-size: .78rem; color: var(--amber); line-height: 1.6;
+    }
+
+    /* Barre CTA options */
+    .options-cta-bar {
+      margin-top: 1.2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1.2rem 1.5rem;
+    }
+    .options-cta-text strong { display: block; font-size: .88rem; color: var(--text); font-weight: 500; }
+    .options-cta-text span { font-size: .78rem; color: var(--muted); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .th-price, .th-cta { display: none; }
+      .td-price, .td-action { display: none; }
+      /* Sur mobile on affiche le prix en td-name */
+      .tarifs-table tr { position: relative; }
+      .tarifs-table .td-name::after {
+        content: attr(data-price);
+        display: block; font-size: .8rem; color: var(--blue); margin-top: .2rem;
+      }
+      .btn-devis { font-size: .68rem; padding: .4rem .7rem; }
+      .options-cta-bar { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 768px) {
+      .th-price { display: table-cell; }
+      .td-price { display: table-cell; font-size: 1rem; }
+      .th-cta, .td-action { display: none; }
+    }
