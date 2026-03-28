@@ -33,6 +33,7 @@ const NAV_HTML = `
  <li><a href="/reprogrammation-moteur-biarritz">Biarritz</a></li>
  <li><a href="/reprogrammation-moteur-anglet">Anglet</a></li>
  <li><a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a></li>
+ <li><a href="/reprogrammation-moteur-hendaye">Hendaye</a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Pyrénées-Atlantiques</li>
  <li><a href="/reprogrammation-moteur-pau">Pau</a></li>
@@ -62,6 +63,7 @@ const NAV_HTML = `
  <a href="/reprogrammation-moteur-biarritz" class="nav-mobile-sub">Biarritz</a>
  <a href="/reprogrammation-moteur-anglet" class="nav-mobile-sub">Anglet</a>
  <a href="/reprogrammation-moteur-saint-jean-de-luz" class="nav-mobile-sub">Saint-Jean-de-Luz</a>
+ <a href="/reprogrammation-moteur-hendaye" class="nav-mobile-sub">Hendaye</a>
  <a href="/reprogrammation-moteur-pau" class="nav-mobile-sub">Pau</a>
  <a href="/reprogrammation-moteur-dax" class="nav-mobile-sub">Dax & Landes</a>
  <a href="/reprogrammation-moteur-auxerre" class="nav-mobile-sub">Auxerre & Yonne</a>
@@ -111,6 +113,7 @@ const FOOTER_HTML = `
  <a href="/reprogrammation-moteur-biarritz">Biarritz</a>
  <a href="/reprogrammation-moteur-anglet">Anglet</a>
  <a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a>
+ <a href="/reprogrammation-moteur-hendaye">Hendaye</a>
  <a href="/reprogrammation-moteur-pau">Pau & Pyrénées-Atlantiques</a>
  <a href="/reprogrammation-moteur-dax">Dax & Landes</a>
  <a href="/reprogrammation-moteur-auxerre">Auxerre & Yonne</a>
