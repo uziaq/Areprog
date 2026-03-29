@@ -867,19 +867,25 @@
     });
   </script>
 
-  <!-- Netlify Identity : redirige vers /devis après login via lien email -->
+  <!-- Netlify Identity : intercepte uniquement les tokens email, ne touche pas aux users déjà connectés -->
   <script>
     if (window.netlifyIdentity) {
       netlifyIdentity.on('init', function(user) {
-        // Si token d'invitation ou recovery présent dans le hash
         var hash = window.location.hash;
-        if (hash && (
+        var hasToken = hash && (
           hash.indexOf('invite_token') !== -1 ||
           hash.indexOf('recovery_token') !== -1 ||
           hash.indexOf('confirmation_token') !== -1
-        )) {
+        );
+        if (hasToken) {
+          // Lien email reçu → ouvrir le widget pour définir/réinitialiser le mdp
           netlifyIdentity.open();
+        } else if (user) {
+          // Déjà authentifié via Netlify ET on est sur la page d'accueil
+          // → rediriger silencieusement vers /devis sans ouvrir le widget
+          window.location.href = '/devis';
         }
+        // Sinon : visiteur normal, ne rien faire
       });
       netlifyIdentity.on('login', function() {
         netlifyIdentity.close();
