@@ -3,8 +3,11 @@
 #  À placer à la RACINE du repo
 # ============================================================
 
-# ── Protection espace pro (Basic Auth gérée dans _headers) ──
-# La page devis est accessible mais non indexée + cachée des bots
+# ── Netlify Identity — callback tokens ─────────────────────
+# OBLIGATOIRE : intercepte les liens d'invitation et reset mdp
+# Le hash (#invite_token=...) est géré par admin.html côté client
+/                                   /admin.html                         200! splat=true path=/*#invite_token=*
+/admin                              /admin.html                         200
 
 # ── Clean URLs (sans .html) ─────────────────────────────────
 /stage1                             /stage1.html                        200
@@ -47,5 +50,4 @@
 /produit.html                       /contact                            301
 /confirmation                       /                                   301
 /confirmation.html                  /                                   301
-/admin                              /areprog-devis.html                 301
-/admin.html                         /areprog-devis.html                 301
+/admin.html                         /admin.html                         200
