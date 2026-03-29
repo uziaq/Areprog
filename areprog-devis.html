@@ -548,29 +548,68 @@ select option{background:#1d222d}
 // AUTH — Netlify Identity
 function $(s) { return document.getElementById(s); }
 
+// ── Session persistante 1h ──────────────────────────────────
+// Stocke l'heure de connexion dans localStorage.
+// À chaque ouverture de page : si < 1h écoulée → connecté directement.
+// Si > 1h → le widget Netlify Identity redemande la connexion.
+
+var SESSION_KEY = 'ar_session';
+var SESSION_DURATION = 60 * 60 * 1000; // 1 heure en ms
+
+function setSession() {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now() }));
+}
+
+function checkSession() {
+  try {
+    var raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return false;
+    var data = JSON.parse(raw);
+    return (Date.now() - data.t) < SESSION_DURATION;
+  } catch(e) { return false; }
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+function showApp() {
+  $('login-screen').style.display = 'none';
+  $('app').style.display = 'block';
+  initApp();
+}
+
+function showLogin() {
+  $('app').style.display = 'none';
+  $('login-screen').style.display = 'flex';
+}
+
 function doLogout() {
+  clearSession();
   netlifyIdentity.logout();
 }
 
 netlifyIdentity.on('init', function(user) {
   if (user) {
-    // Déjà connecté
-    $('login-screen').style.display = 'none';
-    $('app').style.display = 'block';
-    initApp();
+    // Token Netlify Identity valide → refresh session et connecter
+    setSession();
+    showApp();
+  } else if (checkSession()) {
+    // Session locale encore valide (< 1h) → connecter sans redemander
+    showApp();
   }
+  // Sinon : rester sur l'écran de connexion
 });
 
 netlifyIdentity.on('login', function(user) {
   netlifyIdentity.close();
-  $('login-screen').style.display = 'none';
-  $('app').style.display = 'block';
-  initApp();
+  setSession();
+  showApp();
 });
 
 netlifyIdentity.on('logout', function() {
-  $('app').style.display = 'none';
-  $('login-screen').style.display = 'flex';
+  clearSession();
+  showLogin();
 });
 
 netlifyIdentity.on('error', function(err) {
