@@ -105,7 +105,6 @@
   <link rel="stylesheet" href="shared.css"/>
   <link rel="stylesheet" href="home.css"/>
   <!-- Netlify Identity : intercepte les tokens d'invitation depuis les emails -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body data-page="index">
   <div id="nav-container"></div>
@@ -867,31 +866,6 @@
     });
   </script>
 
-  <!-- Netlify Identity : intercepte uniquement les tokens email, ne touche pas aux users déjà connectés -->
-  <script>
-    if (window.netlifyIdentity) {
-      netlifyIdentity.on('init', function(user) {
-        var hash = window.location.hash;
-        var hasToken = hash && (
-          hash.indexOf('invite_token') !== -1 ||
-          hash.indexOf('recovery_token') !== -1 ||
-          hash.indexOf('confirmation_token') !== -1
-        );
-        if (hasToken) {
-          // Lien email reçu → ouvrir le widget pour définir/réinitialiser le mdp
-          netlifyIdentity.open();
-        } else if (user) {
-          // Déjà authentifié via Netlify ET on est sur la page d'accueil
-          // → rediriger silencieusement vers /devis sans ouvrir le widget
-          window.location.href = '/devis';
-        }
-        // Sinon : visiteur normal, ne rien faire
-      });
-      netlifyIdentity.on('login', function() {
-        netlifyIdentity.close();
-        window.location.href = '/devis';
-      });
-    }
-  </script>
+  <!-- Auth gérée par GoTrue dans areprog-devis.html -->
 </body>
 </html>
