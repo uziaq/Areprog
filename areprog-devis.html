@@ -4,8 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
-<!-- GoTrue JS — Auth Netlify sans widget automatique -->
-<script src="https://cdn.jsdelivr.net/npm/gotrue-js@0.9.29/browser/gotrue.min.js"></script>
+<!-- Auth : appel direct API Netlify Identity via fetch -->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -359,7 +358,7 @@ select option{background:#1d222d}
 </head>
 <body>
 
-<!-- LOGIN GoTrue -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">ARE<span>PROG</span></div>
@@ -544,28 +543,24 @@ select option{background:#1d222d}
 </div>
 
 <script>
-// AUTH — GoTrue direct (pas de widget Netlify)
+// AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
 function $(s) { return document.getElementById(s); }
 
-// GoTrue pointe vers l'endpoint Identity de ton site Netlify
-var auth = new GoTrue({
-  APIUrl: 'https://areprog.fr/.netlify/identity',
-  audience: '',
-  setCookie: false,
-});
+var IDENTITY_URL = 'https://areprog.fr/.netlify/identity';
+var SESSION_KEY  = 'ar_session';
+var SESSION_DURATION = 60 * 60 * 1000; // 1 heure
 
-var SESSION_KEY = 'ar_session';
-var SESSION_DURATION = 60 * 60 * 1000; // 1 heure — modifiable
-
-function setSession() {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now() }));
+function setSession(token) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now(), token: token }));
 }
-function checkSession() {
+function getSession() {
   try {
     var raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return false;
-    return (Date.now() - JSON.parse(raw).t) < SESSION_DURATION;
-  } catch(e) { return false; }
+    if (!raw) return null;
+    var data = JSON.parse(raw);
+    if ((Date.now() - data.t) < SESSION_DURATION) return data;
+    return null;
+  } catch(e) { return null; }
 }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
@@ -593,38 +588,40 @@ async function doLogin() {
   var email = $('l-email').value.trim();
   var pass  = $('l-pass').value;
   $('lerr').style.display = 'none';
-  if (!email || !pass) { showLoginErr('Renseigne email et mot de passe.'); return; }
+  if (!email || !pass) { showLoginErr('Renseigne ton email et mot de passe.'); return; }
   setLoginLoading(true);
   try {
-    await auth.login(email, pass, true);
-    setSession();
+    var resp = await fetch(IDENTITY_URL + '/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
+    });
+    var data = await resp.json();
+    if (!resp.ok || !data.access_token) {
+      throw new Error(data.error_description || 'Identifiants incorrects');
+    }
+    setSession(data.access_token);
     showApp();
   } catch(e) {
     setLoginLoading(false);
     showLoginErr('Email ou mot de passe incorrect.');
+    console.error(e);
   }
 }
 
 function doLogout() {
   clearSession();
-  var user = auth.currentUser();
-  if (user) {
-    user.logout().catch(function(){});
-  }
   showLogin();
 }
 
-// Au chargement : vérifier session locale ou token GoTrue en cours
+// Au chargement : session encore valide → connecter directement
 (function() {
-  var user = auth.currentUser();
-  if (user || checkSession()) {
-    if (user) setSession(); // rafraîchir le timer
+  if (getSession()) {
     showApp();
   }
-  // Sinon : écran de login
 })();
 
-// Enter sur le champ mot de passe
+// Touches clavier
 document.addEventListener('DOMContentLoaded', function() {
   var lp = $('l-pass');
   if (lp) lp.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
