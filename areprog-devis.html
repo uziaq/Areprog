@@ -624,12 +624,7 @@ select option{background:#1d222d}
         </div>
       </div>
 
-      <!-- Gains OLSX (affiché si renseigné) -->
-      <div id="gains-bar" style="display:none;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 18px;margin-bottom:18px;display:none">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:8px">⚡ Gains détectés via OLSX</div>
-        <div style="display:flex;gap:24px;flex-wrap:wrap" id="gains-bar-vals"></div>
-        <button onclick="clearGains()" style="margin-top:8px;font-size:11px;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline">Supprimer les gains</button>
-      </div>
+      <!-- gains-bar supprimé — géré dans le champ f-gains -->
 
       <div class="lines-wrap">
         <div class="card-title">Prestations</div>
@@ -663,11 +658,22 @@ select option{background:#1d222d}
         <div class="card">
           <div class="card-title">Notes & conditions</div>
           <div class="fr"><label>Mentions imprimées sur le document</label>
-            <textarea id="f-notes" rows="4">Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.</textarea>
+            <textarea id="f-notes" rows="3">Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.</textarea>
           </div>
           <div class="fr"><label>Notes internes (non imprimées)</label>
-            <textarea id="f-nint" rows="3" placeholder="Mémo interne..."></textarea>
+            <textarea id="f-nint" rows="2" placeholder="Mémo interne..."></textarea>
           </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span>Gains & bénéfices</span>
+            <button class="btn-s" style="font-size:11px;padding:4px 10px" onclick="prefillGains()" title="Pré-remplir depuis les prestations sélectionnées">↺ Auto</button>
+          </div>
+          <div class="fr">
+            <label>Un gain par ligne — affiché dans l'encart bleu du document</label>
+            <textarea id="f-gains" rows="6" placeholder="Ex :&#10;Meilleure réactivité moteur&#10;100% réversible&#10;−40% sur le carburant&#10;Agrément de conduite amélioré" oninput="previewGainsBadge()"></textarea>
+          </div>
+          <div id="gains-badge-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
         </div>
       </div>
     </div>
@@ -926,7 +932,7 @@ select option{background:#1d222d}
     <div class="tpl-preview-panel">
       <div class="tpl-preview-bar">
         <span class="tpl-preview-bar-title">Aperçu en direct</span>
-        <button class="btn-p" style="font-size:12px" onclick="window.print()">🖨 Imprimer</button>
+        <button class="btn-p" style="font-size:12px" onclick="printFromModal()">🖨 Imprimer</button>
       </div>
       <div class="tpl-preview-scroll">
         <div class="tpl-preview-doc" id="tpl-live-preview"></div>
@@ -978,7 +984,7 @@ select option{background:#1d222d}
 <div id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-wrap">
     <div class="modal-toolbar">
-      <button class="btn-p" onclick="window.print()">🖨️ Imprimer / Enregistrer PDF</button>
+      <button class="btn-p" onclick="printFromModal()">🖨️ Imprimer / Enregistrer PDF</button>
       <button class="btn-s" onclick="closeModal()">✕ Fermer</button>
       <span style="color:var(--text-muted);font-size:11px;margin-left:4px">→ Dans la boîte d'impression, choisir "Enregistrer en PDF"</span>
     </div>
@@ -1407,6 +1413,7 @@ function resetForm(goToForm) {
   $('form-h').textContent = 'Nouveau devis';
   currentGains = null;
   renderGainsBar();
+  if ($('f-gains')) { $('f-gains').value = ''; previewGainsBadge(); }
   addLine();
   if (goToForm) showTab('form');
 }
@@ -1489,6 +1496,7 @@ function lineSelect(sel, lid) {
   line.label = sel.value;
   line.pu = p;
   renderLines();
+  prefillGainsIfEmpty();
 }
 
 function lineField(inp, lid, field) {
@@ -1536,6 +1544,7 @@ function buildObj() {
     vim: $('f-vim').value,
     lines: JSON.parse(JSON.stringify(lines)),
     gains: currentGains ? JSON.parse(JSON.stringify(currentGains)) : null,
+    customGains: ($('f-gains') ? $('f-gains').value.split('\n').map(function(g){return g.trim();}).filter(Boolean) : []),
     tvaRate: parseFloat($('f-tva').value),
     ht: ht,
     tva: ht * tvaRate,
@@ -1595,6 +1604,16 @@ function loadDoc(docId) {
   lines = JSON.parse(JSON.stringify(doc.lines));
   currentGains = doc.gains || null;
   renderGainsBar();
+  // Restaurer les gains personnalisés
+  if ($('f-gains')) {
+    if (doc.customGains && doc.customGains.length) {
+      $('f-gains').value = doc.customGains.join('\n');
+    } else {
+      // Pré-remplir depuis le catalogue si pas de gains custom
+      $('f-gains').value = buildGainsFromLines(doc.lines || []).join('\n');
+    }
+    previewGainsBadge();
+  }
   renderLines();
   $('form-h').textContent = doc.type === 'devis' ? 'Modifier le devis' : 'Modifier la facture';
   showTab('form');
@@ -1635,8 +1654,15 @@ function renderDocHTML(doc, tplOverride) {
   }).join('');
 
   var gainsHTML = '';
-  // Gains OLSX réels en priorité, sinon gains génériques par mots-clés
-  if (doc.gains && (doc.gains.chOrig || doc.gains.ch || doc.gains.nm || doc.gains.conso)) {
+  // Priorité 1 : gains personnalisés du document
+  // Priorité 2 : gains OLSX numériques
+  // Priorité 3 : gains du catalogue par prestation
+  var customGainsArr = doc.customGains && doc.customGains.length ? doc.customGains : null;
+  if (customGainsArr && tpl.showGains !== false) {
+    gainsHTML = '<div class="d-gains"><div class="d-gains-title">✦ Bénéfices de votre prestation</div><div class="d-gains-grid">'
+      + customGainsArr.map(function(g){return '<div class="d-gain">'+g+'</div>';}).join('')
+      + '</div></div>';
+  } else if (doc.gains && (doc.gains.chOrig || doc.gains.ch || doc.gains.nm || doc.gains.conso)) {
     var g = doc.gains;
     var items = [];
     if (g.chOrig && g.ch) items.push({lbl:'Puissance', val:'+'+(g.ch-g.chOrig)+' ch', sub:g.chOrig+' → '+g.ch+' ch'});
@@ -1652,6 +1678,7 @@ function renderDocHTML(doc, tplOverride) {
       + gains.map(function(g){return '<div class="d-gain">'+g+'</div>';}).join('')
       + '</div></div>';
   }
+  if (customGainsArr && !tpl.showGains) gainsHTML = '';
 
   return '<div class="d-header" style="border-bottom:2px solid ' + accentColor + '22">'
     + '<div><div class="d-brand">' + buildLogoHTML(tpl) + '</div>'
@@ -1702,21 +1729,58 @@ function renderDocHTML(doc, tplOverride) {
     + (tpl.showFooter !== false ? '<div class="d-footer">' + (tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
 }
 
+// Construit le nom de fichier PDF : AREPROG_TYPE_NUMERO_CLIENT
+function buildPdfTitle(doc) {
+  var type = (doc.type === 'devis' ? 'Devis' : 'Facture');
+  var num  = (doc.num || '').replace(/[^a-zA-Z0-9_-]/g, '-');
+  var nom  = (doc.cn || 'Client').replace(/[^a-zA-Z0-9 _-]/g, '').trim().replace(/\s+/g, '-');
+  return 'AREPROG_' + type + '_' + num + '_' + nom;
+}
+
+// Injecte le title dans la page (utilisé comme nom de fichier par le navigateur)
+var _originalTitle = document.title;
+function setPrintTitle(doc) {
+  document.title = buildPdfTitle(doc);
+}
+function restoreTitle() {
+  document.title = _originalTitle;
+}
+
 function openPreview() {
-  $('preview').innerHTML = renderDocHTML(buildObj());
+  var doc = buildObj();
+  $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
+  // Préparer le titre pour l'impression depuis la toolbar
+  $('modal').dataset.printTitle = buildPdfTitle(doc);
 }
 function previewDoc(docId) {
   var doc = loadDocs().find(function(d){ return d.id === docId; });
   if (!doc) return;
   $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
+  $('modal').dataset.printTitle = buildPdfTitle(doc);
 }
-function closeModal() { $('modal').classList.remove('open'); }
+function closeModal() {
+  $('modal').classList.remove('open');
+  restoreTitle();
+}
+function printFromModal() {
+  var title = $('modal').dataset.printTitle || _originalTitle;
+  document.title = title;
+  window.print();
+  // Restaurer après impression (délai pour laisser le dialog s'ouvrir)
+  setTimeout(restoreTitle, 2000);
+}
 function printDoc() {
-  $('preview').innerHTML = renderDocHTML(buildObj());
+  var doc = buildObj();
+  $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
-  setTimeout(function(){ window.print(); }, 250);
+  $('modal').dataset.printTitle = buildPdfTitle(doc);
+  setTimeout(function(){
+    document.title = buildPdfTitle(doc);
+    window.print();
+    setTimeout(restoreTitle, 2000);
+  }, 250);
 }
 
 // ============================================================
@@ -2112,6 +2176,63 @@ function saveCurrentClientToCarnet() {
 var currentGains = null;
 var olsxDetected = null;
 
+// Retourne la liste des gains depuis les lignes via le catalogue
+function buildGainsFromLines(linesArr) {
+  var cat = loadCat();
+  var set = new Set();
+  linesArr.forEach(function(l) {
+    if (!l.label) return;
+    for (var gi = 0; gi < cat.length; gi++) {
+      for (var ii = 0; ii < cat[gi].items.length; ii++) {
+        var it = cat[gi].items[ii];
+        if (it.l === l.label && it.gains && it.gains.length) {
+          it.gains.forEach(function(g){ if(g) set.add(g); });
+        }
+      }
+    }
+  });
+  return [...set].slice(0, 8);
+}
+
+// Pré-remplir f-gains depuis les prestations actuellement sélectionnées
+function prefillGains() {
+  var suggestions = buildGainsFromLines(lines);
+  if (suggestions.length) {
+    $('f-gains').value = suggestions.join('\n');
+    previewGainsBadge();
+  } else {
+    $('f-gains').value = '';
+    previewGainsBadge();
+    // Feedback
+    var btn = event.currentTarget;
+    btn.textContent = 'Aucun gain trouvé';
+    setTimeout(function(){ btn.textContent = '↺ Auto'; }, 1500);
+  }
+}
+
+// Afficher les gains comme badges dans le formulaire
+function previewGainsBadge() {
+  var el = $('gains-badge-preview');
+  if (!el) return;
+  var raw = ($('f-gains') ? $('f-gains').value : '');
+  var items = raw.split('\n').map(function(g){return g.trim();}).filter(Boolean);
+  if (!items.length) { el.innerHTML = ''; return; }
+  el.innerHTML = items.map(function(g) {
+    return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.2);border-radius:20px;font-size:11px;color:var(--blue)">' + g + '</span>';
+  }).join('');
+}
+
+// Pré-remplir gains quand une prestation est sélectionnée dans les lignes
+function prefillGainsIfEmpty() {
+  var el = $('f-gains');
+  if (!el || el.value.trim()) return; // ne pas écraser si déjà rempli
+  var suggestions = buildGainsFromLines(lines);
+  if (suggestions.length) {
+    el.value = suggestions.join('\n');
+    previewGainsBadge();
+  }
+}
+
 function openOlsxModal() {
   olsxDetected = null;
   $('olsx-gains-preview').textContent = 'Sélectionne un véhicule dans le simulateur…';
@@ -2124,6 +2245,17 @@ function importOlsxGains() {
   if (!olsxDetected) return;
   currentGains = olsxDetected;
   renderGainsBar();
+  // Ajouter les gains numériques OLSX dans f-gains
+  var g = olsxDetected;
+  var parts = [];
+  if (g.chOrig && g.ch) parts.push(g.chOrig + ' ch → ' + g.ch + ' ch (+' + (g.ch - g.chOrig) + ' ch)');
+  if (g.nmOrig && g.nm) parts.push(g.nmOrig + ' Nm → ' + g.nm + ' Nm (+' + (g.nm - g.nmOrig) + ' Nm)');
+  if (g.conso) parts.push('Consommation : ' + g.conso);
+  if (parts.length && $('f-gains')) {
+    var existing = $('f-gains').value.trim();
+    $('f-gains').value = (existing ? existing + '\n' : '') + parts.join('\n');
+    previewGainsBadge();
+  }
   closeOlsxModal();
 }
 
