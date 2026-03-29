@@ -195,6 +195,53 @@ select option{background:#1d222d}
 /* TABS */
 .tc{display:none}.tc.on{display:block}
 
+/* ── GESTIONNAIRE CATALOGUE ── */
+.cat-group{background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.cat-group-head{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;
+  background:var(--bg4);cursor:pointer;user-select:none;
+}
+.cat-group-name{font-weight:600;font-size:13px;flex:1}
+.cat-group-count{font-size:11px;color:var(--text-muted)}
+.cat-group-actions{display:flex;gap:6px;opacity:0;transition:opacity .15s}
+.cat-group-head:hover .cat-group-actions{opacity:1}
+.cat-items{padding:8px}
+.cat-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;
+  border-radius:6px;transition:background .1s;
+}
+.cat-item:hover{background:rgba(255,255,255,.04)}
+.cat-item-label{flex:1;font-size:13px;color:var(--text)}
+.cat-item-price{font-family:var(--fm);font-size:12px;color:var(--blue);min-width:60px;text-align:right}
+.cat-item-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.cat-item:hover .cat-item-actions{opacity:1}
+.cat-icon-btn{
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:1px solid var(--border);border-radius:5px;
+  color:var(--text-dim);font-size:13px;cursor:pointer;transition:all .15s;padding:0;
+}
+.cat-icon-btn:hover{border-color:var(--blue);color:var(--blue)}
+.cat-icon-btn.del:hover{border-color:var(--red);color:var(--red)}
+.cat-add-item{
+  display:flex;align-items:center;gap:6px;width:100%;padding:7px 10px;
+  background:transparent;border:1px dashed var(--border);border-radius:6px;
+  color:var(--text-muted);font-size:12px;cursor:pointer;margin-top:4px;
+  transition:all .15s;
+}
+.cat-add-item:hover{border-color:var(--blue);color:var(--blue)}
+.cat-add-group{
+  width:100%;padding:9px;background:transparent;border:1px dashed var(--border);
+  border-radius:8px;color:var(--text-dim);font-size:13px;cursor:pointer;
+  margin-top:8px;transition:all .15s;
+}
+.cat-add-group:hover{border-color:var(--green);color:var(--green)}
+
+/* Modal édition item */
+.cat-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:320;align-items:center;justify-content:center;padding:20px}
+.cat-modal.open{display:flex}
+.cat-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:480px;max-width:100%;padding:24px}
+.cat-box-title{font-family:var(--fh);font-size:18px;font-weight:700;margin-bottom:18px}
+
 /* ── SYNC FIREBASE ── */
 .sync-bar{
   display:flex;align-items:center;gap:8px;padding:6px 14px;
@@ -500,6 +547,7 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('liste')">Mes documents</button>
       <button class="nb" onclick="showTab('carnet')">👥 Clients</button>
       <button class="nb" onclick="showTab('template')">🎨 Template</button>
+      <button class="nb" onclick="showTab('services')">⚙️ Services</button>
     </div>
     <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
   </div>
@@ -634,6 +682,22 @@ select option{background:#1d222d}
         <input id="carnet-search" type="text" placeholder="Rechercher un client, véhicule, immat..." oninput="renderCarnet()"/>
       </div>
       <div class="carnet-grid" id="carnet-grid"></div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="tc" id="t-services">
+      <div class="sh">
+        <div class="sh-title">Catalogue des services</div>
+        <div class="sh-actions">
+          <button class="btn-s" onclick="resetCatalogue()">↺ Réinitialiser</button>
+          <button class="btn-p" onclick="exportCatalogue()">⬇ Exporter</button>
+        </div>
+      </div>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px">
+        Modifie le nom, le prix et l'organisation de tes services. Les changements s'appliquent immédiatement dans les formulaires de devis.
+      </p>
+      <div id="cat-editor"></div>
+      <button class="cat-add-group" onclick="addCatGroup()">+ Ajouter une catégorie</button>
     </div>
 
     <!-- TEMPLATE -->
@@ -871,6 +935,40 @@ select option{background:#1d222d}
   </div>
 </div>
 
+<!-- MODAL ÉDITION SERVICE -->
+<div class="cat-modal" id="cat-item-modal" onclick="if(event.target===this)closeCatModal()">
+  <div class="cat-box">
+    <div class="cat-box-title" id="cat-modal-title">Modifier le service</div>
+    <div class="fr"><label>Nom du service</label>
+      <input id="cat-item-label" type="text" placeholder="Ex : Stage 1 — Reprogrammation moteur"/>
+    </div>
+    <div class="fr"><label>Prix indicatif (€ HT) — mettre 0 pour "Sur devis"</label>
+      <input id="cat-item-price" type="number" min="0" step="1" placeholder="330"/>
+    </div>
+    <div class="fr"><label>Catégorie</label>
+      <select id="cat-item-group"></select>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="closeCatModal()">Annuler</button>
+      <button class="btn-g" onclick="saveCatItem()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AJOUT CATÉGORIE -->
+<div class="cat-modal" id="cat-group-modal" onclick="if(event.target===this)$('cat-group-modal').classList.remove('open')">
+  <div class="cat-box">
+    <div class="cat-box-title">Nouvelle catégorie</div>
+    <div class="fr"><label>Nom de la catégorie</label>
+      <input id="cat-group-name-input" type="text" placeholder="Ex : Prestations spéciales"/>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('cat-group-modal').classList.remove('open')">Annuler</button>
+      <button class="btn-g" onclick="confirmAddGroup()">✓ Créer</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL APERÇU -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-wrap">
@@ -973,6 +1071,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Relier le bouton proprement (évite tout souci de timing)
   var btn = $('login-btn');
   if (btn) btn.onclick = doLogin;
+  // Enter dans les modals catalogue
+  var cli = $('cat-item-label');
+  if (cli) cli.addEventListener('keydown', function(e){ if(e.key==='Enter') saveCatItem(); });
+  var cgi = $('cat-group-name-input');
+  if (cgi) cgi.addEventListener('keydown', function(e){ if(e.key==='Enter') confirmAddGroup(); });
 });
 
 // ============================================================
@@ -1059,6 +1162,7 @@ function syncFromFirebase(callback) {
         snap.forEach(function(d){ clients.push(d.data()); });
         localStorage.setItem('ar_clients', JSON.stringify(clients));
       }
+      syncCatalogueFromFirebase();
       setSyncStatus(true, 'Firebase synchronisé');
       renderDash();
       renderCarnet();
@@ -1124,7 +1228,7 @@ function deleteClientFirebase(clientId) {
 // ============================================================
 //  CATALOGUE — extrait exact de tarifs.html
 // ============================================================
-const CAT = [
+var CAT_DEFAULT = [
   { g: 'Reprogrammation moteur', items: [
     { l: 'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible', p: 330 },
     { l: 'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)', p: 460 },
@@ -1168,6 +1272,34 @@ const CAT = [
     { l: 'Prestation personnalisée / Sur-mesure', p: 0 },
   ]},
 ];
+
+// ============================================================
+//  CATALOGUE DYNAMIQUE — modifiable par l'utilisateur
+// ============================================================
+var CAT_KEY = 'ar_catalogue';
+
+function loadCat() {
+  try {
+    var raw = localStorage.getItem(CAT_KEY);
+    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(CAT_DEFAULT));
+  } catch(e) { return JSON.parse(JSON.stringify(CAT_DEFAULT)); }
+}
+
+function saveCat(cat) {
+  localStorage.setItem(CAT_KEY, JSON.stringify(cat));
+  // Sync Firebase
+  if (db && syncOk) {
+    db.collection('config').doc('catalogue').set({ cat: cat })
+      .catch(function(e){ console.warn('Firebase cat save:', e); });
+  }
+}
+
+// CAT actif (rechargé à chaque renderLines)
+var CAT = loadCat();
+
+function reloadCat() {
+  CAT = loadCat();
+}
 
 // Gains automatiques par mot-clé
 const GAINS_MAP = [
@@ -1274,8 +1406,9 @@ function onTypeChange() {
 //  LINES
 // ============================================================
 function buildSelectOpts(selected) {
+  var activeCat = loadCat();
   var h = '<option value="">— Sélectionner une prestation —</option>';
-  CAT.forEach(function(cat) {
+  activeCat.forEach(function(cat) {
     h += '<optgroup label="' + cat.g + '">';
     cat.items.forEach(function(it) {
       var sel = selected === it.l ? ' selected' : '';
@@ -2041,6 +2174,209 @@ function showTab(t) {
 }
 
 // ============================================================
+//  GESTIONNAIRE CATALOGUE
+// ============================================================
+var catEditingGroup = null;   // index groupe en cours d'édition
+var catEditingItem  = null;   // index item en cours d'édition
+
+function renderCatEditor() {
+  var cat = loadCat();
+  var el = $('cat-editor');
+  if (!el) return;
+  if (!cat.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div>Aucun service. Clique sur "+ Ajouter une catégorie".</div>';
+    return;
+  }
+  el.innerHTML = cat.map(function(grp, gi) {
+    var items = (grp.items || []).map(function(it, ii) {
+      return '<div class="cat-item">'
+        + '<div class="cat-item-label">' + escHtml(it.l) + '</div>'
+        + '<div class="cat-item-price">' + (it.p > 0 ? it.p + ' €' : '<span style="color:var(--text-muted)">Sur devis</span>') + '</div>'
+        + '<div class="cat-item-actions">'
+          + '<button class="cat-icon-btn" onclick="editCatItem(' + gi + ',' + ii + ')" title="Modifier">✏️</button>'
+          + '<button class="cat-icon-btn" onclick="moveCatItem(' + gi + ',' + ii + ',-1)" title="Monter">↑</button>'
+          + '<button class="cat-icon-btn" onclick="moveCatItem(' + gi + ',' + ii + ',1)" title="Descendre">↓</button>'
+          + '<button class="cat-icon-btn del" onclick="deleteCatItem(' + gi + ',' + ii + ')" title="Supprimer">×</button>'
+        + '</div>'
+      + '</div>';
+    }).join('');
+    return '<div class="cat-group">'
+      + '<div class="cat-group-head" onclick="toggleCatGroup(this)">'
+        + '<div class="cat-group-name">' + escHtml(grp.g) + '</div>'
+        + '<div class="cat-group-count">' + (grp.items||[]).length + ' service' + ((grp.items||[]).length > 1 ? 's' : '') + '</div>'
+        + '<div class="cat-group-actions" onclick="event.stopPropagation()">'
+          + '<button class="cat-icon-btn" onclick="renameCatGroup(' + gi + ')" title="Renommer">✏️</button>'
+          + '<button class="cat-icon-btn" onclick="moveCatGroup(' + gi + ',-1)" title="Monter">↑</button>'
+          + '<button class="cat-icon-btn" onclick="moveCatGroup(' + gi + ',1)" title="Descendre">↓</button>'
+          + '<button class="cat-icon-btn del" onclick="deleteCatGroup(' + gi + ')" title="Supprimer la catégorie">×</button>'
+        + '</div>'
+      + '</div>'
+      + '<div class="cat-items" id="cat-group-' + gi + '">'
+        + items
+        + '<button class="cat-add-item" onclick="addCatItem(' + gi + ')">+ Ajouter un service</button>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+function toggleCatGroup(head) {
+  var items = head.nextElementSibling;
+  items.style.display = items.style.display === 'none' ? '' : 'none';
+}
+
+function escHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Édition item ─────────────────────────────────────────────
+function openCatModal(gi, ii) {
+  catEditingGroup = gi;
+  catEditingItem  = ii;
+  var cat = loadCat();
+  var isNew = ii === null;
+  $('cat-modal-title').textContent = isNew ? 'Nouveau service' : 'Modifier le service';
+
+  // Remplir le select des groupes
+  var sel = $('cat-item-group');
+  sel.innerHTML = cat.map(function(grp, i) {
+    return '<option value="' + i + '"' + (i === gi ? ' selected' : '') + '>' + escHtml(grp.g) + '</option>';
+  }).join('');
+
+  if (!isNew) {
+    var it = cat[gi].items[ii];
+    $('cat-item-label').value = it.l;
+    $('cat-item-price').value = it.p;
+  } else {
+    $('cat-item-label').value = '';
+    $('cat-item-price').value = '';
+  }
+  $('cat-item-modal').classList.add('open');
+  setTimeout(function(){ $('cat-item-label').focus(); }, 100);
+}
+
+function closeCatModal() { $('cat-item-modal').classList.remove('open'); }
+
+function addCatItem(gi) { openCatModal(gi, null); }
+function editCatItem(gi, ii) { openCatModal(gi, ii); }
+
+function saveCatItem() {
+  var label = $('cat-item-label').value.trim();
+  if (!label) { alert('Le nom du service est obligatoire.'); return; }
+  var price = parseFloat($('cat-item-price').value) || 0;
+  var targetGroup = parseInt($('cat-item-group').value);
+  var cat = loadCat();
+
+  var item = { l: label, p: price };
+
+  if (catEditingItem === null) {
+    // Nouveau
+    cat[targetGroup].items.push(item);
+  } else {
+    // Modifier — gérer le changement de groupe
+    if (targetGroup === catEditingGroup) {
+      cat[catEditingGroup].items[catEditingItem] = item;
+    } else {
+      cat[catEditingGroup].items.splice(catEditingItem, 1);
+      cat[targetGroup].items.push(item);
+    }
+  }
+  saveCat(cat);
+  closeCatModal();
+  renderCatEditor();
+}
+
+// ── Suppression / déplacement items ──────────────────────────
+function deleteCatItem(gi, ii) {
+  if (!confirm('Supprimer ce service ?')) return;
+  var cat = loadCat();
+  cat[gi].items.splice(ii, 1);
+  saveCat(cat);
+  renderCatEditor();
+}
+
+function moveCatItem(gi, ii, dir) {
+  var cat = loadCat();
+  var items = cat[gi].items;
+  var ni = ii + dir;
+  if (ni < 0 || ni >= items.length) return;
+  var tmp = items[ii]; items[ii] = items[ni]; items[ni] = tmp;
+  saveCat(cat);
+  renderCatEditor();
+}
+
+// ── Groupes ───────────────────────────────────────────────────
+function addCatGroup() {
+  $('cat-group-name-input').value = '';
+  $('cat-group-modal').classList.add('open');
+  setTimeout(function(){ $('cat-group-name-input').focus(); }, 100);
+}
+
+function confirmAddGroup() {
+  var name = $('cat-group-name-input').value.trim();
+  if (!name) { alert('Nom de catégorie obligatoire.'); return; }
+  var cat = loadCat();
+  cat.push({ g: name, items: [] });
+  saveCat(cat);
+  $('cat-group-modal').classList.remove('open');
+  renderCatEditor();
+}
+
+function renameCatGroup(gi) {
+  var cat = loadCat();
+  var name = prompt('Nouveau nom de la catégorie :', cat[gi].g);
+  if (!name || !name.trim()) return;
+  cat[gi].g = name.trim();
+  saveCat(cat);
+  renderCatEditor();
+}
+
+function deleteCatGroup(gi) {
+  var cat = loadCat();
+  if (cat[gi].items.length > 0 && !confirm('Supprimer la catégorie "' + cat[gi].g + '" et ses ' + cat[gi].items.length + ' services ?')) return;
+  cat.splice(gi, 1);
+  saveCat(cat);
+  renderCatEditor();
+}
+
+function moveCatGroup(gi, dir) {
+  var cat = loadCat();
+  var ni = gi + dir;
+  if (ni < 0 || ni >= cat.length) return;
+  var tmp = cat[gi]; cat[gi] = cat[ni]; cat[ni] = tmp;
+  saveCat(cat);
+  renderCatEditor();
+}
+
+function resetCatalogue() {
+  if (!confirm('Réinitialiser le catalogue aux services par défaut ?')) return;
+  localStorage.removeItem(CAT_KEY);
+  if (db && syncOk) db.collection('config').doc('catalogue').delete().catch(function(){});
+  renderCatEditor();
+}
+
+function exportCatalogue() {
+  var cat = loadCat();
+  var json = JSON.stringify(cat, null, 2);
+  var blob = new Blob([json], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'catalogue-areprog.json';
+  a.click();
+}
+
+// Sync Firebase → catalogue
+function syncCatalogueFromFirebase() {
+  if (!db) return;
+  db.collection('config').doc('catalogue').get()
+    .then(function(doc) {
+      if (doc.exists && doc.data().cat) {
+        localStorage.setItem(CAT_KEY, JSON.stringify(doc.data().cat));
+      }
+    })
+    .catch(function(){});
+}
+
+// ============================================================
 //  LOGO HTML pour les documents
 // ============================================================
 function buildLogoHTML(tpl) {
@@ -2165,12 +2501,13 @@ function livePreview() {
 //  TABS (complet avec template)
 // ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template'][i]===t); });
+  ['dash','form','liste','carnet','template','services'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services'][i]===t); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
   if(t==='template') { fillTplForm(loadTemplate()); livePreview(); }
+  if(t==='services') renderCatEditor();
 }
 
 // ============================================================
