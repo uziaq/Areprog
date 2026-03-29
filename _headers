@@ -1,62 +1,46 @@
 # ============================================================
-# AREPROG — Netlify _headers
-# Headers de sécurité appliqués à toutes les pages
+#  AREPROG — Netlify _headers
+#  À placer à la RACINE du repo
 # ============================================================
 
+# ── Sécurité globale ────────────────────────────────────────
 /*
-  # HTTPS strict — force HTTPS pendant 1 an, incluant sous-domaines
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
-  # Empêche le clickjacking — SAMEORIGIN permet les iframes internes (simulateur olsx)
-  X-Frame-Options: SAMEORIGIN
+# ── CSP — autorise Netlify Identity en plus des ressources existantes ──
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://api.olsx.eu; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://identity.netlify.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app; frame-src https://identity.netlify.com; object-src 'none'
 
-  # Empêche le sniffing MIME (attaques via fichiers uploadés)
-  X-Content-Type-Options: nosniff
-
-  # Contrôle le referrer envoyé lors des clics sortants
-  Referrer-Policy: strict-origin-when-cross-origin
-
-  # Désactive les fonctionnalités navigateur non utilisées
-  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
-
-  # Content Security Policy — autorise les ressources légitimes + simulateur olsx.eu
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.olsx.eu; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://wa.me https://api.olsx.eu; frame-src 'self' https://api.olsx.eu; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://wa.me https://formspree.io
-
-  # Empêche la détection automatique du type de contenu par IE
-  X-DNS-Prefetch-Control: on
-
-# Cache long sur les assets statiques (images, CSS, JS, fonts)
-/**.css
+# ── Cache statique ───────────────────────────────────────────
+/*.webp
   Cache-Control: public, max-age=31536000, immutable
 
-/**.js
+/*.jpg
   Cache-Control: public, max-age=31536000, immutable
 
-/**.webp
+/*.png
   Cache-Control: public, max-age=31536000, immutable
 
-/**.jpg
-  Cache-Control: public, max-age=31536000, immutable
-
-/**.png
-  Cache-Control: public, max-age=31536000, immutable
-
-/**.svg
-  Cache-Control: public, max-age=31536000, immutable
-
-/**.ico
-  Cache-Control: public, max-age=31536000, immutable
-
-/**.woff2
-  Cache-Control: public, max-age=31536000, immutable
-
-# Cache court sur les pages HTML (pour pouvoir les mettre à jour)
-/**.html
-  Cache-Control: public, max-age=3600, must-revalidate
-
-# Sitemap et robots — pas de cache long
-/sitemap.xml
-  Cache-Control: public, max-age=3600
-
-/robots.txt
+/*.css
   Cache-Control: public, max-age=86400
+
+/*.js
+  Cache-Control: public, max-age=86400
+
+# ── Pas d'indexation sur les pages privées ──────────────────
+/areprog-devis.html
+  X-Robots-Tag: noindex, nofollow
+
+/boutique.html
+  X-Robots-Tag: noindex, nofollow
+
+/produit.html
+  X-Robots-Tag: noindex, nofollow
+
+/confirmation.html
+  X-Robots-Tag: noindex, nofollow

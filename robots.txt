@@ -1,13 +1,17 @@
 User-agent: *
 Allow: /
 
-# Pages privées ou en développement — noindex géré via meta robots dans chaque page
-Disallow: /admin.html
+# Pages privées — accès bloqué aux robots
+Disallow: /areprog-devis
+Disallow: /areprog-devis.html
+Disallow: /devis
+Disallow: /pro
 Disallow: /admin
-Disallow: /confirmation.html
+Disallow: /admin.html
 Disallow: /confirmation
-Disallow: /simulateur.html
+Disallow: /confirmation.html
 Disallow: /simulateur
+Disallow: /simulateur.html
 
 # Sitemap
 Sitemap: https://areprog.fr/sitemap.xml

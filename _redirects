@@ -1,121 +1,51 @@
 # ============================================================
-# AREPROG — Netlify _redirects
-# Priorité : règle la plus spécifique EN PREMIER
-# Format : /source  /destination  code
+#  AREPROG — Netlify _redirects
+#  À placer à la RACINE du repo
 # ============================================================
 
-# ── 1. FORCE HTTPS (géré par Netlify automatiquement,
-#       mais on explicite pour être sûr)
-# http://areprog.fr/*  https://areprog.fr/:splat  301!
-# http://www.areprog.fr/*  https://areprog.fr/:splat  301!
+# ── Protection espace pro (Basic Auth gérée dans _headers) ──
+# La page devis est accessible mais non indexée + cachée des bots
 
-# ── 2. WWW → non-www (301 permanent)
-https://www.areprog.fr/*  https://areprog.fr/:splat  301!
+# ── Clean URLs (sans .html) ─────────────────────────────────
+/stage1                             /stage1.html                        200
+/stage2                             /stage2.html                        200
+/conversion-e85                     /conversion-e85.html                200
+/desactivation-egr                  /desactivation-egr.html             200
+/desactivation-fap                  /desactivation-fap.html             200
+/desactivation-adblue               /desactivation-adblue.html          200
+/optimisation-consommation          /optimisation-consommation.html     200
+/odis                               /odis.html                          200
+/tarifs                             /tarifs.html                        200
+/contact                            /contact.html                       200
+/about                              /about.html                         200
+/faq                                /faq.html                           200
+/simulateur                         /simulateur.html                    200
+/guide-reprogrammation-moteur       /guide-reprogrammation-moteur.html  200
+/chip-tuning-pays-basque            /chip-tuning-pays-basque.html       200
+/mentions-legales                   /mentions-legales.html              200
+/politique-confidentialite          /politique-confidentialite.html     200
+/ethanol-prix                       /ethanol-prix.html                  200
 
-# ── 3. URLs avec .html → URLs propres (301 permanent SEO)
-#    Ces redirections consolident le jus de lien accumulé
-#    sur les anciennes URLs GitHub Pages vers les nouvelles
+# Pages locales
+/reprogrammation-moteur-bayonne          /reprogrammation-moteur-bayonne.html          200
+/reprogrammation-moteur-biarritz         /reprogrammation-moteur-biarritz.html         200
+/reprogrammation-moteur-anglet           /reprogrammation-moteur-anglet.html           200
+/reprogrammation-moteur-hendaye          /reprogrammation-moteur-hendaye.html          200
+/reprogrammation-moteur-saint-jean-de-luz /reprogrammation-moteur-saint-jean-de-luz.html 200
+/reprogrammation-moteur-pau              /reprogrammation-moteur-pau.html              200
+/reprogrammation-moteur-dax              /reprogrammation-moteur-dax.html              200
+/reprogrammation-moteur-auxerre          /reprogrammation-moteur-auxerre.html          200
 
-/index.html                                     /                                               301!
-/about.html                                     /about                                          301!
-/boutique.html                                  /boutique                                       301!
-/chip-tuning-pays-basque.html                   /chip-tuning-pays-basque                        301!
-/confirmation.html                              /confirmation                                   301!
-/contact.html                                   /contact                                        301!
-/conversion-e85.html                            /conversion-e85                                 301!
-/desactivation-adblue.html                      /desactivation-adblue                           301!
-/desactivation-egr.html                         /desactivation-egr                              301!
-/desactivation-fap.html                         /desactivation-fap                              301!
-/ethanol-prix.html                              /ethanol-prix                                   301!
-/faq.html                                       /faq                                            301!
-/guide-reprogrammation-moteur.html              /guide-reprogrammation-moteur                   301!
-/mentions-legales.html                          /mentions-legales                               301!
-/odis.html                                      /odis                                           301!
-/optimisation-consommation.html                 /optimisation-consommation                      301!
-/politique-confidentialite.html                 /politique-confidentialite                      301!
-/produit.html                                   /produit                                        301!
-/reprogrammation-moteur-anglet.html             /reprogrammation-moteur-anglet                  301!
-/reprogrammation-moteur-auxerre.html            /reprogrammation-moteur-auxerre                 301!
-/reprogrammation-moteur-bayonne.html            /reprogrammation-moteur-bayonne                 301!
-/reprogrammation-moteur-biarritz.html           /reprogrammation-moteur-biarritz                301!
-/reprogrammation-moteur-dax.html                /reprogrammation-moteur-dax                     301!
-/reprogrammation-moteur-pau.html                /reprogrammation-moteur-pau                     301!
-/reprogrammation-moteur-saint-jean-de-luz.html  /reprogrammation-moteur-saint-jean-de-luz       301!
-/simulateur.html                                /simulateur                                     301!
-/stage1.html                                    /stage1                                         301!
-/stage2.html                                    /stage2                                         301!
-/tarifs.html                                    /tarifs                                         301!
+# Espace pro
+/devis                              /areprog-devis.html                 200
+/pro                                /areprog-devis.html                 200
 
-# ── 4. VARIANTES & FAUTES DE FRAPPE COURANTES (301)
-#    Requêtes probables que Google ou des visiteurs pourraient taper
-
-# Reprogrammation sans "moteur" dans l'URL
-/reprogrammation-bayonne                        /reprogrammation-moteur-bayonne                 301!
-/reprogrammation-biarritz                       /reprogrammation-moteur-biarritz                301!
-/reprogrammation-anglet                         /reprogrammation-moteur-anglet                  301!
-/reprogrammation-pau                            /reprogrammation-moteur-pau                     301!
-/reprogrammation-dax                            /reprogrammation-moteur-dax                     301!
-/reprogrammation-auxerre                        /reprogrammation-moteur-auxerre                 301!
-/reprogrammation-saint-jean-de-luz              /reprogrammation-moteur-saint-jean-de-luz       301!
-
-# Variantes avec "chip-tuning"
-/chip-tuning                                    /chip-tuning-pays-basque                        301!
-/chiptuning                                     /chip-tuning-pays-basque                        301!
-/chip-tuning-bayonne                            /chip-tuning-pays-basque                        301!
-
-# Variantes services
-/e85                                            /conversion-e85                                 301!
-/ethanol                                        /conversion-e85                                 301!
-/bioethanol                                     /conversion-e85                                 301!
-/egr                                            /desactivation-egr                              301!
-/fap                                            /desactivation-fap                              301!
-/adblue                                         /desactivation-adblue                           301!
-/stage-1                                        /stage1                                         301!
-/stage-2                                        /stage2                                         301!
-/odis-vag                                       /odis                                           301!
-/diagnostic                                     /odis                                           301!
-/diagnostic-odis                                /odis                                           301!
-
-# Variantes navigation courantes
-/devis                                          /contact                                        301!
-/rdv                                            /contact                                        301!
-/rendez-vous                                    /contact                                        301!
-/prix                                           /tarifs                                         301!
-/tarif                                          /tarifs                                         301!
-/prestations                                    /tarifs                                         301!
-/services                                       /tarifs                                         301!
-/apropos                                        /about                                          301!
-/a-propos                                       /about                                          301!
-/qui-sommes-nous                                /about                                          301!
-/simulateur-gains                               /simulateur                                     301!
-/gains                                          /simulateur                                     301!
-/guide                                          /guide-reprogrammation-moteur                   301!
-
-# Zones — variantes sans tirets ou abréviations
-/bayonne                                        /reprogrammation-moteur-bayonne                 301!
-/biarritz                                       /reprogrammation-moteur-biarritz                301!
-/anglet                                         /reprogrammation-moteur-anglet                  301!
-/pau                                            /reprogrammation-moteur-pau                     301!
-/dax                                            /reprogrammation-moteur-dax                     301!
-/auxerre                                        /reprogrammation-moteur-auxerre                 301!
-/saint-jean-de-luz                              /reprogrammation-moteur-saint-jean-de-luz       301!
-/pays-basque                                    /chip-tuning-pays-basque                        301!
-
-# ── 5. PAGES LÉGALES — variantes
-/legal                                          /mentions-legales                               301!
-/legales                                        /mentions-legales                               301!
-/confidentialite                                /politique-confidentialite                      301!
-/rgpd                                           /politique-confidentialite                      301!
-/privacy                                        /politique-confidentialite                      301!
-
-# ── 6. RÈGLE FALLBACK — URLs propres vers fichiers .html
-#    Netlify sert automatiquement /slug → /slug.html si le fichier existe
-#    Cette règle est en dernier recours pour tout ce qui n'est pas capté au-dessus
-/*  /:splat.html  200
-
-# ── Pages locales nouvelles (mars 2026)
-/reprogrammation-hendaye           /reprogrammation-moteur-hendaye         301!
-/hendaye                           /reprogrammation-moteur-hendaye         301!
-/reprogrammation-moteur-hendaye.html /reprogrammation-moteur-hendaye       301!
-
-
+# ── Redirections 301 anciennes URLs ─────────────────────────
+/boutique                           /contact                            301
+/boutique.html                      /contact                            301
+/produit                            /contact                            301
+/produit.html                       /contact                            301
+/confirmation                       /                                   301
+/confirmation.html                  /                                   301
+/admin                              /areprog-devis.html                 301
+/admin.html                         /areprog-devis.html                 301
