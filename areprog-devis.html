@@ -945,6 +945,11 @@ select option{background:#1d222d}
     <div class="fr"><label>Prix indicatif (€ HT) — mettre 0 pour "Sur devis"</label>
       <input id="cat-item-price" type="number" min="0" step="1" placeholder="330"/>
     </div>
+    <div class="fr">
+      <label>Gains / bénéfices (un par ligne — affichés sur le devis)</label>
+      <textarea id="cat-item-gains" rows="4" placeholder="Ex :&#10;Meilleure réactivité moteur&#10;100% réversible&#10;Agrément de conduite amélioré"></textarea>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Ces gains apparaîtront dans l'encart bleu sur le devis/facture PDF</div>
+    </div>
     <div class="fr"><label>Catégorie</label>
       <select id="cat-item-group"></select>
     </div>
@@ -1230,46 +1235,59 @@ function deleteClientFirebase(clientId) {
 // ============================================================
 var CAT_DEFAULT = [
   { g: 'Reprogrammation moteur', items: [
-    { l: 'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible', p: 330 },
-    { l: 'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)', p: 460 },
-    { l: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
-    { l: 'Optimisation consommation — Idéal grands rouleurs & flottes', p: 380 },
-    { l: 'Retour à l\'origine — Restauration fichier constructeur (offert si reprog AREPROG)', p: 0 },
+    { l: 'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible', p: 330,
+      gains: ['Meilleure réactivité moteur', 'Couple optimisé dès bas régimes', 'Agrément de conduite amélioré', '100% réversible'] },
+    { l: 'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)', p: 460,
+      gains: ['Cartographie sur-mesure', 'Couple & puissance maximisés', 'Suivi personnalisé', '100% réversible'] },
+    { l: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330,
+      gains: ['Carburant E85 ≈ 0,75 €/L vs 1,80 €/L SP95', '−40% sur le coût carburant', 'Compatible toutes stations E85', 'Bilan carbone amélioré'] },
+    { l: 'Optimisation consommation — Idéal grands rouleurs & flottes', p: 380,
+      gains: ['−10 à −15% de carburant', 'Idéal grands rouleurs & flottes', 'Couple amélioré bas régime'] },
+    { l: 'Retour à l\'origine — Restauration fichier constructeur (offert si reprog AREPROG)', p: 0, gains: [] },
   ]},
   { g: 'Désactivations — usage spécifique', items: [
-    { l: 'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement', p: 180 },
-    { l: 'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)', p: 280 },
-    { l: 'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique', p: 280 },
-    { l: 'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances', p: 140 },
+    { l: 'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement', p: 180,
+      gains: ['Admission protégée de l\'encrassement', 'Moteur plus propre', 'Fiabilité accrue +80 000 km'] },
+    { l: 'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)', p: 280,
+      gains: ['Régénérations forcées supprimées', 'Contre-pressions éliminées', 'Consommation stabilisée'] },
+    { l: 'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique', p: 280,
+      gains: ['Coût AdBlue supprimé', 'Système simplifié', 'Alertes défaillance supprimées'] },
+    { l: 'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances', p: 140,
+      gains: ['Prévention casse mécanique', 'Moteur protégé', 'Aucun impact sur les performances'] },
   ]},
   { g: 'Packs combinés — économies garanties', items: [
-    { l: 'Pack Stage 1 + EGR OFF · Diesel — 2 prestations en 1 intervention', p: 370 },
-    { l: 'Pack Stage 1 + FAP OFF · Diesel (après retrait physique du filtre)', p: 370 },
-    { l: 'Pack Stage 1 + EGR + FAP OFF — Préparation diesel complète ★', p: 390 },
-    { l: 'Pack Stage 1 + AdBlue OFF — Moteur optimisé + SCR désactivé', p: 400 },
+    { l: 'Pack Stage 1 + EGR OFF · Diesel — 2 prestations en 1 intervention', p: 370,
+      gains: ['Performance + protection admission', 'Économie vs prestations séparées', '2 prestations en 1 déplacement'] },
+    { l: 'Pack Stage 1 + FAP OFF · Diesel (après retrait physique du filtre)', p: 370,
+      gains: ['Performance + suppression régénérations', 'Économie vs prestations séparées', '2 prestations en 1 déplacement'] },
+    { l: 'Pack Stage 1 + EGR + FAP OFF — Préparation diesel complète ★', p: 390,
+      gains: ['Performance + protection + flux échappement', 'Tout en une seule intervention', 'Économies maximales'] },
+    { l: 'Pack Stage 1 + AdBlue OFF — Moteur optimisé + SCR désactivé', p: 400,
+      gains: ['Performance moteur', 'Coût AdBlue supprimé', 'Économie vs prestations séparées'] },
   ]},
   { g: 'Diagnostic & spécialités VAG', items: [
-    { l: 'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur', p: 100 },
+    { l: 'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur', p: 100,
+      gains: ['Diagnostic officiel constructeur', 'Codages avancés disponibles', 'Mises à jour via serveurs VAG officiels'] },
   ]},
   { g: 'Options logicielles (en complément d\'une reprog, sinon +100 €)', items: [
-    { l: 'Pop & Bang — Détonations à la décélération · Effet sonore agressif', p: 150 },
-    { l: 'Pop & Bang Sport Button — Pops actifs uniquement en mode Sport', p: 180 },
-    { l: 'DSG Farts — Crépitements à la décélération sur boîtes DSG', p: 150 },
-    { l: 'Popcorn — Crépitements agressifs continus à la décélération', p: 150 },
-    { l: 'Launch Control — Optimisation départ arrêté · Meilleur 0-100', p: 150 },
-    { l: 'Octane Adaptation — Adaptation automatique selon indice d\'octane', p: 360 },
-    { l: 'Exhaust Flaps — Gestion des clapets d\'échappement selon le mode', p: 60 },
-    { l: 'Start & Stop OFF — Désactivation définitive du Start & Stop', p: 60 },
-    { l: 'Vmax OFF — Suppression du limiteur de vitesse constructeur', p: 60 },
-    { l: 'Power on Driving Mode — Démarrage automatique en mode Sport', p: 60 },
-    { l: 'Sport Display — Affichage données sportives au tableau de bord', p: 60 },
-    { l: 'Vmax 30 — Limitation à 30 km/h (chantier, logistique, formation)', p: 90 },
+    { l: 'Pop & Bang — Détonations à la décélération · Effet sonore agressif', p: 150, gains: ['Son sportif à la décélération'] },
+    { l: 'Pop & Bang Sport Button — Pops actifs uniquement en mode Sport', p: 180, gains: ['Pops actifs en mode Sport uniquement'] },
+    { l: 'DSG Farts — Crépitements à la décélération sur boîtes DSG', p: 150, gains: ['Crépitements DSG à la décélération'] },
+    { l: 'Popcorn — Crépitements agressifs continus', p: 150, gains: ['Crépitements agressifs continus'] },
+    { l: 'Launch Control — Optimisation départ arrêté · Meilleur 0-100', p: 150, gains: ['Départ arrêté optimisé', 'Meilleur chrono 0-100'] },
+    { l: 'Octane Adaptation — Adaptation automatique selon indice d\'octane', p: 360, gains: ['Adaptation auto selon carburant utilisé'] },
+    { l: 'Exhaust Flaps — Gestion des clapets d\'échappement selon le mode', p: 60, gains: ['Gestion des clapets par mode de conduite'] },
+    { l: 'Start & Stop OFF — Désactivation définitive du Start & Stop', p: 60, gains: ['Start & Stop définitivement désactivé'] },
+    { l: 'Vmax OFF — Suppression du limiteur de vitesse constructeur', p: 60, gains: ['Bridage vitesse supprimé'] },
+    { l: 'Power on Driving Mode — Démarrage automatique en mode Sport', p: 60, gains: ['Démarre toujours en mode Sport'] },
+    { l: 'Sport Display — Affichage données sportives au tableau de bord', p: 60, gains: ['Données sportives sur le tableau de bord'] },
+    { l: 'Vmax 30 — Limitation à 30 km/h', p: 90, gains: ['Limitation à 30 km/h — chantier/logistique'] },
   ]},
   { g: 'Suppléments & options', items: [
-    { l: 'Supplément déplacement hors zone (+30 km)', p: 40 },
-    { l: 'Supplément fichier inconnu (reprise modif tiers)', p: 30 },
-    { l: 'Supplément intervention urgente (sous 24h)', p: 50 },
-    { l: 'Prestation personnalisée / Sur-mesure', p: 0 },
+    { l: 'Supplément déplacement hors zone (+30 km)', p: 40, gains: [] },
+    { l: 'Supplément fichier inconnu (reprise modif tiers)', p: 30, gains: [] },
+    { l: 'Supplément intervention urgente (sous 24h)', p: 50, gains: [] },
+    { l: 'Prestation personnalisée / Sur-mesure', p: 0, gains: [] },
   ]},
 ];
 
@@ -1302,22 +1320,21 @@ function reloadCat() {
 }
 
 // Gains automatiques par mot-clé
-const GAINS_MAP = [
-  { k: ['stage 2'],               g: ['Cartographie sur-mesure','Couple & puissance maximisés','Suivi personnalisé','100% réversible'] },
-  { k: ['stage 1'],               g: ['Meilleure réactivité moteur','Couple optimisé dès bas régimes','Agrément de conduite amélioré','100% réversible'] },
-  { k: ['e85','ethanol','éthanol'], g: ['Carburant E85 ≈ 0,75 €/L vs 1,80 €/L SP95','−40% sur le coût carburant','Compatible toutes stations E85','Bilan carbone amélioré'] },
-  { k: ['egr'],                   g: ['Admission protégée de l\'encrassement','Moteur plus propre','Fiabilité accrue +80 000 km'] },
-  { k: ['fap','dpf'],             g: ['Régénérations forcées supprimées','Contre-pressions éliminées','Consommation stabilisée'] },
-  { k: ['adblue','scr'],          g: ['Coût AdBlue supprimé','Système simplifié','Alertes défaillance supprimées'] },
-  { k: ['conso','consommation'],  g: ['−10 à −15% de carburant','Idéal grands rouleurs & flottes','Couple amélioré bas régime'] },
-  { k: ['odis','vag'],            g: ['Diagnostic officiel constructeur','Codages avancés disponibles','Mises à jour via serveurs VAG officiels'] },
-];
-
+// getGains — récupère les gains directement depuis le catalogue dynamique
 function getGains(lines) {
-  const set = new Set();
-  lines.forEach(l => {
-    const lb = (l.label || '').toLowerCase();
-    GAINS_MAP.forEach(gm => { if (gm.k.some(k => lb.includes(k))) gm.g.forEach(g => set.add(g)); });
+  var cat = loadCat();
+  var set = new Set();
+  lines.forEach(function(l) {
+    if (!l.label) return;
+    // Cherche la prestation exacte dans le catalogue
+    for (var gi = 0; gi < cat.length; gi++) {
+      for (var ii = 0; ii < cat[gi].items.length; ii++) {
+        var it = cat[gi].items[ii];
+        if (it.l === l.label && it.gains && it.gains.length) {
+          it.gains.forEach(function(g){ if(g) set.add(g); });
+        }
+      }
+    }
   });
   return [...set].slice(0, 8);
 }
@@ -2189,8 +2206,10 @@ function renderCatEditor() {
   }
   el.innerHTML = cat.map(function(grp, gi) {
     var items = (grp.items || []).map(function(it, ii) {
+      var gainsCount = (it.gains || []).filter(Boolean).length;
       return '<div class="cat-item">'
-        + '<div class="cat-item-label">' + escHtml(it.l) + '</div>'
+        + '<div class="cat-item-label">' + escHtml(it.l)
+          + (gainsCount > 0 ? ' <span style="font-size:10px;color:var(--green);margin-left:6px">✓ ' + gainsCount + ' gain' + (gainsCount>1?'s':'') + '</span>' : '') + '</div>'
         + '<div class="cat-item-price">' + (it.p > 0 ? it.p + ' €' : '<span style="color:var(--text-muted)">Sur devis</span>') + '</div>'
         + '<div class="cat-item-actions">'
           + '<button class="cat-icon-btn" onclick="editCatItem(' + gi + ',' + ii + ')" title="Modifier">✏️</button>'
@@ -2246,9 +2265,11 @@ function openCatModal(gi, ii) {
     var it = cat[gi].items[ii];
     $('cat-item-label').value = it.l;
     $('cat-item-price').value = it.p;
+    $('cat-item-gains').value = (it.gains || []).join('\n');
   } else {
     $('cat-item-label').value = '';
     $('cat-item-price').value = '';
+    $('cat-item-gains').value = '';
   }
   $('cat-item-modal').classList.add('open');
   setTimeout(function(){ $('cat-item-label').focus(); }, 100);
@@ -2266,7 +2287,8 @@ function saveCatItem() {
   var targetGroup = parseInt($('cat-item-group').value);
   var cat = loadCat();
 
-  var item = { l: label, p: price };
+  var gainsRaw = ($('cat-item-gains').value || '').split('\n').map(function(g){ return g.trim(); }).filter(Boolean);
+  var item = { l: label, p: price, gains: gainsRaw };
 
   if (catEditingItem === null) {
     // Nouveau
