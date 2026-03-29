@@ -190,6 +190,163 @@ select option{background:#1d222d}
 /* TABS */
 .tc{display:none}.tc.on{display:block}
 
+/* WHATSAPP PARSER */
+.wa-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center;padding:20px}
+.wa-modal.open{display:flex}
+.wa-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:16px;width:540px;max-width:100%;padding:28px;box-shadow:0 0 60px rgba(30,144,255,.12)}
+.wa-title{font-family:var(--fh);font-size:20px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.wa-sub{color:var(--text-dim);font-size:13px;margin-bottom:20px;line-height:1.5}
+.wa-textarea{width:100%;min-height:120px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;resize:vertical;outline:none;transition:border-color .2s;font-family:var(--fb)}
+.wa-textarea:focus{border-color:var(--blue)}
+.wa-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.wa-result{margin-top:16px;padding:14px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);font-size:13px;display:none}
+.wa-result-row{display:flex;gap:8px;align-items:baseline;padding:4px 0}
+.wa-result-label{color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:.8px;min-width:110px}
+.wa-result-val{color:var(--text);font-weight:500}
+.wa-loading{text-align:center;padding:20px;color:var(--text-dim);display:none}
+.wa-loading-spin{width:28px;height:28px;border:2px solid rgba(30,144,255,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
+.wa-err{color:var(--red);font-size:12px;margin-top:10px;display:none}
+.wa-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
+  background:#25d366;border:none;border-radius:8px;color:#fff;font-weight:600;font-size:13px;
+  cursor:pointer;transition:background .15s
+}
+.wa-btn:hover{background:#1eb857}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE MOBILE
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Topbar : logo + nav empilés */
+  .topbar{
+    height:auto;flex-wrap:wrap;gap:0;padding:0;
+    flex-direction:column;align-items:stretch;
+  }
+  .tb-brand{
+    padding:12px 16px 8px;font-size:20px;
+    border-bottom:1px solid var(--border);
+  }
+  .tb-nav{
+    overflow-x:auto;padding:8px 12px;gap:4px;
+    -webkit-overflow-scrolling:touch;flex-wrap:nowrap;
+  }
+  .nb{padding:7px 12px;font-size:12px;white-space:nowrap}
+  .logout-btn{display:none} /* Remplacé par menu mobile */
+
+  /* Main padding réduit */
+  .main{padding:14px 12px}
+
+  /* Stats : 2 colonnes sur mobile */
+  .stats-row{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .sc{padding:14px}
+  .sc-val{font-size:22px}
+
+  /* Section header : empilé */
+  .sh{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:14px}
+  .sh-title{font-size:18px}
+
+  /* Actions : scroll horizontal */
+  .sh-actions{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;
+    width:100%;padding-bottom:4px;-webkit-overflow-scrolling:touch;
+  }
+  .sh-actions button{white-space:nowrap;flex-shrink:0;padding:8px 12px;font-size:12px}
+  .wa-btn{padding:8px 12px;font-size:12px}
+
+  /* Grilles → 1 colonne */
+  .fg2,.fg3{grid-template-columns:1fr;gap:12px;margin-bottom:12px}
+
+  /* Cards */
+  .card{padding:16px}
+  .card-title{font-size:13px;margin-bottom:12px}
+  .fr{margin-bottom:10px}
+  .fr label{font-size:10px}
+  .fr input,.fr select,.fr textarea{padding:9px 10px;font-size:14px}
+
+  /* Lignes prestations : layout mobile adapté */
+  .lines-wrap{padding:14px}
+  .lines-head{display:none} /* Caché sur mobile, labels inline */
+  .line-row{
+    display:grid;
+    grid-template-columns:1fr 52px 80px 36px;
+    grid-template-rows:auto auto;
+    gap:6px;
+    margin-bottom:12px;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .line-row select{
+    grid-column:1 / -2;grid-row:1;
+    font-size:13px;padding:9px 10px;
+  }
+  .line-row input[type="number"]:first-of-type{
+    grid-column:2;grid-row:2;
+    text-align:center;font-size:13px;padding:8px 6px;
+  }
+  .line-row input[type="number"]:last-of-type{
+    grid-column:3;grid-row:2;
+    text-align:right;font-size:13px;padding:8px 8px;
+  }
+  .line-row .lt{
+    grid-column:1;grid-row:2;
+    font-size:12px;padding:8px 4px;
+    color:var(--blue);text-align:left;
+    display:flex;align-items:center;
+  }
+  .line-row .lt::before{content:"Total : ";color:var(--text-muted);font-size:11px;margin-right:4px}
+  .rm-line{grid-column:4;grid-row:1;align-self:center}
+  .add-line{font-size:13px;padding:10px}
+
+  /* Totaux */
+  .totaux-card{padding:16px}
+  .totaux-row{padding:7px 0}
+  .totaux-row.big .tv{font-size:16px}
+
+  /* Table liste : simplifiée */
+  .dt thead{display:none}
+  .dt tbody tr{
+    display:block;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:14px;
+    margin-bottom:10px;
+  }
+  .dt tbody td{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:4px 0;border:none;font-size:13px;
+  }
+  .dt tbody td:empty{display:none}
+  .dt tbody td:first-child{font-size:12px;color:var(--text-dim)}
+  .act-cell{flex-wrap:wrap;gap:6px;justify-content:flex-start;margin-top:8px}
+  .act-cell button{flex:1;min-width:80px;justify-content:center;text-align:center}
+
+  /* Modal aperçu */
+  .modal-toolbar{
+    flex-wrap:wrap;gap:8px;width:100%;border-radius:10px;
+  }
+  .modal-toolbar button{flex:1;font-size:12px;padding:8px 10px;text-align:center}
+  .modal-toolbar span{display:none}
+  .modal-inner{border-radius:10px}
+  .preview-body{padding:20px 18px}
+
+  /* Modal WhatsApp */
+  .wa-box{padding:20px 16px}
+  .wa-actions{flex-wrap:wrap}
+  .wa-actions button{flex:1}
+
+  /* Dashboard recent docs */
+  #dash-list .dt tbody td[style*="font-family"]{font-size:12px}
+}
+
+/* Très petits écrans */
+@media (max-width: 380px) {
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px}
+  .sc-val{font-size:18px}
+  .nb{font-size:11px;padding:6px 9px}
+}
+
 @media print{
   body,html{background:#fff!important}
   #login-screen,#app{display:none!important}
@@ -244,6 +401,7 @@ select option{background:#1d222d}
       <div class="sh">
         <div class="sh-title" id="form-h">Nouveau devis</div>
         <div class="sh-actions">
+          <button class="wa-btn" onclick="openWaModal()">💬 Importer WhatsApp</button>
           <button class="btn-s" onclick="newDoc()">↺ Réinitialiser</button>
           <button class="btn-s" onclick="openPreview()">👁 Aperçu</button>
           <button class="btn-p" onclick="printDoc()">🖨 Imprimer / PDF</button>
@@ -346,6 +504,29 @@ select option{background:#1d222d}
       <div id="liste-body"></div>
     </div>
 
+  </div>
+</div>
+
+<!-- MODAL WHATSAPP PARSER -->
+<div class="wa-modal" id="wa-modal" onclick="if(event.target===this)closeWaModal()">
+  <div class="wa-box">
+    <div class="wa-title">💬 Importer un message WhatsApp</div>
+    <div class="wa-sub">Colle le message reçu de ton client. L'IA extrait automatiquement le nom, le véhicule et les prestations demandées.</div>
+    <textarea class="wa-textarea" id="wa-text" placeholder="Ex: Bonjour je m'appelle Thomas Dupont j'ai une Golf 7 GTD 184ch de 2018 plaque AB-123-CD, je voudrais savoir le prix pour un stage 1 et la conversion E85 merci"></textarea>
+    <div class="wa-err" id="wa-err">Erreur lors de l'analyse. Réessaie.</div>
+    <div class="wa-loading" id="wa-loading">
+      <div class="wa-loading-spin"></div>
+      Analyse en cours…
+    </div>
+    <div class="wa-result" id="wa-result">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:10px;font-weight:700">✦ Informations détectées</div>
+      <div id="wa-result-rows"></div>
+    </div>
+    <div class="wa-actions">
+      <button class="btn-s" onclick="closeWaModal()">Annuler</button>
+      <button class="btn-p" id="wa-analyze-btn" onclick="analyzeWaMessage()">🔍 Analyser</button>
+      <button class="btn-g" id="wa-apply-btn" onclick="applyWaResult()" style="display:none">✓ Pré-remplir le devis</button>
+    </div>
   </div>
 </div>
 
@@ -840,6 +1021,182 @@ function buildTable(docs, withDelete) {
       + '</tr>';
   }).join('');
   return '<table class="dt"><thead><tr><th>N°</th><th>Type</th><th>Date</th><th>Client / Véhicule</th><th>Montant TTC</th><th>Statut</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+// ============================================================
+//  WHATSAPP PARSER — Claude API
+// ============================================================
+var waExtracted = null;
+
+function openWaModal() {
+  $('wa-text').value = '';
+  $('wa-result').style.display = 'none';
+  $('wa-err').style.display = 'none';
+  $('wa-loading').style.display = 'none';
+  $('wa-apply-btn').style.display = 'none';
+  $('wa-analyze-btn').style.display = 'inline-flex';
+  waExtracted = null;
+  $('wa-modal').classList.add('open');
+  setTimeout(function(){ $('wa-text').focus(); }, 100);
+}
+
+function closeWaModal() {
+  $('wa-modal').classList.remove('open');
+}
+
+// Catalogue plat pour matching prestations
+var PRESTATION_KEYS = [
+  { keys: ['stage 2', 'stage2'],                         label: 'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)', p: 460 },
+  { keys: ['stage 1', 'stage1', 'reprog', 'reprogramm'], label: 'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible', p: 330 },
+  { keys: ['e85', 'ethanol', 'éthanol', 'bioethanol'],   label: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
+  { keys: ['pack stage 1 + e85', 'stage 1 e85'],         label: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
+  { keys: ['egr'],                                        label: 'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement', p: 180 },
+  { keys: ['fap', 'dpf'],                                 label: 'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)', p: 280 },
+  { keys: ['adblue', 'ad blue', 'scr'],                   label: 'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique', p: 280 },
+  { keys: ['odis', 'diagnostic vag', 'diagnostic'],       label: 'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur', p: 100 },
+  { keys: ['conso', 'consommation'],                      label: 'Optimisation consommation — Idéal grands rouleurs & flottes', p: 380 },
+  { keys: ['pop', 'bang'],                                label: 'Pop & Bang — Détonations à la décélération · Effet sonore agressif', p: 150 },
+  { keys: ['launch control'],                             label: 'Launch Control — Optimisation départ arrêté · Meilleur 0-100', p: 150 },
+  { keys: ['vmax', 'limiteur'],                           label: 'Vmax OFF — Suppression du limiteur de vitesse constructeur', p: 60 },
+  { keys: ['start stop', 'start & stop'],                 label: 'Start & Stop OFF — Désactivation définitive du Start & Stop', p: 60 },
+  { keys: ['swirl'],                                      label: 'Swirl OFF — Désactivation volets d'admission · Diesel · Prévention défaillances', p: 140 },
+];
+
+async function analyzeWaMessage() {
+  var msg = $('wa-text').value.trim();
+  if (!msg) { $('wa-err').textContent = 'Colle d'abord un message.'; $('wa-err').style.display = 'block'; return; }
+
+  $('wa-err').style.display = 'none';
+  $('wa-result').style.display = 'none';
+  $('wa-analyze-btn').style.display = 'none';
+  $('wa-apply-btn').style.display = 'none';
+  $('wa-loading').style.display = 'block';
+  waExtracted = null;
+
+  var prompt = "Tu es un assistant pour un professionnel de la reprogrammation moteur en France.\n"
+    + "Analyse ce message WhatsApp d'un client et extrais les informations suivantes en JSON strict (pas de markdown, pas de texte autour) :\n"
+    + "{\n"
+    + "  \"nom\": \"Prénom NOM du client ou vide\",\n"
+    + "  \"telephone\": \"numéro ou vide\",\n"
+    + "  \"email\": \"email ou vide\",\n"
+    + "  \"ville\": \"ville ou vide\",\n"
+    + "  \"marque\": \"marque du véhicule ou vide\",\n"
+    + "  \"modele\": \"modèle exact ou vide\",\n"
+    + "  \"motorisation\": \"motorisation avec cylindrée et puissance en ch si mentionnée, ou vide\",\n"
+    + "  \"annee\": \"année ou vide\",\n"
+    + "  \"immatriculation\": \"immatriculation ou vide\",\n"
+    + "  \"prestations\": [\"liste des prestations demandées en français simple, ex: Stage 1, Conversion E85, EGR OFF\"]\n"
+    + "}\n\n"
+    + "Message du client :\n" + msg;
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    var data = await resp.json();
+    var text = (data.content || []).map(function(i){ return i.text || ''; }).join('');
+    // Nettoyer si markdown
+    text = text.replace(/```json|```/g, '').trim();
+    var parsed = JSON.parse(text);
+
+    // Matcher les prestations au catalogue
+    var matchedLines = [];
+    (parsed.prestations || []).forEach(function(pStr) {
+      var pLow = pStr.toLowerCase();
+      var found = false;
+      for (var i = 0; i < PRESTATION_KEYS.length; i++) {
+        var pk = PRESTATION_KEYS[i];
+        if (pk.keys.some(function(k){ return pLow.indexOf(k) !== -1; })) {
+          // Éviter les doublons
+          if (!matchedLines.some(function(l){ return l.label === pk.label; })) {
+            matchedLines.push({ id: Date.now() + Math.random(), label: pk.label, qte: 1, pu: pk.p });
+          }
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        // Prestation non reconnue → ligne libre
+        matchedLines.push({ id: Date.now() + Math.random(), label: pStr, qte: 1, pu: 0 });
+      }
+    });
+
+    waExtracted = { parsed: parsed, lines: matchedLines };
+
+    // Afficher le résumé
+    var rows = '';
+    var fields = [
+      ['Client', parsed.nom],
+      ['Téléphone', parsed.telephone],
+      ['Email', parsed.email],
+      ['Ville', parsed.ville],
+      ['Marque', parsed.marque],
+      ['Modèle', parsed.modele],
+      ['Motorisation', parsed.motorisation],
+      ['Année', parsed.annee],
+      ['Immat.', parsed.immatriculation],
+    ];
+    fields.forEach(function(f) {
+      if (f[1]) rows += '<div class="wa-result-row"><span class="wa-result-label">'+f[0]+'</span><span class="wa-result-val">'+f[1]+'</span></div>';
+    });
+    if (matchedLines.length) {
+      rows += '<div class="wa-result-row" style="margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px">'
+        + '<span class="wa-result-label">Prestations</span>'
+        + '<span class="wa-result-val">' + matchedLines.map(function(l){ return l.label.split(' — ')[0]; }).join('<br>') + '</span></div>';
+    }
+
+    $('wa-result-rows').innerHTML = rows || '<span style="color:var(--text-muted)">Aucune information détectée.</span>';
+    $('wa-result').style.display = 'block';
+    $('wa-loading').style.display = 'none';
+    $('wa-apply-btn').style.display = 'inline-flex';
+
+  } catch(e) {
+    $('wa-loading').style.display = 'none';
+    $('wa-analyze-btn').style.display = 'inline-flex';
+    $('wa-err').textContent = 'Erreur analyse : ' + (e.message || 'Réessaie.');
+    $('wa-err').style.display = 'block';
+    console.error(e);
+  }
+}
+
+function applyWaResult() {
+  if (!waExtracted) return;
+  var p = waExtracted.parsed;
+
+  // Remplir les champs client
+  if (p.nom)            $('f-cnom').value  = p.nom;
+  if (p.telephone)      $('f-ctel').value  = p.telephone;
+  if (p.email)          $('f-cemail').value = p.email;
+  if (p.ville)          $('f-cville').value = p.ville;
+
+  // Remplir les champs véhicule
+  if (p.marque)         $('f-vm').value    = p.marque;
+  if (p.modele)         $('f-vmo').value   = p.modele;
+  if (p.motorisation)   $('f-vmot').value  = p.motorisation;
+  if (p.annee)          $('f-van').value   = p.annee;
+  if (p.immatriculation) $('f-vim').value  = p.immatriculation.toUpperCase();
+
+  // Injecter les lignes de prestations
+  if (waExtracted.lines && waExtracted.lines.length > 0) {
+    // Remplacer les lignes vides par les prestations détectées
+    lines = waExtracted.lines;
+    renderLines();
+  }
+
+  closeWaModal();
+
+  // Flash visuel pour confirmer
+  var formEl = $('t-form');
+  formEl.style.transition = 'opacity .15s';
+  formEl.style.opacity = '0.5';
+  setTimeout(function(){ formEl.style.opacity = '1'; }, 200);
 }
 
 // ============================================================
