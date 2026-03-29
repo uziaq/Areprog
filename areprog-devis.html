@@ -365,7 +365,7 @@ select option{background:#1d222d}
     <div class="login-sub">Espace professionnel</div>
     <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="arthur@areprog.fr" autocomplete="email"/></div>
     <div class="lf"><label>Mot de passe</label><input id="l-pass" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
-    <button class="login-btn" id="login-btn" onclick="doLogin()">Se connecter →</button>
+    <button class="login-btn" id="login-btn" onclick="if(typeof doLogin==='function')doLogin()">Se connecter →</button>
     <div class="login-err" id="lerr" style="display:none"></div>
   </div>
 </div>
@@ -615,18 +615,21 @@ function doLogout() {
 }
 
 // Au chargement : session encore valide → connecter directement
-(function() {
-  if (getSession()) {
-    showApp();
-  }
-})();
-
-// Touches clavier
 document.addEventListener('DOMContentLoaded', function() {
+  // Touches clavier
   var lp = $('l-pass');
   if (lp) lp.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   var le = $('l-email');
   if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
+
+  // Auto-login si session valide
+  if (getSession()) {
+    showApp();
+  }
+
+  // Relier le bouton proprement (évite tout souci de timing)
+  var btn = $('login-btn');
+  if (btn) btn.onclick = doLogin;
 });
 
 // STORAGE
@@ -1110,12 +1113,12 @@ var PRESTATION_KEYS = [
   { keys: ['launch control'],                             label: 'Launch Control — Optimisation départ arrêté · Meilleur 0-100', p: 150 },
   { keys: ['vmax', 'limiteur'],                           label: 'Vmax OFF — Suppression du limiteur de vitesse constructeur', p: 60 },
   { keys: ['start stop', 'start & stop'],                 label: 'Start & Stop OFF — Désactivation définitive du Start & Stop', p: 60 },
-  { keys: ['swirl'],                                      label: 'Swirl OFF — Désactivation volets d'admission · Diesel · Prévention défaillances', p: 140 },
+  { keys: ['swirl'],                                      label: 'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances', p: 140 },
 ];
 
 async function analyzeWaMessage() {
   var msg = $('wa-text').value.trim();
-  if (!msg) { $('wa-err').textContent = 'Colle d'abord un message.'; $('wa-err').style.display = 'block'; return; }
+  if (!msg) { $('wa-err').textContent = 'Colle d\'abord un message.'; $('wa-err').style.display = 'block'; return; }
 
   $('wa-err').style.display = 'none';
   $('wa-result').style.display = 'none';
