@@ -1693,7 +1693,8 @@ async function analyzeWaMessage() {
     + "Message du client :\n" + msg;
 
   try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    // Appel via Netlify Function (proxy) pour éviter le blocage CORS
+    var resp = await fetch('/.netlify/functions/claude-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
