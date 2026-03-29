@@ -104,6 +104,8 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
   <link rel="stylesheet" href="home.css"/>
+  <!-- Netlify Identity : intercepte les tokens d'invitation depuis les emails -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body data-page="index">
   <div id="nav-container"></div>
@@ -167,7 +169,7 @@
 
           <div class="hc-section">Résultats Stage 1</div>
           <div class="hc-row"><span class="hc-key">Puissance origine</span><span class="hc-val">220 ch</span></div>
-          <div class="hc-row"><span class="hc-key">Puissance reprog.</span><span class="hc-val gain">275 ch <span class="hc-delta">après reprog.</span></span></div>
+          <div class="hc-row"><span class="hc-key">Puissance reprog.</span><span class="hc-val gain">275 ch <span class="hc-delta">+55 ch</span></span></div>
           <div class="hc-row"><span class="hc-key">Couple origine</span><span class="hc-val">350 Nm</span></div>
           <div class="hc-row"><span class="hc-key">Couple reprog.</span><span class="hc-val gain">430 Nm <span class="hc-delta">+80 Nm</span></span></div>
 
@@ -332,8 +334,8 @@
         <div class="service-name">Stage 1</div>
         <p class="service-desc">Optimisation de la cartographie moteur sans modification mécanique. Gains immédiats en puissance et couple sur tous les turbos.</p>
         <div class="service-gains">
-          <div><div class="sg-val">À domicile</div><div class="sg-label">Intervention</div></div>
-          <div><div class="sg-val">100% réversible</div><div class="sg-label">Réversible</div></div>
+          <div><div class="sg-val">+20 à +55 ch</div><div class="sg-label">Puissance</div></div>
+          <div><div class="sg-val">+40 à +90 Nm</div><div class="sg-label">Couple</div></div>
         </div>
       </a>
       <a href="/stage2" class="service-card reveal">
@@ -342,7 +344,7 @@
         <div class="service-name">Stage 2</div>
         <p class="service-desc">Reprogrammation avancée combinée aux modifications mécaniques. Pour les passionnés qui veulent repousser les limites.</p>
         <div class="service-gains">
-          <div><div class="sg-val">Sur-mesure</div><div class="sg-label">Par véhicule</div></div>
+          <div><div class="sg-val">jusqu'à +100 ch</div><div class="sg-label">Puissance</div></div>
           <div><div class="sg-val">Sur-mesure</div><div class="sg-label">Par véhicule</div></div>
         </div>
       </a>
@@ -442,7 +444,7 @@
         <div class="temo-author">
           <div class="temo-avatar">TM</div>
           <div><div class="temo-name">Thomas M.</div><div class="temo-vehicle">VW Golf 7 GTI · Stage 1</div></div>
-          <div class="temo-gain">Sur-mesure</div>
+          <div class="temo-gain">+55 ch</div>
         </div>
       </div>
 
@@ -863,6 +865,27 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closePopup();
     });
+  </script>
+
+  <!-- Netlify Identity : redirige vers /devis après login via lien email -->
+  <script>
+    if (window.netlifyIdentity) {
+      netlifyIdentity.on('init', function(user) {
+        // Si token d'invitation ou recovery présent dans le hash
+        var hash = window.location.hash;
+        if (hash && (
+          hash.indexOf('invite_token') !== -1 ||
+          hash.indexOf('recovery_token') !== -1 ||
+          hash.indexOf('confirmation_token') !== -1
+        )) {
+          netlifyIdentity.open();
+        }
+      });
+      netlifyIdentity.on('login', function() {
+        netlifyIdentity.close();
+        window.location.href = '/devis';
+      });
+    }
   </script>
 </body>
 </html>
