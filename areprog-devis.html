@@ -5,6 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
 <!-- Auth : appel direct API Netlify Identity via fetch -->
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import {
+    getFirestore, collection, doc,
+    getDocs, setDoc, deleteDoc, query, where, orderBy
+  } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  // ═══════════════════════════════════════════════
+  //  🔧 REMPLACE CES VALEURS PAR TON PROJET FIREBASE
+  //  (Firebase Console → Paramètres du projet → Tes applications)
+  // ═══════════════════════════════════════════════
+const firebaseConfig = {
+    apiKey: "AIzaSyCAPjBtmwrcNUUg9Nlkn_2ltUa_P_90yV4",
+    authDomain: "areprog-devis.firebaseapp.com",
+    projectId: "areprog-devis",
+    storageBucket: "areprog-devis.firebasestorage.app",
+    messagingSenderId: "1047582505562",
+    appId: "1:1047582505562:web:32cefe1cab9eeeb270f663",
+    measurementId: "G-L3DVK09YSV"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // ── Expose db + helpers sur window pour le code global ──
+  window._db = db;
+  window._fs = { collection, doc, getDocs, setDoc, deleteDoc, query, where, orderBy };
+
+  // Signale que Firebase est prêt
+  window._fbReady = true;
+  document.dispatchEvent(new Event('firebase-ready'));
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -632,9 +665,63 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btn) btn.onclick = doLogin;
 });
 
-// STORAGE
-function loadDocs() { return JSON.parse(localStorage.getItem('ar_docs') || '[]'); }
-function saveDocs(d) { localStorage.setItem('ar_docs', JSON.stringify(d)); }
+// ============================================================
+//  STORAGE — Firebase Firestore
+//  Les docs sont stockés dans la collection "docs/{userEmail}/items/{docId}"
+// ============================================================
+
+function getUserEmail() {
+  try {
+    var raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    var data = JSON.parse(raw);
+    // Décoder le JWT pour récupérer l'email
+    var payload = JSON.parse(atob(data.token.split('.')[1]));
+    return (payload.email || '').replace(/[^a-zA-Z0-9_-]/g, '_');
+  } catch(e) { return 'default'; }
+}
+
+async function loadDocs() {
+  try {
+    var { collection, getDocs, query, orderBy } = window._fs;
+    var db = window._db;
+    var userEmail = getUserEmail();
+    var col = collection(db, 'docs', userEmail, 'items');
+    var snap = await getDocs(query(col, orderBy('id', 'desc')));
+    var docs = [];
+    snap.forEach(function(d) { docs.push(d.data()); });
+    return docs;
+  } catch(e) {
+    console.error('Firestore loadDocs error:', e);
+    return [];
+  }
+}
+
+async function saveDocToFirestore(doc) {
+  try {
+    var { collection, doc: fsDoc, setDoc } = window._fs;
+    var db = window._db;
+    var userEmail = getUserEmail();
+    var ref = fsDoc(collection(db, 'docs', userEmail, 'items'), String(doc.id));
+    await setDoc(ref, doc);
+  } catch(e) {
+    console.error('Firestore saveDoc error:', e);
+    throw e;
+  }
+}
+
+async function deleteDocFromFirestore(docId) {
+  try {
+    var { collection, doc: fsDoc, deleteDoc } = window._fs;
+    var db = window._db;
+    var userEmail = getUserEmail();
+    var ref = fsDoc(collection(db, 'docs', userEmail, 'items'), String(docId));
+    await deleteDoc(ref);
+  } catch(e) {
+    console.error('Firestore deleteDoc error:', e);
+    throw e;
+  }
+}
 
 // ============================================================
 //  CATALOGUE — extrait exact de tarifs.html
@@ -720,9 +807,10 @@ function plusDays(n) {
   d.setDate(d.getDate() + n);
   return d.toISOString().split('T')[0];
 }
-function genNum(prefix) {
-  const y = new Date().getFullYear();
-  const cnt = loadDocs().filter(d => d.num && d.num.startsWith(prefix + '-' + y)).length;
+async function genNum(prefix) {
+  var y = new Date().getFullYear();
+  var docs = await loadDocs();
+  var cnt = docs.filter(function(d) { return d.num && d.num.startsWith(prefix + '-' + y); }).length;
   return prefix + '-' + y + '-' + String(cnt + 1).padStart(3, '0');
 }
 
@@ -742,16 +830,22 @@ function showTab(t) {
 var lines = [];
 var editId = null;
 
-function initApp() {
-  resetForm(false);
-  renderDash();
+async function initApp() {
+  // Attendre que Firebase soit prêt si ce n'est pas encore le cas
+  if (!window._fbReady) {
+    await new Promise(function(resolve) {
+      document.addEventListener('firebase-ready', resolve, { once: true });
+    });
+  }
+  await resetForm(false);
+  await renderDash();
 }
 
-function resetForm(goToForm) {
+async function resetForm(goToForm) {
   editId = null;
   lines = [];
   $('f-type').value = 'devis';
-  $('f-num').value = genNum('DEV');
+  $('f-num').value = await genNum('DEV');
   $('f-date').value = today();
   $('f-ech').value = plusDays(30);
   $('f-statut').value = 'envoye';
@@ -766,12 +860,12 @@ function resetForm(goToForm) {
   if (goToForm) showTab('form');
 }
 
-function newDoc() { resetForm(true); }
+async function newDoc() { await resetForm(true); }
 
-function onTypeChange() {
+async function onTypeChange() {
   var t = $('f-type').value;
   $('form-h').textContent = t === 'devis' ? (editId ? 'Modifier le devis' : 'Nouveau devis') : (editId ? 'Modifier la facture' : 'Nouvelle facture');
-  if (!editId) $('f-num').value = genNum(t === 'devis' ? 'DEV' : 'FAC');
+  if (!editId) $('f-num').value = await genNum(t === 'devis' ? 'DEV' : 'FAC');
 }
 
 // ============================================================
@@ -885,24 +979,26 @@ function buildObj() {
   };
 }
 
-function saveDoc() {
+async function saveDoc() {
   var doc = buildObj();
   if (!doc.cn) { alert('Renseignez le nom du client avant d\'enregistrer.'); return; }
-  var docs = loadDocs();
-  if (editId) {
-    var i = docs.findIndex(function(d) { return d.id === editId; });
-    if (i >= 0) docs[i] = doc; else docs.unshift(doc);
-  } else {
-    docs.unshift(doc);
+  var btn = $('t-form').querySelector('.btn-g');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enregistrement…'; }
+  try {
+    editId = doc.id;
+    await saveDocToFirestore(doc);
+    await renderDash();
+    alert('Document enregistré ✓');
+  } catch(e) {
+    alert('Erreur lors de l\'enregistrement. Vérifie ta connexion.');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Enregistrer'; }
   }
-  editId = doc.id;
-  saveDocs(docs);
-  renderDash();
-  alert('Document enregistré ✓');
 }
 
-function loadDoc(docId) {
-  var doc = loadDocs().find(function(d) { return d.id === docId; });
+async function loadDoc(docId) {
+  var docs = await loadDocs();
+  var doc = docs.find(function(d) { return d.id === docId; });
   if (!doc) return;
   editId = doc.id;
   $('f-type').value = doc.type;
@@ -929,11 +1025,15 @@ function loadDoc(docId) {
   showTab('form');
 }
 
-function deleteDoc(docId) {
+async function deleteDoc(docId) {
   if (!confirm('Supprimer définitivement ce document ?')) return;
-  saveDocs(loadDocs().filter(function(d) { return d.id !== docId; }));
-  renderDash();
-  renderListe();
+  try {
+    await deleteDocFromFirestore(docId);
+    await renderDash();
+    await renderListe();
+  } catch(e) {
+    alert('Erreur lors de la suppression.');
+  }
 }
 
 // ============================================================
@@ -1007,8 +1107,9 @@ function openPreview() {
   $('preview').innerHTML = renderDocHTML(buildObj());
   $('modal').classList.add('open');
 }
-function previewDoc(docId) {
-  var doc = loadDocs().find(function(d){ return d.id === docId; });
+async function previewDoc(docId) {
+  var docs = await loadDocs();
+  var doc = docs.find(function(d){ return d.id === docId; });
   if (!doc) return;
   $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
@@ -1023,8 +1124,9 @@ function printDoc() {
 // ============================================================
 //  DASHBOARD
 // ============================================================
-function renderDash() {
-  var docs = loadDocs();
+async function renderDash() {
+  $('stats').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">Chargement…</div>';
+  var docs = await loadDocs();
   var devis = docs.filter(function(d){ return d.type === 'devis'; }).length;
   var factures = docs.filter(function(d){ return d.type === 'facture'; }).length;
   var caEnc = docs.filter(function(d){ return d.type === 'facture' && d.statut === 'payé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
@@ -1044,8 +1146,9 @@ function renderDash() {
 // ============================================================
 //  LISTE
 // ============================================================
-function renderListe() {
-  var all = loadDocs();
+async function renderListe() {
+  $('liste-body').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0;text-align:center">Chargement…</div>';
+  var all = await loadDocs();
   var flt = $('flt').value;
   var docs = flt ? all.filter(function(d){ return d.type === flt; }) : all;
   $('liste-body').innerHTML = docs.length ? buildTable(docs, true)
