@@ -5,32 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
 <!-- Auth : appel direct API Netlify Identity via fetch -->
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import {
-    getFirestore, collection, doc,
-    getDocs, setDoc, deleteDoc, query, where, orderBy
-  } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCAPjBtmwrcNUUg9Nlkn_2ltUa_P_90yV4",
-    authDomain: "areprog-devis.firebaseapp.com",
-    projectId: "areprog-devis",
-    storageBucket: "areprog-devis.firebasestorage.app",
-    messagingSenderId: "1047582505562",
-    appId: "1:1047582505562:web:32cefe1cab9eeeb270f663",
-    measurementId: "G-L3DVK09YSV"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-
-  window._db = db;
-  window._fs = { collection, doc, getDocs, setDoc, deleteDoc, query, where, orderBy };
-  window._fbReady = true;
-  document.dispatchEvent(new Event('firebase-ready'));
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -50,8 +24,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 input,select,textarea,button{font-family:var(--fb);font-size:14px}
 button{cursor:pointer}
 select option{background:#1d222d}
-#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg) radial-gradient(ellipse 80% 50% at 50% -10%,rgba(30,144,255,.12) 0%,transparent 70%)}
-.login-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:16px;padding:48px 40px;width:380px;text-align:center;box-shadow:0 0 80px rgba(30,144,255,.1),0 2px 0 rgba(30,144,255,.3) inset}
+
+/* LOGIN */
+#login-screen{
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:var(--bg) radial-gradient(ellipse 80% 50% at 50% -10%,rgba(30,144,255,.12) 0%,transparent 70%);
+}
+.login-box{
+  background:var(--bg2);border:1px solid var(--border-blue);border-radius:16px;
+  padding:48px 40px;width:380px;text-align:center;
+  box-shadow:0 0 80px rgba(30,144,255,.1),0 2px 0 rgba(30,144,255,.3) inset;
+}
 .login-logo{font-family:var(--fh);font-size:36px;font-weight:800;color:#fff;letter-spacing:3px}
 .login-logo span{color:var(--blue)}
 .login-sub{color:var(--text-dim);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;margin-top:4px}
@@ -62,8 +45,14 @@ select option{background:#1d222d}
 .login-btn{width:100%;padding:13px;background:var(--blue);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:15px;letter-spacing:.5px;margin-top:8px;transition:background .2s}
 .login-btn:hover{background:var(--blue-dim)}
 .login-err{color:var(--red);font-size:12px;margin-top:10px;display:none}
+
+/* APP */
 #app{display:none;min-height:100vh}
-.topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100}
+.topbar{
+  height:52px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  position:sticky;top:0;z-index:100;
+}
 .tb-brand{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:2px;color:#fff}
 .tb-brand span{color:var(--blue)}
 .tb-nav{display:flex;gap:2px}
@@ -73,12 +62,16 @@ select option{background:#1d222d}
 .logout-btn{padding:6px 13px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-size:12px;transition:all .15s}
 .logout-btn:hover{border-color:var(--red);color:var(--red)}
 .main{padding:28px 32px;max-width:1280px;margin:0 auto}
+
+/* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
 .sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
 .sc-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px}
 .sc-val{font-family:var(--fh);font-size:30px;font-weight:700;color:#fff}
 .sc-val.blue{color:var(--blue)}.sc-val.green{color:var(--green)}.sc-val.orange{color:var(--orange)}
 .sc-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* BUTTONS */
 .btn-p{padding:9px 18px;background:var(--blue);border:none;border-radius:8px;color:#fff;font-weight:600;font-size:13px;transition:background .15s}
 .btn-p:hover{background:var(--blue-dim)}
 .btn-s{padding:8px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;transition:all .15s}
@@ -88,6 +81,8 @@ select option{background:#1d222d}
 .btn-d{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-size:12px;transition:all .15s}
 .btn-d:hover{border-color:var(--red);color:var(--red)}
 .btn-sm{padding:5px 10px!important;font-size:12px!important}
+
+/* LAYOUT */
 .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .sh-title{font-family:var(--fh);font-size:22px;font-weight:700;letter-spacing:.5px}
 .sh-actions{display:flex;gap:10px}
@@ -100,10 +95,12 @@ select option{background:#1d222d}
 .fr input,.fr select,.fr textarea{width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);outline:none;transition:border-color .2s}
 .fr input:focus,.fr select:focus,.fr textarea:focus{border-color:var(--blue)}
 .fr textarea{resize:vertical;min-height:72px}
+
+/* LIGNES */
 .lines-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px}
 .lines-head{display:grid;grid-template-columns:2.8fr 0.7fr 1fr 1fr 36px;gap:10px;margin-bottom:10px;padding:0 2px}
 .lines-head span{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
-.line-row{display:grid;grid-template-columns:2.8fr 0.7fr 1fr 1fr 36px;gap:10px;margin-bottom:8px;align-items:center}
+.line-row{display:grid;grid-template-columns:2.8fr 0.7fr 1fr 0.5fr 1fr 36px;gap:10px;margin-bottom:8px;align-items:center}
 .line-row select,.line-row input{width:100%;padding:9px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);outline:none;transition:border-color .2s}
 .line-row select:focus,.line-row input:focus{border-color:var(--blue)}
 .line-row .lt{font-family:var(--fm);font-size:13px;text-align:right;padding:9px 10px;color:var(--text)}
@@ -111,6 +108,8 @@ select option{background:#1d222d}
 .rm-line:hover{border-color:var(--red);color:var(--red)}
 .add-line{width:100%;margin-top:6px;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:7px;color:var(--text-dim);font-size:13px;transition:all .15s}
 .add-line:hover{border-color:var(--blue);color:var(--blue)}
+
+/* TOTAUX */
 .totaux-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px}
 .totaux-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .totaux-row:last-child{border:none;padding-top:14px;margin-top:6px;border-top:1px solid var(--border-blue)}
@@ -119,6 +118,8 @@ select option{background:#1d222d}
 .tl{color:var(--text-dim)}
 .tv{font-family:var(--fm);font-size:13px;color:var(--text)}
 .tva-sel{background:transparent;border:none;color:var(--text-dim);font-size:12px;cursor:pointer;outline:none;margin-left:4px}
+
+/* TABLE LISTE */
 .dt{width:100%;border-collapse:collapse}
 .dt th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:10px 14px;border-bottom:1px solid var(--border)}
 .dt td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
@@ -130,12 +131,19 @@ select option{background:#1d222d}
 .b-annule{background:rgba(239,68,68,.1);color:var(--red)}
 .doc-num{font-family:var(--fm);font-size:12px;color:var(--text-dim)}
 .act-cell{display:flex;gap:6px;justify-content:flex-end}
+
+/* MODAL */
 #modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;overflow-y:auto;padding:20px}
 #modal.open{display:block}
 .modal-wrap{display:flex;flex-direction:column;align-items:center;min-height:100%}
-.modal-toolbar{background:var(--bg2);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:10px;padding:12px 16px;margin-bottom:16px;width:780px;max-width:100%}
+.modal-toolbar{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  display:flex;align-items:center;gap:10px;padding:12px 16px;margin-bottom:16px;width:780px;max-width:100%;
+}
 .modal-inner{background:#fff;color:#111;border-radius:12px;width:780px;max-width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .preview-body{padding:44px 52px}
+
+/* DOC IMPRIMABLE */
 .d-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid #e5e7eb}
 .d-brand{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;letter-spacing:3px}
 .d-brand span{color:#1E90FF}
@@ -173,9 +181,112 @@ select option{background:#1d222d}
 .d-notes strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:6px}
 .d-notes p{font-size:12px;color:#555;line-height:1.65}
 .d-footer{border-top:1px solid #e5e7eb;padding-top:14px;font-size:10px;color:#aaa;text-align:center;line-height:1.7}
+
+/* EMPTY */
 .empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
 .empty-icon{font-size:36px;margin-bottom:12px}
+
+/* TABS */
 .tc{display:none}.tc.on{display:block}
+
+/* ── TEMPLATE EDITOR ── */
+.tpl-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:320;overflow-y:auto;padding:16px}
+.tpl-modal.open{display:block}
+.tpl-wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:16px;min-height:calc(100vh - 32px)}
+.tpl-panel{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:0}
+.tpl-panel-title{font-family:var(--fh);font-size:18px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
+.tpl-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.tpl-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.tpl-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:10px}
+.tpl-row{margin-bottom:10px}
+.tpl-row label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:5px}
+.tpl-row input,.tpl-row textarea,.tpl-row select{width:100%;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);outline:none;font-size:13px;transition:border-color .2s}
+.tpl-row input:focus,.tpl-row textarea:focus,.tpl-row select:focus{border-color:var(--blue)}
+.tpl-row textarea{resize:vertical;min-height:60px;line-height:1.5}
+.tpl-row.inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tpl-row.inline label{grid-column:1/-1}
+.tpl-color{display:flex;align-items:center;gap:8px}
+.tpl-color input[type=color]{width:40px;height:36px;padding:2px 4px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:var(--bg3)}
+.tpl-color input[type=text]{flex:1}
+.tpl-actions{display:flex;gap:10px;margin-top:4px;padding-top:18px;border-top:1px solid var(--border);flex-wrap:wrap}
+.tpl-preview-panel{background:#f0f2f5;border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.tpl-preview-bar{background:var(--bg2);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;border-radius:14px 14px 0 0}
+.tpl-preview-bar-title{font-size:13px;font-weight:600;color:var(--text-dim)}
+.tpl-preview-scroll{flex:1;overflow-y:auto;padding:24px}
+.tpl-preview-doc{background:#fff;border-radius:8px;padding:36px 40px;box-shadow:0 4px 20px rgba(0,0,0,.12);max-width:700px;margin:0 auto}
+.tpl-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-dim)}
+.tpl-toggle input{width:16px;height:16px;accent-color:var(--blue);cursor:pointer}
+@media(max-width:900px){
+  .tpl-wrap{grid-template-columns:1fr}
+  .tpl-preview-panel{display:none}
+}
+
+/* ── CARNET CLIENTS ── */
+.carnet-search{
+  display:flex;gap:10px;margin-bottom:16px;
+}
+.carnet-search input{
+  flex:1;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);outline:none;font-size:13px;
+  transition:border-color .2s;
+}
+.carnet-search input:focus{border-color:var(--blue)}
+.carnet-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.carnet-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:14px;cursor:pointer;transition:all .15s;position:relative;
+}
+.carnet-card:hover{border-color:var(--blue);background:var(--bg4)}
+.carnet-card-name{font-weight:600;font-size:14px;margin-bottom:3px}
+.carnet-card-veh{font-size:12px;color:var(--text-dim)}
+.carnet-card-tel{font-size:11px;color:var(--text-muted);margin-top:4px}
+.carnet-card-del{
+  position:absolute;top:8px;right:8px;width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;color:var(--text-muted);font-size:14px;
+  border-radius:4px;transition:all .15s;
+}
+.carnet-card-del:hover{color:var(--red);background:rgba(239,68,68,.1)}
+.carnet-empty{color:var(--text-muted);font-size:13px;padding:20px 0;text-align:center}
+
+/* ── MODAL CARNET ── */
+.carnet-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:310;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.carnet-modal.open{display:flex}
+.carnet-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:560px;max-width:100%;padding:24px;margin-top:40px}
+.carnet-box-title{font-family:var(--fh);font-size:18px;font-weight:700;margin-bottom:16px}
+
+/* ── MODAL OLSX ── */
+.olsx-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:310;align-items:center;justify-content:center;padding:16px}
+.olsx-modal.open{display:flex}
+.olsx-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:820px;max-width:100%;overflow:hidden;display:flex;flex-direction:column}
+.olsx-toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+.olsx-toolbar-title{font-family:var(--fh);font-size:16px;font-weight:700}
+.olsx-toolbar-hint{font-size:12px;color:var(--text-dim)}
+.olsx-iframe{width:100%;height:580px;border:none;display:block}
+.olsx-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.olsx-gains-preview{font-size:12px;color:var(--green);flex:1}
+
+/* ── PRIX OFFERT ── */
+.line-row .price-offert{
+  font-size:11px;font-weight:700;color:var(--green);
+  text-align:center;padding:9px 4px;
+}
+
+/* ── GAINS SUR DOC ── */
+.d-gains-olsx{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px;margin-bottom:16px}
+.d-gains-olsx-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#166534;font-weight:700;margin-bottom:10px}
+.d-gains-olsx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.d-gains-olsx-item{text-align:center}
+.d-gains-olsx-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:#166534}
+.d-gains-olsx-lbl{font-size:10px;color:#4ade80;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+@media(max-width:768px){
+  .carnet-grid{grid-template-columns:1fr}
+  .olsx-iframe{height:440px}
+  .d-gains-olsx-grid{grid-template-columns:1fr 1fr}
+}
+
+/* WHATSAPP PARSER */
 .wa-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center;padding:20px}
 .wa-modal.open{display:flex}
 .wa-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:16px;width:540px;max-width:100%;padding:28px;box-shadow:0 0 60px rgba(30,144,255,.12)}
@@ -190,78 +301,173 @@ select option{background:#1d222d}
 .wa-result-val{color:var(--text);font-weight:500}
 .wa-loading{text-align:center;padding:20px;color:var(--text-dim);display:none}
 .wa-loading-spin{width:28px;height:28px;border:2px solid rgba(30,144,255,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
-@keyframes spin{to{transform:rotate(360deg)}}
 .wa-err{color:var(--red);font-size:12px;margin-top:10px;display:none}
-.wa-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:#25d366;border:none;border-radius:8px;color:#fff;font-weight:600;font-size:13px;cursor:pointer;transition:background .15s}
+.wa-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
+  background:#25d366;border:none;border-radius:8px;color:#fff;font-weight:600;font-size:13px;
+  cursor:pointer;transition:background .15s
+}
 .wa-btn:hover{background:#1eb857}
 
+/* ═══════════════════════════════════════════
+   RESPONSIVE MOBILE
+═══════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .topbar{height:auto;flex-wrap:wrap;gap:0;padding:0;flex-direction:column;align-items:stretch}
-  .tb-brand{padding:12px 16px 8px;font-size:20px;border-bottom:1px solid var(--border)}
-  .tb-nav{overflow-x:auto;padding:8px 12px;gap:4px;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+
+  /* Topbar : logo + nav empilés */
+  .topbar{
+    height:auto;flex-wrap:wrap;gap:0;padding:0;
+    flex-direction:column;align-items:stretch;
+  }
+  .tb-brand{
+    padding:12px 16px 8px;font-size:20px;
+    border-bottom:1px solid var(--border);
+  }
+  .tb-nav{
+    overflow-x:auto;padding:8px 12px;gap:4px;
+    -webkit-overflow-scrolling:touch;flex-wrap:nowrap;
+  }
   .nb{padding:7px 12px;font-size:12px;white-space:nowrap}
-  .logout-btn{display:none}
+  .logout-btn{display:none} /* Remplacé par menu mobile */
+
+  /* Main padding réduit */
   .main{padding:14px 12px}
+
+  /* Stats : 2 colonnes sur mobile */
   .stats-row{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-  .sc{padding:14px}.sc-val{font-size:22px}
+  .sc{padding:14px}
+  .sc-val{font-size:22px}
+
+  /* Section header : empilé */
   .sh{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:14px}
   .sh-title{font-size:18px}
-  .sh-actions{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;width:100%;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+
+  /* Actions : scroll horizontal */
+  .sh-actions{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;
+    width:100%;padding-bottom:4px;-webkit-overflow-scrolling:touch;
+  }
   .sh-actions button{white-space:nowrap;flex-shrink:0;padding:8px 12px;font-size:12px}
   .wa-btn{padding:8px 12px;font-size:12px}
+
+  /* Grilles → 1 colonne */
   .fg2,.fg3{grid-template-columns:1fr;gap:12px;margin-bottom:12px}
-  .card{padding:16px}.card-title{font-size:13px;margin-bottom:12px}
-  .fr{margin-bottom:10px}.fr label{font-size:10px}
+
+  /* Cards */
+  .card{padding:16px}
+  .card-title{font-size:13px;margin-bottom:12px}
+  .fr{margin-bottom:10px}
+  .fr label{font-size:10px}
   .fr input,.fr select,.fr textarea{padding:9px 10px;font-size:14px}
+
+  /* Lignes prestations : layout mobile adapté */
   .lines-wrap{padding:14px}
-  .lines-head{display:none}
-  .line-row{display:grid;grid-template-columns:1fr 52px 80px 36px;grid-template-rows:auto auto;gap:6px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06)}
-  .line-row select{grid-column:1 / -2;grid-row:1;font-size:13px;padding:9px 10px}
-  .line-row input[type="number"]:first-of-type{grid-column:2;grid-row:2;text-align:center;font-size:13px;padding:8px 6px}
-  .line-row input[type="number"]:last-of-type{grid-column:3;grid-row:2;text-align:right;font-size:13px;padding:8px 8px}
-  .line-row .lt{grid-column:1;grid-row:2;font-size:12px;padding:8px 4px;color:var(--blue);text-align:left;display:flex;align-items:center}
+  .lines-head{display:none} /* Caché sur mobile, labels inline */
+  .line-row{
+    display:grid;
+    grid-template-columns:1fr 52px 70px 30px 36px;
+    grid-template-rows:auto auto;
+    gap:6px;
+    margin-bottom:12px;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .line-row select{
+    grid-column:1 / -2;grid-row:1;
+    font-size:13px;padding:9px 10px;
+  }
+  .line-row input[type="number"]:first-of-type{
+    grid-column:2;grid-row:2;
+    text-align:center;font-size:13px;padding:8px 6px;
+  }
+  .line-row input[type="number"]:last-of-type{
+    grid-column:3;grid-row:2;
+    text-align:right;font-size:13px;padding:8px 8px;
+  }
+  .line-row .lt{
+    grid-column:1;grid-row:2;
+    font-size:12px;padding:8px 4px;
+    color:var(--blue);text-align:left;
+    display:flex;align-items:center;
+  }
   .line-row .lt::before{content:"Total : ";color:var(--text-muted);font-size:11px;margin-right:4px}
   .rm-line{grid-column:4;grid-row:1;align-self:center}
   .add-line{font-size:13px;padding:10px}
-  .totaux-card{padding:16px}.totaux-row{padding:7px 0}.totaux-row.big .tv{font-size:16px}
+
+  /* Totaux */
+  .totaux-card{padding:16px}
+  .totaux-row{padding:7px 0}
+  .totaux-row.big .tv{font-size:16px}
+
+  /* Table liste : simplifiée */
   .dt thead{display:none}
-  .dt tbody tr{display:block;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-  .dt tbody td{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border:none;font-size:13px}
+  .dt tbody tr{
+    display:block;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:14px;
+    margin-bottom:10px;
+  }
+  .dt tbody td{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:4px 0;border:none;font-size:13px;
+  }
   .dt tbody td:empty{display:none}
   .dt tbody td:first-child{font-size:12px;color:var(--text-dim)}
   .act-cell{flex-wrap:wrap;gap:6px;justify-content:flex-start;margin-top:8px}
   .act-cell button{flex:1;min-width:80px;justify-content:center;text-align:center}
-  .modal-toolbar{flex-wrap:wrap;gap:8px;width:100%;border-radius:10px}
+
+  /* Modal aperçu */
+  .modal-toolbar{
+    flex-wrap:wrap;gap:8px;width:100%;border-radius:10px;
+  }
   .modal-toolbar button{flex:1;font-size:12px;padding:8px 10px;text-align:center}
   .modal-toolbar span{display:none}
-  .modal-inner{border-radius:10px}.preview-body{padding:20px 18px}
-  .wa-box{padding:20px 16px}.wa-actions{flex-wrap:wrap}.wa-actions button{flex:1}
+  .modal-inner{border-radius:10px}
+  .preview-body{padding:20px 18px}
+
+  /* Modal WhatsApp */
+  .wa-box{padding:20px 16px}
+  .wa-actions{flex-wrap:wrap}
+  .wa-actions button{flex:1}
+
+  /* Dashboard recent docs */
+  #dash-list .dt tbody td[style*="font-family"]{font-size:12px}
 }
+
+/* Très petits écrans */
 @media (max-width: 380px) {
-  .stats-row{grid-template-columns:1fr 1fr;gap:8px}.sc-val{font-size:18px}.nb{font-size:11px;padding:6px 9px}
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px}
+  .sc-val{font-size:18px}
+  .nb{font-size:11px;padding:6px 9px}
 }
+
 @media print{
   body,html{background:#fff!important}
   #login-screen,#app{display:none!important}
   #modal{display:block!important;position:static!important;background:#fff!important;padding:0!important;overflow:visible!important}
-  .modal-wrap{display:block!important}.modal-toolbar{display:none!important}
+  .modal-wrap{display:block!important}
+  .modal-toolbar{display:none!important}
   .modal-inner{box-shadow:none!important;border-radius:0!important;width:100%!important}
 }
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">ARE<span>PROG</span></div>
     <div class="login-sub">Espace professionnel</div>
     <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="arthur@areprog.fr" autocomplete="email"/></div>
     <div class="lf"><label>Mot de passe</label><input id="l-pass" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
-    <button class="login-btn" id="login-btn">Se connecter →</button>
+    <button class="login-btn" id="login-btn" onclick="if(typeof doLogin==='function')doLogin()">Se connecter →</button>
     <div class="login-err" id="lerr" style="display:none"></div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <div class="topbar">
     <div class="tb-brand">ARE<span>PROG</span></div>
@@ -269,10 +475,15 @@ select option{background:#1d222d}
       <button class="nb on" onclick="showTab('dash')">Dashboard</button>
       <button class="nb" onclick="newDoc()">+ Nouveau document</button>
       <button class="nb" onclick="showTab('liste')">Mes documents</button>
+      <button class="nb" onclick="showTab('carnet')">👥 Clients</button>
+      <button class="nb" onclick="showTab('template')">🎨 Template</button>
     </div>
     <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
   </div>
+
   <div class="main">
+
+    <!-- DASHBOARD -->
     <div class="tc on" id="t-dash">
       <div class="stats-row" id="stats"></div>
       <div class="sh">
@@ -281,17 +492,22 @@ select option{background:#1d222d}
       </div>
       <div id="dash-list"></div>
     </div>
+
+    <!-- FORM -->
     <div class="tc" id="t-form">
       <div class="sh">
         <div class="sh-title" id="form-h">Nouveau devis</div>
         <div class="sh-actions">
-          <button class="wa-btn" onclick="openWaModal()">💬 Importer WhatsApp</button>
+          <button class="wa-btn" onclick="openWaModal()">💬 WhatsApp</button>
+          <button class="btn-s" onclick="openCarnetModal()">👥 Carnet clients</button>
+          <button class="btn-s" onclick="openOlsxModal()">⚡ Gains OLSX</button>
           <button class="btn-s" onclick="newDoc()">↺ Réinitialiser</button>
           <button class="btn-s" onclick="openPreview()">👁 Aperçu</button>
           <button class="btn-p" onclick="printDoc()">🖨 Imprimer / PDF</button>
           <button class="btn-g" onclick="saveDoc()">💾 Enregistrer</button>
         </div>
       </div>
+
       <div class="fg3">
         <div class="card">
           <div class="card-title">Document</div>
@@ -330,15 +546,28 @@ select option{background:#1d222d}
           <div class="fr"><label>Immatriculation</label><input id="f-vim" type="text" placeholder="AB-123-CD"/></div>
         </div>
       </div>
+
+      <!-- Gains OLSX (affiché si renseigné) -->
+      <div id="gains-bar" style="display:none;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 18px;margin-bottom:18px;display:none">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:8px">⚡ Gains détectés via OLSX</div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap" id="gains-bar-vals"></div>
+        <button onclick="clearGains()" style="margin-top:8px;font-size:11px;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline">Supprimer les gains</button>
+      </div>
+
       <div class="lines-wrap">
         <div class="card-title">Prestations</div>
         <div class="lines-head">
-          <span>Désignation</span><span style="text-align:center">Qté</span>
-          <span style="text-align:right">PU HT (€)</span><span style="text-align:right">Total HT</span><span></span>
+          <span>Désignation</span>
+          <span style="text-align:center">Qté</span>
+          <span style="text-align:right">PU HT (€)</span>
+          <span style="text-align:center">Offert</span>
+          <span style="text-align:right">Total HT</span>
+          <span></span>
         </div>
         <div id="lines"></div>
         <button class="add-line" onclick="addLine()">+ Ajouter une ligne</button>
       </div>
+
       <div class="fg2">
         <div class="totaux-card">
           <div class="card-title">Totaux</div>
@@ -365,29 +594,132 @@ select option{background:#1d222d}
         </div>
       </div>
     </div>
+
+    <!-- CARNET -->
+    <div class="tc" id="t-carnet">
+      <div class="sh">
+        <div class="sh-title">Carnet clients & véhicules</div>
+        <button class="btn-p" onclick="openAddClientModal()">+ Nouveau client</button>
+      </div>
+      <div class="carnet-search">
+        <input id="carnet-search" type="text" placeholder="Rechercher un client, véhicule, immat..." oninput="renderCarnet()"/>
+      </div>
+      <div class="carnet-grid" id="carnet-grid"></div>
+    </div>
+
+    <!-- TEMPLATE -->
+    <div class="tc" id="t-template">
+      <div class="sh">
+        <div class="sh-title">Modèle de document</div>
+        <div class="sh-actions">
+          <button class="btn-s" onclick="resetTemplate()">↺ Réinitialiser</button>
+          <button class="btn-p" onclick="openTemplateModal()">🔍 Aperçu plein écran</button>
+          <button class="btn-g" onclick="saveTemplate()">💾 Enregistrer</button>
+        </div>
+      </div>
+      <div class="fg2">
+        <div>
+          <!-- Entreprise -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Votre entreprise</div>
+            <div class="fr"><label>Nom affiché (en-tête)</label><input id="tpl-nom" type="text" placeholder="AREPROG"/></div>
+            <div class="fr"><label>Activité (sous le nom)</label><input id="tpl-activite" type="text" placeholder="Reprogrammation moteur à domicile"/></div>
+            <div class="fr"><label>Zones d'intervention</label><input id="tpl-zones" type="text" placeholder="Pays Basque (64) · Landes (40) · Yonne (89)"/></div>
+            <div class="fr"><label>Téléphone</label><input id="tpl-tel" type="text" placeholder="06 67 92 46 30"/></div>
+            <div class="fr"><label>Email</label><input id="tpl-email" type="text" placeholder="contact@areprog.fr"/></div>
+            <div class="fr"><label>Site web</label><input id="tpl-web" type="text" placeholder="areprog.fr"/></div>
+            <div class="fr"><label>Adresse (optionnel)</label><input id="tpl-adresse" type="text" placeholder=""/></div>
+            <div class="fr"><label>Mentions légales (SIRET, TVA...)</label><textarea id="tpl-legal" rows="2" placeholder="SIRET : 000 000 000 00000 · TVA non applicable"></textarea></div>
+          </div>
+          <!-- Pied de page -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Pied de page</div>
+            <div class="fr"><label>Texte du pied de page</label><textarea id="tpl-footer" rows="3" placeholder="AREPROG — Reprogrammation moteur à domicile..."></textarea></div>
+          </div>
+        </div>
+        <div>
+          <!-- Style -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Couleur & style</div>
+            <div class="fr"><label>Couleur principale</label>
+              <div class="tpl-color">
+                <input type="color" id="tpl-color-pick" value="#1E90FF" oninput="syncColorInput()"/>
+                <input type="text" id="tpl-color-hex" value="#1E90FF" oninput="syncColorPicker()" placeholder="#1E90FF"/>
+              </div>
+            </div>
+            <div class="fr"><label>Couleur du texte des titres</label>
+              <div class="tpl-color">
+                <input type="color" id="tpl-title-color-pick" value="#111111" oninput="syncTitleColorInput()"/>
+                <input type="text" id="tpl-title-color-hex" value="#111111" oninput="syncTitleColorPicker()" placeholder="#111111"/>
+              </div>
+            </div>
+            <div class="fr"><label>Afficher le logo texte</label>
+              <select id="tpl-logo-style">
+                <option value="split">Nom en deux couleurs (ARE + PROG)</option>
+                <option value="full">Nom en couleur principale</option>
+                <option value="plain">Nom en noir simple</option>
+              </select>
+            </div>
+          </div>
+          <!-- Options doc -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Options du document</div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-gains" checked/> Afficher l'encart gains/bénéfices</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-veh" checked/> Afficher le véhicule chez le client</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-footer" checked/> Afficher le pied de page</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-legal" checked/> Afficher les mentions légales</label></div>
+            <div class="fr"><label>Intitulé colonne total</label>
+              <select id="tpl-col-total">
+                <option value="Total HT">Total HT</option>
+                <option value="Total TTC">Total TTC</option>
+                <option value="Montant">Montant</option>
+              </select>
+            </div>
+            <div class="fr"><label>Validité devis (jours)</label>
+              <input type="number" id="tpl-validite" value="30" min="1" max="365" placeholder="30"/>
+            </div>
+          </div>
+          <!-- Aperçu mini -->
+          <div class="card">
+            <div class="card-title">Aperçu live</div>
+            <div style="background:#f0f2f5;border-radius:8px;padding:12px;max-height:320px;overflow-y:auto">
+              <div id="tpl-mini-preview" style="background:#fff;border-radius:6px;padding:20px;font-size:10px;transform-origin:top left"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTE -->
     <div class="tc" id="t-liste">
       <div class="sh">
         <div class="sh-title">Tous les documents</div>
         <div class="sh-actions">
           <select id="flt" onchange="renderListe()" style="padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px">
-            <option value="">Tous</option><option value="devis">Devis</option><option value="facture">Factures</option>
+            <option value="">Tous</option>
+            <option value="devis">Devis</option>
+            <option value="facture">Factures</option>
           </select>
           <button class="btn-p" onclick="newDoc()">+ Nouveau</button>
         </div>
       </div>
       <div id="liste-body"></div>
     </div>
+
   </div>
 </div>
 
-<!-- MODAL WHATSAPP -->
+<!-- MODAL WHATSAPP PARSER -->
 <div class="wa-modal" id="wa-modal" onclick="if(event.target===this)closeWaModal()">
   <div class="wa-box">
     <div class="wa-title">💬 Importer un message WhatsApp</div>
     <div class="wa-sub">Colle le message reçu de ton client. L'IA extrait automatiquement le nom, le véhicule et les prestations demandées.</div>
     <textarea class="wa-textarea" id="wa-text" placeholder="Ex: Bonjour je m'appelle Thomas Dupont j'ai une Golf 7 GTD 184ch de 2018 plaque AB-123-CD, je voudrais savoir le prix pour un stage 1 et la conversion E85 merci"></textarea>
     <div class="wa-err" id="wa-err">Erreur lors de l'analyse. Réessaie.</div>
-    <div class="wa-loading" id="wa-loading"><div class="wa-loading-spin"></div>Analyse en cours…</div>
+    <div class="wa-loading" id="wa-loading">
+      <div class="wa-loading-spin"></div>
+      Analyse en cours…
+    </div>
     <div class="wa-result" id="wa-result">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:10px;font-weight:700">✦ Informations détectées</div>
       <div id="wa-result-rows"></div>
@@ -400,6 +732,116 @@ select option{background:#1d222d}
   </div>
 </div>
 
+<!-- MODAL OLSX SIMULATEUR -->
+<div class="olsx-modal" id="olsx-modal" onclick="if(event.target===this)closeOlsxModal()">
+  <div class="olsx-box">
+    <div class="olsx-toolbar">
+      <div>
+        <div class="olsx-toolbar-title">⚡ Simulateur OLSX — Gains moteur</div>
+        <div class="olsx-toolbar-hint">Sélectionne le véhicule dans le simulateur, puis clique "Importer les gains"</div>
+      </div>
+      <button class="btn-s" onclick="closeOlsxModal()">✕</button>
+    </div>
+    <iframe class="olsx-iframe" id="olsx-iframe"
+      src="https://api.olsx.eu/iframe?token=165|nY954hlsQT6tK8OLuaZtdtnj7zS0HYzBRIWsYYQk7966bc37&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=on&mailcontact=arthur%40areprog.fr"
+      allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox">
+    </iframe>
+    <div class="olsx-footer">
+      <div class="olsx-gains-preview" id="olsx-gains-preview">Aucun gain sélectionné</div>
+      <button class="btn-s" onclick="closeOlsxModal()">Annuler</button>
+      <button class="btn-g" id="olsx-import-btn" onclick="importOlsxGains()" style="display:none">✓ Importer les gains</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CARNET (sélection) -->
+<div class="carnet-modal" id="carnet-modal" onclick="if(event.target===this)closeCarnetModal()">
+  <div class="carnet-box">
+    <div class="carnet-box-title">👥 Choisir un client</div>
+    <div class="carnet-search">
+      <input id="carnet-modal-search" type="text" placeholder="Rechercher..." oninput="renderCarnetModal()"/>
+    </div>
+    <div class="carnet-grid" id="carnet-modal-grid" style="max-height:400px;overflow-y:auto"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px;align-items:center">
+      <button class="btn-s" onclick="openAddClientModal()">+ Nouveau client</button>
+      <button class="btn-s" onclick="closeCarnetModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AJOUT CLIENT -->
+<div class="carnet-modal" id="add-client-modal" onclick="if(event.target===this)closeAddClientModal()">
+  <div class="carnet-box">
+    <div class="carnet-box-title" id="add-client-title">Nouveau client</div>
+    <div class="fg2" style="margin-bottom:0">
+      <div>
+        <div class="fr"><label>Nom / Société</label><input id="ac-nom" type="text" placeholder="Prénom NOM"/></div>
+        <div class="fr"><label>Téléphone</label><input id="ac-tel" type="text" placeholder="06 XX XX XX XX"/></div>
+        <div class="fr"><label>Email</label><input id="ac-email" type="email" placeholder="client@email.fr"/></div>
+        <div class="fr"><label>Adresse</label><input id="ac-adr" type="text" placeholder="10 rue des Lilas"/></div>
+        <div class="fr"><label>Ville + CP</label><input id="ac-ville" type="text" placeholder="64100 Bayonne"/></div>
+      </div>
+      <div>
+        <div class="fr"><label>Marque</label><input id="ac-vm" type="text" placeholder="Volkswagen"/></div>
+        <div class="fr"><label>Modèle</label><input id="ac-vmo" type="text" placeholder="Golf 7 GTI"/></div>
+        <div class="fr"><label>Motorisation</label><input id="ac-vmot" type="text" placeholder="2.0 TSI 220ch"/></div>
+        <div class="fr"><label>Année</label><input id="ac-van" type="text" placeholder="2019"/></div>
+        <div class="fr"><label>Immatriculation</label><input id="ac-vim" type="text" placeholder="AB-123-CD"/></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="closeAddClientModal()">Annuler</button>
+      <button class="btn-g" onclick="saveClient()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TEMPLATE PLEIN ÉCRAN -->
+<div class="tpl-modal" id="tpl-modal">
+  <div class="tpl-wrap">
+    <div class="tpl-panel">
+      <div class="tpl-panel-title">
+        🎨 Template
+        <button class="btn-s" onclick="closeTplModal()" style="font-size:12px">✕ Fermer</button>
+      </div>
+      <div style="flex:1;overflow-y:auto">
+        <div class="tpl-section">
+          <div class="tpl-section-title">Entreprise</div>
+          <div class="tpl-row"><label>Nom</label><input id="tpl2-nom" type="text" oninput="syncTpl('nom',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Activité</label><input id="tpl2-activite" type="text" oninput="syncTpl('activite',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Zones</label><input id="tpl2-zones" type="text" oninput="syncTpl('zones',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Téléphone</label><input id="tpl2-tel" type="text" oninput="syncTpl('tel',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Site web</label><input id="tpl2-web" type="text" oninput="syncTpl('web',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Mentions légales</label><textarea id="tpl2-legal" rows="2" oninput="syncTpl('legal',this.value);livePreview()"></textarea></div>
+        </div>
+        <div class="tpl-section">
+          <div class="tpl-section-title">Style</div>
+          <div class="tpl-row"><label>Couleur principale</label>
+            <div class="tpl-color">
+              <input type="color" id="tpl2-color-pick" oninput="syncTpl('color',this.value);$('tpl2-color-hex').value=this.value;livePreview()"/>
+              <input type="text" id="tpl2-color-hex" oninput="syncTpl('color',this.value);$('tpl2-color-pick').value=this.value;livePreview()"/>
+            </div>
+          </div>
+          <div class="tpl-row"><label>Pied de page</label><textarea id="tpl2-footer" rows="3" oninput="syncTpl('footer',this.value);livePreview()"></textarea></div>
+        </div>
+      </div>
+      <div class="tpl-actions">
+        <button class="btn-s" onclick="resetTemplate();livePreview()">↺ Réinitialiser</button>
+        <button class="btn-g" onclick="saveTemplate();closeTplModal()">💾 Enregistrer & fermer</button>
+      </div>
+    </div>
+    <div class="tpl-preview-panel">
+      <div class="tpl-preview-bar">
+        <span class="tpl-preview-bar-title">Aperçu en direct</span>
+        <button class="btn-p" style="font-size:12px" onclick="window.print()">🖨 Imprimer</button>
+      </div>
+      <div class="tpl-preview-scroll">
+        <div class="tpl-preview-doc" id="tpl-live-preview"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL APERÇU -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-wrap">
@@ -408,490 +850,1153 @@ select option{background:#1d222d}
       <button class="btn-s" onclick="closeModal()">✕ Fermer</button>
       <span style="color:var(--text-muted);font-size:11px;margin-left:4px">→ Dans la boîte d'impression, choisir "Enregistrer en PDF"</span>
     </div>
-    <div class="modal-inner"><div class="preview-body" id="preview"></div></div>
+    <div class="modal-inner">
+      <div class="preview-body" id="preview"></div>
+    </div>
   </div>
 </div>
 
 <script>
-function $(s){return document.getElementById(s);}
+// AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
+function $(s) { return document.getElementById(s); }
 
-var IDENTITY_URL='https://areprog.fr/.netlify/identity';
-var SESSION_KEY='ar_session';
-var SESSION_DURATION=60*60*1000;
+var IDENTITY_URL = 'https://areprog.fr/.netlify/identity';
+var SESSION_KEY  = 'ar_session';
+var SESSION_DURATION = 60 * 60 * 1000; // 1 heure
 
-function setSession(token){localStorage.setItem(SESSION_KEY,JSON.stringify({t:Date.now(),token:token}));}
-function getSession(){
-  try{var raw=localStorage.getItem(SESSION_KEY);if(!raw)return null;var data=JSON.parse(raw);if((Date.now()-data.t)<SESSION_DURATION)return data;return null;}catch(e){return null;}
+function setSession(token) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now(), token: token }));
 }
-function clearSession(){localStorage.removeItem(SESSION_KEY);}
+function getSession() {
+  try {
+    var raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    var data = JSON.parse(raw);
+    if ((Date.now() - data.t) < SESSION_DURATION) return data;
+    return null;
+  } catch(e) { return null; }
+}
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
-function showApp(){$('login-screen').style.display='none';$('app').style.display='block';initApp();}
-function showLogin(){$('app').style.display='none';$('login-screen').style.display='flex';}
-function setLoginLoading(on){var btn=$('login-btn');btn.disabled=on;btn.textContent=on?'Connexion…':'Se connecter →';}
-function showLoginErr(msg){var el=$('lerr');el.textContent=msg;el.style.display='block';}
+function showApp() {
+  $('login-screen').style.display = 'none';
+  $('app').style.display = 'block';
+  initApp();
+}
+function showLogin() {
+  $('app').style.display = 'none';
+  $('login-screen').style.display = 'flex';
+}
+function setLoginLoading(on) {
+  var btn = $('login-btn');
+  btn.disabled = on;
+  btn.textContent = on ? 'Connexion…' : 'Se connecter →';
+}
+function showLoginErr(msg) {
+  var el = $('lerr');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
 
-async function doLogin(){
-  var email=$('l-email').value.trim();var pass=$('l-pass').value;
-  $('lerr').style.display='none';
-  if(!email||!pass){showLoginErr('Renseigne ton email et mot de passe.');return;}
+async function doLogin() {
+  var email = $('l-email').value.trim();
+  var pass  = $('l-pass').value;
+  $('lerr').style.display = 'none';
+  if (!email || !pass) { showLoginErr('Renseigne ton email et mot de passe.'); return; }
   setLoginLoading(true);
-  try{
-    var resp=await fetch(IDENTITY_URL+'/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=password&username='+encodeURIComponent(email)+'&password='+encodeURIComponent(pass)});
-    var data=await resp.json();
-    if(!resp.ok||!data.access_token)throw new Error(data.error_description||'Identifiants incorrects');
-    setSession(data.access_token);showApp();
-  }catch(e){setLoginLoading(false);showLoginErr('Email ou mot de passe incorrect.');console.error(e);}
+  try {
+    var resp = await fetch(IDENTITY_URL + '/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
+    });
+    var data = await resp.json();
+    if (!resp.ok || !data.access_token) {
+      throw new Error(data.error_description || 'Identifiants incorrects');
+    }
+    setSession(data.access_token);
+    showApp();
+  } catch(e) {
+    setLoginLoading(false);
+    showLoginErr('Email ou mot de passe incorrect.');
+    console.error(e);
+  }
 }
-function doLogout(){clearSession();showLogin();}
 
-document.addEventListener('DOMContentLoaded',function(){
-  var lp=$('l-pass');if(lp)lp.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
-  var le=$('l-email');if(le)le.addEventListener('keydown',function(e){if(e.key==='Enter')$('l-pass').focus();});
-  if(getSession())showApp();
-  var btn=$('login-btn');if(btn)btn.onclick=doLogin;
+function doLogout() {
+  clearSession();
+  showLogin();
+}
+
+// Au chargement : session encore valide → connecter directement
+document.addEventListener('DOMContentLoaded', function() {
+  // Touches clavier
+  var lp = $('l-pass');
+  if (lp) lp.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  var le = $('l-email');
+  if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
+
+  // Auto-login si session valide
+  if (getSession()) {
+    showApp();
+  }
+
+  // Relier le bouton proprement (évite tout souci de timing)
+  var btn = $('login-btn');
+  if (btn) btn.onclick = doLogin;
 });
 
-// ============================================================
-//  STORAGE — Firebase Firestore
-// ============================================================
-function getUserEmail(){
-  try{var raw=localStorage.getItem(SESSION_KEY);if(!raw)return null;var data=JSON.parse(raw);var payload=JSON.parse(atob(data.token.split('.')[1]));return(payload.email||'').replace(/[^a-zA-Z0-9_-]/g,'_');}catch(e){return'default';}
-}
-async function loadDocs(){
-  try{var{collection,getDocs,query,orderBy}=window._fs;var db=window._db;var userEmail=getUserEmail();var col=collection(db,'docs',userEmail,'items');var snap=await getDocs(query(col,orderBy('id','desc')));var docs=[];snap.forEach(function(d){docs.push(d.data());});return docs;}catch(e){console.error('Firestore loadDocs error:',e);return[];}
-}
-async function saveDocToFirestore(doc){
-  try{var{collection,doc:fsDoc,setDoc}=window._fs;var db=window._db;var ref=fsDoc(collection(db,'docs',getUserEmail(),'items'),String(doc.id));await setDoc(ref,doc);}catch(e){console.error('Firestore saveDoc error:',e);throw e;}
-}
-async function deleteDocFromFirestore(docId){
-  try{var{collection,doc:fsDoc,deleteDoc}=window._fs;var db=window._db;var ref=fsDoc(collection(db,'docs',getUserEmail(),'items'),String(docId));await deleteDoc(ref);}catch(e){console.error('Firestore deleteDoc error:',e);throw e;}
-}
+// STORAGE
+function loadDocs() { return JSON.parse(localStorage.getItem('ar_docs') || '[]'); }
+function saveDocs(d) { localStorage.setItem('ar_docs', JSON.stringify(d)); }
 
 // ============================================================
-//  CATALOGUE
+//  CATALOGUE — extrait exact de tarifs.html
 // ============================================================
-const CAT=[
-  {g:'Reprogrammation moteur',items:[
-    {l:'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible',p:330},
-    {l:'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)',p:460},
-    {l:'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe',p:330},
-    {l:'Optimisation consommation — Idéal grands rouleurs & flottes',p:380},
-    {l:'Retour à l\'origine — Restauration fichier constructeur (offert si reprog AREPROG)',p:0},
+const CAT = [
+  { g: 'Reprogrammation moteur', items: [
+    { l: 'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible', p: 330 },
+    { l: 'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)', p: 460 },
+    { l: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
+    { l: 'Optimisation consommation — Idéal grands rouleurs & flottes', p: 380 },
+    { l: 'Retour à l\'origine — Restauration fichier constructeur (offert si reprog AREPROG)', p: 0 },
   ]},
-  {g:'Désactivations — usage spécifique',items:[
-    {l:'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement',p:180},
-    {l:'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)',p:280},
-    {l:'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique',p:280},
-    {l:'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances',p:140},
+  { g: 'Désactivations — usage spécifique', items: [
+    { l: 'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement', p: 180 },
+    { l: 'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)', p: 280 },
+    { l: 'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique', p: 280 },
+    { l: 'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances', p: 140 },
   ]},
-  {g:'Packs combinés — économies garanties',items:[
-    {l:'Pack Stage 1 + EGR OFF · Diesel — 2 prestations en 1 intervention',p:370},
-    {l:'Pack Stage 1 + FAP OFF · Diesel (après retrait physique du filtre)',p:370},
-    {l:'Pack Stage 1 + EGR + FAP OFF — Préparation diesel complète ★',p:390},
-    {l:'Pack Stage 1 + AdBlue OFF — Moteur optimisé + SCR désactivé',p:400},
+  { g: 'Packs combinés — économies garanties', items: [
+    { l: 'Pack Stage 1 + EGR OFF · Diesel — 2 prestations en 1 intervention', p: 370 },
+    { l: 'Pack Stage 1 + FAP OFF · Diesel (après retrait physique du filtre)', p: 370 },
+    { l: 'Pack Stage 1 + EGR + FAP OFF — Préparation diesel complète ★', p: 390 },
+    { l: 'Pack Stage 1 + AdBlue OFF — Moteur optimisé + SCR désactivé', p: 400 },
   ]},
-  {g:'Diagnostic & spécialités VAG',items:[
-    {l:'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur',p:100},
+  { g: 'Diagnostic & spécialités VAG', items: [
+    { l: 'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur', p: 100 },
   ]},
-  {g:'Options logicielles (en complément d\'une reprog, sinon +100 €)',items:[
-    {l:'Pop & Bang — Détonations à la décélération · Effet sonore agressif',p:150},
-    {l:'Pop & Bang Sport Button — Pops actifs uniquement en mode Sport',p:180},
-    {l:'DSG Farts — Crépitements à la décélération sur boîtes DSG',p:150},
-    {l:'Popcorn — Crépitements agressifs continus à la décélération',p:150},
-    {l:'Launch Control — Optimisation départ arrêté · Meilleur 0-100',p:150},
-    {l:'Octane Adaptation — Adaptation automatique selon indice d\'octane',p:360},
-    {l:'Exhaust Flaps — Gestion des clapets d\'échappement selon le mode',p:60},
-    {l:'Start & Stop OFF — Désactivation définitive du Start & Stop',p:60},
-    {l:'Vmax OFF — Suppression du limiteur de vitesse constructeur',p:60},
-    {l:'Power on Driving Mode — Démarrage automatique en mode Sport',p:60},
-    {l:'Sport Display — Affichage données sportives au tableau de bord',p:60},
-    {l:'Vmax 30 — Limitation à 30 km/h (chantier, logistique, formation)',p:90},
+  { g: 'Options logicielles (en complément d\'une reprog, sinon +100 €)', items: [
+    { l: 'Pop & Bang — Détonations à la décélération · Effet sonore agressif', p: 150 },
+    { l: 'Pop & Bang Sport Button — Pops actifs uniquement en mode Sport', p: 180 },
+    { l: 'DSG Farts — Crépitements à la décélération sur boîtes DSG', p: 150 },
+    { l: 'Popcorn — Crépitements agressifs continus à la décélération', p: 150 },
+    { l: 'Launch Control — Optimisation départ arrêté · Meilleur 0-100', p: 150 },
+    { l: 'Octane Adaptation — Adaptation automatique selon indice d\'octane', p: 360 },
+    { l: 'Exhaust Flaps — Gestion des clapets d\'échappement selon le mode', p: 60 },
+    { l: 'Start & Stop OFF — Désactivation définitive du Start & Stop', p: 60 },
+    { l: 'Vmax OFF — Suppression du limiteur de vitesse constructeur', p: 60 },
+    { l: 'Power on Driving Mode — Démarrage automatique en mode Sport', p: 60 },
+    { l: 'Sport Display — Affichage données sportives au tableau de bord', p: 60 },
+    { l: 'Vmax 30 — Limitation à 30 km/h (chantier, logistique, formation)', p: 90 },
   ]},
-  {g:'Suppléments & options',items:[
-    {l:'Supplément déplacement hors zone (+30 km)',p:40},
-    {l:'Supplément fichier inconnu (reprise modif tiers)',p:30},
-    {l:'Supplément intervention urgente (sous 24h)',p:50},
-    {l:'Prestation personnalisée / Sur-mesure',p:0},
+  { g: 'Suppléments & options', items: [
+    { l: 'Supplément déplacement hors zone (+30 km)', p: 40 },
+    { l: 'Supplément fichier inconnu (reprise modif tiers)', p: 30 },
+    { l: 'Supplément intervention urgente (sous 24h)', p: 50 },
+    { l: 'Prestation personnalisée / Sur-mesure', p: 0 },
   ]},
 ];
 
-const GAINS_MAP=[
-  {k:['stage 2'],g:['Cartographie sur-mesure','Couple & puissance maximisés','Suivi personnalisé','100% réversible']},
-  {k:['stage 1'],g:['Meilleure réactivité moteur','Couple optimisé dès bas régimes','Agrément de conduite amélioré','100% réversible']},
-  {k:['e85','ethanol','éthanol'],g:['Carburant E85 ≈ 0,75 €/L vs 1,80 €/L SP95','−40% sur le coût carburant','Compatible toutes stations E85','Bilan carbone amélioré']},
-  {k:['egr'],g:['Admission protégée de l\'encrassement','Moteur plus propre','Fiabilité accrue +80 000 km']},
-  {k:['fap','dpf'],g:['Régénérations forcées supprimées','Contre-pressions éliminées','Consommation stabilisée']},
-  {k:['adblue','scr'],g:['Coût AdBlue supprimé','Système simplifié','Alertes défaillance supprimées']},
-  {k:['conso','consommation'],g:['−10 à −15% de carburant','Idéal grands rouleurs & flottes','Couple amélioré bas régime']},
-  {k:['odis','vag'],g:['Diagnostic officiel constructeur','Codages avancés disponibles','Mises à jour via serveurs VAG officiels']},
+// Gains automatiques par mot-clé
+const GAINS_MAP = [
+  { k: ['stage 2'],               g: ['Cartographie sur-mesure','Couple & puissance maximisés','Suivi personnalisé','100% réversible'] },
+  { k: ['stage 1'],               g: ['Meilleure réactivité moteur','Couple optimisé dès bas régimes','Agrément de conduite amélioré','100% réversible'] },
+  { k: ['e85','ethanol','éthanol'], g: ['Carburant E85 ≈ 0,75 €/L vs 1,80 €/L SP95','−40% sur le coût carburant','Compatible toutes stations E85','Bilan carbone amélioré'] },
+  { k: ['egr'],                   g: ['Admission protégée de l\'encrassement','Moteur plus propre','Fiabilité accrue +80 000 km'] },
+  { k: ['fap','dpf'],             g: ['Régénérations forcées supprimées','Contre-pressions éliminées','Consommation stabilisée'] },
+  { k: ['adblue','scr'],          g: ['Coût AdBlue supprimé','Système simplifié','Alertes défaillance supprimées'] },
+  { k: ['conso','consommation'],  g: ['−10 à −15% de carburant','Idéal grands rouleurs & flottes','Couple amélioré bas régime'] },
+  { k: ['odis','vag'],            g: ['Diagnostic officiel constructeur','Codages avancés disponibles','Mises à jour via serveurs VAG officiels'] },
 ];
 
-function getGains(lines){
-  const set=new Set();
-  lines.forEach(l=>{const lb=(l.label||'').toLowerCase();GAINS_MAP.forEach(gm=>{if(gm.k.some(k=>lb.includes(k)))gm.g.forEach(g=>set.add(g));});});
-  return[...set].slice(0,8);
+function getGains(lines) {
+  const set = new Set();
+  lines.forEach(l => {
+    const lb = (l.label || '').toLowerCase();
+    GAINS_MAP.forEach(gm => { if (gm.k.some(k => lb.includes(k))) gm.g.forEach(g => set.add(g)); });
+  });
+  return [...set].slice(0, 8);
 }
 
 // ============================================================
 //  HELPERS
 // ============================================================
-function fmt(n){return n.toFixed(2).replace('.',',')+' \u20ac';}
-function fmtDate(d){if(!d)return'\u2014';const[y,m,j]=d.split('-');return j+'/'+m+'/'+y;}
-function today(){return new Date().toISOString().split('T')[0];}
-function plusDays(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
-async function genNum(prefix){
-  var y=new Date().getFullYear();var docs=await loadDocs();
-  var cnt=docs.filter(function(d){return d.num&&d.num.startsWith(prefix+'-'+y);}).length;
-  return prefix+'-'+y+'-'+String(cnt+1).padStart(3,'0');
+function fmt(n) { return n.toFixed(2).replace('.', ',') + ' \u20ac'; }
+function fmtDate(d) {
+  if (!d) return '\u2014';
+  const [y,m,j] = d.split('-');
+  return j + '/' + m + '/' + y;
+}
+function today() { return new Date().toISOString().split('T')[0]; }
+function plusDays(n) {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+function genNum(prefix) {
+  const y = new Date().getFullYear();
+  const cnt = loadDocs().filter(d => d.num && d.num.startsWith(prefix + '-' + y)).length;
+  return prefix + '-' + y + '-' + String(cnt + 1).padStart(3, '0');
 }
 
 // ============================================================
 //  TABS
 // ============================================================
-function showTab(t){
-  ['dash','form','liste'].forEach(x=>$('t-'+x).classList.toggle('on',x===t));
-  document.querySelectorAll('.nb').forEach((b,i)=>b.classList.toggle('on',['dash','form','liste'][i]===t));
-  if(t==='dash')renderDash();
-  if(t==='liste')renderListe();
+function showTab(t) {
+  ['dash','form','liste'].forEach(x => $('t-' + x).classList.toggle('on', x === t));
+  document.querySelectorAll('.nb').forEach((b, i) => b.classList.toggle('on', ['dash','form','liste'][i] === t));
+  if (t === 'dash') renderDash();
+  if (t === 'liste') renderListe();
 }
 
 // ============================================================
 //  FORM STATE
 // ============================================================
-var lines=[];var editId=null;
+var lines = [];
+var editId = null;
 
-async function initApp(){
-  if(!window._fbReady){await new Promise(function(resolve){document.addEventListener('firebase-ready',resolve,{once:true});});}
-  await resetForm(false);await renderDash();
+function initApp() {
+  resetForm(false);
+  fillTplForm(loadTemplate());
+  renderDash();
+  renderCarnet();
 }
 
-async function resetForm(goToForm){
-  editId=null;lines=[];
-  $('f-type').value='devis';
-  $('f-num').value=await genNum('DEV');
-  $('f-date').value=today();$('f-ech').value=plusDays(30);
-  $('f-statut').value='envoyé';
-  ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-vm','f-vmo','f-vmot','f-van','f-vim','f-nint'].forEach(function(i){$(i).value='';});
-  $('f-tva').value='0';
-  $('f-notes').value='Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
-  $('form-h').textContent='Nouveau devis';
-  addLine();if(goToForm)showTab('form');
+function resetForm(goToForm) {
+  editId = null;
+  lines = [];
+  $('f-type').value = 'devis';
+  $('f-num').value = genNum('DEV');
+  $('f-date').value = today();
+  $('f-ech').value = plusDays(30);
+  $('f-statut').value = 'envoye';
+  // Reset statut properly
+  var s = $('f-statut');
+  s.value = 'envoyé';
+  ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-vm','f-vmo','f-vmot','f-van','f-vim','f-nint'].forEach(function(i) { $(i).value = ''; });
+  $('f-tva').value = '0';
+  $('f-notes').value = 'Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
+  $('form-h').textContent = 'Nouveau devis';
+  currentGains = null;
+  renderGainsBar();
+  addLine();
+  if (goToForm) showTab('form');
 }
 
-async function newDoc(){await resetForm(true);}
+function newDoc() { resetForm(true); }
 
-async function onTypeChange(){
-  var t=$('f-type').value;
-  $('form-h').textContent=t==='devis'?(editId?'Modifier le devis':'Nouveau devis'):(editId?'Modifier la facture':'Nouvelle facture');
-  if(!editId)$('f-num').value=await genNum(t==='devis'?'DEV':'FAC');
+function onTypeChange() {
+  var t = $('f-type').value;
+  $('form-h').textContent = t === 'devis' ? (editId ? 'Modifier le devis' : 'Nouveau devis') : (editId ? 'Modifier la facture' : 'Nouvelle facture');
+  if (!editId) $('f-num').value = genNum(t === 'devis' ? 'DEV' : 'FAC');
 }
 
 // ============================================================
 //  LINES
 // ============================================================
-function buildSelectOpts(selected){
-  var h='<option value="">— Sélectionner une prestation —</option>';
-  CAT.forEach(function(cat){
-    h+='<optgroup label="'+cat.g+'">';
-    cat.items.forEach(function(it){
-      var sel=selected===it.l?' selected':'';
-      var prix=it.p>0?' — '+it.p+'\u00a0\u20ac':'';
-      h+='<option value="'+it.l.replace(/"/g,'&quot;')+'" data-p="'+it.p+'"'+sel+'>'+it.l+prix+'</option>';
+function buildSelectOpts(selected) {
+  var h = '<option value="">— Sélectionner une prestation —</option>';
+  CAT.forEach(function(cat) {
+    h += '<optgroup label="' + cat.g + '">';
+    cat.items.forEach(function(it) {
+      var sel = selected === it.l ? ' selected' : '';
+      var prix = it.p > 0 ? ' — ' + it.p + '\u00a0\u20ac' : '';
+      h += '<option value="' + it.l.replace(/"/g,'&quot;') + '" data-p="' + it.p + '"' + sel + '>' + it.l + prix + '</option>';
     });
-    h+='</optgroup>';
+    h += '</optgroup>';
   });
   return h;
 }
 
-function addLine(data){
-  data=data||{};
-  lines.push({id:Date.now()+Math.random(),label:data.label||'',qte:data.qte||1,pu:data.pu||0});
+function addLine(data) {
+  data = data || {};
+  lines.push({ id: Date.now() + Math.random(), label: data.label || '', qte: data.qte || 1, pu: data.pu || 0 });
   renderLines();
 }
 
-function removeLine(lid){lines=lines.filter(function(l){return l.id!==lid;});renderLines();calcTotaux();}
+function removeLine(lid) {
+  lines = lines.filter(function(l) { return l.id !== lid; });
+  renderLines();
+  calcTotaux();
+}
 
-function renderLines(){
-  var c=$('lines');c.innerHTML='';
-  lines.forEach(function(line){
-    var div=document.createElement('div');div.className='line-row';div.dataset.lid=line.id;
-    var total=(line.qte*line.pu).toFixed(2);
-    div.innerHTML=
-      '<select onchange="lineSelect(this,'+line.id+')">'+buildSelectOpts(line.label)+'</select>'+
-      '<input type="number" min="1" step="1" value="'+line.qte+'" onchange="lineField(this,'+line.id+',\'qte\')" style="text-align:center"/>'+
-      '<input type="number" min="0" step="0.01" value="'+line.pu+'" onchange="lineField(this,'+line.id+',\'pu\')" style="text-align:right"/>'+
-      '<div class="lt">'+total+' \u20ac</div>'+
-      '<button class="rm-line" onclick="removeLine('+line.id+')" title="Supprimer">\xd7</button>';
+function renderLines() {
+  var c = $('lines');
+  c.innerHTML = '';
+  lines.forEach(function(line) {
+    var div = document.createElement('div');
+    div.className = 'line-row';
+    div.dataset.lid = line.id;
+    var isOffert = line.offert || false;
+    var total = isOffert ? 'Offert' : (line.qte * line.pu).toFixed(2) + ' \u20ac';
+    var disabledAttr = isOffert ? ' disabled' : '';
+    var opacityStyle = isOffert ? ' style="text-align:right;opacity:.4"' : ' style="text-align:right"';
+    div.innerHTML =
+      '<select onchange="lineSelect(this,' + line.id + ')">' + buildSelectOpts(line.label) + '</select>' +
+      '<input type="number" min="1" step="1" value="' + line.qte + '" onchange="lineField(this,' + line.id + ',\'qte\')" style="text-align:center"' + disabledAttr + '/>' +
+      '<input type="number" min="0" step="0.01" value="' + line.pu + '" onchange="lineField(this,' + line.id + ',\'pu\')"' + opacityStyle + disabledAttr + '/>' +
+      '<label style="display:flex;align-items:center;justify-content:center;cursor:pointer" title="Offert">' +
+        '<input type="checkbox"' + (isOffert ? ' checked' : '') + ' onchange="lineOffert(this,' + line.id + ')" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer"/>' +
+      '</label>' +
+      '<div class="lt" style="color:' + (isOffert ? 'var(--green)' : '') + '">' + total + '</div>' +
+      '<button class="rm-line" onclick="removeLine(' + line.id + ')" title="Supprimer">\xd7</button>';
     c.appendChild(div);
   });
   calcTotaux();
 }
 
-function lineSelect(sel,lid){
-  var opt=sel.options[sel.selectedIndex];var p=parseFloat(opt.getAttribute('data-p'))||0;
-  var line=lines.find(function(l){return l.id===lid;});if(!line)return;
-  line.label=sel.value;line.pu=p;renderLines();
+function lineOffert(chk, lid) {
+  var line = lines.find(function(l){ return l.id === lid; });
+  if (!line) return;
+  line.offert = chk.checked;
+  renderLines();
 }
 
-function lineField(inp,lid,field){
-  var line=lines.find(function(l){return l.id===lid;});if(!line)return;
-  line[field]=parseFloat(inp.value)||0;
-  var row=inp.closest('.line-row');row.querySelector('.lt').textContent=(line.qte*line.pu).toFixed(2)+' \u20ac';
+function lineSelect(sel, lid) {
+  var opt = sel.options[sel.selectedIndex];
+  var p = parseFloat(opt.getAttribute('data-p')) || 0;
+  var line = lines.find(function(l) { return l.id === lid; });
+  if (!line) return;
+  line.label = sel.value;
+  line.pu = p;
+  renderLines();
+}
+
+function lineField(inp, lid, field) {
+  var line = lines.find(function(l) { return l.id === lid; });
+  if (!line) return;
+  line[field] = parseFloat(inp.value) || 0;
+  var row = inp.closest('.line-row');
+  row.querySelector('.lt').textContent = (line.qte * line.pu).toFixed(2) + ' \u20ac';
   calcTotaux();
 }
 
-function calcTotaux(){
-  var ht=lines.reduce(function(s,l){return s+l.qte*l.pu;},0);
-  var tvaRate=parseFloat($('f-tva').value)/100;
-  $('t-ht').textContent=fmt(ht);$('t-tva').textContent=fmt(ht*tvaRate);$('t-ttc').textContent=fmt(ht*(1+tvaRate));
+// ============================================================
+//  TOTAUX
+// ============================================================
+function calcTotaux() {
+  var ht = lines.reduce(function(s, l) { return s + (l.offert ? 0 : l.qte * l.pu); }, 0);
+  var tvaRate = parseFloat($('f-tva').value) / 100;
+  $('t-ht').textContent = fmt(ht);
+  $('t-tva').textContent = fmt(ht * tvaRate);
+  $('t-ttc').textContent = fmt(ht * (1 + tvaRate));
 }
 
 // ============================================================
 //  SAVE / LOAD
 // ============================================================
-function buildObj(){
-  var ht=lines.reduce(function(s,l){return s+l.qte*l.pu;},0);
-  var tvaRate=parseFloat($('f-tva').value)/100;
-  return{id:editId||Date.now(),type:$('f-type').value,num:$('f-num').value,date:$('f-date').value,ech:$('f-ech').value,statut:$('f-statut').value,cn:$('f-cnom').value,ca:$('f-cadr').value,cv:$('f-cville').value,ct:$('f-ctel').value,ce:$('f-cemail').value,vm:$('f-vm').value,vmo:$('f-vmo').value,vmot:$('f-vmot').value,van:$('f-van').value,vim:$('f-vim').value,lines:JSON.parse(JSON.stringify(lines)),tvaRate:parseFloat($('f-tva').value),ht:ht,tva:ht*tvaRate,ttc:ht*(1+tvaRate),notes:$('f-notes').value,nint:$('f-nint').value};
+function buildObj() {
+  var ht = lines.reduce(function(s, l) { return s + (l.offert ? 0 : l.qte * l.pu); }, 0);
+  var tvaRate = parseFloat($('f-tva').value) / 100;
+  return {
+    id: editId || Date.now(),
+    type: $('f-type').value,
+    num: $('f-num').value,
+    date: $('f-date').value,
+    ech: $('f-ech').value,
+    statut: $('f-statut').value,
+    cn: $('f-cnom').value,
+    ca: $('f-cadr').value,
+    cv: $('f-cville').value,
+    ct: $('f-ctel').value,
+    ce: $('f-cemail').value,
+    vm: $('f-vm').value,
+    vmo: $('f-vmo').value,
+    vmot: $('f-vmot').value,
+    van: $('f-van').value,
+    vim: $('f-vim').value,
+    lines: JSON.parse(JSON.stringify(lines)),
+    gains: currentGains ? JSON.parse(JSON.stringify(currentGains)) : null,
+    tvaRate: parseFloat($('f-tva').value),
+    ht: ht,
+    tva: ht * tvaRate,
+    ttc: ht * (1 + tvaRate),
+    notes: $('f-notes').value,
+    nint: $('f-nint').value,
+  };
 }
 
-async function saveDoc(){
-  var doc=buildObj();
-  if(!doc.cn){alert('Renseignez le nom du client avant d\'enregistrer.');return;}
-  var btn=$('t-form').querySelector('.btn-g');
-  if(btn){btn.disabled=true;btn.textContent='Enregistrement…';}
-  try{editId=doc.id;await saveDocToFirestore(doc);await renderDash();alert('Document enregistré ✓');}
-  catch(e){alert('Erreur lors de l\'enregistrement. Vérifie ta connexion.');}
-  finally{if(btn){btn.disabled=false;btn.textContent='💾 Enregistrer';}}
+function saveDoc() {
+  var doc = buildObj();
+  if (!doc.cn) { alert('Renseignez le nom du client avant d\'enregistrer.'); return; }
+  var docs = loadDocs();
+  if (editId) {
+    var i = docs.findIndex(function(d) { return d.id === editId; });
+    if (i >= 0) docs[i] = doc; else docs.unshift(doc);
+  } else {
+    docs.unshift(doc);
+  }
+  editId = doc.id;
+  saveDocs(docs);
+  renderDash();
+  // Proposer d'enregistrer le client dans le carnet si nouveau
+  var cn = $('f-cnom').value.trim();
+  var clients = loadClients();
+  var exists = cn && clients.some(function(cl){ return cl.nom.toLowerCase() === cn.toLowerCase(); });
+  if (cn && !exists) {
+    if (confirm('Enregistrer "' + cn + '" dans le carnet clients ?')) {
+      saveCurrentClientToCarnet();
+    }
+  }
+  alert('Document enregistré ✓');
 }
 
-async function loadDoc(docId){
-  var docs=await loadDocs();var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;
-  editId=doc.id;$('f-type').value=doc.type;$('f-num').value=doc.num;$('f-date').value=doc.date;$('f-ech').value=doc.ech||plusDays(30);$('f-statut').value=doc.statut;$('f-cnom').value=doc.cn||'';$('f-cadr').value=doc.ca||'';$('f-cville').value=doc.cv||'';$('f-ctel').value=doc.ct||'';$('f-cemail').value=doc.ce||'';$('f-vm').value=doc.vm||'';$('f-vmo').value=doc.vmo||'';$('f-vmot').value=doc.vmot||'';$('f-van').value=doc.van||'';$('f-vim').value=doc.vim||'';$('f-tva').value=String(doc.tvaRate||0);$('f-notes').value=doc.notes||'';$('f-nint').value=doc.nint||'';
-  lines=JSON.parse(JSON.stringify(doc.lines));renderLines();
-  $('form-h').textContent=doc.type==='devis'?'Modifier le devis':'Modifier la facture';
+function loadDoc(docId) {
+  var doc = loadDocs().find(function(d) { return d.id === docId; });
+  if (!doc) return;
+  editId = doc.id;
+  $('f-type').value = doc.type;
+  $('f-num').value = doc.num;
+  $('f-date').value = doc.date;
+  $('f-ech').value = doc.ech || plusDays(30);
+  $('f-statut').value = doc.statut;
+  $('f-cnom').value = doc.cn || '';
+  $('f-cadr').value = doc.ca || '';
+  $('f-cville').value = doc.cv || '';
+  $('f-ctel').value = doc.ct || '';
+  $('f-cemail').value = doc.ce || '';
+  $('f-vm').value = doc.vm || '';
+  $('f-vmo').value = doc.vmo || '';
+  $('f-vmot').value = doc.vmot || '';
+  $('f-van').value = doc.van || '';
+  $('f-vim').value = doc.vim || '';
+  $('f-tva').value = String(doc.tvaRate || 0);
+  $('f-notes').value = doc.notes || '';
+  $('f-nint').value = doc.nint || '';
+  lines = JSON.parse(JSON.stringify(doc.lines));
+  currentGains = doc.gains || null;
+  renderGainsBar();
+  renderLines();
+  $('form-h').textContent = doc.type === 'devis' ? 'Modifier le devis' : 'Modifier la facture';
   showTab('form');
 }
 
-async function deleteDoc(docId){
-  if(!confirm('Supprimer définitivement ce document ?'))return;
-  try{await deleteDocFromFirestore(docId);await renderDash();await renderListe();}
-  catch(e){alert('Erreur lors de la suppression.');}
+function deleteDoc(docId) {
+  if (!confirm('Supprimer définitivement ce document ?')) return;
+  saveDocs(loadDocs().filter(function(d) { return d.id !== docId; }));
+  renderDash();
+  renderListe();
 }
 
 // ============================================================
 //  APERÇU / PRINT
 // ============================================================
-function renderDocHTML(doc){
-  var ht=doc.ht||doc.lines.reduce(function(s,l){return s+l.qte*l.pu;},0);
-  var tvaRate=(doc.tvaRate||0)/100;var tva=ht*tvaRate;var ttc=ht+tva;
-  var isDevis=doc.type==='devis';var gains=getGains(doc.lines);
-  var vehStr=[doc.vm,doc.vmo,doc.vmot,doc.van?'('+doc.van+')':''].filter(Boolean).join(' ');
-  var noticeHTML=doc.statut==='payé'
-    ?'<div class="d-notice paye">✓ FACTURE RÉGLÉE — Paiement reçu</div>'
-    :isDevis?'<div class="d-notice devis">⏳ Ce devis est valable 30 jours à compter du '+fmtDate(doc.date)+'. Aucun acompte requis — paiement après intervention.</div>'
-    :'<div class="d-notice facture">📄 Facture émise le '+fmtDate(doc.date)+' — Règlement à réception.</div>';
-  var linesHTML=doc.lines.map(function(l){return'<tr><td>'+(l.label||'—')+'</td><td>'+l.qte+'</td><td>'+(l.pu||0).toFixed(2)+' €</td><td><strong>'+((l.qte||1)*(l.pu||0)).toFixed(2)+' €</strong></td></tr>';}).join('');
-  var gainsHTML='';
-  if(gains.length){gainsHTML='<div class="d-gains"><div class="d-gains-title">✦ Bénéfices de votre prestation</div><div class="d-gains-grid">'+gains.map(function(g){return'<div class="d-gain">'+g+'</div>';}).join('')+'</div></div>';}
-  return'<div class="d-header"><div><div class="d-brand">ARE<span>PROG</span></div><div class="d-brand-info">Reprogrammation moteur à domicile<br>Pays Basque (64) · Landes (40) · Yonne (89)<br>06\u00a067\u00a092\u00a046\u00a030 &nbsp;·&nbsp; areprog.fr</div></div><div class="d-right"><div class="d-type">'+(isDevis?'DEVIS':'FACTURE')+'</div><div class="d-num">'+(doc.num||'—')+'</div><div class="d-date">Émis le '+fmtDate(doc.date)+'</div>'+(doc.ech?'<div class="d-date">'+(isDevis?'Valable jusqu\'au':'Échéance')+' '+fmtDate(doc.ech)+'</div>':'')+'</div></div><div class="d-parties"><div class="d-party"><div class="d-party-label">Prestataire</div><div class="d-party-name">AREPROG</div><div class="d-party-info">Reprogrammation moteur à domicile<br>Pays Basque (64) · Landes (40) · Yonne (89)<br>06 67 92 46 30<br>areprog.fr</div></div><div class="d-party"><div class="d-party-label">Client</div><div class="d-party-name">'+(doc.cn||'—')+'</div><div class="d-party-info">'+(doc.ca?doc.ca+'<br>':'')+(doc.cv||'')+(doc.ct?'<br>'+doc.ct:'')+(doc.ce?'<br>'+doc.ce:'')+(vehStr?'<br><br><strong>Véhicule :</strong> '+vehStr:'')+(doc.vim?'<br>Immatriculation : <strong>'+doc.vim.toUpperCase()+'</strong>':'')+'</div></div></div>'+noticeHTML+'<table class="d-table"><thead><tr><th style="width:52%">Désignation</th><th style="width:8%;text-align:right">Qté</th><th style="width:18%;text-align:right">PU HT</th><th style="width:22%;text-align:right">Total HT</th></tr></thead><tbody>'+linesHTML+'</tbody></table><div class="d-totaux"><div class="d-totaux-box"><div class="d-tot-row"><span>Total HT</span><span>'+ht.toFixed(2)+' €</span></div><div class="d-tot-row"><span>TVA ('+(doc.tvaRate||0)+' %)</span><span>'+tva.toFixed(2)+' €</span></div><div class="d-tot-row big"><span>TOTAL TTC</span><span>'+ttc.toFixed(2)+' €</span></div></div></div>'+gainsHTML+(doc.notes?'<div class="d-notes"><strong>Conditions & mentions</strong><p>'+doc.notes+'</p></div>':'')+'<div class="d-footer">AREPROG — Reprogrammation moteur à domicile &nbsp;·&nbsp; Pays Basque (64) · Landes (40) · Yonne (89)<br>06 67 92 46 30 &nbsp;·&nbsp; areprog.fr &nbsp;·&nbsp; Garantie 2 ans sur chaque prestation &nbsp;·&nbsp; 100% réversible</div>';
+function renderDocHTML(doc, tplOverride) {
+  var tpl = tplOverride || loadTemplate();
+  var accentColor = tpl.color || '#1E90FF';
+  var ht = doc.ht || doc.lines.reduce(function(s,l){return s+l.qte*l.pu;},0);
+  var tvaRate = (doc.tvaRate || 0) / 100;
+  var tva = ht * tvaRate;
+  var ttc = ht + tva;
+  var isDevis = doc.type === 'devis';
+  var gains = getGains(doc.lines);
+  var vehStr = [doc.vm, doc.vmo, doc.vmot, doc.van ? '(' + doc.van + ')' : ''].filter(Boolean).join(' ');
+
+  var noticeHTML = doc.statut === 'payé'
+    ? '<div class="d-notice paye">✓ FACTURE RÉGLÉE — Paiement reçu</div>'
+    : isDevis
+      ? '<div class="d-notice devis">⏳ Ce devis est valable ' + (tpl.validite||30) + ' jours à compter du ' + fmtDate(doc.date) + '. Aucun acompte requis — paiement après intervention.</div>'
+      : '<div class="d-notice facture">📄 Facture émise le ' + fmtDate(doc.date) + ' — Règlement à réception.</div>';
+
+  var linesHTML = doc.lines.map(function(l) {
+    var puStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : (l.pu||0).toFixed(2) + ' €';
+    var totStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + ((l.qte||1)*(l.pu||0)).toFixed(2) + ' €</strong>';
+    return '<tr><td>' + (l.label || '—') + '</td><td>' + l.qte + '</td><td>' + puStr + '</td><td>' + totStr + '</td></tr>';
+  }).join('');
+
+  var gainsHTML = '';
+  // Gains OLSX réels en priorité, sinon gains génériques par mots-clés
+  if (doc.gains && (doc.gains.chOrig || doc.gains.ch || doc.gains.nm || doc.gains.conso)) {
+    var g = doc.gains;
+    var items = [];
+    if (g.chOrig && g.ch) items.push({lbl:'Puissance', val:'+'+(g.ch-g.chOrig)+' ch', sub:g.chOrig+' → '+g.ch+' ch'});
+    if (g.nmOrig && g.nm) items.push({lbl:'Couple', val:'+'+(g.nm-g.nmOrig)+' Nm', sub:g.nmOrig+' → '+g.nm+' Nm'});
+    if (g.conso) items.push({lbl:'Consommation', val:g.conso, sub:'estimation'});
+    if (items.length) {
+      gainsHTML = '<div class="d-gains-olsx"><div class="d-gains-olsx-title">✦ Gains estimés pour ce véhicule</div><div class="d-gains-olsx-grid">'
+        + items.map(function(it){ return '<div class="d-gains-olsx-item"><div class="d-gains-olsx-val">'+it.val+'</div><div class="d-gains-olsx-lbl">'+it.lbl+'</div></div>'; }).join('')
+        + '</div></div>';
+    }
+  } else if (gains.length && tpl.showGains !== false) {
+    gainsHTML = '<div class="d-gains"><div class="d-gains-title">✦ Bénéfices de votre prestation</div><div class="d-gains-grid">'
+      + gains.map(function(g){return '<div class="d-gain">'+g+'</div>';}).join('')
+      + '</div></div>';
+  }
+
+  return '<div class="d-header" style="border-bottom:2px solid ' + accentColor + '22">'
+    + '<div><div class="d-brand">' + buildLogoHTML(tpl) + '</div>'
+    + '<div class="d-brand-info">' + (tpl.activite||'')
+    + (tpl.zones ? '<br>' + tpl.zones : '')
+    + (tpl.tel ? '<br>' + tpl.tel : '')
+    + (tpl.email ? ' &nbsp;·&nbsp; ' + tpl.email : '')
+    + (tpl.web ? ' &nbsp;·&nbsp; ' + tpl.web : '')
+    + '</div></div>'
+    + '<div class="d-right">'
+    + '<div class="d-type">' + (isDevis ? 'DEVIS' : 'FACTURE') + '</div>'
+    + '<div class="d-num">' + (doc.num || '—') + '</div>'
+    + '<div class="d-date">Émis le ' + fmtDate(doc.date) + '</div>'
+    + (doc.ech ? '<div class="d-date">' + (isDevis ? 'Valable jusqu\'au' : 'Échéance') + ' ' + fmtDate(doc.ech) + '</div>' : '')
+    + '</div></div>'
+    + '<div class="d-parties">'
+    + '<div class="d-party"><div class="d-party-label">Prestataire</div><div class="d-party-name">' + (tpl.nom||'AREPROG') + '</div>'
+    + '<div class="d-party-info">' + (tpl.activite||'')
+    + (tpl.zones ? '<br>' + tpl.zones : '')
+    + (tpl.adresse ? '<br>' + tpl.adresse : '')
+    + (tpl.tel ? '<br>' + tpl.tel : '')
+    + (tpl.email ? '<br>' + tpl.email : '')
+    + (tpl.web ? '<br>' + tpl.web : '')
+    + (tpl.legal ? '<br><small style="color:#aaa">' + tpl.legal + '</small>' : '')
+    + '</div></div>'
+    + '<div class="d-party"><div class="d-party-label">Client</div><div class="d-party-name">' + (doc.cn || '—') + '</div>'
+    + '<div class="d-party-info">'
+    + (doc.ca ? doc.ca + '<br>' : '') + (doc.cv || '')
+    + (doc.ct ? '<br>' + doc.ct : '')
+    + (doc.ce ? '<br>' + doc.ce : '')
+    + (vehStr ? '<br><br><strong>Véhicule :</strong> ' + vehStr : '')
+    + (doc.vim ? '<br>Immatriculation : <strong>' + doc.vim.toUpperCase() + '</strong>' : '')
+    + '</div></div></div>'
+    + noticeHTML
+    + '<table class="d-table"><thead><tr>'
+    + '<th style="width:52%">Désignation</th>'
+    + '<th style="width:8%;text-align:right">Qté</th>'
+    + '<th style="width:18%;text-align:right">PU HT</th>'
+    + '<th style="width:22%;text-align:right">' + (tpl.colTotal||'Total HT') + '</th>'
+    + '</tr></thead><tbody>' + linesHTML + '</tbody></table>'
+    + '<div class="d-totaux"><div class="d-totaux-box">'
+    + '<div class="d-tot-row"><span>Total HT</span><span>' + ht.toFixed(2) + ' €</span></div>'
+    + '<div class="d-tot-row"><span>TVA (' + (doc.tvaRate || 0) + ' %)</span><span>' + tva.toFixed(2) + ' €</span></div>'
+    + '<div class="d-tot-row big" style="color:' + accentColor + '"><span>TOTAL TTC</span><span>' + ttc.toFixed(2) + ' €</span></div>'
+    + '</div></div>'
+    + gainsHTML
+    + (doc.notes ? '<div class="d-notes"><strong>Conditions & mentions</strong><p>' + doc.notes + '</p></div>' : '')
+    + (tpl.showFooter !== false ? '<div class="d-footer">' + (tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
 }
 
-function openPreview(){$('preview').innerHTML=renderDocHTML(buildObj());$('modal').classList.add('open');}
-async function previewDoc(docId){var docs=await loadDocs();var doc=docs.find(function(d){return d.id===docId;});if(!doc)return;$('preview').innerHTML=renderDocHTML(doc);$('modal').classList.add('open');}
-function closeModal(){$('modal').classList.remove('open');}
-function printDoc(){$('preview').innerHTML=renderDocHTML(buildObj());$('modal').classList.add('open');setTimeout(function(){window.print();},250);}
+function openPreview() {
+  $('preview').innerHTML = renderDocHTML(buildObj());
+  $('modal').classList.add('open');
+}
+function previewDoc(docId) {
+  var doc = loadDocs().find(function(d){ return d.id === docId; });
+  if (!doc) return;
+  $('preview').innerHTML = renderDocHTML(doc);
+  $('modal').classList.add('open');
+}
+function closeModal() { $('modal').classList.remove('open'); }
+function printDoc() {
+  $('preview').innerHTML = renderDocHTML(buildObj());
+  $('modal').classList.add('open');
+  setTimeout(function(){ window.print(); }, 250);
+}
 
 // ============================================================
 //  DASHBOARD
 // ============================================================
-async function renderDash(){
-  $('stats').innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:10px 0">Chargement…</div>';
-  var docs=await loadDocs();
-  var devis=docs.filter(function(d){return d.type==='devis';}).length;
-  var factures=docs.filter(function(d){return d.type==='facture';}).length;
-  var caEnc=docs.filter(function(d){return d.type==='facture'&&d.statut==='payé';}).reduce(function(s,d){return s+(d.ttc||0);},0);
-  var caAtt=docs.filter(function(d){return d.type==='facture'&&d.statut!=='payé'&&d.statut!=='annulé';}).reduce(function(s,d){return s+(d.ttc||0);},0);
-  $('stats').innerHTML='<div class="sc"><div class="sc-label">Devis créés</div><div class="sc-val blue">'+devis+'</div><div class="sc-sub">Total</div></div><div class="sc"><div class="sc-label">Factures</div><div class="sc-val">'+factures+'</div><div class="sc-sub">Émises</div></div><div class="sc"><div class="sc-label">CA encaissé</div><div class="sc-val green">'+fmt(caEnc)+'</div><div class="sc-sub">Factures payées</div></div><div class="sc"><div class="sc-label">En attente</div><div class="sc-val orange">'+fmt(caAtt)+'</div><div class="sc-sub">À encaisser</div></div>';
-  var recent=docs.slice(0,10);
-  $('dash-list').innerHTML=recent.length?buildTable(recent,false):'<div class="empty"><div class="empty-icon">📄</div><div>Aucun document. Créez votre premier devis !</div></div>';
+function renderDash() {
+  var docs = loadDocs();
+  var devis = docs.filter(function(d){ return d.type === 'devis'; }).length;
+  var factures = docs.filter(function(d){ return d.type === 'facture'; }).length;
+  var caEnc = docs.filter(function(d){ return d.type === 'facture' && d.statut === 'payé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+  var caAtt = docs.filter(function(d){ return d.type === 'facture' && d.statut !== 'payé' && d.statut !== 'annulé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+
+  $('stats').innerHTML =
+    '<div class="sc"><div class="sc-label">Devis créés</div><div class="sc-val blue">'+devis+'</div><div class="sc-sub">Total</div></div>' +
+    '<div class="sc"><div class="sc-label">Factures</div><div class="sc-val">'+factures+'</div><div class="sc-sub">Émises</div></div>' +
+    '<div class="sc"><div class="sc-label">CA encaissé</div><div class="sc-val green">'+fmt(caEnc)+'</div><div class="sc-sub">Factures payées</div></div>' +
+    '<div class="sc"><div class="sc-label">En attente</div><div class="sc-val orange">'+fmt(caAtt)+'</div><div class="sc-sub">À encaisser</div></div>';
+
+  var recent = docs.slice(0, 10);
+  $('dash-list').innerHTML = recent.length ? buildTable(recent, false)
+    : '<div class="empty"><div class="empty-icon">📄</div><div>Aucun document. Créez votre premier devis !</div></div>';
 }
 
 // ============================================================
 //  LISTE
 // ============================================================
-async function renderListe(){
-  $('liste-body').innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:20px 0;text-align:center">Chargement…</div>';
-  var all=await loadDocs();var flt=$('flt').value;
-  var docs=flt?all.filter(function(d){return d.type===flt;}):all;
-  $('liste-body').innerHTML=docs.length?buildTable(docs,true):'<div class="empty"><div class="empty-icon">📂</div><div>Aucun document trouvé.</div></div>';
+function renderListe() {
+  var all = loadDocs();
+  var flt = $('flt').value;
+  var docs = flt ? all.filter(function(d){ return d.type === flt; }) : all;
+  $('liste-body').innerHTML = docs.length ? buildTable(docs, true)
+    : '<div class="empty"><div class="empty-icon">📂</div><div>Aucun document trouvé.</div></div>';
 }
 
-function buildTable(docs,withDelete){
-  var rows=docs.map(function(d){
-    var typeBadge=d.type==='devis'?'<span class="badge b-devis">Devis</span>':'<span class="badge b-facture">Facture</span>';
-    var statBadge=d.statut==='payé'?'<span class="badge b-paye">Payé ✓</span>':d.statut==='annulé'?'<span class="badge b-annule">Annulé</span>':'<span style="color:var(--text-dim);font-size:12px">'+d.statut+'</span>';
-    var veh=[d.vm,d.vmo].filter(Boolean).join(' ');
-    var delBtn=withDelete?'<button class="btn-d btn-sm" onclick="deleteDoc('+d.id+')">🗑</button>':'';
-    return'<tr><td><span class="doc-num">'+(d.num||'—')+'</span></td><td>'+typeBadge+'</td><td>'+fmtDate(d.date)+'</td><td><strong>'+(d.cn||'—')+'</strong>'+(veh?'<br><span style="color:var(--text-dim);font-size:11px">'+veh+(d.van?' ('+d.van+')':'')+'</span>':'')+'</td><td style="font-family:var(--fm);color:var(--blue)">'+fmt(d.ttc||0)+'</td><td>'+statBadge+'</td><td><div class="act-cell"><button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button><button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'+delBtn+'</div></td></tr>';
+function buildTable(docs, withDelete) {
+  var rows = docs.map(function(d) {
+    var typeBadge = d.type === 'devis' ? '<span class="badge b-devis">Devis</span>' : '<span class="badge b-facture">Facture</span>';
+    var statBadge = d.statut === 'payé' ? '<span class="badge b-paye">Payé ✓</span>'
+      : d.statut === 'annulé' ? '<span class="badge b-annule">Annulé</span>'
+      : '<span style="color:var(--text-dim);font-size:12px">'+d.statut+'</span>';
+    var veh = [d.vm, d.vmo].filter(Boolean).join(' ');
+    var delBtn = withDelete ? '<button class="btn-d btn-sm" onclick="deleteDoc('+d.id+')">🗑</button>' : '';
+    return '<tr>'
+      + '<td><span class="doc-num">'+(d.num||'—')+'</span></td>'
+      + '<td>'+typeBadge+'</td>'
+      + '<td>'+fmtDate(d.date)+'</td>'
+      + '<td><strong>'+(d.cn||'—')+'</strong>'+(veh?'<br><span style="color:var(--text-dim);font-size:11px">'+veh+(d.van?' ('+d.van+')':'')+'</span>':'')+'</td>'
+      + '<td style="font-family:var(--fm);color:var(--blue)">'+fmt(d.ttc||0)+'</td>'
+      + '<td>'+statBadge+'</td>'
+      + '<td><div class="act-cell">'
+        + '<button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button>'
+        + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'
+        + delBtn
+      + '</div></td>'
+      + '</tr>';
   }).join('');
-  return'<table class="dt"><thead><tr><th>N°</th><th>Type</th><th>Date</th><th>Client / Véhicule</th><th>Montant TTC</th><th>Statut</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+  return '<table class="dt"><thead><tr><th>N°</th><th>Type</th><th>Date</th><th>Client / Véhicule</th><th>Montant TTC</th><th>Statut</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 // ============================================================
 //  WHATSAPP PARSER — Claude API
 // ============================================================
-var waExtracted=null;
+var waExtracted = null;
 
-function openWaModal(){
-  $('wa-text').value='';$('wa-result').style.display='none';$('wa-err').style.display='none';
-  $('wa-loading').style.display='none';$('wa-apply-btn').style.display='none';
-  $('wa-analyze-btn').style.display='inline-flex';waExtracted=null;
-  $('wa-modal').classList.add('open');setTimeout(function(){$('wa-text').focus();},100);
+function openWaModal() {
+  $('wa-text').value = '';
+  $('wa-result').style.display = 'none';
+  $('wa-err').style.display = 'none';
+  $('wa-loading').style.display = 'none';
+  $('wa-apply-btn').style.display = 'none';
+  $('wa-analyze-btn').style.display = 'inline-flex';
+  waExtracted = null;
+  $('wa-modal').classList.add('open');
+  setTimeout(function(){ $('wa-text').focus(); }, 100);
 }
-function closeWaModal(){$('wa-modal').classList.remove('open');}
 
-// ============================================================
-//  CATALOGUE PLAT WHATSAPP — ordre : packs > stage2 > stage1 > reste
-// ============================================================
-var PRESTATION_KEYS=[
-  {keys:['pack stage 1 + egr + fap','pack diesel complet','préparation diesel'],
-    label:'Pack Stage 1 + EGR + FAP OFF — Préparation diesel complète ★',p:390},
-  {keys:['pack stage 1 + egr','stage 1 egr'],
-    label:'Pack Stage 1 + EGR OFF · Diesel — 2 prestations en 1 intervention',p:370},
-  {keys:['pack stage 1 + fap','stage 1 fap'],
-    label:'Pack Stage 1 + FAP OFF · Diesel (après retrait physique du filtre)',p:370},
-  {keys:['pack stage 1 + e85','stage 1 e85'],
-    label:'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe',p:330},
-  {keys:['stage 2','stage2','stade 2'],
-    label:'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)',p:460},
-  {keys:['stage 1','stage1','stade 1','reprog','reprogramm','cartographie','optimisation moteur'],
-    label:'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible',p:330},
-  {keys:['e85','ethanol','éthanol','bioethanol','bioéthanol','flex fuel','flexfuel'],
-    label:'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe',p:330},
-  {keys:['egr off','egr','désactivation egr','desactivation egr','suppression egr','vanne egr'],
-    label:'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement',p:180},
-  {keys:['fap off','dpf off','fap','dpf','désactivation fap','desactivation fap','suppression fap','suppression dpf','désactivation dpf'],
-    label:'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)',p:280},
-  {keys:['adblue off','adblue','ad blue','scr off','scr','désactivation adblue','desactivation adblue','suppression adblue'],
-    label:'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique',p:280},
-  {keys:['swirl off','swirl','désactivation swirl','volets admission'],
-    label:'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances',p:140},
-  {keys:['conso','consommation','optimisation conso','économie carburant'],
-    label:'Optimisation consommation — Idéal grands rouleurs & flottes',p:380},
-  {keys:['odis','diagnostic vag','diagnostic officiel'],
-    label:'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur',p:100},
-  {keys:['pop bang','pop & bang','pop and bang','pops','détonation','detonation'],
-    label:'Pop & Bang — Détonations à la décélération · Effet sonore agressif',p:150},
-  {keys:['dsg fart','dsg'],
-    label:'DSG Farts — Crépitements à la décélération sur boîtes DSG',p:150},
-  {keys:['launch control','launch'],
-    label:'Launch Control — Optimisation départ arrêté · Meilleur 0-100',p:150},
-  {keys:['vmax off','vmax','limiteur vitesse','débridage','débridé'],
-    label:'Vmax OFF — Suppression du limiteur de vitesse constructeur',p:60},
-  {keys:['start stop off','start & stop','start stop','startstop'],
-    label:'Start & Stop OFF — Désactivation définitive du Start & Stop',p:60},
+function closeWaModal() {
+  $('wa-modal').classList.remove('open');
+}
+
+// Catalogue plat pour matching prestations
+var PRESTATION_KEYS = [
+  { keys: ['stage 2', 'stage2'],                         label: 'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)', p: 460 },
+  { keys: ['stage 1', 'stage1', 'reprog', 'reprogramm'], label: 'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible', p: 330 },
+  { keys: ['e85', 'ethanol', 'éthanol', 'bioethanol'],   label: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
+  { keys: ['pack stage 1 + e85', 'stage 1 e85'],         label: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
+  { keys: ['egr'],                                        label: 'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement', p: 180 },
+  { keys: ['fap', 'dpf'],                                 label: 'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)', p: 280 },
+  { keys: ['adblue', 'ad blue', 'scr'],                   label: 'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique', p: 280 },
+  { keys: ['odis', 'diagnostic vag', 'diagnostic'],       label: 'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur', p: 100 },
+  { keys: ['conso', 'consommation'],                      label: 'Optimisation consommation — Idéal grands rouleurs & flottes', p: 380 },
+  { keys: ['pop', 'bang'],                                label: 'Pop & Bang — Détonations à la décélération · Effet sonore agressif', p: 150 },
+  { keys: ['launch control'],                             label: 'Launch Control — Optimisation départ arrêté · Meilleur 0-100', p: 150 },
+  { keys: ['vmax', 'limiteur'],                           label: 'Vmax OFF — Suppression du limiteur de vitesse constructeur', p: 60 },
+  { keys: ['start stop', 'start & stop'],                 label: 'Start & Stop OFF — Désactivation définitive du Start & Stop', p: 60 },
+  { keys: ['swirl'],                                      label: 'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances', p: 140 },
 ];
 
-async function analyzeWaMessage(){
-  var msg=$('wa-text').value.trim();
-  if(!msg){$('wa-err').textContent='Colle d\'abord un message.';$('wa-err').style.display='block';return;}
-  $('wa-err').style.display='none';$('wa-result').style.display='none';
-  $('wa-analyze-btn').style.display='none';$('wa-apply-btn').style.display='none';
-  $('wa-loading').style.display='block';waExtracted=null;
+async function analyzeWaMessage() {
+  var msg = $('wa-text').value.trim();
+  if (!msg) { $('wa-err').textContent = 'Colle d\'abord un message.'; $('wa-err').style.display = 'block'; return; }
 
-  var prestationsList=PRESTATION_KEYS.map(function(pk){return'- '+pk.label.split(' — ')[0];}).join('\n');
+  $('wa-err').style.display = 'none';
+  $('wa-result').style.display = 'none';
+  $('wa-analyze-btn').style.display = 'none';
+  $('wa-apply-btn').style.display = 'none';
+  $('wa-loading').style.display = 'block';
+  waExtracted = null;
 
-  var prompt="Tu es l'assistant d'AREPROG, un spécialiste de la reprogrammation moteur à domicile en France.\n\n"
-    +"Analyse le message WhatsApp ci-dessous. Ce message peut contenir des emojis (📍, 📞, ✉️, 🚗, 🔧, 👤, ⚙️, etc.) utilisés comme icônes de champ — ignore-les pour extraire le texte.\n\n"
-    +"Extrais les informations suivantes et réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans texte autour :\n"
-    +"{\n"
-    +"  \"nom\": \"Prénom et NOM du client, ou chaîne vide\",\n"
-    +"  \"telephone\": \"numéro de téléphone (chiffres + espaces), ou chaîne vide\",\n"
-    +"  \"email\": \"adresse email, ou chaîne vide\",\n"
-    +"  \"ville\": \"ville ou région, ou chaîne vide\",\n"
-    +"  \"marque\": \"marque du véhicule (ex: Volkswagen), ou chaîne vide\",\n"
-    +"  \"modele\": \"modèle exact (ex: Golf 6), ou chaîne vide\",\n"
-    +"  \"motorisation\": \"cylindrée + carburant + puissance en ch (ex: 1.6 TDI 105ch), ou chaîne vide\",\n"
-    +"  \"annee\": \"année du véhicule, ou chaîne vide\",\n"
-    +"  \"immatriculation\": \"plaque d'immatriculation, ou chaîne vide\",\n"
-    +"  \"km\": \"kilométrage si mentionné (ex: 175 000 km), ou chaîne vide\",\n"
-    +"  \"prestations\": [\"tableau des prestations — utilise les noms courts exacts de la liste ci-dessous\"]\n"
-    +"}\n\n"
-    +"Liste des prestations reconnues (utilise ces noms courts dans le tableau 'prestations') :\n"
-    +prestationsList+"\n\n"
-    +"RÈGLES IMPORTANTES :\n"
-    +"- 'Désactivation EGR', 'EGR OFF', 'supprimer l\\'EGR' → utilise 'EGR OFF'\n"
-    +"- 'Désactivation FAP', 'FAP OFF', 'supprimer le FAP' → utilise 'FAP OFF'\n"
-    +"- 'Stage 2' est différent de 'Stage 1' — ne confonds JAMAIS les deux\n"
-    +"- Si plusieurs prestations sont demandées, liste-les TOUTES séparément dans le tableau\n"
-    +"- Les codes erreur OBD (P0407, P046C, P2463, etc.) sont des infos véhicule — NE les inclus PAS dans les prestations\n"
-    +"- Si une information est absente du message, mets une chaîne vide \"\"\n\n"
-    +"Message WhatsApp du client :\n"
-    +"---\n"+msg+"\n---";
+  var prompt = "Tu es un assistant pour un professionnel de la reprogrammation moteur en France.\n"
+    + "Analyse ce message WhatsApp d'un client et extrais les informations suivantes en JSON strict (pas de markdown, pas de texte autour) :\n"
+    + "{\n"
+    + "  \"nom\": \"Prénom NOM du client ou vide\",\n"
+    + "  \"telephone\": \"numéro ou vide\",\n"
+    + "  \"email\": \"email ou vide\",\n"
+    + "  \"ville\": \"ville ou vide\",\n"
+    + "  \"marque\": \"marque du véhicule ou vide\",\n"
+    + "  \"modele\": \"modèle exact ou vide\",\n"
+    + "  \"motorisation\": \"motorisation avec cylindrée et puissance en ch si mentionnée, ou vide\",\n"
+    + "  \"annee\": \"année ou vide\",\n"
+    + "  \"immatriculation\": \"immatriculation ou vide\",\n"
+    + "  \"prestations\": [\"liste des prestations demandées en français simple, ex: Stage 1, Conversion E85, EGR OFF\"]\n"
+    + "}\n\n"
+    + "Message du client :\n" + msg;
 
-  try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
-    var data=await resp.json();
-    var text=(data.content||[]).map(function(i){return i.text||'';}).join('');
-    text=text.replace(/```json|```/g,'').trim();
-    var parsed=JSON.parse(text);
-
-    var matchedLines=[];
-    (parsed.prestations||[]).forEach(function(pStr){
-      var pLow=pStr.toLowerCase();var found=false;
-      for(var i=0;i<PRESTATION_KEYS.length;i++){
-        var pk=PRESTATION_KEYS[i];
-        if(pk.keys.some(function(k){return pLow.indexOf(k)!==-1;})){
-          if(!matchedLines.some(function(l){return l.label===pk.label;})){
-            matchedLines.push({id:Date.now()+Math.random(),label:pk.label,qte:1,pu:pk.p});
-          }
-          found=true;break;
-        }
-      }
-      if(!found)matchedLines.push({id:Date.now()+Math.random(),label:pStr,qte:1,pu:0});
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
     });
 
-    waExtracted={parsed:parsed,lines:matchedLines};
+    var data = await resp.json();
+    var text = (data.content || []).map(function(i){ return i.text || ''; }).join('');
+    // Nettoyer si markdown
+    text = text.replace(/```json|```/g, '').trim();
+    var parsed = JSON.parse(text);
 
-    var rows='';
-    var fields=[
-      ['Client',parsed.nom],['Téléphone',parsed.telephone],['Email',parsed.email],
-      ['Ville',parsed.ville],['Marque',parsed.marque],['Modèle',parsed.modele],
-      ['Motorisation',parsed.motorisation],['Année',parsed.annee],
-      ['Immat.',parsed.immatriculation],['Kilométrage',parsed.km],
+    // Matcher les prestations au catalogue
+    var matchedLines = [];
+    (parsed.prestations || []).forEach(function(pStr) {
+      var pLow = pStr.toLowerCase();
+      var found = false;
+      for (var i = 0; i < PRESTATION_KEYS.length; i++) {
+        var pk = PRESTATION_KEYS[i];
+        if (pk.keys.some(function(k){ return pLow.indexOf(k) !== -1; })) {
+          // Éviter les doublons
+          if (!matchedLines.some(function(l){ return l.label === pk.label; })) {
+            matchedLines.push({ id: Date.now() + Math.random(), label: pk.label, qte: 1, pu: pk.p });
+          }
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        // Prestation non reconnue → ligne libre
+        matchedLines.push({ id: Date.now() + Math.random(), label: pStr, qte: 1, pu: 0 });
+      }
+    });
+
+    waExtracted = { parsed: parsed, lines: matchedLines };
+
+    // Afficher le résumé
+    var rows = '';
+    var fields = [
+      ['Client', parsed.nom],
+      ['Téléphone', parsed.telephone],
+      ['Email', parsed.email],
+      ['Ville', parsed.ville],
+      ['Marque', parsed.marque],
+      ['Modèle', parsed.modele],
+      ['Motorisation', parsed.motorisation],
+      ['Année', parsed.annee],
+      ['Immat.', parsed.immatriculation],
     ];
-    fields.forEach(function(f){if(f[1])rows+='<div class="wa-result-row"><span class="wa-result-label">'+f[0]+'</span><span class="wa-result-val">'+f[1]+'</span></div>';});
-    if(matchedLines.length){
-      rows+='<div class="wa-result-row" style="margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px"><span class="wa-result-label">Prestations</span><span class="wa-result-val">'+matchedLines.map(function(l){return l.label.split(' — ')[0];}).join('<br>')+'</span></div>';
+    fields.forEach(function(f) {
+      if (f[1]) rows += '<div class="wa-result-row"><span class="wa-result-label">'+f[0]+'</span><span class="wa-result-val">'+f[1]+'</span></div>';
+    });
+    if (matchedLines.length) {
+      rows += '<div class="wa-result-row" style="margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px">'
+        + '<span class="wa-result-label">Prestations</span>'
+        + '<span class="wa-result-val">' + matchedLines.map(function(l){ return l.label.split(' — ')[0]; }).join('<br>') + '</span></div>';
     }
-    $('wa-result-rows').innerHTML=rows||'<span style="color:var(--text-muted)">Aucune information détectée.</span>';
-    $('wa-result').style.display='block';$('wa-loading').style.display='none';$('wa-apply-btn').style.display='inline-flex';
 
-  }catch(e){
-    $('wa-loading').style.display='none';$('wa-analyze-btn').style.display='inline-flex';
-    $('wa-err').textContent='Erreur analyse : '+(e.message||'Réessaie.');$('wa-err').style.display='block';
+    $('wa-result-rows').innerHTML = rows || '<span style="color:var(--text-muted)">Aucune information détectée.</span>';
+    $('wa-result').style.display = 'block';
+    $('wa-loading').style.display = 'none';
+    $('wa-apply-btn').style.display = 'inline-flex';
+
+  } catch(e) {
+    $('wa-loading').style.display = 'none';
+    $('wa-analyze-btn').style.display = 'inline-flex';
+    $('wa-err').textContent = 'Erreur analyse : ' + (e.message || 'Réessaie.');
+    $('wa-err').style.display = 'block';
     console.error(e);
   }
 }
 
-function applyWaResult(){
-  if(!waExtracted)return;var p=waExtracted.parsed;
-  if(p.nom)$('f-cnom').value=p.nom;
-  if(p.telephone)$('f-ctel').value=p.telephone;
-  if(p.email)$('f-cemail').value=p.email;
-  if(p.ville)$('f-cville').value=p.ville;
-  if(p.marque)$('f-vm').value=p.marque;
-  if(p.modele)$('f-vmo').value=p.modele;
-  if(p.motorisation)$('f-vmot').value=p.motorisation;
-  if(p.annee)$('f-van').value=p.annee;
-  if(p.immatriculation)$('f-vim').value=p.immatriculation.toUpperCase();
-  if(p.km){var nint=$('f-nint');nint.value=(nint.value?nint.value+'\n':'')+'Kilométrage : '+p.km;}
-  if(waExtracted.lines&&waExtracted.lines.length>0){lines=waExtracted.lines;renderLines();}
+function applyWaResult() {
+  if (!waExtracted) return;
+  var p = waExtracted.parsed;
+
+  // Remplir les champs client
+  if (p.nom)            $('f-cnom').value  = p.nom;
+  if (p.telephone)      $('f-ctel').value  = p.telephone;
+  if (p.email)          $('f-cemail').value = p.email;
+  if (p.ville)          $('f-cville').value = p.ville;
+
+  // Remplir les champs véhicule
+  if (p.marque)         $('f-vm').value    = p.marque;
+  if (p.modele)         $('f-vmo').value   = p.modele;
+  if (p.motorisation)   $('f-vmot').value  = p.motorisation;
+  if (p.annee)          $('f-van').value   = p.annee;
+  if (p.immatriculation) $('f-vim').value  = p.immatriculation.toUpperCase();
+
+  // Injecter les lignes de prestations
+  if (waExtracted.lines && waExtracted.lines.length > 0) {
+    // Remplacer les lignes vides par les prestations détectées
+    lines = waExtracted.lines;
+    renderLines();
+  }
+
   closeWaModal();
-  var formEl=$('t-form');formEl.style.transition='opacity .15s';formEl.style.opacity='0.5';
-  setTimeout(function(){formEl.style.opacity='1';},200);
+
+  // Flash visuel pour confirmer
+  var formEl = $('t-form');
+  formEl.style.transition = 'opacity .15s';
+  formEl.style.opacity = '0.5';
+  setTimeout(function(){ formEl.style.opacity = '1'; }, 200);
 }
+
+// ============================================================
+//  CARNET CLIENTS
+// ============================================================
+function loadClients() { return JSON.parse(localStorage.getItem('ar_clients') || '[]'); }
+function saveClients(d) { localStorage.setItem('ar_clients', JSON.stringify(d)); }
+
+var editClientId = null;
+
+function renderCarnet() {
+  var q = ($('carnet-search') ? $('carnet-search').value : '').toLowerCase();
+  var clients = loadClients().filter(function(cl) {
+    return !q || (cl.nom+cl.vm+cl.vmo+cl.vim+cl.tel).toLowerCase().includes(q);
+  });
+  var grid = $('carnet-grid');
+  if (!grid) return;
+  grid.innerHTML = clients.length ? clients.map(function(cl) {
+    return clientCard(cl, false);
+  }).join('') : '<div class="carnet-empty">Aucun client enregistré.</div>';
+}
+
+function renderCarnetModal() {
+  var q = ($('carnet-modal-search') ? $('carnet-modal-search').value : '').toLowerCase();
+  var clients = loadClients().filter(function(cl) {
+    return !q || (cl.nom+cl.vm+cl.vmo+cl.vim+cl.tel).toLowerCase().includes(q);
+  });
+  var grid = $('carnet-modal-grid');
+  if (!grid) return;
+  grid.innerHTML = clients.length ? clients.map(function(cl) {
+    return clientCard(cl, true);
+  }).join('') : '<div class="carnet-empty">Aucun client.</div>';
+}
+
+function clientCard(cl, selectable) {
+  var veh = [cl.vm, cl.vmo, cl.vmot].filter(Boolean).join(' ');
+  var onclick = selectable ? 'onclick="selectClient(' + cl.id + ')"' : '';
+  return '<div class="carnet-card" ' + onclick + '>'
+    + '<button class="carnet-card-del" onclick="event.stopPropagation();deleteClient(' + cl.id + ')" title="Supprimer">×</button>'
+    + '<div class="carnet-card-name">' + (cl.nom || '—') + '</div>'
+    + (veh ? '<div class="carnet-card-veh">🚗 ' + veh + (cl.vim ? ' · ' + cl.vim.toUpperCase() : '') + '</div>' : '')
+    + (cl.tel ? '<div class="carnet-card-tel">📞 ' + cl.tel + '</div>' : '')
+    + (!selectable ? '<div style="display:flex;gap:6px;margin-top:10px"><button class="btn-s btn-sm" onclick="editClient(' + cl.id + ')">✏️ Modifier</button><button class="btn-p btn-sm" onclick="selectClientAndGo(' + cl.id + ')">→ Nouveau devis</button></div>' : '')
+    + '</div>';
+}
+
+function openCarnetModal() {
+  $('carnet-modal-search').value = '';
+  renderCarnetModal();
+  $('carnet-modal').classList.add('open');
+}
+function closeCarnetModal() { $('carnet-modal').classList.remove('open'); }
+
+function openAddClientModal(fromCarnet) {
+  editClientId = null;
+  $('add-client-title').textContent = 'Nouveau client';
+  ['ac-nom','ac-tel','ac-email','ac-adr','ac-ville','ac-vm','ac-vmo','ac-vmot','ac-van','ac-vim'].forEach(function(i){ $(i).value=''; });
+  closeCarnetModal();
+  $('add-client-modal').classList.add('open');
+}
+function closeAddClientModal() { $('add-client-modal').classList.remove('open'); }
+
+function editClient(cid) {
+  var cl = loadClients().find(function(c){ return c.id === cid; });
+  if (!cl) return;
+  editClientId = cid;
+  $('add-client-title').textContent = 'Modifier le client';
+  $('ac-nom').value = cl.nom || '';
+  $('ac-tel').value = cl.tel || '';
+  $('ac-email').value = cl.email || '';
+  $('ac-adr').value = cl.adr || '';
+  $('ac-ville').value = cl.ville || '';
+  $('ac-vm').value = cl.vm || '';
+  $('ac-vmo').value = cl.vmo || '';
+  $('ac-vmot').value = cl.vmot || '';
+  $('ac-van').value = cl.van || '';
+  $('ac-vim').value = cl.vim || '';
+  $('add-client-modal').classList.add('open');
+}
+
+function saveClient() {
+  var nom = $('ac-nom').value.trim();
+  if (!nom) { alert('Le nom est obligatoire.'); return; }
+  var clients = loadClients();
+  var cl = {
+    id: editClientId || Date.now(),
+    nom: nom, tel: $('ac-tel').value, email: $('ac-email').value,
+    adr: $('ac-adr').value, ville: $('ac-ville').value,
+    vm: $('ac-vm').value, vmo: $('ac-vmo').value, vmot: $('ac-vmot').value,
+    van: $('ac-van').value, vim: $('ac-vim').value,
+  };
+  if (editClientId) {
+    var i = clients.findIndex(function(c){ return c.id === editClientId; });
+    if (i >= 0) clients[i] = cl; else clients.unshift(cl);
+  } else {
+    clients.unshift(cl);
+  }
+  saveClients(clients);
+  closeAddClientModal();
+  renderCarnet();
+}
+
+function deleteClient(cid) {
+  if (!confirm('Supprimer ce client ?')) return;
+  saveClients(loadClients().filter(function(c){ return c.id !== cid; }));
+  renderCarnet();
+  renderCarnetModal();
+}
+
+function selectClient(cid) {
+  var cl = loadClients().find(function(c){ return c.id === cid; });
+  if (!cl) return;
+  $('f-cnom').value = cl.nom || '';
+  $('f-ctel').value = cl.tel || '';
+  $('f-cemail').value = cl.email || '';
+  $('f-cadr').value = cl.adr || '';
+  $('f-cville').value = cl.ville || '';
+  $('f-vm').value = cl.vm || '';
+  $('f-vmo').value = cl.vmo || '';
+  $('f-vmot').value = cl.vmot || '';
+  $('f-van').value = cl.van || '';
+  $('f-vim').value = cl.vim || '';
+  closeCarnetModal();
+}
+
+function selectClientAndGo(cid) {
+  selectClient(cid);
+  showTab('form');
+}
+
+// Enregistrer client depuis le formulaire courant
+function saveCurrentClientToCarnet() {
+  var nom = $('f-cnom').value.trim();
+  if (!nom) { alert('Renseignez le nom du client d\'abord.'); return; }
+  var clients = loadClients();
+  // Chercher si déjà existant (même nom)
+  var existing = clients.find(function(c){ return c.nom.toLowerCase() === nom.toLowerCase(); });
+  if (existing && !confirm('Un client "' + nom + '" existe déjà. Mettre à jour ?')) return;
+  var cl = {
+    id: existing ? existing.id : Date.now(),
+    nom: nom, tel: $('f-ctel').value, email: $('f-cemail').value,
+    adr: $('f-cadr').value, ville: $('f-cville').value,
+    vm: $('f-vm').value, vmo: $('f-vmo').value, vmot: $('f-vmot').value,
+    van: $('f-van').value, vim: $('f-vim').value,
+  };
+  if (existing) {
+    var i = clients.indexOf(existing);
+    clients[i] = cl;
+  } else {
+    clients.unshift(cl);
+  }
+  saveClients(clients);
+  alert('Client enregistré dans le carnet ✓');
+}
+
+// ============================================================
+//  OLSX — GAINS MOTEUR
+// ============================================================
+var currentGains = null;
+var olsxDetected = null;
+
+function openOlsxModal() {
+  olsxDetected = null;
+  $('olsx-gains-preview').textContent = 'Sélectionne un véhicule dans le simulateur…';
+  $('olsx-import-btn').style.display = 'none';
+  $('olsx-modal').classList.add('open');
+}
+function closeOlsxModal() { $('olsx-modal').classList.remove('open'); }
+
+function importOlsxGains() {
+  if (!olsxDetected) return;
+  currentGains = olsxDetected;
+  renderGainsBar();
+  closeOlsxModal();
+}
+
+function clearGains() {
+  currentGains = null;
+  renderGainsBar();
+}
+
+function renderGainsBar() {
+  var bar = $('gains-bar');
+  if (!bar) return;
+  if (!currentGains) {
+    bar.style.display = 'none';
+    return;
+  }
+  var g = currentGains;
+  var items = [];
+  if (g.chOrig && g.ch)   items.push({ lbl: 'Puissance', val: g.chOrig + ' → ' + g.ch + ' ch (+' + (g.ch - g.chOrig) + ')' });
+  if (g.nmOrig && g.nm)   items.push({ lbl: 'Couple',    val: g.nmOrig + ' → ' + g.nm + ' Nm (+' + (g.nm - g.nmOrig) + ')' });
+  if (g.conso)             items.push({ lbl: 'Conso',     val: g.conso });
+  bar.style.display = 'block';
+  $('gains-bar-vals').innerHTML = items.map(function(it) {
+    return '<div style="font-size:13px"><strong style="color:var(--green)">' + it.val + '</strong> <span style="color:var(--text-dim);font-size:11px">' + it.lbl + '</span></div>';
+  }).join('');
+}
+
+// Écouter les messages postMessage de l'iframe OLSX
+window.addEventListener('message', function(e) {
+  // OLSX envoie les données de gain via postMessage
+  if (!e.data) return;
+  var d = e.data;
+  // Format OLSX : { type: 'olsx_data', ch: 220, chOrig: 180, nm: 380, nmOrig: 320, ... }
+  // ou format alternatif selon la version de l'API
+  if (d.type === 'olsx_data' || d.ch || d.power || d.horsepower) {
+    olsxDetected = {
+      ch:     d.ch || d.power || d.horsepower || null,
+      chOrig: d.chOrig || d.powerOrig || d.originalHorsepower || null,
+      nm:     d.nm || d.torque || null,
+      nmOrig: d.nmOrig || d.torqueOrig || null,
+      conso:  d.conso || d.consumption || null,
+      raw:    d
+    };
+    // Construire le preview
+    var parts = [];
+    if (olsxDetected.chOrig && olsxDetected.ch) parts.push(olsxDetected.chOrig + '→' + olsxDetected.ch + ' ch');
+    if (olsxDetected.nmOrig && olsxDetected.nm) parts.push(olsxDetected.nmOrig + '→' + olsxDetected.nm + ' Nm');
+    if (olsxDetected.conso) parts.push(olsxDetected.conso);
+    if (parts.length) {
+      $('olsx-gains-preview').textContent = '✓ Gains détectés : ' + parts.join(' · ');
+      $('olsx-gains-preview').style.color = 'var(--green)';
+      $('olsx-import-btn').style.display = 'inline-flex';
+    }
+  }
+});
+
+// ============================================================
+//  TABS (mis à jour avec carnet)
+// ============================================================
+function showTab(t) {
+  ['dash','form','liste','carnet'].forEach(function(x){ var el = $('t-'+x); if(el) el.classList.toggle('on', x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on', ['dash','form','liste','carnet'][i]===t); });
+  if (t==='dash') renderDash();
+  if (t==='liste') renderListe();
+  if (t==='carnet') renderCarnet();
+}
+
+// ============================================================
+//  LOGO HTML pour les documents
+// ============================================================
+function buildLogoHTML(tpl) {
+  var nom = tpl.nom || 'AREPROG';
+  var style = tpl.logoStyle || 'split';
+  var color = tpl.color || '#1E90FF';
+  if (style === 'split') {
+    var half = Math.ceil(nom.length / 2);
+    return nom.slice(0,half) + '<span style="color:' + color + '">' + nom.slice(half) + '</span>';
+  } else if (style === 'full') {
+    return '<span style="color:' + color + '">' + nom + '</span>';
+  }
+  return nom;
+}
+
+// ============================================================
+//  TEMPLATE — Modèle de document
+// ============================================================
+var TPL_KEY = 'ar_template';
+var TPL_DEFAULT = {
+  nom:'AREPROG', activite:'Reprogrammation moteur à domicile',
+  zones:'Pays Basque (64) · Landes (40) · Yonne (89)',
+  tel:'06 67 92 46 30', email:'contact@areprog.fr', web:'areprog.fr',
+  adresse:'', legal:'',
+  footer:'AREPROG — Reprogrammation moteur à domicile · Pays Basque (64) · Landes (40) · Yonne (89)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
+  color:'#1E90FF', titleColor:'#111111', logoStyle:'split',
+  showGains:true, showVeh:true, showFooter:true, showLegal:true,
+  colTotal:'Total HT', validite:30,
+};
+
+function loadTemplate() {
+  try {
+    var raw = localStorage.getItem(TPL_KEY);
+    return raw ? Object.assign({},TPL_DEFAULT,JSON.parse(raw)) : Object.assign({},TPL_DEFAULT);
+  } catch(e) { return Object.assign({},TPL_DEFAULT); }
+}
+function saveTemplate() {
+  localStorage.setItem(TPL_KEY, JSON.stringify(readTplForm()));
+  alert('Template enregistré ✓');
+}
+function resetTemplate() {
+  if (!confirm('Réinitialiser le template aux valeurs par défaut ?')) return;
+  localStorage.removeItem(TPL_KEY);
+  fillTplForm(TPL_DEFAULT);
+  livePreview();
+}
+function syncTpl(key,val) {
+  var map = {
+    nom:['tpl-nom','tpl2-nom'], activite:['tpl-activite','tpl2-activite'],
+    zones:['tpl-zones','tpl2-zones'], tel:['tpl-tel','tpl2-tel'],
+    web:['tpl-web','tpl2-web'], legal:['tpl-legal','tpl2-legal'],
+    footer:['tpl-footer','tpl2-footer'], color:['tpl-color-hex','tpl2-color-hex'],
+  };
+  if (map[key]) map[key].forEach(function(id){ var el=$(id); if(el&&el.value!==val)el.value=val; });
+  livePreview();
+}
+function readTplForm() {
+  function v(id,def){ var el=$(id); return el&&el.value?el.value:def; }
+  function ck(id,def){ var el=$(id); return el?el.checked:def; }
+  return {
+    nom:v('tpl-nom','AREPROG'), activite:v('tpl-activite',TPL_DEFAULT.activite),
+    zones:v('tpl-zones',''), tel:v('tpl-tel',''), email:v('tpl-email',''),
+    web:v('tpl-web',''), adresse:v('tpl-adresse',''), legal:v('tpl-legal',''),
+    footer:v('tpl-footer',TPL_DEFAULT.footer),
+    color:v('tpl-color-hex','#1E90FF'), titleColor:v('tpl-title-color-hex','#111111'),
+    logoStyle:v('tpl-logo-style','split'),
+    showGains:ck('tpl-show-gains',true), showVeh:ck('tpl-show-veh',true),
+    showFooter:ck('tpl-show-footer',true), showLegal:ck('tpl-show-legal',true),
+    colTotal:v('tpl-col-total','Total HT'),
+    validite:parseInt(v('tpl-validite','30'))||30,
+  };
+}
+function fillTplForm(tpl) {
+  var fields=[
+    ['tpl-nom',tpl.nom],['tpl-activite',tpl.activite],['tpl-zones',tpl.zones],
+    ['tpl-tel',tpl.tel],['tpl-email',tpl.email],['tpl-web',tpl.web],
+    ['tpl-adresse',tpl.adresse],['tpl-legal',tpl.legal],['tpl-footer',tpl.footer],
+    ['tpl-color-hex',tpl.color],['tpl-color-pick',tpl.color],
+    ['tpl-title-color-hex',tpl.titleColor],['tpl-title-color-pick',tpl.titleColor],
+    ['tpl2-nom',tpl.nom],['tpl2-activite',tpl.activite],['tpl2-zones',tpl.zones],
+    ['tpl2-tel',tpl.tel],['tpl2-web',tpl.web],['tpl2-legal',tpl.legal],
+    ['tpl2-footer',tpl.footer],['tpl2-color-hex',tpl.color],['tpl2-color-pick',tpl.color],
+  ];
+  fields.forEach(function(f){ var el=$(f[0]); if(el) el.value=f[1]||''; });
+  var ls=$('tpl-logo-style'); if(ls) ls.value=tpl.logoStyle||'split';
+  var cs=$('tpl-col-total'); if(cs) cs.value=tpl.colTotal||'Total HT';
+  var ve=$('tpl-validite'); if(ve) ve.value=tpl.validite||30;
+  if($('tpl-show-gains'))  $('tpl-show-gains').checked  = tpl.showGains!==false;
+  if($('tpl-show-veh'))    $('tpl-show-veh').checked    = tpl.showVeh!==false;
+  if($('tpl-show-footer')) $('tpl-show-footer').checked = tpl.showFooter!==false;
+  if($('tpl-show-legal'))  $('tpl-show-legal').checked  = tpl.showLegal!==false;
+}
+function syncColorInput(){ var v=$('tpl-color-pick').value; $('tpl-color-hex').value=v; if($('tpl2-color-pick'))$('tpl2-color-pick').value=v; if($('tpl2-color-hex'))$('tpl2-color-hex').value=v; livePreview(); }
+function syncColorPicker(){ var v=$('tpl-color-hex').value; if(/^#[0-9a-fA-F]{6}$/.test(v)){$('tpl-color-pick').value=v; if($('tpl2-color-pick'))$('tpl2-color-pick').value=v; if($('tpl2-color-hex'))$('tpl2-color-hex').value=v;} livePreview(); }
+function syncTitleColorInput(){ var v=$('tpl-title-color-pick').value; $('tpl-title-color-hex').value=v; livePreview(); }
+function syncTitleColorPicker(){ var v=$('tpl-title-color-hex').value; if(/^#[0-9a-fA-F]{6}$/.test(v))$('tpl-title-color-pick').value=v; livePreview(); }
+function openTemplateModal(){ fillTplForm(readTplForm()); livePreview(); $('tpl-modal').classList.add('open'); }
+function closeTplModal(){ $('tpl-modal').classList.remove('open'); }
+function livePreview() {
+  var tpl = readTplForm();
+  var sampleDoc = {
+    type:'devis',num:'DEV-2026-001',date:new Date().toISOString().split('T')[0],
+    ech:new Date(Date.now()+30*86400000).toISOString().split('T')[0],statut:'envoyé',
+    cn:'Dupont Thomas',ca:'12 rue des Pins',cv:'64100 Bayonne',
+    ct:'06 12 34 56 78',ce:'thomas@email.fr',
+    vm:'Volkswagen',vmo:'Golf 7 GTI',vmot:'2.0 TSI 220ch',van:'2019',vim:'AB-123-CD',
+    lines:[
+      {label:'Stage 1 — Reprogrammation moteur (essence & diesel turbo)',qte:1,pu:330,offert:false},
+      {label:'Conversion E85 — Bioéthanol natif ECU',qte:1,pu:330,offert:false},
+      {label:'Diagnostic ODIS VAG',qte:1,pu:0,offert:true},
+    ],
+    tvaRate:0,ht:660,tva:0,ttc:660,
+    notes:'Prestation réalisée à domicile. Garantie 2 ans. 100% réversible.',
+    gains:{ch:220,chOrig:180,nm:380,nmOrig:320},
+  };
+  var html = renderDocHTML(sampleDoc, tpl);
+  var m=$('tpl-mini-preview'); if(m) m.innerHTML=html;
+  var l=$('tpl-live-preview'); if(l) l.innerHTML=html;
+}
+
+// ============================================================
+//  TABS (complet avec template)
+// ============================================================
+function showTab(t) {
+  ['dash','form','liste','carnet','template'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template'][i]===t); });
+  if(t==='dash')     renderDash();
+  if(t==='liste')    renderListe();
+  if(t==='carnet')   renderCarnet();
+  if(t==='template') { fillTplForm(loadTemplate()); livePreview(); }
+}
+
+// ============================================================
+//  START — Netlify Identity gère l'auth
+// ============================================================
+// L'initialisation est gérée par netlifyIdentity.on('init') ci-dessus
 </script>
 </body>
 </html>
