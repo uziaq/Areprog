@@ -3276,7 +3276,7 @@ function updatePushBadge() {
   var badge = $('push-status-badge');
   if (!badge) return;
   if (isIOSSafari()) {
-    badge.innerHTML = '<span class="push-badge off" title="Installer l'app pour activer">📲 Installer l'app</span>';
+    badge.innerHTML = '<span class="push-badge off">📲 Installer l\'app</span>';
     return;
   }
   if (!('Notification' in window)) {
@@ -3364,8 +3364,8 @@ function maybeShowInstallHint() {
   setTimeout(function() {
     showNotifBanner(
       '📲',
-      'Installer l'app pour des rappels',
-      'Partager ⬆️ → Sur l'écran d'accueil → activer les notifications'
+      'Installer l\'app pour des rappels',
+      'Partager ⬆️ → Sur l\'écran d\'accueil → activer les notifications'
     );
     localStorage.setItem('ar_pwa_hint', '1');
   }, 4000);
