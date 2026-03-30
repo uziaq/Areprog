@@ -1593,12 +1593,7 @@ function genNum(prefix) {
 // ============================================================
 //  TABS
 // ============================================================
-function showTab(t) {
-  ['dash','form','liste'].forEach(x => $('t-' + x).classList.toggle('on', x === t));
-  document.querySelectorAll('.nb').forEach((b, i) => b.classList.toggle('on', ['dash','form','liste'][i] === t));
-  if (t === 'dash') renderDash();
-  if (t === 'liste') renderListe();
-}
+// showTab v1 supprimée (remplacée)
 
 // ============================================================
 //  FORM STATE
@@ -2541,13 +2536,7 @@ window.addEventListener('message', function(e) {
 // ============================================================
 //  TABS (mis à jour avec carnet)
 // ============================================================
-function showTab(t) {
-  ['dash','form','liste','carnet'].forEach(function(x){ var el = $('t-'+x); if(el) el.classList.toggle('on', x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on', ['dash','form','liste','carnet'][i]===t); });
-  if (t==='dash') renderDash();
-  if (t==='liste') renderListe();
-  if (t==='carnet') renderCarnet();
-}
+// showTab v2 supprimée (remplacée)
 
 // ============================================================
 //  GESTIONNAIRE CATALOGUE
@@ -2945,7 +2934,7 @@ function renderCalendar() {
 
     var cls = 'cal-cell' + (isToday?' today':'') + (isSel?' selected':'') + (isOther?' other-month':'') + (dayRdvs.length?' has-event':'');
     var evHTML = dayRdvs.slice(0,3).map(function(r){
-      return '<div class="cal-event '+r.type+'" onclick="event.stopPropagation();openRdvModal(''+r.id+'')" title="'+escHtml(r.title)+'">'+escHtml(r.heure?r.heure+' ':'')+escHtml(r.title)+'</div>';
+      return '<div class="cal-event '+r.type+'" onclick="event.stopPropagation();openRdvModal(\''+r.id+'\',null)" title="'+escHtml(r.title)+'">'+escHtml(r.heure?r.heure+' ':'')+escHtml(r.title)+'</div>';
     }).join('');
     if (dayRdvs.length > 3) evHTML += '<div class="cal-more">+' + (dayRdvs.length-3) + '</div>';
 
@@ -2977,14 +2966,14 @@ function renderSideEvents(d) {
       if (cl) clientName = cl.nom;
     }
     return '<div class="rdv-item '+r.type+'">'
-      + '<button class="rdv-del" onclick="deleteRdv(''+r.id+'')" title="Supprimer">×</button>'
+      + '<button class="rdv-del" onclick="deleteRdv(\''+r.id+'\')" title="Supprimer">×</button>'
       + (r.heure ? '<div class="rdv-time">'+r.heure+'</div>' : '')
       + '<div class="rdv-title">'+escHtml(r.title)+'</div>'
       + (clientName ? '<div class="rdv-sub">👤 '+escHtml(clientName)+'</div>' : '')
       + (r.lieu ? '<div class="rdv-sub">📍 '+escHtml(r.lieu)+'</div>' : '')
       + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
       + '<div style="display:flex;gap:6px;margin-top:8px">'
-        + '<button class="btn-s btn-sm" onclick="openRdvModal(''+r.id+'')">✏️ Modifier</button>'
+        + '<button class="btn-s btn-sm" onclick="openRdvModal(\''+r.id+'\',null)">✏️ Modifier</button>'
         + (r.clientId ? '<button class="btn-s btn-sm" onclick="selectClientAndGo('+r.clientId+')">📄 Devis</button>' : '')
       + '</div>'
     + '</div>';
