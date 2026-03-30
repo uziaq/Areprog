@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
 <!-- Auth : appel direct API Netlify Identity via fetch -->
+<!-- PWA Manifest pour installation iOS/Android -->
+<link rel="manifest" href="/manifest.json"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="AREPROG"/>
+<meta name="theme-color" content="#0a0c10"/>
 <!-- Firebase SDK -->
 <script type="module">
   // Firebase initialisé dans le bloc principal — voir bas de page
@@ -1292,6 +1298,31 @@ select option{background:#1d222d}
   </div>
 </div>
 
+<!-- MODAL INSTALLATION PWA -->
+<div class="rdv-modal" id="pwa-modal" onclick="if(event.target===this)$('pwa-modal').classList.remove('open')" style="z-index:330">
+  <div class="rdv-box" style="max-width:420px">
+    <div class="rdv-box-title">📲 Installer l'app AREPROG</div>
+    <p style="color:var(--text-dim);font-size:13px;line-height:1.7;margin-bottom:18px">
+      Pour recevoir des notifications sur iPhone, il faut installer l'app sur l'écran d'accueil. C'est gratuit et rapide (30 secondes).
+    </p>
+    <div style="background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:18px">
+      <div style="font-size:13px;line-height:2">
+        <div>1️⃣ Appuie sur <strong style="color:var(--blue)">Partager</strong> <span style="font-size:16px">⬆️</span> en bas de Safari</div>
+        <div>2️⃣ Fais défiler et appuie sur <strong style="color:var(--blue)">"Sur l'écran d'accueil"</strong></div>
+        <div>3️⃣ Appuie sur <strong style="color:var(--blue)">"Ajouter"</strong> en haut à droite</div>
+        <div>4️⃣ Ouvre l'app depuis ton écran d'accueil</div>
+        <div>5️⃣ Les notifications seront disponibles ✓</div>
+      </div>
+    </div>
+    <div style="background:rgba(30,144,255,.08);border:1px solid rgba(30,144,255,.2);border-radius:8px;padding:12px;margin-bottom:18px;font-size:12px;color:var(--text-dim)">
+      💡 En attendant, les rappels s'affichent dans l'app quand elle est ouverte. Pense à garder l'onglet ouvert pour les recevoir.
+    </div>
+    <div style="display:flex;justify-content:flex-end">
+      <button class="btn-p" onclick="$('pwa-modal').classList.remove('open')">Compris ✓</button>
+    </div>
+  </div>
+</div>
+
 <!-- NOTIFICATION BANNER -->
 <div class="notif-banner" id="notif-banner">
   <div class="notif-icon" id="notif-icon">🔔</div>
@@ -1715,6 +1746,7 @@ function initApp() {
   }, 500);
   // Vérifier rappels agenda
   setTimeout(checkTodayNotifs, 2000);
+  maybeShowInstallHint();
 }
 
 function resetForm(goToForm) {
@@ -3228,9 +3260,25 @@ function deleteRdvFromModal() {
 var notifQueue = [];
 var notifTimer = null;
 
+// Détecte si l'app est en mode PWA installée
+function isPWA() {
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+}
+
+// Détecte iOS Safari (hors PWA)
+function isIOSSafari() {
+  var ua = navigator.userAgent;
+  return /iP(hone|ad|od)/i.test(ua) && /WebKit/i.test(ua) && !window.MSStream && !isPWA();
+}
+
 function updatePushBadge() {
   var badge = $('push-status-badge');
   if (!badge) return;
+  if (isIOSSafari()) {
+    badge.innerHTML = '<span class="push-badge off" title="Installer l'app pour activer">📲 Installer l'app</span>';
+    return;
+  }
   if (!('Notification' in window)) {
     badge.innerHTML = '<span class="push-badge off">🔕 Non supporté</span>';
     return;
@@ -3246,8 +3294,13 @@ function updatePushBadge() {
 }
 
 function requestPushPermission() {
+  // iOS Safari hors PWA → guide d'installation
+  if (isIOSSafari()) {
+    showPWAInstallGuide();
+    return;
+  }
   if (!('Notification' in window)) {
-    showNotifBanner('⚠️', 'Non supporté', 'Votre navigateur ne supporte pas les notifications.');
+    showNotifBanner('⚠️', 'Non supporté', 'Utilisez Chrome ou Firefox pour les notifications.');
     return;
   }
   if (Notification.permission === 'granted') {
@@ -3259,14 +3312,18 @@ function requestPushPermission() {
     updatePushBadge();
     if (perm === 'granted') {
       showNotifBanner('🔔', 'Notifications activées !', 'Vous recevrez des rappels pour vos RDV.');
-      // Test notif
       setTimeout(function(){
         sendNotif('AREPROG — Agenda', 'Les notifications sont configurées ✓');
       }, 1000);
     } else {
-      showNotifBanner('🔕', 'Permission refusée', 'Autorisez les notifications dans les réglages du navigateur.');
+      showNotifBanner('🔕', 'Permission refusée', 'Autorisez les notifications dans les réglages Safari.');
     }
   });
+}
+
+function showPWAInstallGuide() {
+  // Afficher un modal d'instructions d'installation
+  $('pwa-modal').classList.add('open');
 }
 
 function sendNotif(title, body, icon) {
@@ -3300,6 +3357,20 @@ function scheduleRdvNotif(rdv) {
 }
 
 // Vérifier les rappels au démarrage (pour les rdvs du jour)
+// Invitation à installer en PWA (s'affiche 1 fois)
+function maybeShowInstallHint() {
+  if (!isIOSSafari()) return;
+  if (localStorage.getItem('ar_pwa_hint')) return;
+  setTimeout(function() {
+    showNotifBanner(
+      '📲',
+      'Installer l'app pour des rappels',
+      'Partager ⬆️ → Sur l'écran d'accueil → activer les notifications'
+    );
+    localStorage.setItem('ar_pwa_hint', '1');
+  }, 4000);
+}
+
 function checkTodayNotifs() {
   if (Notification.permission !== 'granted') return;
   var today = toDateStr(new Date());
