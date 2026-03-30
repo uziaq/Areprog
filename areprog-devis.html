@@ -195,6 +195,115 @@ select option{background:#1d222d}
 /* TABS */
 .tc{display:none}.tc.on{display:block}
 
+/* ── AGENDA ── */
+.agenda-layout{display:grid;grid-template-columns:1fr 320px;gap:20px}
+.agenda-cal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.agenda-cal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+}
+.agenda-cal-title{font-family:var(--fh);font-size:18px;font-weight:700;letter-spacing:.5px}
+.agenda-cal-nav{display:flex;gap:6px}
+.cal-nav-btn{
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);cursor:pointer;font-size:14px;transition:all .15s;
+}
+.cal-nav-btn:hover{border-color:var(--blue);color:var(--blue)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dow{
+  text-align:center;padding:8px 4px;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);
+  border-bottom:1px solid var(--border);
+}
+.cal-cell{
+  min-height:80px;border-right:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.04);padding:6px;
+  cursor:pointer;transition:background .1s;position:relative;
+}
+.cal-cell:hover{background:rgba(255,255,255,.03)}
+.cal-cell.today{background:rgba(30,144,255,.06)}
+.cal-cell.today .cal-day-num{color:var(--blue);font-weight:700}
+.cal-cell.other-month .cal-day-num{color:var(--text-muted);opacity:.4}
+.cal-cell.selected{background:rgba(30,144,255,.1);outline:1px solid var(--blue)}
+.cal-day-num{font-size:12px;font-weight:500;margin-bottom:4px}
+.cal-event{
+  font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;
+}
+.cal-event.rdv{background:rgba(30,144,255,.25);color:#93c5fd}
+.cal-event.relance{background:rgba(245,158,11,.2);color:#fcd34d}
+.cal-event.impaye{background:rgba(239,68,68,.2);color:#fca5a5}
+.cal-event.perso{background:rgba(168,85,247,.2);color:#d8b4fe}
+.cal-more{font-size:10px;color:var(--text-muted);padding:0 4px}
+
+/* Sidebar agenda */
+.agenda-side{display:flex;flex-direction:column;gap:16px}
+.agenda-today-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.agenda-today-title{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}
+.rdv-item{
+  padding:10px 12px;border-radius:8px;margin-bottom:8px;border-left:3px solid var(--blue);
+  background:var(--bg3);cursor:pointer;transition:background .1s;
+}
+.rdv-item:hover{background:var(--bg4)}
+.rdv-item.relance{border-left-color:var(--orange)}
+.rdv-item.impaye{border-left-color:var(--red)}
+.rdv-item.perso{border-left-color:#a855f7}
+.rdv-time{font-family:var(--fm);font-size:11px;color:var(--text-dim);margin-bottom:3px}
+.rdv-title{font-size:13px;font-weight:600;color:var(--text)}
+.rdv-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+.rdv-del{float:right;color:var(--text-muted);font-size:14px;background:none;border:none;cursor:pointer;padding:0 2px;transition:color .15s}
+.rdv-del:hover{color:var(--red)}
+
+/* Alertes automatiques */
+.alert-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.alert-item{
+  display:flex;align-items:flex-start;gap:10px;padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.alert-item:last-child{border-bottom:none}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.alert-dot.orange{background:var(--orange)}
+.alert-dot.red{background:var(--red)}
+.alert-text{flex:1;font-size:12px;color:var(--text)}
+.alert-date{font-size:10px;color:var(--text-muted);font-family:var(--fm)}
+
+/* Modal RDV */
+.rdv-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:320;align-items:center;justify-content:center;padding:20px}
+.rdv-modal.open{display:flex}
+.rdv-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:500px;max-width:100%;padding:26px}
+.rdv-box-title{font-family:var(--fh);font-size:19px;font-weight:700;margin-bottom:18px}
+
+/* Notif banner */
+.notif-banner{
+  display:none;position:fixed;bottom:20px;right:20px;z-index:400;
+  background:var(--bg2);border:1px solid var(--border-blue);border-radius:12px;
+  padding:14px 18px;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.4);
+  animation:slideUp .3s ease;
+}
+.notif-banner.show{display:flex;gap:12px;align-items:flex-start}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.notif-icon{font-size:20px;flex-shrink:0}
+.notif-body{flex:1}
+.notif-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.notif-msg{font-size:12px;color:var(--text-dim)}
+.notif-close{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0}
+
+/* Notification push badge */
+.push-badge{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+  border-radius:20px;font-size:11px;font-weight:600;
+  background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2);
+}
+.push-badge.off{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.2)}
+
+@media(max-width:900px){
+  .agenda-layout{grid-template-columns:1fr}
+  .cal-cell{min-height:52px}
+  .cal-event{display:none}
+  .cal-cell.has-event::after{content:'•';color:var(--blue);font-size:16px;position:absolute;bottom:2px;right:4px}
+}
+
 /* ── GESTIONNAIRE CATALOGUE ── */
 .cat-group{background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
 .cat-group-head{
@@ -548,6 +657,7 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('carnet')">👥 Clients</button>
       <button class="nb" onclick="showTab('template')">🎨 Template</button>
       <button class="nb" onclick="showTab('services')">⚙️ Services</button>
+      <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
     </div>
     <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
   </div>
@@ -674,6 +784,46 @@ select option{background:#1d222d}
             <textarea id="f-gains" rows="6" placeholder="Ex :&#10;Meilleure réactivité moteur&#10;100% réversible&#10;−40% sur le carburant&#10;Agrément de conduite amélioré" oninput="previewGainsBadge()"></textarea>
           </div>
           <div id="gains-badge-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENDA -->
+    <div class="tc" id="t-agenda">
+      <div class="sh">
+        <div class="sh-title">Agenda</div>
+        <div class="sh-actions">
+          <span id="push-status-badge"></span>
+          <button class="btn-s" onclick="requestPushPermission()">🔔 Notifications</button>
+          <button class="btn-p" onclick="openRdvModal(null)">+ Nouveau RDV</button>
+        </div>
+      </div>
+      <div class="agenda-layout">
+        <!-- Calendrier -->
+        <div class="agenda-cal">
+          <div class="agenda-cal-head">
+            <div class="agenda-cal-title" id="cal-month-label">—</div>
+            <div class="agenda-cal-nav">
+              <button class="cal-nav-btn" onclick="calPrev()">‹</button>
+              <button class="cal-nav-btn" onclick="calToday()">Auj.</button>
+              <button class="cal-nav-btn" onclick="calNext()">›</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="cal-dows"></div>
+          <div class="cal-grid" id="cal-cells"></div>
+        </div>
+        <!-- Sidebar -->
+        <div class="agenda-side">
+          <!-- Événements du jour sélectionné -->
+          <div class="agenda-today-card">
+            <div class="agenda-today-title" id="side-date-label">Aujourd'hui</div>
+            <div id="side-events"><div style="color:var(--text-muted);font-size:13px">Aucun événement</div></div>
+          </div>
+          <!-- Alertes auto -->
+          <div class="alert-card">
+            <div class="agenda-today-title">⚠️ Alertes</div>
+            <div id="auto-alerts"><div style="color:var(--text-muted);font-size:13px">Chargement…</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -980,6 +1130,79 @@ select option{background:#1d222d}
   </div>
 </div>
 
+<!-- MODAL RDV -->
+<div class="rdv-modal" id="rdv-modal" onclick="if(event.target===this)closeRdvModal()">
+  <div class="rdv-box">
+    <div class="rdv-box-title" id="rdv-modal-title">Nouveau rendez-vous</div>
+    <div class="fg2" style="margin-bottom:0">
+      <div>
+        <div class="fr"><label>Titre / Objet</label>
+          <input id="rdv-title" type="text" placeholder="Intervention Stage 1 — Golf 7"/>
+        </div>
+        <div class="fr"><label>Type</label>
+          <select id="rdv-type">
+            <option value="rdv">🔵 Rendez-vous client</option>
+            <option value="relance">🟡 Relance devis</option>
+            <option value="impaye">🔴 Relance facture impayée</option>
+            <option value="perso">🟣 Rappel personnel</option>
+          </select>
+        </div>
+        <div class="fr"><label>Date</label>
+          <input id="rdv-date" type="date"/>
+        </div>
+        <div class="fr"><label>Heure (optionnel)</label>
+          <input id="rdv-heure" type="time" placeholder="09:00"/>
+        </div>
+        <div class="fr"><label>Rappel avant</label>
+          <select id="rdv-rappel">
+            <option value="0">Pas de rappel</option>
+            <option value="15">15 minutes avant</option>
+            <option value="30">30 minutes avant</option>
+            <option value="60" selected>1 heure avant</option>
+            <option value="1440">La veille (24h)</option>
+            <option value="2880">2 jours avant</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <div class="fr"><label>Client lié (optionnel)</label>
+          <select id="rdv-client">
+            <option value="">— Aucun client —</option>
+          </select>
+        </div>
+        <div class="fr"><label>Document lié (optionnel)</label>
+          <select id="rdv-doc">
+            <option value="">— Aucun document —</option>
+          </select>
+        </div>
+        <div class="fr"><label>Adresse / Lieu</label>
+          <input id="rdv-lieu" type="text" placeholder="12 rue des Pins, Bayonne"/>
+        </div>
+        <div class="fr"><label>Notes</label>
+          <textarea id="rdv-notes" rows="4" placeholder="Détails de l'intervention..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
+      <button class="btn-d" id="rdv-delete-btn" onclick="deleteRdvFromModal()" style="display:none">🗑 Supprimer</button>
+      <div style="display:flex;gap:10px;margin-left:auto">
+        <button class="btn-s" onclick="closeRdvModal()">Annuler</button>
+        <button class="btn-g" onclick="saveRdv()">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION BANNER -->
+<div class="notif-banner" id="notif-banner">
+  <div class="notif-icon" id="notif-icon">🔔</div>
+  <div class="notif-body">
+    <div class="notif-title" id="notif-title">Rappel</div>
+    <div class="notif-msg" id="notif-msg"></div>
+  </div>
+  <button class="notif-close" onclick="closeNotifBanner()">×</button>
+</div>
+
 <!-- MODAL APERÇU -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-wrap">
@@ -1174,6 +1397,7 @@ function syncFromFirebase(callback) {
         localStorage.setItem('ar_clients', JSON.stringify(clients));
       }
       syncCatalogueFromFirebase();
+      syncRdvsFromFirebase();
       setSyncStatus(true, 'Firebase synchronisé');
       renderDash();
       renderCarnet();
@@ -1392,8 +1616,11 @@ function initApp() {
   setTimeout(function() {
     syncFromFirebase(function() {
       startRealtimeSync();
+      syncRdvsFromFirebase();
     });
   }, 500);
+  // Vérifier rappels agenda
+  setTimeout(checkTodayNotifs, 2000);
 }
 
 function resetForm(goToForm) {
@@ -2654,20 +2881,424 @@ function livePreview() {
 // ============================================================
 //  TABS (complet avec template)
 // ============================================================
+// ============================================================
+//  AGENDA — Calendrier + Notifications
+// ============================================================
+var RDV_KEY = 'ar_rdvs';
+var calDate = new Date(); // mois affiché
+var calSelected = new Date(); // jour sélectionné
+var editingRdvId = null;
+
+// ── Storage RDVs ─────────────────────────────────────────────
+function loadRdvs() {
+  try { return JSON.parse(localStorage.getItem(RDV_KEY) || '[]'); } catch(e) { return []; }
+}
+function saveRdvs(arr) {
+  localStorage.setItem(RDV_KEY, JSON.stringify(arr));
+  if (db && syncOk) {
+    db.collection('rdvs').doc('all').set({ rdvs: arr })
+      .catch(function(e){ console.warn('Firebase rdvs:', e); });
+  }
+}
+
+// ── Rendu calendrier ─────────────────────────────────────────
+var DOW = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+var MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+function renderAgenda() {
+  renderCalendar();
+  renderSideEvents(calSelected);
+  renderAutoAlerts();
+  fillRdvClientSelect();
+  updatePushBadge();
+}
+
+function calPrev() { calDate.setMonth(calDate.getMonth()-1); renderCalendar(); }
+function calNext() { calDate.setMonth(calDate.getMonth()+1); renderCalendar(); }
+function calToday() { calDate = new Date(); calSelected = new Date(); renderCalendar(); renderSideEvents(calSelected); }
+
+function renderCalendar() {
+  var y = calDate.getFullYear(), m = calDate.getMonth();
+  $('cal-month-label').textContent = MONTHS[m] + ' ' + y;
+
+  var dows = $('cal-dows');
+  dows.innerHTML = DOW.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
+
+  // Premier lundi avant le 1er du mois
+  var first = new Date(y, m, 1);
+  var startDow = (first.getDay() + 6) % 7; // lundi=0
+  var start = new Date(first); start.setDate(1 - startDow);
+
+  var rdvs = loadRdvs();
+  var cells = $('cal-cells');
+  cells.innerHTML = '';
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  for (var i = 0; i < 42; i++) {
+    var d = new Date(start); d.setDate(start.getDate() + i);
+    var isToday = d.getTime() === today.getTime();
+    var isSel = d.toDateString() === calSelected.toDateString();
+    var isOther = d.getMonth() !== m;
+    var dStr = toDateStr(d);
+
+    var dayRdvs = rdvs.filter(function(r){ return r.date === dStr; });
+
+    var cls = 'cal-cell' + (isToday?' today':'') + (isSel?' selected':'') + (isOther?' other-month':'') + (dayRdvs.length?' has-event':'');
+    var evHTML = dayRdvs.slice(0,3).map(function(r){
+      return '<div class="cal-event '+r.type+'" onclick="event.stopPropagation();openRdvModal(''+r.id+'')" title="'+escHtml(r.title)+'">'+escHtml(r.heure?r.heure+' ':'')+escHtml(r.title)+'</div>';
+    }).join('');
+    if (dayRdvs.length > 3) evHTML += '<div class="cal-more">+' + (dayRdvs.length-3) + '</div>';
+
+    var cell = document.createElement('div');
+    cell.className = cls;
+    cell.innerHTML = '<div class="cal-day-num">'+d.getDate()+'</div>' + evHTML;
+    cell.addEventListener('click', (function(dd){ return function(){ calSelected = new Date(dd); renderCalendar(); renderSideEvents(calSelected); }; })(d));
+    cells.appendChild(cell);
+  }
+}
+
+function renderSideEvents(d) {
+  var dStr = toDateStr(d);
+  var label = $('side-date-label');
+  var today = new Date(); today.setHours(0,0,0,0);
+  var isToday = d.getTime() === today.getTime();
+  if (label) label.textContent = isToday ? 'Aujourd\'hui — ' + d.getDate() + ' ' + MONTHS[d.getMonth()] : d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+
+  var rdvs = loadRdvs().filter(function(r){ return r.date === dStr; });
+  rdvs.sort(function(a,b){ return (a.heure||'99:99').localeCompare(b.heure||'99:99'); });
+
+  var el = $('side-events');
+  if (!rdvs.length) { el.innerHTML = '<div style="color:var(--text-muted);font-size:13px">Aucun événement</div>'; return; }
+
+  el.innerHTML = rdvs.map(function(r) {
+    var clientName = '';
+    if (r.clientId) {
+      var cl = loadClients().find(function(c){ return c.id === r.clientId; });
+      if (cl) clientName = cl.nom;
+    }
+    return '<div class="rdv-item '+r.type+'">'
+      + '<button class="rdv-del" onclick="deleteRdv(''+r.id+'')" title="Supprimer">×</button>'
+      + (r.heure ? '<div class="rdv-time">'+r.heure+'</div>' : '')
+      + '<div class="rdv-title">'+escHtml(r.title)+'</div>'
+      + (clientName ? '<div class="rdv-sub">👤 '+escHtml(clientName)+'</div>' : '')
+      + (r.lieu ? '<div class="rdv-sub">📍 '+escHtml(r.lieu)+'</div>' : '')
+      + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
+      + '<div style="display:flex;gap:6px;margin-top:8px">'
+        + '<button class="btn-s btn-sm" onclick="openRdvModal(''+r.id+'')">✏️ Modifier</button>'
+        + (r.clientId ? '<button class="btn-s btn-sm" onclick="selectClientAndGo('+r.clientId+')">📄 Devis</button>' : '')
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+function renderAutoAlerts() {
+  var el = $('auto-alerts');
+  if (!el) return;
+  var docs = loadDocs();
+  var alerts = [];
+  var now = new Date(); now.setHours(0,0,0,0);
+
+  // Devis en attente depuis + de 3 jours
+  docs.filter(function(d){ return d.type==='devis' && (d.statut==='envoyé'||d.statut==='accepté'); }).forEach(function(d) {
+    var dDate = new Date(d.date);
+    var days = Math.floor((now - dDate) / 86400000);
+    if (days >= 3) {
+      alerts.push({ type:'orange', text: 'Devis '+d.num+' — '+d.cn+' en attente depuis '+days+' jour'+(days>1?'s':''), date: d.date });
+    }
+  });
+
+  // Factures impayées depuis + de 7 jours
+  docs.filter(function(d){ return d.type==='facture' && d.statut!=='payé' && d.statut!=='annulé'; }).forEach(function(d) {
+    var dDate = new Date(d.date);
+    var days = Math.floor((now - dDate) / 86400000);
+    if (days >= 7) {
+      alerts.push({ type:'red', text: 'Facture '+d.num+' — '+d.cn+' impayée depuis '+days+' jour'+(days>1?'s':''), date: d.date });
+    }
+  });
+
+  if (!alerts.length) {
+    el.innerHTML = '<div style="color:var(--green);font-size:12px">✓ Aucune alerte en cours</div>';
+    return;
+  }
+
+  alerts.sort(function(a,b){ return a.type.localeCompare(b.type); });
+  el.innerHTML = alerts.map(function(a) {
+    return '<div class="alert-item">'
+      + '<div class="alert-dot '+a.type+'"></div>'
+      + '<div class="alert-text">'+escHtml(a.text)+'<div class="alert-date">'+fmtDate(a.date)+'</div></div>'
+    + '</div>';
+  }).join('');
+}
+
+// ── Modal RDV ────────────────────────────────────────────────
+function openRdvModal(rdvId) {
+  editingRdvId = rdvId;
+  fillRdvClientSelect();
+  fillRdvDocSelect();
+
+  if (rdvId) {
+    var rdv = loadRdvs().find(function(r){ return r.id === rdvId; });
+    if (!rdv) return;
+    $('rdv-modal-title').textContent = 'Modifier le rendez-vous';
+    $('rdv-title').value = rdv.title || '';
+    $('rdv-type').value = rdv.type || 'rdv';
+    $('rdv-date').value = rdv.date || '';
+    $('rdv-heure').value = rdv.heure || '';
+    $('rdv-rappel').value = rdv.rappel || '60';
+    $('rdv-client').value = rdv.clientId || '';
+    $('rdv-doc').value = rdv.docId || '';
+    $('rdv-lieu').value = rdv.lieu || '';
+    $('rdv-notes').value = rdv.notes || '';
+    $('rdv-delete-btn').style.display = 'inline-flex';
+  } else {
+    $('rdv-modal-title').textContent = 'Nouveau rendez-vous';
+    $('rdv-title').value = '';
+    $('rdv-type').value = 'rdv';
+    $('rdv-date').value = toDateStr(calSelected);
+    $('rdv-heure').value = '';
+    $('rdv-rappel').value = '60';
+    $('rdv-client').value = '';
+    $('rdv-doc').value = '';
+    $('rdv-lieu').value = '';
+    $('rdv-notes').value = '';
+    $('rdv-delete-btn').style.display = 'none';
+  }
+  $('rdv-modal').classList.add('open');
+  setTimeout(function(){ $('rdv-title').focus(); }, 100);
+}
+
+function closeRdvModal() { $('rdv-modal').classList.remove('open'); }
+
+function fillRdvClientSelect() {
+  var sel = $('rdv-client');
+  if (!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">— Aucun client —</option>'
+    + loadClients().map(function(cl){ return '<option value="'+cl.id+'">' + escHtml(cl.nom) + (cl.vm?' — '+escHtml(cl.vm)+' '+escHtml(cl.vmo||''):'') + '</option>'; }).join('');
+  if (cur) sel.value = cur;
+}
+
+function fillRdvDocSelect() {
+  var sel = $('rdv-doc');
+  if (!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">— Aucun document —</option>'
+    + loadDocs().slice(0,50).map(function(d){ return '<option value="'+d.id+'">'+escHtml(d.num)+' — '+escHtml(d.cn||'')+'</option>'; }).join('');
+  if (cur) sel.value = cur;
+}
+
+function saveRdv() {
+  var title = $('rdv-title').value.trim();
+  if (!title) { alert('Le titre est obligatoire.'); return; }
+  var rdvDate = $('rdv-date').value;
+  if (!rdvDate) { alert('La date est obligatoire.'); return; }
+
+  var rdv = {
+    id:       editingRdvId || String(Date.now()),
+    title:    title,
+    type:     $('rdv-type').value,
+    date:     rdvDate,
+    heure:    $('rdv-heure').value,
+    rappel:   parseInt($('rdv-rappel').value) || 0,
+    clientId: $('rdv-client').value ? parseInt($('rdv-client').value) : null,
+    docId:    $('rdv-doc').value ? parseInt($('rdv-doc').value) : null,
+    lieu:     $('rdv-lieu').value,
+    notes:    $('rdv-notes').value,
+  };
+
+  var rdvs = loadRdvs();
+  if (editingRdvId) {
+    var i = rdvs.findIndex(function(r){ return r.id === editingRdvId; });
+    if (i >= 0) rdvs[i] = rdv; else rdvs.push(rdv);
+  } else {
+    rdvs.push(rdv);
+  }
+  saveRdvs(rdvs);
+
+  // Programmer le rappel
+  scheduleRdvNotif(rdv);
+
+  closeRdvModal();
+  renderCalendar();
+  renderSideEvents(calSelected);
+}
+
+function deleteRdv(rdvId) {
+  if (!confirm('Supprimer ce rendez-vous ?')) return;
+  saveRdvs(loadRdvs().filter(function(r){ return r.id !== rdvId; }));
+  renderCalendar();
+  renderSideEvents(calSelected);
+}
+
+function deleteRdvFromModal() {
+  if (!editingRdvId) return;
+  deleteRdv(editingRdvId);
+  closeRdvModal();
+}
+
+// ── NOTIFICATIONS PUSH ────────────────────────────────────────
+var notifQueue = [];
+var notifTimer = null;
+
+function updatePushBadge() {
+  var badge = $('push-status-badge');
+  if (!badge) return;
+  if (!('Notification' in window)) {
+    badge.innerHTML = '<span class="push-badge off">🔕 Non supporté</span>';
+    return;
+  }
+  var perm = Notification.permission;
+  if (perm === 'granted') {
+    badge.innerHTML = '<span class="push-badge">🔔 Notifs actives</span>';
+  } else if (perm === 'denied') {
+    badge.innerHTML = '<span class="push-badge off">🔕 Bloquées</span>';
+  } else {
+    badge.innerHTML = '<span class="push-badge off">🔕 Non activées</span>';
+  }
+}
+
+function requestPushPermission() {
+  if (!('Notification' in window)) {
+    showNotifBanner('⚠️', 'Non supporté', 'Votre navigateur ne supporte pas les notifications.');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    showNotifBanner('✅', 'Déjà actives', 'Les notifications sont déjà activées.');
+    updatePushBadge();
+    return;
+  }
+  Notification.requestPermission().then(function(perm) {
+    updatePushBadge();
+    if (perm === 'granted') {
+      showNotifBanner('🔔', 'Notifications activées !', 'Vous recevrez des rappels pour vos RDV.');
+      // Test notif
+      setTimeout(function(){
+        sendNotif('AREPROG — Agenda', 'Les notifications sont configurées ✓');
+      }, 1000);
+    } else {
+      showNotifBanner('🔕', 'Permission refusée', 'Autorisez les notifications dans les réglages du navigateur.');
+    }
+  });
+}
+
+function sendNotif(title, body, icon) {
+  if (Notification.permission !== 'granted') return;
+  try {
+    new Notification(title, {
+      body: body,
+      icon: icon || '/favicon512.png',
+      badge: '/favicon32x32.png',
+      tag: 'areprog-rdv',
+    });
+  } catch(e) {
+    // Fallback : banner in-app
+    showNotifBanner('🔔', title, body);
+  }
+}
+
+// Programmer un rappel via setTimeout (fonctionne si page ouverte)
+function scheduleRdvNotif(rdv) {
+  if (!rdv.heure || rdv.rappel === 0) return;
+  var rdvDateTime = new Date(rdv.date + 'T' + rdv.heure);
+  var notifTime = new Date(rdvDateTime.getTime() - rdv.rappel * 60000);
+  var delay = notifTime.getTime() - Date.now();
+  if (delay < 0 || delay > 7 * 24 * 3600000) return; // max 7 jours
+  setTimeout(function() {
+    var msg = rdv.heure + ' — ' + rdv.title;
+    if (rdv.lieu) msg += '\n📍 ' + rdv.lieu;
+    sendNotif('📅 Rappel AREPROG', msg);
+    showNotifBanner('📅', 'Rappel : ' + rdv.title, rdv.heure + (rdv.lieu ? ' · ' + rdv.lieu : ''));
+  }, delay);
+}
+
+// Vérifier les rappels au démarrage (pour les rdvs du jour)
+function checkTodayNotifs() {
+  if (Notification.permission !== 'granted') return;
+  var today = toDateStr(new Date());
+  var rdvs = loadRdvs().filter(function(r){ return r.date === today; });
+  rdvs.forEach(function(r){ scheduleRdvNotif(r); });
+
+  // Alertes urgentes devis/factures
+  var docs = loadDocs();
+  var now = new Date(); now.setHours(0,0,0,0);
+  var urgents = [];
+
+  docs.filter(function(d){ return d.type==='facture' && d.statut!=='payé' && d.statut!=='annulé'; }).forEach(function(d) {
+    var days = Math.floor((now - new Date(d.date)) / 86400000);
+    if (days === 7 || days === 14 || days === 30) {
+      urgents.push('Facture '+(d.num||'')+' — '+(d.cn||'')+' impayée depuis '+days+' jours');
+    }
+  });
+
+  if (urgents.length) {
+    setTimeout(function(){
+      sendNotif('⚠️ AREPROG — Alerte', urgents[0]);
+    }, 3000);
+  }
+}
+
+// Banner in-app (fallback ou iOS qui bloque Notification API)
+function showNotifBanner(icon, title, msg) {
+  $('notif-icon').textContent = icon;
+  $('notif-title').textContent = title;
+  $('notif-msg').textContent = msg;
+  $('notif-banner').classList.add('show');
+  if (notifTimer) clearTimeout(notifTimer);
+  notifTimer = setTimeout(closeNotifBanner, 5000);
+}
+function closeNotifBanner() {
+  $('notif-banner').classList.remove('show');
+}
+
+// ── Helpers ─────────────────────────────────────────────────
+function toDateStr(d) {
+  var y = d.getFullYear();
+  var m = String(d.getMonth()+1).padStart(2,'0');
+  var j = String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+j;
+}
+
+// ── Sync Firebase rdvs ───────────────────────────────────────
+function syncRdvsFromFirebase() {
+  if (!db) return;
+  db.collection('rdvs').doc('all').get()
+    .then(function(doc) {
+      if (doc.exists && doc.data().rdvs) {
+        localStorage.setItem(RDV_KEY, JSON.stringify(doc.data().rdvs));
+      }
+    }).catch(function(){});
+}
+
+// ============================================================
+//  TABS (complet avec agenda)
+// ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services'][i]===t); });
+  ['dash','form','liste','carnet','template','services','agenda'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda'][i]===t); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
   if(t==='template') { fillTplForm(loadTemplate()); livePreview(); }
   if(t==='services') renderCatEditor();
+  if(t==='agenda')   renderAgenda();
 }
 
 // ============================================================
 //  START — Netlify Identity gère l'auth
 // ============================================================
 // L'initialisation est gérée par netlifyIdentity.on('init') ci-dessus
+</script>
+<script>
+// Enregistrement du Service Worker (notifications en arrière-plan)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then(function(reg) {
+      console.log('SW enregistré :', reg.scope);
+      // Passer les rappels au SW pour persistance
+      window._swReg = reg;
+    })
+    .catch(function(e) { console.warn('SW non disponible :', e); });
+}
 </script>
 </body>
 </html>
