@@ -287,6 +287,36 @@ select option{background:#1d222d}
 .rdv-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:500px;max-width:100%;padding:26px}
 .rdv-box-title{font-family:var(--fh);font-size:19px;font-weight:700;margin-bottom:18px}
 
+/* Confirmation RDV copier */
+.rdv-confirm-btn{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 12px;
+  background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);
+  border-radius:6px;color:var(--green);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .15s;
+}
+.rdv-confirm-btn:hover{background:rgba(34,197,94,.2)}
+.rdv-confirm-btn.copied{background:rgba(34,197,94,.25);color:#86efac}
+
+/* Véhicules multiples dans le carnet */
+.veh-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.veh-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;
+  background:var(--bg4);border-radius:6px;border:1px solid var(--border);
+  font-size:12px;cursor:pointer;transition:all .15s;
+}
+.veh-item:hover{border-color:var(--blue)}
+.veh-item.selected{border-color:var(--blue);background:rgba(30,144,255,.08)}
+.veh-item-info{flex:1}
+.veh-item-name{font-weight:600;color:var(--text)}
+.veh-item-sub{color:var(--text-muted);font-size:11px}
+.veh-add-btn{
+  display:flex;align-items:center;gap:5px;padding:7px 10px;
+  background:transparent;border:1px dashed var(--border);border-radius:6px;
+  color:var(--text-dim);font-size:12px;cursor:pointer;margin-top:4px;
+  transition:all .15s;width:100%;
+}
+.veh-add-btn:hover{border-color:var(--blue);color:var(--blue)}
+
 /* Notif banner */
 .notif-banner{
   display:none;position:fixed;bottom:20px;right:20px;z-index:400;
@@ -1136,16 +1166,27 @@ select option{background:#1d222d}
         <div class="fr"><label>Ville + CP</label><input id="ac-ville" type="text" placeholder="64100 Bayonne"/></div>
       </div>
       <div>
-        <div class="fr"><label>Marque</label><input id="ac-vm" type="text" placeholder="Volkswagen"/></div>
-        <div class="fr"><label>Modèle</label><input id="ac-vmo" type="text" placeholder="Golf 7 GTI"/></div>
-        <div class="fr"><label>Motorisation</label><input id="ac-vmot" type="text" placeholder="2.0 TSI 220ch"/></div>
-        <div class="fr"><label>Année</label><input id="ac-van" type="text" placeholder="2019"/></div>
-        <div class="fr"><label>Immatriculation</label><input id="ac-vim" type="text" placeholder="AB-123-CD"/></div>
+        <div class="fr" style="margin-bottom:6px">
+          <label>Véhicules</label>
+          <div id="ac-veh-list" class="veh-list"></div>
+          <button class="veh-add-btn" onclick="addVehicleRow()">+ Ajouter un véhicule</button>
+        </div>
       </div>
     </div>
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
       <button class="btn-s" onclick="closeAddClientModal()">Annuler</button>
       <button class="btn-g" onclick="saveClient()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SÉLECTION VÉHICULE -->
+<div class="rdv-modal" id="veh-select-modal" onclick="if(event.target===this)$('veh-select-modal').classList.remove('open')" style="z-index:325">
+  <div class="rdv-box" style="max-width:440px">
+    <div class="rdv-box-title">🚗 Sélectionner un véhicule</div>
+    <div id="veh-select-list" class="veh-list" style="max-height:360px;overflow-y:auto"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('veh-select-modal').classList.remove('open')">Fermer</button>
     </div>
   </div>
 </div>
@@ -1289,7 +1330,10 @@ select option{background:#1d222d}
       </div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
-      <button class="btn-d" id="rdv-delete-btn" onclick="deleteRdvFromModal()" style="display:none">🗑 Supprimer</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn-d" id="rdv-delete-btn" onclick="deleteRdvFromModal()" style="display:none">🗑 Supprimer</button>
+        <button class="rdv-confirm-btn" id="rdv-copy-btn" onclick="copyConfirmMsgFromModal()" style="display:none">📋 Copier message</button>
+      </div>
       <div style="display:flex;gap:10px;margin-left:auto">
         <button class="btn-s" onclick="closeRdvModal()">Annuler</button>
         <button class="btn-g" onclick="saveRdv()">💾 Enregistrer</button>
@@ -1559,6 +1603,66 @@ function startRealtimeSync() {
     localStorage.setItem('ar_clients', JSON.stringify(clients));
     if ($('t-carnet') && $('t-carnet').classList.contains('on')) renderCarnet();
   }, function(e){ console.warn('Clients sync err:', e); });
+}
+
+// ── VÉHICULES MULTIPLES ──────────────────────────────────────────────────────
+var vehRowId = 0;
+function removeVehRow(btn) {
+  var row = btn.parentElement && btn.parentElement.parentElement;
+  if (row && row.classList.contains('veh-row')) row.remove();
+}
+function addVehicleRow(data) {
+  data = data || {};
+  var id = ++vehRowId;
+  var vl = $('ac-veh-list');
+  if (!vl) return;
+  var div = document.createElement('div');
+  div.className = 'veh-row';
+  div.style.cssText = 'background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px';
+  div.innerHTML =
+    '<div style="display:flex;gap:6px;margin-bottom:6px">'
+    + '<input class="vr-vm" type="text" placeholder="Marque" value="'+(data.vm||'')+'" style="flex:1;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px"/>'
+    + '<input class="vr-vmo" type="text" placeholder="Modèle" value="'+(data.vmo||'')+'" style="flex:1.5;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px"/>'
+    + '<button onclick="removeVehRow(this)" style="width:28px;height:32px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:16px;flex-shrink:0">×</button>'
+    + '</div>'
+    + '<div style="display:flex;gap:6px">'
+    + '<input class="vr-vmot" type="text" placeholder="Motorisation" value="'+(data.vmot||'')+'" style="flex:2;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px"/>'
+    + '<input class="vr-van" type="text" placeholder="Année" value="'+(data.van||'')+'" style="flex:0.8;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px"/>'
+    + '<input class="vr-vim" type="text" placeholder="Immat" value="'+(data.vim||'')+'" style="flex:1.2;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;text-transform:uppercase"/>'
+    + '</div>';
+  vl.appendChild(div);
+}
+
+// Ouvrir le sélecteur de véhicule pour un client dans le formulaire devis
+function openVehSelect(clientId) {
+  var cl = loadClients().find(function(cl){ return cl.id === clientId; });
+  if (!cl) return;
+  var vehs = cl.vehs && cl.vehs.length ? cl.vehs
+    : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}] : []);
+  if (vehs.length === 0) return;
+  if (vehs.length === 1) { applyVehicle(vehs[0]); return; }
+  // Plusieurs véhicules → afficher le sélecteur
+  var list = $('veh-select-list');
+  list.innerHTML = vehs.map(function(v, i) {
+    var label = [v.vm,v.vmo,v.vmot,v.van?'('+v.van+')':''].filter(Boolean).join(' ');
+    return '<div class="veh-item" onclick="applyVehicle('+JSON.stringify(v).replace(/"/g,'&quot;')+')">'
+      + '<div class="veh-item-info">'
+        + '<div class="veh-item-name">'+escHtml(label)+'</div>'
+        + (v.vim ? '<div class="veh-item-sub">'+escHtml(v.vim.toUpperCase())+'</div>' : '')
+      + '</div>'
+      + '<span style="color:var(--blue);font-size:18px">→</span>'
+      + '</div>';
+  }).join('');
+  $('veh-select-modal').classList.add('open');
+}
+
+function applyVehicle(v) {
+  $('f-vm').value   = v.vm   || '';
+  $('f-vmo').value  = v.vmo  || '';
+  $('f-vmot').value = v.vmot || '';
+  $('f-van').value  = v.van  || '';
+  $('f-vim').value  = (v.vim || '').toUpperCase();
+  $('veh-select-modal').classList.remove('open');
 }
 
 // ── CLIENTS ─────────────────────────────────────────────────────────────────
@@ -2423,7 +2527,9 @@ function closeCarnetModal() { $('carnet-modal').classList.remove('open'); }
 function openAddClientModal(fromCarnet) {
   editClientId = null;
   $('add-client-title').textContent = 'Nouveau client';
-  ['ac-nom','ac-tel','ac-email','ac-adr','ac-ville','ac-vm','ac-vmo','ac-vmot','ac-van','ac-vim'].forEach(function(i){ $(i).value=''; });
+  ['ac-nom','ac-tel','ac-email','ac-adr','ac-ville'].forEach(function(i){ $(i).value=''; });
+  var vl = $('ac-veh-list'); if(vl) vl.innerHTML = '';
+  addVehicleRow();
   closeCarnetModal();
   $('add-client-modal').classList.add('open');
 }
@@ -2439,11 +2545,13 @@ function editClient(cid) {
   $('ac-email').value = cl.email || '';
   $('ac-adr').value = cl.adr || '';
   $('ac-ville').value = cl.ville || '';
-  $('ac-vm').value = cl.vm || '';
-  $('ac-vmo').value = cl.vmo || '';
-  $('ac-vmot').value = cl.vmot || '';
-  $('ac-van').value = cl.van || '';
-  $('ac-vim').value = cl.vim || '';
+  // Charger les véhicules multiples
+  var vehList = $('ac-veh-list');
+  if (vehList) {
+    vehList.innerHTML = '';
+    var clVehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}] : []);
+    clVehs.forEach(function(v){ addVehicleRow(v); });
+  }
   $('add-client-modal').classList.add('open');
 }
 
@@ -2451,12 +2559,25 @@ function saveClient() {
   var nom = $('ac-nom').value.trim();
   if (!nom) { alert('Le nom est obligatoire.'); return; }
   var clients = loadClients();
+  // Collecter les véhicules depuis les lignes dynamiques
+  var vehs = [];
+  document.querySelectorAll('#ac-veh-list .veh-row').forEach(function(row) {
+    var vm   = row.querySelector('.vr-vm').value.trim();
+    var vmo  = row.querySelector('.vr-vmo').value.trim();
+    var vmot = row.querySelector('.vr-vmot').value.trim();
+    var van  = row.querySelector('.vr-van').value.trim();
+    var vim  = row.querySelector('.vr-vim').value.trim();
+    if (vm || vmo || vim) vehs.push({ vm:vm, vmo:vmo, vmot:vmot, van:van, vim:vim });
+  });
+  // Compatibilité rétro : conserver vm/vmo/etc sur le premier véhicule
+  var firstVeh = vehs[0] || {};
   var cl = {
     id: editClientId || Date.now(),
     nom: nom, tel: $('ac-tel').value, email: $('ac-email').value,
     adr: $('ac-adr').value, ville: $('ac-ville').value,
-    vm: $('ac-vm').value, vmo: $('ac-vmo').value, vmot: $('ac-vmot').value,
-    van: $('ac-van').value, vim: $('ac-vim').value,
+    vm: firstVeh.vm||'', vmo: firstVeh.vmo||'', vmot: firstVeh.vmot||'',
+    van: firstVeh.van||'', vim: firstVeh.vim||'',
+    vehs: vehs,
   };
   if (editClientId) {
     var i = clients.findIndex(function(c){ return c.id === editClientId; });
@@ -2480,17 +2601,20 @@ function deleteClient(cid) {
 function selectClient(cid) {
   var cl = loadClients().find(function(c){ return c.id === cid; });
   if (!cl) return;
-  $('f-cnom').value = cl.nom || '';
-  $('f-ctel').value = cl.tel || '';
+  $('f-cnom').value  = cl.nom   || '';
+  $('f-ctel').value  = cl.tel   || '';
   $('f-cemail').value = cl.email || '';
-  $('f-cadr').value = cl.adr || '';
+  $('f-cadr').value  = cl.adr   || '';
   $('f-cville').value = cl.ville || '';
-  $('f-vm').value = cl.vm || '';
-  $('f-vmo').value = cl.vmo || '';
-  $('f-vmot').value = cl.vmot || '';
-  $('f-van').value = cl.van || '';
-  $('f-vim').value = cl.vim || '';
   closeCarnetModal();
+  // Si plusieurs véhicules → afficher le sélecteur
+  var vehs = cl.vehs && cl.vehs.length ? cl.vehs
+    : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}] : []);
+  if (vehs.length > 1) {
+    openVehSelect(cid);
+  } else if (vehs.length === 1) {
+    applyVehicle(vehs[0]);
+  }
 }
 
 function selectClientAndGo(cid) {
@@ -3103,9 +3227,10 @@ function renderSideEvents(d) {
       + (clientName ? '<div class="rdv-sub">👤 '+escHtml(clientName)+'</div>' : '')
       + (r.lieu ? '<div class="rdv-sub">📍 '+escHtml(r.lieu)+'</div>' : '')
       + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
-      + '<div style="display:flex;gap:6px;margin-top:8px">'
+      + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
         + '<button class="btn-s btn-sm" onclick="openRdvModal(\''+r.id+'\',null)">✏️ Modifier</button>'
         + (r.clientId ? '<button class="btn-s btn-sm" onclick="selectClientAndGo('+r.clientId+')">📄 Devis</button>' : '')
+        + '<button class="rdv-confirm-btn" onclick="copyConfirmMsg(\''+r.id+'\')">📋 Copier confirmation</button>'
       + '</div>'
     + '</div>';
   }).join('');
@@ -3170,6 +3295,7 @@ function openRdvModal(rdvId) {
     $('rdv-lieu').value = rdv.lieu || '';
     $('rdv-notes').value = rdv.notes || '';
     $('rdv-delete-btn').style.display = 'inline-flex';
+    $('rdv-copy-btn').style.display = 'inline-flex';
   } else {
     $('rdv-modal-title').textContent = 'Nouveau rendez-vous';
     $('rdv-title').value = '';
@@ -3182,12 +3308,17 @@ function openRdvModal(rdvId) {
     $('rdv-lieu').value = '';
     $('rdv-notes').value = '';
     $('rdv-delete-btn').style.display = 'none';
+    $('rdv-copy-btn').style.display = 'none';
   }
   $('rdv-modal').classList.add('open');
   setTimeout(function(){ $('rdv-title').focus(); }, 100);
 }
 
 function closeRdvModal() { $('rdv-modal').classList.remove('open'); }
+
+function copyConfirmMsgFromModal() {
+  if (editingRdvId) copyConfirmMsg(editingRdvId);
+}
 
 function fillRdvClientSelect() {
   var sel = $('rdv-client');
@@ -3407,6 +3538,102 @@ function showNotifBanner(icon, title, msg) {
 }
 function closeNotifBanner() {
   $('notif-banner').classList.remove('show');
+}
+
+// ── Message de confirmation RDV ─────────────────────────────
+function buildConfirmMsg(rdv) {
+  var tpl = loadTemplate();
+  var nomEntreprise = tpl.nom || 'AREPROG';
+  var tel = tpl.tel || '06 67 92 46 30';
+  var cl = rdv.clientId ? loadClients().find(function(c){ return c.id === rdv.clientId; }) : null;
+  var clientPrenom = cl ? cl.nom.split(' ')[0] : '';
+
+  var dateStr = rdv.date ? (function() {
+    var d = new Date(rdv.date);
+    var jours = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+    var mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    return jours[d.getDay()] + ' ' + d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear();
+  })() : '';
+
+  var lignes = [];
+  lignes.push('Bonjour ' + (clientPrenom || '') + ' !');
+  lignes.push('');
+  lignes.push('Je vous confirme notre rendez-vous pour l\'intervention :');
+  lignes.push('');
+  lignes.push('📅 ' + (dateStr || rdv.date));
+  if (rdv.heure) lignes.push('🕐 ' + rdv.heure);
+  if (rdv.lieu)  lignes.push('📍 ' + rdv.lieu);
+  if (rdv.title) lignes.push('🔧 ' + rdv.title);
+  lignes.push('');
+  // Infos véhicule client
+  if (cl) {
+    var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo,vmot:cl.vmot,van:cl.van}] : []);
+    if (vehs.length > 0 && vehs[0].vm) {
+      var v = vehs[0];
+      lignes.push('🚗 Véhicule : ' + [v.vm,v.vmo,v.vmot,v.van?'('+v.van+')':''].filter(Boolean).join(' '));
+      lignes.push('');
+    }
+  }
+  if (rdv.notes) {
+    lignes.push('📝 ' + rdv.notes);
+    lignes.push('');
+  }
+  lignes.push('N\'h\u00e9sitez pas \u00e0 me contacter si besoin.');
+  lignes.push('');
+  lignes.push('À bientôt,');
+  lignes.push(nomEntreprise);
+  lignes.push(tel);
+
+  return lignes.join('\n');
+}
+
+function copyConfirmMsg(rdvId) {
+  var rdv = loadRdvs().find(function(r){ return r.id === rdvId; });
+  if (!rdv) return;
+  var msg = buildConfirmMsg(rdv);
+
+  // Copier dans le presse-papier
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg).then(function() {
+      showNotifBanner('📋', 'Message copié !', 'Colle-le dans WhatsApp ou SMS.');
+      // Mettre à jour le bouton visuellement
+      document.querySelectorAll('.rdv-confirm-btn').forEach(function(btn) {
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(rdvId)) {
+          btn.textContent = '✓ Copié !';
+          btn.classList.add('copied');
+          setTimeout(function(){ btn.textContent = '📋 Copier confirmation'; btn.classList.remove('copied'); }, 2000);
+        }
+      });
+    }).catch(function() { fallbackCopy(msg); });
+  } else {
+    fallbackCopy(msg);
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showNotifBanner('📋', 'Message copié !', 'Colle-le dans WhatsApp ou SMS.');
+  } catch(e) {
+    // Afficher le message dans une alerte pour copie manuelle
+    prompt('Copie ce message :', text);
+  }
+  document.body.removeChild(ta);
+}
+
+// Aperçu du message de confirmation (dans le modal RDV)
+function previewConfirmMsg(rdvId) {
+  if (!rdvId) return '';
+  var rdv = loadRdvs().find(function(r){ return r.id === rdvId; });
+  if (!rdv) return '';
+  return buildConfirmMsg(rdv);
 }
 
 // ── Helpers ─────────────────────────────────────────────────
