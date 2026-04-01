@@ -4,6 +4,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<!-- jsPDF pour générer les PDFs à envoyer -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!-- Auth : appel direct API Netlify Identity via fetch -->
 <!-- PWA Manifest pour installation iOS/Android -->
 <link rel="manifest" href="/manifest.json"/>
@@ -207,6 +212,79 @@ select option{background:#1d222d}
 
 /* TABS */
 .tc{display:none}.tc.on{display:block}
+
+/* ── RECHERCHE GLOBALE ── */
+.search-bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;margin-bottom:20px;
+}
+.search-bar input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-size:14px;
+}
+.search-bar input::placeholder{color:var(--text-muted)}
+.search-icon{color:var(--text-muted);font-size:16px;flex-shrink:0}
+.search-results{display:flex;flex-direction:column;gap:6px}
+.search-result-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  cursor:pointer;transition:border-color .15s;
+}
+.search-result-item:hover{border-color:var(--blue)}
+.search-result-icon{font-size:18px;flex-shrink:0}
+.search-result-body{flex:1}
+.search-result-title{font-size:13px;font-weight:600;color:var(--text)}
+.search-result-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
+
+/* ── STATUT RAPIDE ── */
+.status-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  cursor:pointer;border:1px solid transparent;transition:all .15s;
+  position:relative;
+}
+.status-pill:hover{opacity:.8}
+.status-dropdown{
+  display:none;position:absolute;top:110%;left:0;z-index:50;
+  background:var(--bg2);border:1px solid var(--border-blue);border-radius:8px;
+  padding:4px;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.status-pill:focus-within .status-dropdown,
+.status-pill.open .status-dropdown{display:block}
+.status-opt{
+  display:flex;align-items:center;gap:6px;padding:7px 10px;
+  font-size:12px;cursor:pointer;border-radius:5px;color:var(--text);
+  transition:background .1s;white-space:nowrap;
+}
+.status-opt:hover{background:var(--bg3)}
+
+/* ── STATISTIQUES ── */
+.stats-chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.chart-card-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:16px;font-weight:700}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar-fill{width:100%;border-radius:3px 3px 0 0;background:var(--blue);min-height:2px;transition:height .4s ease}
+.bar-label{font-size:9px;color:var(--text-muted);text-align:center}
+.bar-val{font-size:9px;color:var(--text-dim);font-family:var(--fm)}
+.pie-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pie-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim)}
+.pie-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kpi-item{text-align:center;padding:12px;background:var(--bg3);border-radius:8px}
+.kpi-val{font-family:var(--fh);font-size:22px;font-weight:700;color:var(--blue)}
+.kpi-lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+
+/* ── HISTORIQUE CLIENT ── */
+.client-history-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:320;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.client-history-modal.open{display:flex}
+.client-history-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:660px;max-width:100%;padding:24px;margin-top:30px}
+
+@media(max-width:768px){
+  .stats-chart-row{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+}
 
 /* ── AGENDA ── */
 .agenda-layout{display:grid;grid-template-columns:1fr 320px;gap:20px}
@@ -508,28 +586,7 @@ select option{background:#1d222d}
   .d-gains-olsx-grid{grid-template-columns:1fr 1fr}
 }
 
-/* WHATSAPP PARSER */
-.wa-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center;padding:20px}
-.wa-modal.open{display:flex}
-.wa-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:16px;width:540px;max-width:100%;padding:28px;box-shadow:0 0 60px rgba(30,144,255,.12)}
-.wa-title{font-family:var(--fh);font-size:20px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.wa-sub{color:var(--text-dim);font-size:13px;margin-bottom:20px;line-height:1.5}
-.wa-textarea{width:100%;min-height:120px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;resize:vertical;outline:none;transition:border-color .2s;font-family:var(--fb)}
-.wa-textarea:focus{border-color:var(--blue)}
-.wa-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
-.wa-result{margin-top:16px;padding:14px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);font-size:13px;display:none}
-.wa-result-row{display:flex;gap:8px;align-items:baseline;padding:4px 0}
-.wa-result-label{color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:.8px;min-width:110px}
-.wa-result-val{color:var(--text);font-weight:500}
-.wa-loading{text-align:center;padding:20px;color:var(--text-dim);display:none}
-.wa-loading-spin{width:28px;height:28px;border:2px solid rgba(30,144,255,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
-.wa-err{color:var(--red);font-size:12px;margin-top:10px;display:none}
-.wa-btn{
-  display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
-  background:#25d366;border:none;border-radius:8px;color:#fff;font-weight:600;font-size:13px;
-  cursor:pointer;transition:background .15s
-}
-.wa-btn:hover{background:#1eb857}
+/* WhatsApp parser supprimé */
 
 /* ═══════════════════════════════════════════
    RESPONSIVE MOBILE — Refonte complète
@@ -588,10 +645,7 @@ select option{background:#1d222d}
     scrollbar-width:none;
   }
   .sh-actions::-webkit-scrollbar{display:none}
-  .sh-actions button,.wa-btn{
-    white-space:nowrap;flex-shrink:0;
-    padding:7px 11px;font-size:11px;
-  }
+  .sh-actions button{white-space:nowrap;flex-shrink:0;padding:7px 11px;font-size:11px;}
 
   /* ── DASHBOARD — cards docs pleine largeur ── */
   .dt{width:100%}
@@ -794,6 +848,8 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('template')">🎨 Template</button>
       <button class="nb" onclick="showTab('services')">⚙️ Services</button>
       <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
+      <button class="nb" onclick="showTab('stats')">📊 Stats</button>
+      <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -807,10 +863,45 @@ select option{background:#1d222d}
 
     <!-- DASHBOARD -->
     <div class="tc on" id="t-dash">
+      <!-- Recherche rapide -->
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="dash-search" placeholder="Rechercher un client, véhicule, numéro de document…" oninput="dashQuickSearch(this.value)"/>
+        <button class="btn-s" style="font-size:11px;padding:5px 10px;flex-shrink:0" onclick="showTab('search')">Tout voir →</button>
+      </div>
+      <div id="dash-search-results" style="display:none"></div>
+
+      <!-- Stats -->
       <div class="stats-row" id="stats"></div>
+
+      <!-- Actions rapides -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px" id="quick-actions">
+        <button class="btn-p" onclick="newDoc()" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
+          <span style="font-size:20px">📄</span>Nouveau devis
+        </button>
+        <button class="btn-s" onclick="newDoc();$('f-type').value='facture';onTypeChange()" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
+          <span style="font-size:20px">🧾</span>Nouvelle facture
+        </button>
+        <button class="btn-s" onclick="showTab('agenda');setTimeout(function(){openRdvModal(null)},100)" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
+          <span style="font-size:20px">📅</span>Nouveau RDV
+        </button>
+        <button class="btn-s" onclick="showTab('carnet');setTimeout(function(){openAddClientModal()},100)" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
+          <span style="font-size:20px">👤</span>Nouveau client
+        </button>
+      </div>
+
       <div class="sh">
         <div class="sh-title">Documents récents</div>
-        <button class="btn-p" onclick="newDoc()">+ Nouveau document</button>
+        <div style="display:flex;gap:8px">
+          <select id="dash-filter-statut" onchange="renderDash()" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px">
+            <option value="">Tous statuts</option>
+            <option value="envoyé">Envoyés</option>
+            <option value="accepté">Acceptés</option>
+            <option value="payé">Payés</option>
+            <option value="annulé">Annulés</option>
+          </select>
+          <button class="btn-p" onclick="newDoc()">+ Nouveau</button>
+        </div>
       </div>
       <div id="dash-list"></div>
     </div>
@@ -820,7 +911,6 @@ select option{background:#1d222d}
       <div class="sh">
         <div class="sh-title" id="form-h">Nouveau devis</div>
         <div class="sh-actions">
-          <button class="wa-btn" onclick="openWaModal()">💬 WhatsApp</button>
           <button class="btn-s" onclick="openCarnetModal()">👥 Carnet clients</button>
           <button class="btn-s" onclick="openOlsxModal()">⚡ Gains OLSX</button>
           <button class="btn-s" onclick="newDoc()">↺ Réinitialiser</button>
@@ -928,8 +1018,7 @@ select option{background:#1d222d}
       <div class="sh">
         <div class="sh-title">Agenda</div>
         <div class="sh-actions">
-          <span id="push-status-badge"></span>
-          <button class="btn-s" onclick="requestPushPermission()">🔔 Notifications</button>
+          <span class="push-badge" style="background:rgba(34,197,94,.1);color:var(--green)">📧 Rappels par email</span>
           <button class="btn-p" onclick="openRdvModal(null)">+ Nouveau RDV</button>
         </div>
       </div>
@@ -960,6 +1049,59 @@ select option{background:#1d222d}
             <div id="auto-alerts"><div style="color:var(--text-muted);font-size:13px">Chargement…</div></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="tc" id="t-stats">
+      <div class="sh">
+        <div class="sh-title">Statistiques</div>
+        <div style="display:flex;gap:8px">
+          <select id="stats-period" onchange="renderStats()" style="padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px">
+            <option value="3">3 derniers mois</option>
+            <option value="6" selected>6 derniers mois</option>
+            <option value="12">12 derniers mois</option>
+            <option value="0">Tout l'historique</option>
+          </select>
+          <button class="btn-s" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+      </div>
+      <!-- KPIs -->
+      <div class="kpi-grid" id="stats-kpis" style="margin-bottom:20px"></div>
+      <!-- Graphiques -->
+      <div class="stats-chart-row">
+        <div class="chart-card">
+          <div class="chart-card-title">CA mensuel (€)</div>
+          <div class="bar-chart" id="chart-ca"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Nombre de documents</div>
+          <div class="bar-chart" id="chart-docs"></div>
+        </div>
+      </div>
+      <div class="stats-chart-row">
+        <div class="chart-card">
+          <div class="chart-card-title">Prestations les plus vendues</div>
+          <div id="chart-prestations"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Taux conversion devis → facture</div>
+          <div id="chart-conversion" style="padding-top:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECHERCHE -->
+    <div class="tc" id="t-search">
+      <div class="sh">
+        <div class="sh-title">Recherche globale</div>
+      </div>
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="global-search" placeholder="Nom, véhicule, immatriculation, numéro de devis, prestation…" oninput="globalSearch(this.value)" autofocus/>
+      </div>
+      <div id="search-results" class="search-results">
+        <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>
       </div>
     </div>
 
@@ -1093,28 +1235,6 @@ select option{background:#1d222d}
   </div>
 </div>
 
-<!-- MODAL WHATSAPP PARSER -->
-<div class="wa-modal" id="wa-modal" onclick="if(event.target===this)closeWaModal()">
-  <div class="wa-box">
-    <div class="wa-title">💬 Importer un message WhatsApp</div>
-    <div class="wa-sub">Colle le message reçu de ton client. L'IA extrait automatiquement le nom, le véhicule et les prestations demandées.</div>
-    <textarea class="wa-textarea" id="wa-text" placeholder="Ex: Bonjour je m'appelle Thomas Dupont j'ai une Golf 7 GTD 184ch de 2018 plaque AB-123-CD, je voudrais savoir le prix pour un stage 1 et la conversion E85 merci"></textarea>
-    <div class="wa-err" id="wa-err">Erreur lors de l'analyse. Réessaie.</div>
-    <div class="wa-loading" id="wa-loading">
-      <div class="wa-loading-spin"></div>
-      Analyse en cours…
-    </div>
-    <div class="wa-result" id="wa-result">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:10px;font-weight:700">✦ Informations détectées</div>
-      <div id="wa-result-rows"></div>
-    </div>
-    <div class="wa-actions">
-      <button class="btn-s" onclick="closeWaModal()">Annuler</button>
-      <button class="btn-p" id="wa-analyze-btn" onclick="analyzeWaMessage()">🔍 Analyser</button>
-      <button class="btn-g" id="wa-apply-btn" onclick="applyWaResult()" style="display:none">✓ Pré-remplir le devis</button>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL OLSX SIMULATEUR -->
 <div class="olsx-modal" id="olsx-modal" onclick="if(event.target===this)closeOlsxModal()">
@@ -1299,21 +1419,25 @@ select option{background:#1d222d}
         <div class="fr"><label>Heure (optionnel)</label>
           <input id="rdv-heure" type="time" placeholder="09:00"/>
         </div>
-        <div class="fr"><label>Rappel avant</label>
-          <select id="rdv-rappel">
-            <option value="0">Pas de rappel</option>
-            <option value="15">15 minutes avant</option>
-            <option value="30">30 minutes avant</option>
-            <option value="60" selected>1 heure avant</option>
-            <option value="1440">La veille (24h)</option>
-            <option value="2880">2 jours avant</option>
-          </select>
+        <div class="fr">
+          <label style="display:flex;align-items:center;justify-content:space-between">
+            <span>Rappels par email</span>
+            <button type="button" class="btn-s" style="font-size:11px;padding:3px 8px" onclick="addRappelRow()">+ Ajouter</button>
+          </label>
+          <div id="rdv-rappels-list" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px">📧 Un email sera envoyé à <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bcddcec8d4c9cefcddced9ccced3db92dace">[email&#160;protected]</a></div>
         </div>
       </div>
       <div>
         <div class="fr"><label>Client lié (optionnel)</label>
-          <select id="rdv-client">
+          <select id="rdv-client" onchange="updateRdvVehSelect()">
             <option value="">— Aucun client —</option>
+          </select>
+        </div>
+        <div class="fr" id="rdv-veh-row" style="display:none">
+          <label>Véhicule concerné</label>
+          <select id="rdv-vehicule">
+            <option value="">— Tous les véhicules —</option>
           </select>
         </div>
         <div class="fr"><label>Document lié (optionnel)</label>
@@ -1342,27 +1466,26 @@ select option{background:#1d222d}
   </div>
 </div>
 
-<!-- MODAL INSTALLATION PWA -->
-<div class="rdv-modal" id="pwa-modal" onclick="if(event.target===this)$('pwa-modal').classList.remove('open')" style="z-index:330">
+<!-- MODAL ENVOI EMAIL -->
+<div class="rdv-modal" id="send-email-modal" onclick="if(event.target===this)$('send-email-modal').classList.remove('open')" style="z-index:330">
   <div class="rdv-box" style="max-width:420px">
-    <div class="rdv-box-title">📲 Installer l'app AREPROG</div>
-    <p style="color:var(--text-dim);font-size:13px;line-height:1.7;margin-bottom:18px">
-      Pour recevoir des notifications sur iPhone, il faut installer l'app sur l'écran d'accueil. C'est gratuit et rapide (30 secondes).
-    </p>
-    <div style="background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:18px">
-      <div style="font-size:13px;line-height:2">
-        <div>1️⃣ Appuie sur <strong style="color:var(--blue)">Partager</strong> <span style="font-size:16px">⬆️</span> en bas de Safari</div>
-        <div>2️⃣ Fais défiler et appuie sur <strong style="color:var(--blue)">"Sur l'écran d'accueil"</strong></div>
-        <div>3️⃣ Appuie sur <strong style="color:var(--blue)">"Ajouter"</strong> en haut à droite</div>
-        <div>4️⃣ Ouvre l'app depuis ton écran d'accueil</div>
-        <div>5️⃣ Les notifications seront disponibles ✓</div>
-      </div>
+    <div class="rdv-box-title">📧 Envoyer par email</div>
+    <div class="fr">
+      <label>Email du client</label>
+      <input id="send-to-email" type="email" placeholder="client@email.fr" autocomplete="off"/>
     </div>
-    <div style="background:rgba(30,144,255,.08);border:1px solid rgba(30,144,255,.2);border-radius:8px;padding:12px;margin-bottom:18px;font-size:12px;color:var(--text-dim)">
-      💡 En attendant, les rappels s'affichent dans l'app quand elle est ouverte. Pense à garder l'onglet ouvert pour les recevoir.
+    <div class="fr">
+      <label>Message personnalisé (optionnel)</label>
+      <textarea id="send-message" rows="4" placeholder="Bonjour,
+
+Veuillez trouver ci-joint votre devis.
+
+Cordialement, AREPROG"></textarea>
     </div>
-    <div style="display:flex;justify-content:flex-end">
-      <button class="btn-p" onclick="$('pwa-modal').classList.remove('open')">Compris ✓</button>
+    <div id="send-email-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:10px"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('send-email-modal').classList.remove('open')">Annuler</button>
+      <button class="btn-g" id="send-email-confirm-btn" onclick="confirmSendEmail()">📧 Envoyer</button>
     </div>
   </div>
 </div>
@@ -1377,13 +1500,24 @@ select option{background:#1d222d}
   <button class="notif-close" onclick="closeNotifBanner()">×</button>
 </div>
 
+<!-- MODAL HISTORIQUE CLIENT -->
+<div class="client-history-modal" id="client-history-modal" onclick="if(event.target===this)$('client-history-modal').classList.remove('open')">
+  <div class="client-history-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div class="sh-title" id="client-history-title">Historique client</div>
+      <button class="btn-s" onclick="$('client-history-modal').classList.remove('open')">✕ Fermer</button>
+    </div>
+    <div id="client-history-content"></div>
+  </div>
+</div>
+
 <!-- MODAL APERÇU -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-wrap">
     <div class="modal-toolbar">
-      <button class="btn-p" onclick="printFromModal()">🖨️ Imprimer / Enregistrer PDF</button>
+      <button class="btn-p" onclick="printFromModal()">🖨️ Imprimer / PDF</button>
+      <button class="btn-p" id="send-email-btn" onclick="sendDocByEmail()" style="background:#25d366">📧 Envoyer par email</button>
       <button class="btn-s" onclick="closeModal()">✕ Fermer</button>
-      <span style="color:var(--text-muted);font-size:11px;margin-left:4px">→ Dans la boîte d'impression, choisir "Enregistrer en PDF"</span>
     </div>
     <div class="modal-inner">
       <div class="preview-body" id="preview"></div>
@@ -1391,7 +1525,7 @@ select option{background:#1d222d}
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
 function $(s) { return document.getElementById(s); }
 
@@ -1850,7 +1984,7 @@ function initApp() {
   }, 500);
   // Vérifier rappels agenda
   setTimeout(checkTodayNotifs, 2000);
-  maybeShowInstallHint();
+
 }
 
 function resetForm(goToForm) {
@@ -1953,7 +2087,6 @@ function lineSelect(sel, lid) {
   line.label = sel.value;
   line.pu = p;
   renderLines();
-  prefillGainsIfEmpty();
 }
 
 function lineField(inp, lid, field) {
@@ -2205,14 +2338,15 @@ function restoreTitle() {
 
 function openPreview() {
   var doc = buildObj();
+  _currentDocForEmail = doc;
   $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
-  // Préparer le titre pour l'impression depuis la toolbar
   $('modal').dataset.printTitle = buildPdfTitle(doc);
 }
 function previewDoc(docId) {
   var doc = loadDocs().find(function(d){ return d.id === docId; });
   if (!doc) return;
+  _currentDocForEmail = doc;
   $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
   $('modal').dataset.printTitle = buildPdfTitle(doc);
@@ -2230,6 +2364,7 @@ function printFromModal() {
 }
 function printDoc() {
   var doc = buildObj();
+  _currentDocForEmail = doc;
   $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
   $('modal').dataset.printTitle = buildPdfTitle(doc);
@@ -2256,9 +2391,11 @@ function renderDash() {
     '<div class="sc"><div class="sc-label">CA encaissé</div><div class="sc-val green">'+fmt(caEnc)+'</div><div class="sc-sub">Factures payées</div></div>' +
     '<div class="sc"><div class="sc-label">En attente</div><div class="sc-val orange">'+fmt(caAtt)+'</div><div class="sc-sub">À encaisser</div></div>';
 
-  var recent = docs.slice(0, 10);
+  var filterStatut = $('dash-filter-statut') ? $('dash-filter-statut').value : '';
+  var filtered = filterStatut ? docs.filter(function(d){ return d.statut === filterStatut; }) : docs;
+  var recent = filtered.slice(0, 15);
   $('dash-list').innerHTML = recent.length ? buildTable(recent, false)
-    : '<div class="empty"><div class="empty-icon">📄</div><div>Aucun document. Créez votre premier devis !</div></div>';
+    : '<div class="empty"><div class="empty-icon">📄</div><div>Aucun document trouvé.</div></div>';
 }
 
 // ============================================================
@@ -2298,183 +2435,6 @@ function buildTable(docs, withDelete) {
 }
 
 // ============================================================
-//  WHATSAPP PARSER — Claude API
-// ============================================================
-var waExtracted = null;
-
-function openWaModal() {
-  $('wa-text').value = '';
-  $('wa-result').style.display = 'none';
-  $('wa-err').style.display = 'none';
-  $('wa-loading').style.display = 'none';
-  $('wa-apply-btn').style.display = 'none';
-  $('wa-analyze-btn').style.display = 'inline-flex';
-  waExtracted = null;
-  $('wa-modal').classList.add('open');
-  setTimeout(function(){ $('wa-text').focus(); }, 100);
-}
-
-function closeWaModal() {
-  $('wa-modal').classList.remove('open');
-}
-
-// Catalogue plat pour matching prestations
-var PRESTATION_KEYS = [
-  { keys: ['stage 2', 'stage2'],                         label: 'Stage 2 — Reprogrammation haute performance (avec modifs mécaniques)', p: 460 },
-  { keys: ['stage 1', 'stage1', 'reprog', 'reprogramm'], label: 'Stage 1 — Reprogrammation moteur (essence & diesel turbo) · 100% réversible', p: 330 },
-  { keys: ['e85', 'ethanol', 'éthanol', 'bioethanol'],   label: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
-  { keys: ['pack stage 1 + e85', 'stage 1 e85'],         label: 'Conversion E85 — Bioéthanol natif ECU · Sans boîtier externe', p: 330 },
-  { keys: ['egr'],                                        label: 'EGR OFF — Désactivation vanne EGR · Diesel · Logiciel uniquement', p: 180 },
-  { keys: ['fap', 'dpf'],                                 label: 'FAP / DPF OFF — Usage circuit & export uniquement (après retrait physique)', p: 280 },
-  { keys: ['adblue', 'ad blue', 'scr'],                   label: 'AdBlue / SCR OFF — Désactivation réduction catalytique · Hors homologation voie publique', p: 280 },
-  { keys: ['odis', 'diagnostic vag', 'diagnostic'],       label: 'Diagnostic ODIS VAG — VW · Audi · Seat · Skoda · Porsche · Outil officiel constructeur', p: 100 },
-  { keys: ['conso', 'consommation'],                      label: 'Optimisation consommation — Idéal grands rouleurs & flottes', p: 380 },
-  { keys: ['pop', 'bang'],                                label: 'Pop & Bang — Détonations à la décélération · Effet sonore agressif', p: 150 },
-  { keys: ['launch control'],                             label: 'Launch Control — Optimisation départ arrêté · Meilleur 0-100', p: 150 },
-  { keys: ['vmax', 'limiteur'],                           label: 'Vmax OFF — Suppression du limiteur de vitesse constructeur', p: 60 },
-  { keys: ['start stop', 'start & stop'],                 label: 'Start & Stop OFF — Désactivation définitive du Start & Stop', p: 60 },
-  { keys: ['swirl'],                                      label: 'Swirl OFF — Désactivation volets d\'admission · Diesel · Prévention défaillances', p: 140 },
-];
-
-async function analyzeWaMessage() {
-  var msg = $('wa-text').value.trim();
-  if (!msg) { $('wa-err').textContent = 'Colle d\'abord un message.'; $('wa-err').style.display = 'block'; return; }
-
-  $('wa-err').style.display = 'none';
-  $('wa-result').style.display = 'none';
-  $('wa-analyze-btn').style.display = 'none';
-  $('wa-apply-btn').style.display = 'none';
-  $('wa-loading').style.display = 'block';
-  waExtracted = null;
-
-  var prompt = "Tu es un assistant pour un professionnel de la reprogrammation moteur en France.\n"
-    + "Analyse ce message WhatsApp d'un client et extrais les informations suivantes en JSON strict (pas de markdown, pas de texte autour) :\n"
-    + "{\n"
-    + "  \"nom\": \"Prénom NOM du client ou vide\",\n"
-    + "  \"telephone\": \"numéro ou vide\",\n"
-    + "  \"email\": \"email ou vide\",\n"
-    + "  \"ville\": \"ville ou vide\",\n"
-    + "  \"marque\": \"marque du véhicule ou vide\",\n"
-    + "  \"modele\": \"modèle exact ou vide\",\n"
-    + "  \"motorisation\": \"motorisation avec cylindrée et puissance en ch si mentionnée, ou vide\",\n"
-    + "  \"annee\": \"année ou vide\",\n"
-    + "  \"immatriculation\": \"immatriculation ou vide\",\n"
-    + "  \"prestations\": [\"liste des prestations demandées en français simple, ex: Stage 1, Conversion E85, EGR OFF\"]\n"
-    + "}\n\n"
-    + "Message du client :\n" + msg;
-
-  try {
-    // Appel via Netlify Function (proxy) pour éviter le blocage CORS
-    var resp = await fetch('/.netlify/functions/claude-proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    var data = await resp.json();
-    var text = (data.content || []).map(function(i){ return i.text || ''; }).join('');
-    // Nettoyer si markdown
-    text = text.replace(/```json|```/g, '').trim();
-    var parsed = JSON.parse(text);
-
-    // Matcher les prestations au catalogue
-    var matchedLines = [];
-    (parsed.prestations || []).forEach(function(pStr) {
-      var pLow = pStr.toLowerCase();
-      var found = false;
-      for (var i = 0; i < PRESTATION_KEYS.length; i++) {
-        var pk = PRESTATION_KEYS[i];
-        if (pk.keys.some(function(k){ return pLow.indexOf(k) !== -1; })) {
-          // Éviter les doublons
-          if (!matchedLines.some(function(l){ return l.label === pk.label; })) {
-            matchedLines.push({ id: Date.now() + Math.random(), label: pk.label, qte: 1, pu: pk.p });
-          }
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        // Prestation non reconnue → ligne libre
-        matchedLines.push({ id: Date.now() + Math.random(), label: pStr, qte: 1, pu: 0 });
-      }
-    });
-
-    waExtracted = { parsed: parsed, lines: matchedLines };
-
-    // Afficher le résumé
-    var rows = '';
-    var fields = [
-      ['Client', parsed.nom],
-      ['Téléphone', parsed.telephone],
-      ['Email', parsed.email],
-      ['Ville', parsed.ville],
-      ['Marque', parsed.marque],
-      ['Modèle', parsed.modele],
-      ['Motorisation', parsed.motorisation],
-      ['Année', parsed.annee],
-      ['Immat.', parsed.immatriculation],
-    ];
-    fields.forEach(function(f) {
-      if (f[1]) rows += '<div class="wa-result-row"><span class="wa-result-label">'+f[0]+'</span><span class="wa-result-val">'+f[1]+'</span></div>';
-    });
-    if (matchedLines.length) {
-      rows += '<div class="wa-result-row" style="margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px">'
-        + '<span class="wa-result-label">Prestations</span>'
-        + '<span class="wa-result-val">' + matchedLines.map(function(l){ return l.label.split(' — ')[0]; }).join('<br>') + '</span></div>';
-    }
-
-    $('wa-result-rows').innerHTML = rows || '<span style="color:var(--text-muted)">Aucune information détectée.</span>';
-    $('wa-result').style.display = 'block';
-    $('wa-loading').style.display = 'none';
-    $('wa-apply-btn').style.display = 'inline-flex';
-
-  } catch(e) {
-    $('wa-loading').style.display = 'none';
-    $('wa-analyze-btn').style.display = 'inline-flex';
-    $('wa-err').textContent = 'Erreur analyse : ' + (e.message || 'Réessaie.');
-    $('wa-err').style.display = 'block';
-    console.error(e);
-  }
-}
-
-function applyWaResult() {
-  if (!waExtracted) return;
-  var p = waExtracted.parsed;
-
-  // Remplir les champs client
-  if (p.nom)            $('f-cnom').value  = p.nom;
-  if (p.telephone)      $('f-ctel').value  = p.telephone;
-  if (p.email)          $('f-cemail').value = p.email;
-  if (p.ville)          $('f-cville').value = p.ville;
-
-  // Remplir les champs véhicule
-  if (p.marque)         $('f-vm').value    = p.marque;
-  if (p.modele)         $('f-vmo').value   = p.modele;
-  if (p.motorisation)   $('f-vmot').value  = p.motorisation;
-  if (p.annee)          $('f-van').value   = p.annee;
-  if (p.immatriculation) $('f-vim').value  = p.immatriculation.toUpperCase();
-
-  // Injecter les lignes de prestations
-  if (waExtracted.lines && waExtracted.lines.length > 0) {
-    // Remplacer les lignes vides par les prestations détectées
-    lines = waExtracted.lines;
-    renderLines();
-  }
-
-  closeWaModal();
-
-  // Flash visuel pour confirmer
-  var formEl = $('t-form');
-  formEl.style.transition = 'opacity .15s';
-  formEl.style.opacity = '0.5';
-  setTimeout(function(){ formEl.style.opacity = '1'; }, 200);
-}
-
-// ============================================================
 //  CARNET CLIENTS
 // ============================================================
 // loadClients/saveClients définis dans le bloc Firebase ci-dessus
@@ -2506,14 +2466,22 @@ function renderCarnetModal() {
 }
 
 function clientCard(cl, selectable) {
-  var veh = [cl.vm, cl.vmo, cl.vmot].filter(Boolean).join(' ');
   var onclick = selectable ? 'onclick="selectClient(' + cl.id + ')"' : '';
+  // Construire la liste de tous les véhicules
+  var vehs = cl.vehs && cl.vehs.length
+    ? cl.vehs
+    : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
+  var vehsHTML = vehs.map(function(v) {
+    var label = [v.vm, v.vmo, v.vmot, v.van ? '(' + v.van + ')' : ''].filter(Boolean).join(' ');
+    var immat = v.vim ? ' <span style="font-family:var(--fm);font-size:10px;color:var(--text-muted)">' + v.vim.toUpperCase() + '</span>' : '';
+    return label ? '<div class="carnet-card-veh">🚗 ' + escHtml(label) + immat + '</div>' : '';
+  }).filter(Boolean).join('');
   return '<div class="carnet-card" ' + onclick + '>'
     + '<button class="carnet-card-del" onclick="event.stopPropagation();deleteClient(' + cl.id + ')" title="Supprimer">×</button>'
-    + '<div class="carnet-card-name">' + (cl.nom || '—') + '</div>'
-    + (veh ? '<div class="carnet-card-veh">🚗 ' + veh + (cl.vim ? ' · ' + cl.vim.toUpperCase() : '') + '</div>' : '')
-    + (cl.tel ? '<div class="carnet-card-tel">📞 ' + cl.tel + '</div>' : '')
-    + (!selectable ? '<div style="display:flex;gap:6px;margin-top:10px"><button class="btn-s btn-sm" onclick="editClient(' + cl.id + ')">✏️ Modifier</button><button class="btn-p btn-sm" onclick="selectClientAndGo(' + cl.id + ')">→ Nouveau devis</button></div>' : '')
+    + '<div class="carnet-card-name">' + escHtml(cl.nom || '—') + '</div>'
+    + vehsHTML
+    + (cl.tel ? '<div class="carnet-card-tel">📞 ' + escHtml(cl.tel) + '</div>' : '')
+    + (!selectable ? '<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><button class="btn-s btn-sm" onclick="editClient(' + cl.id + ')">✏️ Modifier</button><button class="btn-s btn-sm" onclick="showClientHistory(' + cl.id + ')">📋 Historique</button><button class="btn-p btn-sm" onclick="selectClientAndGo(' + cl.id + ')">→ Devis</button></div>' : '')
     + '</div>';
 }
 
@@ -2699,16 +2667,7 @@ function previewGainsBadge() {
   }).join('');
 }
 
-// Pré-remplir gains quand une prestation est sélectionnée dans les lignes
-function prefillGainsIfEmpty() {
-  var el = $('f-gains');
-  if (!el || el.value.trim()) return; // ne pas écraser si déjà rempli
-  var suggestions = buildGainsFromLines(lines);
-  if (suggestions.length) {
-    el.value = suggestions.join('\n');
-    previewGainsBadge();
-  }
-}
+
 
 function openOlsxModal() {
   olsxDetected = null;
@@ -3154,7 +3113,7 @@ function renderAgenda() {
   renderSideEvents(calSelected);
   renderAutoAlerts();
   fillRdvClientSelect();
-  updatePushBadge();
+  // push badge supprimé — EmailJS utilisé
 }
 
 function calPrev() { calDate.setMonth(calDate.getMonth()-1); renderCalendar(); }
@@ -3216,15 +3175,25 @@ function renderSideEvents(d) {
 
   el.innerHTML = rdvs.map(function(r) {
     var clientName = '';
+    var rdvVehLabel = '';
     if (r.clientId) {
       var cl = loadClients().find(function(c){ return c.id === r.clientId; });
-      if (cl) clientName = cl.nom;
+      if (cl) {
+        clientName = cl.nom;
+        var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}] : []);
+        if (r.vehIdx !== null && r.vehIdx !== undefined && vehs[r.vehIdx]) {
+          var v = vehs[r.vehIdx];
+          rdvVehLabel = [v.vm,v.vmo,v.vmot,v.van?'('+v.van+')':''].filter(Boolean).join(' ');
+          if (v.vim) rdvVehLabel += ' · ' + v.vim.toUpperCase();
+        }
+      }
     }
     return '<div class="rdv-item '+r.type+'">'
       + '<button class="rdv-del" onclick="deleteRdv(\''+r.id+'\')" title="Supprimer">×</button>'
       + (r.heure ? '<div class="rdv-time">'+r.heure+'</div>' : '')
       + '<div class="rdv-title">'+escHtml(r.title)+'</div>'
       + (clientName ? '<div class="rdv-sub">👤 '+escHtml(clientName)+'</div>' : '')
+      + (rdvVehLabel ? '<div class="rdv-sub">🚗 '+escHtml(rdvVehLabel)+'</div>' : '')
       + (r.lieu ? '<div class="rdv-sub">📍 '+escHtml(r.lieu)+'</div>' : '')
       + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
       + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
@@ -3289,8 +3258,12 @@ function openRdvModal(rdvId) {
     $('rdv-type').value = rdv.type || 'rdv';
     $('rdv-date').value = rdv.date || '';
     $('rdv-heure').value = rdv.heure || '';
-    $('rdv-rappel').value = rdv.rappel || '60';
+    setRappels(rdv.rappels || (rdv.rappel ? [rdv.rappel] : []));
     $('rdv-client').value = rdv.clientId || '';
+    updateRdvVehSelect();
+    if (rdv.vehIdx !== null && rdv.vehIdx !== undefined && $('rdv-vehicule')) {
+      $('rdv-vehicule').value = String(rdv.vehIdx);
+    }
     $('rdv-doc').value = rdv.docId || '';
     $('rdv-lieu').value = rdv.lieu || '';
     $('rdv-notes').value = rdv.notes || '';
@@ -3302,7 +3275,7 @@ function openRdvModal(rdvId) {
     $('rdv-type').value = 'rdv';
     $('rdv-date').value = toDateStr(calSelected);
     $('rdv-heure').value = '';
-    $('rdv-rappel').value = '60';
+    setRappels([]);
     $('rdv-client').value = '';
     $('rdv-doc').value = '';
     $('rdv-lieu').value = '';
@@ -3325,8 +3298,41 @@ function fillRdvClientSelect() {
   if (!sel) return;
   var cur = sel.value;
   sel.innerHTML = '<option value="">— Aucun client —</option>'
-    + loadClients().map(function(cl){ return '<option value="'+cl.id+'">' + escHtml(cl.nom) + (cl.vm?' — '+escHtml(cl.vm)+' '+escHtml(cl.vmo||''):'') + '</option>'; }).join('');
+    + loadClients().map(function(cl) {
+        var vLabel = '';
+        var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||''}] : []);
+        if (vehs.length === 1 && vehs[0].vm) vLabel = ' — ' + vehs[0].vm + ' ' + (vehs[0].vmo||'');
+        else if (vehs.length > 1) vLabel = ' — ' + vehs.length + ' véhicules';
+        return '<option value="'+cl.id+'">' + escHtml(cl.nom) + vLabel + '</option>';
+      }).join('');
   if (cur) sel.value = cur;
+  updateRdvVehSelect();
+}
+
+function updateRdvVehSelect() {
+  var clientId = parseInt($('rdv-client').value);
+  var row = $('rdv-veh-row');
+  var sel = $('rdv-vehicule');
+  if (!row || !sel) return;
+  if (!clientId) {
+    row.style.display = 'none';
+    sel.innerHTML = '<option value="">— Tous les véhicules —</option>';
+    return;
+  }
+  var cl = loadClients().find(function(c){ return c.id === clientId; });
+  if (!cl) { row.style.display = 'none'; return; }
+  var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}] : []);
+  if (vehs.length <= 1) {
+    row.style.display = 'none';
+    return;
+  }
+  // Plusieurs véhicules → afficher le select
+  row.style.display = 'block';
+  sel.innerHTML = '<option value="">— Tous les véhicules —</option>'
+    + vehs.map(function(v, i) {
+        var label = [v.vm, v.vmo, v.vmot, v.van?'('+v.van+')':''].filter(Boolean).join(' ');
+        return '<option value="'+i+'">' + escHtml(label) + (v.vim?' · '+v.vim.toUpperCase():'') + '</option>';
+      }).join('');
 }
 
 function fillRdvDocSelect() {
@@ -3350,8 +3356,9 @@ function saveRdv() {
     type:     $('rdv-type').value,
     date:     rdvDate,
     heure:    $('rdv-heure').value,
-    rappel:   parseInt($('rdv-rappel').value) || 0,
+    rappels:  getRappels(),
     clientId: $('rdv-client').value ? parseInt($('rdv-client').value) : null,
+    vehIdx:   $('rdv-vehicule') && $('rdv-vehicule').value !== '' ? parseInt($('rdv-vehicule').value) : null,
     docId:    $('rdv-doc').value ? parseInt($('rdv-doc').value) : null,
     lieu:     $('rdv-lieu').value,
     notes:    $('rdv-notes').value,
@@ -3387,144 +3394,239 @@ function deleteRdvFromModal() {
   closeRdvModal();
 }
 
-// ── NOTIFICATIONS PUSH ────────────────────────────────────────
-var notifQueue = [];
-var notifTimer = null;
+// ══════════════════════════════════════════════════════════════
+//  EMAILJS — Rappels RDV + Envoi devis/factures
+// ══════════════════════════════════════════════════════════════
+var EJS_SERVICE       = 'service_6dj8dmv';
+var EJS_TPL_RAPPEL    = 'template_mlbev47';  // Rappels agenda
+var EJS_TPL_DOC       = 'template_l6jwa72';  // Envoi devis/factures
+var EJS_FROM_EMAIL    = 'arthur@areprog.fr';
+var notifTimer        = null;
+var _currentDocForEmail = null; // doc en cours d'affichage dans le modal
 
-// Détecte si l'app est en mode PWA installée
-function isPWA() {
-  return window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true;
+// Init EmailJS
+(function() {
+  try { emailjs.init({ publicKey: '3xdOxKiXtMqhlc7ei' }); }
+  catch(e) { console.warn('EmailJS non chargé:', e); }
+})();
+
+// ── Rappels multiples UI ──────────────────────────────────────
+var RAPPEL_OPTIONS = [
+  { v:'15',    l:'15 min avant' },
+  { v:'30',    l:'30 min avant' },
+  { v:'60',    l:'1 heure avant' },
+  { v:'120',   l:'2 heures avant' },
+  { v:'360',   l:'6 heures avant' },
+  { v:'1440',  l:'La veille (24h)' },
+  { v:'2880',  l:'2 jours avant' },
+  { v:'4320',  l:'3 jours avant' },
+  { v:'10080', l:'1 semaine avant' },
+];
+
+function addRappelRow(val) {
+  var list = $('rdv-rappels-list');
+  if (!list) return;
+  var opts = RAPPEL_OPTIONS.map(function(o) {
+    return '<option value="'+o.v+'"'+(o.v===(val||'1440')?' selected':'')+'>'+o.l+'</option>';
+  }).join('');
+  var div = document.createElement('div');
+  div.className = 'rappel-row';
+  div.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:4px';
+  div.innerHTML = '<select style="flex:1;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px">'+opts+'</select>'
+    + '<button type="button" onclick="this.parentElement.remove()" style="width:30px;height:32px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:16px">×</button>';
+  list.appendChild(div);
 }
 
-// Détecte iOS Safari (hors PWA)
-function isIOSSafari() {
-  var ua = navigator.userAgent;
-  return /iP(hone|ad|od)/i.test(ua) && /WebKit/i.test(ua) && !window.MSStream && !isPWA();
+function getRappels() {
+  var vals = [];
+  document.querySelectorAll('#rdv-rappels-list .rappel-row select').forEach(function(sel) {
+    var v = parseInt(sel.value);
+    if (v > 0 && vals.indexOf(v) < 0) vals.push(v);
+  });
+  return vals;
 }
 
-function updatePushBadge() {
-  var badge = $('push-status-badge');
-  if (!badge) return;
-  if (isIOSSafari()) {
-    badge.innerHTML = '<span class="push-badge off">📲 Installer l\'app</span>';
-    return;
-  }
-  if (!('Notification' in window)) {
-    badge.innerHTML = '<span class="push-badge off">🔕 Non supporté</span>';
-    return;
-  }
-  var perm = Notification.permission;
-  if (perm === 'granted') {
-    badge.innerHTML = '<span class="push-badge">🔔 Notifs actives</span>';
-  } else if (perm === 'denied') {
-    badge.innerHTML = '<span class="push-badge off">🔕 Bloquées</span>';
-  } else {
-    badge.innerHTML = '<span class="push-badge off">🔕 Non activées</span>';
-  }
+function setRappels(arr) {
+  var list = $('rdv-rappels-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!arr || !arr.length) { addRappelRow('1440'); return; }
+  arr.forEach(function(v) { addRappelRow(String(v)); });
 }
 
-function requestPushPermission() {
-  // iOS Safari hors PWA → guide d'installation
-  if (isIOSSafari()) {
-    showPWAInstallGuide();
-    return;
-  }
-  if (!('Notification' in window)) {
-    showNotifBanner('⚠️', 'Non supporté', 'Utilisez Chrome ou Firefox pour les notifications.');
-    return;
-  }
-  if (Notification.permission === 'granted') {
-    showNotifBanner('✅', 'Déjà actives', 'Les notifications sont déjà activées.');
-    updatePushBadge();
-    return;
-  }
-  Notification.requestPermission().then(function(perm) {
-    updatePushBadge();
-    if (perm === 'granted') {
-      showNotifBanner('🔔', 'Notifications activées !', 'Vous recevrez des rappels pour vos RDV.');
-      setTimeout(function(){
-        sendNotif('AREPROG — Agenda', 'Les notifications sont configurées ✓');
-      }, 1000);
-    } else {
-      showNotifBanner('🔕', 'Permission refusée', 'Autorisez les notifications dans les réglages Safari.');
-    }
+// ── Envoi email rappel RDV ────────────────────────────────────
+function sendReminderEmail(rdv, minutes) {
+  if (typeof emailjs === 'undefined') return;
+  var cl = rdv.clientId ? loadClients().find(function(c){ return c.id===rdv.clientId; }) : null;
+  var vehs = cl && cl.vehs && cl.vehs.length ? cl.vehs : (cl&&cl.vm?[{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||''}]:[]);
+  var selV = (rdv.vehIdx!=null && vehs[rdv.vehIdx]) ? vehs[rdv.vehIdx] : vehs[0];
+  var vehLabel = selV ? [selV.vm,selV.vmo,selV.vmot,selV.van?'('+selV.van+')':''].filter(Boolean).join(' ') : '';
+  var opt = RAPPEL_OPTIONS.find(function(o){ return parseInt(o.v)===minutes; });
+  emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
+    to_email:    EJS_FROM_EMAIL,
+    rdv_title:   rdv.title||'',
+    rdv_date:    rdv.date ? fmtDate(rdv.date) : '',
+    rdv_heure:   rdv.heure||'Non précisée',
+    rdv_lieu:    rdv.lieu||'Non précisé',
+    rdv_client:  cl ? cl.nom : 'Non précisé',
+    rdv_vehicule: vehLabel||'Non précisé',
+    rdv_notes:   rdv.notes||'',
+    rappel_label: opt ? opt.l : minutes+' min avant',
+  }).catch(function(e){ console.error('EmailJS rappel:', e); });
+}
+
+function scheduleRdvNotif(rdv) {
+  var rappels = rdv.rappels && rdv.rappels.length ? rdv.rappels
+    : (rdv.rappel && rdv.rappel>0 ? [rdv.rappel] : []);
+  if (!rdv.heure || !rappels.length) return;
+  var rdvDT = new Date(rdv.date+'T'+rdv.heure);
+  rappels.forEach(function(minutes) {
+    var delay = rdvDT.getTime() - minutes*60000 - Date.now();
+    if (delay < 0 || delay > 30*24*3600000) return;
+    setTimeout(function() {
+      sendReminderEmail(rdv, minutes);
+      showNotifBanner('📧', 'Email rappel envoyé', rdv.title);
+    }, delay);
   });
 }
 
-function showPWAInstallGuide() {
-  // Afficher un modal d'instructions d'installation
-  $('pwa-modal').classList.add('open');
-}
-
-function sendNotif(title, body, icon) {
-  if (Notification.permission !== 'granted') return;
-  try {
-    new Notification(title, {
-      body: body,
-      icon: icon || '/favicon512.png',
-      badge: '/favicon32x32.png',
-      tag: 'areprog-rdv',
-    });
-  } catch(e) {
-    // Fallback : banner in-app
-    showNotifBanner('🔔', title, body);
-  }
-}
-
-// Programmer un rappel via setTimeout (fonctionne si page ouverte)
-function scheduleRdvNotif(rdv) {
-  if (!rdv.heure || rdv.rappel === 0) return;
-  var rdvDateTime = new Date(rdv.date + 'T' + rdv.heure);
-  var notifTime = new Date(rdvDateTime.getTime() - rdv.rappel * 60000);
-  var delay = notifTime.getTime() - Date.now();
-  if (delay < 0 || delay > 7 * 24 * 3600000) return; // max 7 jours
-  setTimeout(function() {
-    var msg = rdv.heure + ' — ' + rdv.title;
-    if (rdv.lieu) msg += '\n📍 ' + rdv.lieu;
-    sendNotif('📅 Rappel AREPROG', msg);
-    showNotifBanner('📅', 'Rappel : ' + rdv.title, rdv.heure + (rdv.lieu ? ' · ' + rdv.lieu : ''));
-  }, delay);
-}
-
-// Vérifier les rappels au démarrage (pour les rdvs du jour)
-// Invitation à installer en PWA (s'affiche 1 fois)
-function maybeShowInstallHint() {
-  if (!isIOSSafari()) return;
-  if (localStorage.getItem('ar_pwa_hint')) return;
-  setTimeout(function() {
-    showNotifBanner(
-      '📲',
-      'Installer l\'app pour des rappels',
-      'Partager ⬆️ → Sur l\'écran d\'accueil → activer les notifications'
-    );
-    localStorage.setItem('ar_pwa_hint', '1');
-  }, 4000);
-}
+function maybeShowInstallHint() {} // supprimé
 
 function checkTodayNotifs() {
-  if (Notification.permission !== 'granted') return;
-  var today = toDateStr(new Date());
-  var rdvs = loadRdvs().filter(function(r){ return r.date === today; });
-  rdvs.forEach(function(r){ scheduleRdvNotif(r); });
-
-  // Alertes urgentes devis/factures
-  var docs = loadDocs();
+  loadRdvs().forEach(function(r){ scheduleRdvNotif(r); });
+  // Alertes factures impayées
+  if (typeof emailjs === 'undefined') return;
   var now = new Date(); now.setHours(0,0,0,0);
-  var urgents = [];
-
-  docs.filter(function(d){ return d.type==='facture' && d.statut!=='payé' && d.statut!=='annulé'; }).forEach(function(d) {
-    var days = Math.floor((now - new Date(d.date)) / 86400000);
-    if (days === 7 || days === 14 || days === 30) {
-      urgents.push('Facture '+(d.num||'')+' — '+(d.cn||'')+' impayée depuis '+days+' jours');
+  loadDocs().filter(function(d){ return d.type==='facture'&&d.statut!=='payé'&&d.statut!=='annulé'; }).forEach(function(d) {
+    var days = Math.floor((now - new Date(d.date))/86400000);
+    if (days===7||days===14||days===30) {
+      setTimeout(function(){
+        emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
+          to_email: EJS_FROM_EMAIL,
+          rdv_title: 'Facture impayée — '+(d.cn||''),
+          rdv_date: fmtDate(d.date),
+          rdv_heure: 'Depuis '+days+' jours',
+          rdv_lieu: '', rdv_client: d.cn||'',
+          rdv_vehicule: [d.vm,d.vmo].filter(Boolean).join(' '),
+          rdv_notes: 'Montant : '+fmt(d.ttc||0)+' · Ref : '+(d.num||''),
+          rappel_label: 'Alerte automatique',
+        }).catch(function(){});
+      }, 5000);
     }
   });
+}
 
-  if (urgents.length) {
-    setTimeout(function(){
-      sendNotif('⚠️ AREPROG — Alerte', urgents[0]);
-    }, 3000);
+// ══════════════════════════════════════════════════════════════
+//  ENVOI DEVIS / FACTURES PAR EMAIL
+// ══════════════════════════════════════════════════════════════
+var _emailDocPdfB64 = null;
+
+function sendDocByEmail() {
+  // Récupérer l'email du client si connu
+  var doc = _currentDocForEmail;
+  var defaultEmail = doc && doc.ce ? doc.ce : '';
+  $('send-to-email').value = defaultEmail;
+  // Message par défaut
+  var tpl = loadTemplate();
+  var type = doc && doc.type === 'facture' ? 'facture' : 'devis';
+  var num  = doc ? doc.num : '';
+  $('send-message').value = 'Bonjour,\n\nVeuillez trouver ci-joint votre ' + type + ' ' + num + '.\n\nCordialement,\n' + (tpl.nom||'AREPROG') + '\n' + (tpl.tel||'');
+  $('send-email-status').style.display = 'none';
+  $('send-email-confirm-btn').disabled = false;
+  $('send-email-confirm-btn').textContent = '📧 Envoyer';
+  $('send-email-modal').classList.add('open');
+}
+
+async function confirmSendEmail() {
+  var toEmail = $('send-to-email').value.trim();
+  if (!toEmail || !toEmail.includes('@')) {
+    showSendStatus('error', 'Email invalide.');
+    return;
   }
+  if (typeof emailjs === 'undefined') {
+    showSendStatus('error', 'EmailJS non disponible. Vérifiez votre connexion.');
+    return;
+  }
+
+  var btn = $('send-email-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Génération PDF…';
+
+  try {
+    // Générer le PDF depuis le contenu affiché dans le modal
+    var pdfB64 = await generatePdfBase64();
+    btn.textContent = 'Envoi en cours…';
+
+    var doc = _currentDocForEmail || {};
+    var tpl = loadTemplate();
+    var message = $('send-message').value;
+    var type = doc.type === 'facture' ? 'Facture' : 'Devis';
+
+    await emailjs.send(EJS_SERVICE, EJS_TPL_DOC, {
+      to_email:    toEmail,
+      from_name:   tpl.nom || 'AREPROG',
+      from_email:  EJS_FROM_EMAIL,
+      doc_type:    type,
+      doc_num:     doc.num || '',
+      doc_date:    doc.date ? fmtDate(doc.date) : '',
+      client_nom:  doc.cn || '',
+      montant_ttc: fmt(doc.ttc || 0),
+      message:     message,
+      pdf_base64:  pdfB64,
+      pdf_name:    buildPdfTitle(doc) + '.pdf',
+    });
+
+    showSendStatus('success', 'Email envoyé à '+toEmail+' ✓');
+    btn.textContent = '✓ Envoyé !';
+    setTimeout(function(){ $('send-email-modal').classList.remove('open'); }, 2000);
+    showNotifBanner('📧', 'Email envoyé !', type+' '+doc.num+' → '+toEmail);
+
+  } catch(e) {
+    console.error('Envoi email doc:', e);
+    showSendStatus('error', 'Erreur : '+(e.text||e.message||'Réessayez.'));
+    btn.disabled = false;
+    btn.textContent = '📧 Envoyer';
+  }
+}
+
+function showSendStatus(type, msg) {
+  var el = $('send-email-status');
+  el.style.display = 'block';
+  el.style.background = type==='success'?'rgba(34,197,94,.1)':'rgba(239,68,68,.1)';
+  el.style.color = type==='success'?'var(--green)':'var(--red)';
+  el.style.border = '1px solid '+(type==='success'?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)');
+  el.textContent = msg;
+}
+
+async function generatePdfBase64() {
+  // Utiliser jsPDF + html2canvas pour capturer le document
+  var el = $('preview');
+  if (!el) throw new Error('Aperçu non disponible');
+
+  var canvas = await html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    logging: false,
+  });
+
+  var { jsPDF } = window.jspdf;
+  var pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+  var imgW = 210; // A4 width mm
+  var imgH = (canvas.height * imgW) / canvas.width;
+  var pageH = 297; // A4 height mm
+  var pos = 0;
+
+  // Gestion multi-pages si le doc est long
+  while (pos < imgH) {
+    if (pos > 0) pdf.addPage();
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, -pos, imgW, imgH);
+    pos += pageH;
+  }
+
+  // Retourner en base64 sans le prefixe data:
+  var b64 = pdf.output('datauristring');
+  return b64.split(',')[1];
 }
 
 // Banner in-app (fallback ou iOS qui bloque Notification API)
@@ -3565,12 +3667,12 @@ function buildConfirmMsg(rdv) {
   if (rdv.lieu)  lignes.push('📍 ' + rdv.lieu);
   if (rdv.title) lignes.push('🔧 ' + rdv.title);
   lignes.push('');
-  // Infos véhicule client
+  // Infos véhicule du RDV (priorité au véhicule sélectionné, sinon premier)
   if (cl) {
-    var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo,vmot:cl.vmot,van:cl.van}] : []);
-    if (vehs.length > 0 && vehs[0].vm) {
-      var v = vehs[0];
-      lignes.push('🚗 Véhicule : ' + [v.vm,v.vmo,v.vmot,v.van?'('+v.van+')':''].filter(Boolean).join(' '));
+    var vehs2 = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||''}] : []);
+    var selV = (rdv.vehIdx !== null && rdv.vehIdx !== undefined && vehs2[rdv.vehIdx]) ? vehs2[rdv.vehIdx] : vehs2[0];
+    if (selV && selV.vm) {
+      lignes.push('🚗 Véhicule : ' + [selV.vm,selV.vmo,selV.vmot,selV.van?'('+selV.van+')':''].filter(Boolean).join(' '));
       lignes.push('');
     }
   }
@@ -3658,15 +3760,344 @@ function syncRdvsFromFirebase() {
 // ============================================================
 //  TABS (complet avec agenda)
 // ============================================================
+// showTab déplacé ci-dessus
+
+// ============================================================
+//  STATUT RAPIDE
+// ============================================================
+function toggleStatusDropdown(e, docId) {
+  e.stopPropagation();
+  var dd = $('sd-' + docId);
+  if (!dd) return;
+  var pill = dd.parentElement;
+  var isOpen = pill.classList.contains('open');
+  // Fermer tous les autres
+  document.querySelectorAll('.status-pill.open').forEach(function(p){ p.classList.remove('open'); });
+  if (!isOpen) pill.classList.add('open');
+}
+// Fermer les dropdowns au clic extérieur
+document.addEventListener('click', function() {
+  document.querySelectorAll('.status-pill.open').forEach(function(p){ p.classList.remove('open'); });
+});
+
+function quickSetStatus(docId, newStatus) {
+  var docs = loadDocs();
+  var idx = docs.findIndex(function(d){ return d.id === docId; });
+  if (idx < 0) return;
+  docs[idx].statut = newStatus;
+  saveDocs(docs);
+  renderDash();
+  if ($('t-liste').classList.contains('on')) renderListe();
+  showNotifBanner('✅', 'Statut mis à jour', docs[idx].num + ' → ' + newStatus);
+}
+
+// ============================================================
+//  DUPLIQUER UN DOCUMENT
+// ============================================================
+function duplicateDoc(docId) {
+  var docs = loadDocs();
+  var orig = docs.find(function(d){ return d.id === docId; });
+  if (!orig) return;
+  var copy = JSON.parse(JSON.stringify(orig));
+  copy.id = Date.now();
+  copy.date = today();
+  var ech = new Date(); ech.setDate(ech.getDate() + 30);
+  copy.ech = ech.toISOString().split('T')[0];
+  copy.statut = 'envoyé';
+  // Nouveau numéro
+  var prefix = copy.type === 'devis' ? 'DEV' : 'FAC';
+  copy.num = genNum(prefix);
+  docs.unshift(copy);
+  saveDocs(docs);
+  // Charger dans le formulaire
+  loadDoc(copy.id);
+  showNotifBanner('⧉', 'Document dupliqué', copy.num + ' créé depuis ' + orig.num);
+}
+
+// ============================================================
+//  DEVIS → FACTURE EN 1 CLIC
+// ============================================================
+function devisToFacture(docId) {
+  var docs = loadDocs();
+  var devis = docs.find(function(d){ return d.id === docId; });
+  if (!devis) return;
+  if (!confirm('Convertir ce devis en facture ? Le devis sera conservé.')) return;
+  var facture = JSON.parse(JSON.stringify(devis));
+  facture.id = Date.now();
+  facture.type = 'facture';
+  facture.num = genNum('FAC');
+  facture.date = today();
+  facture.statut = 'envoyé';
+  facture.refDevis = devis.num; // référence au devis d'origine
+  docs.unshift(facture);
+  // Marquer le devis comme accepté
+  var devisIdx = docs.findIndex(function(d){ return d.id === docId; });
+  if (devisIdx >= 0 && docs[devisIdx].statut === 'envoyé') docs[devisIdx].statut = 'accepté';
+  saveDocs(docs);
+  loadDoc(facture.id);
+  showNotifBanner('🧾', 'Facture créée', facture.num + ' depuis devis ' + devis.num);
+}
+
+// ============================================================
+//  RECHERCHE GLOBALE
+// ============================================================
+function globalSearch(q) {
+  var el = $('search-results');
+  if (!el) return;
+  q = (q || '').toLowerCase().trim();
+  if (!q || q.length < 2) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape au moins 2 caractères…</div>';
+    return;
+  }
+  var results = [];
+  // Recherche dans les documents
+  loadDocs().forEach(function(d) {
+    var haystack = [d.num,d.cn,d.vm,d.vmo,d.vmot,d.vim,d.cv,d.type,d.statut].join(' ').toLowerCase();
+    if (d.lines) d.lines.forEach(function(l){ haystack += ' ' + (l.label||'').toLowerCase(); });
+    if (haystack.includes(q)) {
+      results.push({ type:'doc', icon: d.type==='devis'?'📄':'🧾',
+        title: d.num + ' — ' + (d.cn||'—'),
+        sub: [d.type, fmtDate(d.date), fmt(d.ttc||0), d.statut].join(' · '),
+        action: 'loadDoc(' + d.id + ')' });
+    }
+  });
+  // Recherche dans les clients
+  loadClients().forEach(function(cl) {
+    var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm?[{vm:cl.vm,vmo:cl.vmo||'',vim:cl.vim||''}]:[]);
+    var haystack = [cl.nom,cl.tel,cl.email,cl.ville].join(' ').toLowerCase();
+    vehs.forEach(function(v){ haystack += ' ' + [v.vm,v.vmo,v.vmot,v.vim].join(' ').toLowerCase(); });
+    if (haystack.includes(q)) {
+      var vLabel = vehs.length ? vehs.map(function(v){return [v.vm,v.vmo].filter(Boolean).join(' ');}).join(', ') : '';
+      results.push({ type:'client', icon:'👤',
+        title: cl.nom,
+        sub: (vLabel||'') + (cl.tel?' · '+cl.tel:''),
+        action: 'showClientHistory(' + cl.id + ')' });
+    }
+  });
+  // Recherche dans les RDVs
+  loadRdvs().forEach(function(r) {
+    var haystack = [r.title,r.lieu,r.notes].join(' ').toLowerCase();
+    if (haystack.includes(q)) {
+      results.push({ type:'rdv', icon:'📅',
+        title: r.title,
+        sub: fmtDate(r.date) + (r.heure?' à '+r.heure:'') + (r.lieu?' · '+r.lieu:''),
+        action: 'showTab(\'agenda\')' });
+    }
+  });
+
+  if (!results.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Aucun résultat pour "' + escHtml(q) + '"</div>';
+    return;
+  }
+  el.innerHTML = '<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">' + results.length + ' résultat' + (results.length>1?'s':'') + '</div>'
+    + results.map(function(r) {
+      return '<div class="search-result-item" onclick="' + r.action + (r.type==='doc'?';showTab(\'form\')':'') + '">'
+        + '<div class="search-result-icon">' + r.icon + '</div>'
+        + '<div class="search-result-body">'
+          + '<div class="search-result-title">' + escHtml(r.title) + '</div>'
+          + '<div class="search-result-sub">' + escHtml(r.sub) + '</div>'
+        + '</div>'
+        + '<span style="color:var(--blue);font-size:16px">→</span>'
+      + '</div>';
+    }).join('');
+}
+
+function dashQuickSearch(q) {
+  var res = $('dash-search-results');
+  if (!q || q.length < 2) { res.style.display='none'; return; }
+  res.style.display = 'block';
+  globalSearch(q);
+  res.innerHTML = $('search-results').innerHTML;
+}
+
+// ============================================================
+//  HISTORIQUE CLIENT
+// ============================================================
+function showClientHistory(clientId) {
+  var cl = loadClients().find(function(c){ return c.id === clientId; });
+  if (!cl) return;
+  var docs = loadDocs().filter(function(d){ return d.cn && d.cn.toLowerCase() === (cl.nom||'').toLowerCase(); });
+  var rdvs = loadRdvs().filter(function(r){ return r.clientId === clientId; });
+
+  $('client-history-title').textContent = '📋 ' + cl.nom;
+
+  var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm?[{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}]:[]);
+  var vehsHTML = vehs.map(function(v){
+    return '<span style="background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:11px;margin-right:4px">🚗 '+escHtml([v.vm,v.vmo,v.van?'('+v.van+')':''].filter(Boolean).join(' '))+'</span>';
+  }).join('');
+
+  var totalCA = docs.filter(function(d){return d.statut==='payé';}).reduce(function(s,d){return s+(d.ttc||0);},0);
+
+  var html = '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">'
+    + (cl.tel?'<span style="font-size:13px;color:var(--text-dim)">📞 '+escHtml(cl.tel)+'</span>':'')
+    + (cl.email?'<span style="font-size:13px;color:var(--text-dim)">✉️ '+escHtml(cl.email)+'</span>':'')
+    + '</div>';
+  if (vehsHTML) html += '<div style="margin-bottom:16px">' + vehsHTML + '</div>';
+  html += '<div style="display:flex;gap:16px;margin-bottom:18px;flex-wrap:wrap">'
+    + '<div style="background:var(--bg3);border-radius:8px;padding:10px 14px;text-align:center"><div style="font-family:var(--fh);font-size:20px;color:var(--blue)">' + docs.length + '</div><div style="font-size:10px;color:var(--text-muted)">Documents</div></div>'
+    + '<div style="background:var(--bg3);border-radius:8px;padding:10px 14px;text-align:center"><div style="font-family:var(--fh);font-size:20px;color:var(--green)">' + fmt(totalCA) + '</div><div style="font-size:10px;color:var(--text-muted)">CA total</div></div>'
+    + '<div style="background:var(--bg3);border-radius:8px;padding:10px 14px;text-align:center"><div style="font-family:var(--fh);font-size:20px;color:var(--orange)">' + rdvs.length + '</div><div style="font-size:10px;color:var(--text-muted)">RDVs</div></div>'
+    + '</div>';
+
+  if (docs.length) {
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px">Documents</div>';
+    html += docs.map(function(d) {
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
+        + '<span class="badge ' + (d.type==='devis'?'b-devis':'b-facture') + '">' + d.type + '</span>'
+        + '<span class="doc-num">' + d.num + '</span>'
+        + '<span style="font-size:12px;color:var(--text-dim)">' + fmtDate(d.date) + '</span>'
+        + '<span style="flex:1;font-size:12px;color:var(--text-dim)">' + (d.lines||[]).map(function(l){return l.label?l.label.split(' — ')[0]:'';}).filter(Boolean).slice(0,2).join(', ') + '</span>'
+        + '<span style="font-family:var(--fm);color:var(--blue);font-size:13px">' + fmt(d.ttc||0) + '</span>'
+        + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+');$(' + "'client-history-modal'" + ').classList.remove(' + "'open'" + ')">✏️</button>'
+        + '</div>';
+    }).join('');
+  } else {
+    html += '<div style="color:var(--text-muted);font-size:13px">Aucun document trouvé pour ce client.</div>';
+  }
+
+  $('client-history-content').innerHTML = html;
+  $('client-history-modal').classList.add('open');
+}
+
+// Bouton historique depuis le carnet
+function clientHistoryBtn(id) { showClientHistory(id); }
+
+// ============================================================
+//  STATISTIQUES
+// ============================================================
+function renderStats() {
+  var period = parseInt($('stats-period') ? $('stats-period').value : '6') || 0;
+  var docs = loadDocs();
+  var now = new Date();
+
+  // Filtrer par période
+  if (period > 0) {
+    var cutoff = new Date(now);
+    cutoff.setMonth(cutoff.getMonth() - period);
+    docs = docs.filter(function(d){ return new Date(d.date) >= cutoff; });
+  }
+
+  var factures = docs.filter(function(d){ return d.type==='facture'; });
+  var devis = docs.filter(function(d){ return d.type==='devis'; });
+  var payees = factures.filter(function(d){ return d.statut==='payé'; });
+  var caTotal = payees.reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+  var caAttente = factures.filter(function(d){ return d.statut!=='payé'&&d.statut!=='annulé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+  var convRate = devis.length > 0 ? Math.round((factures.length / devis.length) * 100) : 0;
+  var panierMoyen = payees.length > 0 ? caTotal / payees.length : 0;
+
+  // KPIs
+  var kpis = $('stats-kpis');
+  if (kpis) kpis.innerHTML = [
+    { val: fmt(caTotal), lbl: 'CA encaissé' },
+    { val: fmt(caAttente), lbl: 'En attente' },
+    { val: docs.length + '', lbl: 'Documents' },
+    { val: payees.length + '', lbl: 'Factures payées' },
+    { val: convRate + '%', lbl: 'Taux conversion' },
+    { val: fmt(panierMoyen), lbl: 'Panier moyen' },
+  ].map(function(k) {
+    return '<div class="kpi-item"><div class="kpi-val">' + k.val + '</div><div class="kpi-lbl">' + k.lbl + '</div></div>';
+  }).join('');
+
+  // Graphique CA par mois
+  var mois6 = [];
+  for (var i = 5; i >= 0; i--) {
+    var d = new Date(now);
+    d.setMonth(d.getMonth() - i);
+    mois6.push({ y: d.getFullYear(), m: d.getMonth(), lbl: ['Jan','Fév','Mar','Avr','Mai','Jui','Jul','Aoû','Sep','Oct','Nov','Déc'][d.getMonth()] });
+  }
+  var allDocs = loadDocs();
+  var maxCA = 0;
+  var maxDocs = 0;
+  var moisData = mois6.map(function(mo) {
+    var moFacts = allDocs.filter(function(d){ return d.type==='facture' && d.statut==='payé' && new Date(d.date).getFullYear()===mo.y && new Date(d.date).getMonth()===mo.m; });
+    var moAll = allDocs.filter(function(d){ return new Date(d.date).getFullYear()===mo.y && new Date(d.date).getMonth()===mo.m; });
+    var ca = moFacts.reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+    if (ca > maxCA) maxCA = ca;
+    if (moAll.length > maxDocs) maxDocs = moAll.length;
+    return { lbl: mo.lbl, ca: ca, cnt: moAll.length };
+  });
+
+  var chartCA = $('chart-ca');
+  if (chartCA) chartCA.innerHTML = moisData.map(function(mo) {
+    var h = maxCA > 0 ? Math.max(4, Math.round((mo.ca / maxCA) * 90)) : 4;
+    return '<div class="bar-col"><div class="bar-val">' + (mo.ca>0?Math.round(mo.ca)+'€':'') + '</div><div class="bar-fill" style="height:'+h+'px;background:var(--blue)"></div><div class="bar-label">' + mo.lbl + '</div></div>';
+  }).join('');
+
+  var chartDocs = $('chart-docs');
+  if (chartDocs) chartDocs.innerHTML = moisData.map(function(mo) {
+    var h = maxDocs > 0 ? Math.max(4, Math.round((mo.cnt / maxDocs) * 90)) : 4;
+    return '<div class="bar-col"><div class="bar-val">' + (mo.cnt>0?mo.cnt:'') + '</div><div class="bar-fill" style="height:'+h+'px;background:var(--green)"></div><div class="bar-label">' + mo.lbl + '</div></div>';
+  }).join('');
+
+  // Prestations les plus vendues
+  var prestCount = {};
+  allDocs.forEach(function(d) {
+    (d.lines||[]).forEach(function(l) {
+      if (!l.label || l.offert) return;
+      var key = l.label.split(' — ')[0].split(' · ')[0];
+      prestCount[key] = (prestCount[key]||0) + 1;
+    });
+  });
+  var topPrests = Object.keys(prestCount).sort(function(a,b){ return prestCount[b]-prestCount[a]; }).slice(0,6);
+  var maxP = topPrests.length ? prestCount[topPrests[0]] : 1;
+  var chartP = $('chart-prestations');
+  if (chartP) chartP.innerHTML = topPrests.length ? topPrests.map(function(p) {
+    var pct = Math.round((prestCount[p]/maxP)*100);
+    return '<div style="margin-bottom:10px">'
+      + '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--text)">' + escHtml(p) + '</span><span style="color:var(--text-dim)">' + prestCount[p] + 'x</span></div>'
+      + '<div style="height:6px;background:var(--bg3);border-radius:3px"><div style="height:100%;width:'+pct+'%;background:var(--blue);border-radius:3px"></div></div>'
+    + '</div>';
+  }).join('') : '<div style="color:var(--text-muted);font-size:13px">Pas encore de données.</div>';
+
+  // Taux conversion
+  var convEl = $('chart-conversion');
+  if (convEl) convEl.innerHTML = '<div style="text-align:center">'
+    + '<div style="font-family:var(--fh);font-size:48px;font-weight:700;color:' + (convRate>=50?'var(--green)':'var(--orange)') + '">' + convRate + '%</div>'
+    + '<div style="color:var(--text-dim);font-size:13px;margin-top:4px">' + devis.length + ' devis → ' + factures.length + ' factures</div>'
+    + '<div style="margin-top:16px;height:8px;background:var(--bg3);border-radius:4px"><div style="height:100%;width:'+Math.min(convRate,100)+'%;background:' + (convRate>=50?'var(--green)':'var(--orange)') + ';border-radius:4px"></div></div>'
+  + '</div>';
+}
+
+// ============================================================
+//  EXPORT CSV
+// ============================================================
+function exportCSV() {
+  var docs = loadDocs();
+  var rows = [['Numéro','Type','Date','Client','Véhicule','Immat','Montant HT','TVA','Montant TTC','Statut','Prestations']];
+  docs.forEach(function(d) {
+    var prests = (d.lines||[]).map(function(l){ return l.label?l.label.split(' — ')[0]:''; }).filter(Boolean).join(' | ');
+    rows.push([
+      d.num||'', d.type||'', d.date||'', d.cn||'',
+      [d.vm,d.vmo].filter(Boolean).join(' '), d.vim||'',
+      (d.ht||0).toFixed(2), (d.tva||0).toFixed(2), (d.ttc||0).toFixed(2),
+      d.statut||'', prests
+    ]);
+  });
+  var csv = rows.map(function(r){
+    return r.map(function(cell){ return '"' + String(cell).replace(/"/g,'""') + '"'; }).join(';');
+  }).join('\n');
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'AREPROG_export_' + today() + '.csv';
+  a.click();
+  showNotifBanner('⬇', 'Export CSV', docs.length + ' documents exportés');
+}
+
+// ============================================================
+//  TABS (complet)
+// ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services','agenda'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda'][i]===t); });
+  ['dash','form','liste','carnet','template','services','agenda','stats','search'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search'][i]===t); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
   if(t==='template') { fillTplForm(loadTemplate()); livePreview(); }
   if(t==='services') renderCatEditor();
   if(t==='agenda')   renderAgenda();
+  if(t==='stats')    renderStats();
+  if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
 }
 
 // ============================================================
@@ -3679,12 +4110,4 @@ function showTab(t) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
     .then(function(reg) {
-      console.log('SW enregistré :', reg.scope);
-      // Passer les rappels au SW pour persistance
-      window._swReg = reg;
-    })
-    .catch(function(e) { console.warn('SW non disponible :', e); });
-}
-</script>
-</body>
-</html>
+    
