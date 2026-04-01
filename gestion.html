@@ -212,12 +212,7 @@ select option{background:#1d222d}
 /* ── MULTI-UTILISATEURS ── */
 
 .user-badge:hover{background:rgba(30,144,255,.2)}
-.user-badge.admin{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.25);color:var(--orange)}
 
-.search-bar input{
-  flex:1;background:transparent;border:none;outline:none;
-  color:var(--text);font-size:14px;
-}
 .search-bar input::placeholder{color:var(--text-muted)}
 .search-icon{color:var(--text-muted);font-size:16px;flex-shrink:0}
 .search-results{display:flex;flex-direction:column;gap:6px}
@@ -834,7 +829,6 @@ select option{background:#1d222d}
     <div class="topbar-row1">
       <div class="tb-brand">ARE<span>PROG</span></div>
       <div style="display:flex;align-items:center;gap:8px">
-        <span id="current-user-badge" class="user-badge admin" onclick="openUserSwitch()">👤 Arthur</span>
         <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
       </div>
     </div>
@@ -2264,8 +2258,6 @@ var editId = null;
 function initApp() {
   resetForm(false);
   fillTplForm(loadTemplate());
-  updateUserBadge();
-  applyUserPermissions();
   renderDash();
   renderCarnet();
   // Firebase
@@ -2276,10 +2268,8 @@ function initApp() {
       syncRdvsFromFirebase();
     });
   }, 500);
-  // Rôle et restrictions
   // Vérifier rappels agenda
   setTimeout(checkTodayNotifs, 2000);
-
 }
 
 function resetForm(goToForm) {
