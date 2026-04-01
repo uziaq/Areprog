@@ -34,7 +34,7 @@ self.addEventListener('notificationclick', function(e) {
         }
       }
       if (clients.openWindow) {
-        return clients.openWindow('https://areprog.fr/devis#agenda');
+        return clients.openWindow('https://areprog.fr/gestion#agenda');
       }
     })
   );

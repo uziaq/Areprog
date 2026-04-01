@@ -40,8 +40,9 @@
 /reprogrammation-moteur-auxerre          /reprogrammation-moteur-auxerre.html          200
 
 # Espace pro
-/devis                              /areprog-devis.html                 200
-/pro                                /areprog-devis.html                 200
+/gestion                            /gestion.html                       200
+/devis                              /gestion.html                       200
+/pro                                /gestion.html                       200
 
 # ── Redirections 301 anciennes URLs ─────────────────────────
 /boutique                           /contact                            301

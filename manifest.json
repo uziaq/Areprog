@@ -2,7 +2,7 @@
   "name": "AREPROG — Devis & Factures",
   "short_name": "AREPROG",
   "description": "Outil professionnel de devis et facturation pour AREPROG",
-  "start_url": "/devis",
+  "start_url": "/gestion",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0a0c10",
