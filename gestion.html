@@ -210,86 +210,10 @@ select option{background:#1d222d}
 .tc{display:none}.tc.on{display:block}
 
 /* ── MULTI-UTILISATEURS ── */
-.user-badge{
-  display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
-  border-radius:20px;font-size:12px;font-weight:600;
-  background:rgba(30,144,255,.12);border:1px solid rgba(30,144,255,.2);color:var(--blue);
-  cursor:pointer;transition:all .15s;
-}
+
 .user-badge:hover{background:rgba(30,144,255,.2)}
 .user-badge.admin{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.25);color:var(--orange)}
-.user-switch-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:400;align-items:center;justify-content:center;padding:20px}
-.user-switch-modal.open{display:flex}
-.user-switch-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:420px;max-width:100%;padding:24px}
-.user-card{
-  display:flex;align-items:center;gap:12px;padding:12px 14px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
-  margin-bottom:8px;cursor:pointer;transition:all .15s;
-}
-.user-card:hover{border-color:var(--blue);background:rgba(30,144,255,.05)}
-.user-card.active{border-color:var(--blue);background:rgba(30,144,255,.08)}
-.user-avatar{
-  width:36px;height:36px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:14px;flex-shrink:0;
-}
-.user-info{flex:1}
-.user-name{font-size:14px;font-weight:600;color:var(--text)}
-.user-role{font-size:11px;color:var(--text-muted)}
-.user-locked{opacity:.5;cursor:not-allowed}
 
-/* PIN modal */
-.pin-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:410;align-items:center;justify-content:center}
-.pin-modal.open{display:flex}
-.pin-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;padding:28px;text-align:center;width:320px;max-width:100%}
-.pin-title{font-size:18px;font-weight:700;margin-bottom:6px}
-.pin-sub{color:var(--text-dim);font-size:13px;margin-bottom:20px}
-.pin-dots{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
-.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);transition:all .15s}
-.pin-dot.filled{background:var(--blue);border-color:var(--blue)}
-.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pin-key{
-  padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;
-  font-size:18px;font-weight:600;cursor:pointer;transition:all .1s;color:var(--text);
-}
-.pin-key:hover{background:var(--bg4);border-color:var(--blue)}
-.pin-key:active{transform:scale(.95)}
-.pin-err{color:var(--red);font-size:12px;margin-top:10px;min-height:18px}
-
-/* ── TECHNICIENS ── */
-.tech-badge{
-  display:inline-flex;align-items:center;gap:5px;padding:3px 9px;
-  border-radius:12px;font-size:11px;font-weight:600;
-}
-.tech-avatar{
-  width:26px;height:26px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;flex-shrink:0;
-}
-
-/* ── MULTI-COMPTES ── */
-.user-tag{
-  display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:20px;
-  font-size:11px;color:var(--text-dim);
-}
-.user-role-admin{color:var(--blue)}
-.user-role-tech{color:var(--green)}
-.accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:16px}
-.account-card{
-  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-  padding:16px;display:flex;flex-direction:column;gap:8px;
-}
-.account-card-name{font-weight:700;font-size:14px;color:var(--text)}
-.account-card-role{font-size:11px;color:var(--text-dim)}
-.account-card-actions{display:flex;gap:6px;margin-top:4px}
-
-/* ── RECHERCHE GLOBALE ── */
-.search-bar{
-  display:flex;align-items:center;gap:10px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-  padding:10px 14px;margin-bottom:20px;
-}
 .search-bar input{
   flex:1;background:transparent;border:none;outline:none;
   color:var(--text);font-size:14px;
@@ -924,7 +848,6 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
-      <button class="nb" id="nb-comptes" onclick="showTab('comptes')" style="display:none">👤 Comptes</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -1177,47 +1100,6 @@ select option{background:#1d222d}
       </div>
       <div id="search-results" class="search-results">
         <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>
-      </div>
-    </div>
-
-    <!-- COMPTES -->
-    <div class="tc" id="t-comptes">
-      <div class="sh">
-        <div class="sh-title">Gestion des comptes</div>
-        <button class="btn-p" onclick="openAddAccountModal()">+ Nouveau compte</button>
-      </div>
-      <div style="background:rgba(30,144,255,.06);border:1px solid rgba(30,144,255,.15);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--text-dim)">
-        🔑 Ton compte (<strong style="color:var(--text)" id="main-account-label"></strong>) est le compte principal avec accès complet. Les autres comptes ont accès uniquement aux documents et à l'agenda.
-      </div>
-      <div class="accounts-grid" id="accounts-grid"></div>
-    </div>
-
-    <!-- MODAL AJOUT COMPTE -->
-    <div class="rdv-modal" id="add-account-modal" onclick="if(event.target===this)$('add-account-modal').classList.remove('open')" style="z-index:330">
-      <div class="rdv-box" style="max-width:420px">
-        <div class="rdv-box-title" id="add-account-title">Nouveau compte technicien</div>
-        <div class="fr"><label>Nom complet</label>
-          <input id="acc-nom" type="text" placeholder="Jean Dupont"/>
-        </div>
-        <div class="fr"><label>Email (pour la connexion)</label>
-          <input id="acc-email" type="email" placeholder="jean@areprog.fr"/>
-        </div>
-        <div class="fr"><label>Couleur</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px" id="acc-colors">
-            <div onclick="selectAccColor(this,'#1E90FF')" style="width:28px;height:28px;border-radius:50%;background:#1E90FF;cursor:pointer;border:3px solid var(--border)" data-color="#1E90FF"></div>
-            <div onclick="selectAccColor(this,'#22c55e')" style="width:28px;height:28px;border-radius:50%;background:#22c55e;cursor:pointer;border:3px solid var(--border)" data-color="#22c55e"></div>
-            <div onclick="selectAccColor(this,'#f59e0b')" style="width:28px;height:28px;border-radius:50%;background:#f59e0b;cursor:pointer;border:3px solid var(--border)" data-color="#f59e0b"></div>
-            <div onclick="selectAccColor(this,'#ef4444')" style="width:28px;height:28px;border-radius:50%;background:#ef4444;cursor:pointer;border:3px solid var(--border)" data-color="#ef4444"></div>
-            <div onclick="selectAccColor(this,'#a855f7')" style="width:28px;height:28px;border-radius:50%;background:#a855f7;cursor:pointer;border:3px solid var(--border)" data-color="#a855f7"></div>
-            <div onclick="selectAccColor(this,'#ec4899')" style="width:28px;height:28px;border-radius:50%;background:#ec4899;cursor:pointer;border:3px solid var(--border)" data-color="#ec4899"></div>
-          </div>
-          <input type="hidden" id="acc-color" value="#1E90FF"/>
-        </div>
-        <div id="add-account-info" style="display:none;margin-top:12px;padding:12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:8px;font-size:12px;color:var(--green)"></div>
-        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
-          <button class="btn-s" onclick="$('add-account-modal').classList.remove('open')">Annuler</button>
-          <button class="btn-g" onclick="saveAccount()">💾 Enregistrer</button>
-        </div>
       </div>
     </div>
 
@@ -1564,9 +1446,279 @@ select option{background:#1d222d}
         <div class="fr"><label>Adresse / Lieu</label>
           <input id="rdv-lieu" type="text" placeholder="12 rue des Pins, Bayonne"/>
         </div>
-        <div class="fr"><label>Technicien</label>
-          <select id="rdv-tech">
-            <option value="">— Technicien —</option>
+
+        <div class="fr"><label>Notes</label>
+          <textarea id="rdv-notes" rows="3" placeholder="Détails de l'intervention..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
+      <div style="display:flex;gap:8px">
+        <button class="btn-d" id="rdv-delete-btn" onclick="deleteRdvFromModal()" style="display:none">🗑 Supprimer</button>
+        <button class="rdv-confirm-btn" id="rdv-copy-btn" onclick="copyConfirmMsgFromModal()" style="display:none">📋 Copier message</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-left:auto">
+        <button class="btn-s" onclick="closeRdvModal()">Annuler</button>
+        <button class="btn-g" onclick="saveRdv()">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ENVOI EMAIL -->
+<div class="rdv-modal" id="send-email-modal" onclick="if(event.target===this)$('send-email-modal').classList.remove('open')" style="z-index:330">
+  <div class="rdv-box" style="max-width:420px">
+    <div class="rdv-box-title">📧 Envoyer par email</div>
+    <div class="fr">
+      <label>Email du client</label>
+      <input id="send-to-email" type="email" placeholder="client@email.fr" autocomplete="off"/>
+    </div>
+    <div class="fr">
+      <label>Message personnalisé (optionnel)</label>
+      <textarea id="send-message" rows="4" placeholder="Bonjour,
+
+Veuillez trouver ci-joint votre devis.
+
+Cordialement, AREPROG"></textarea>
+    </div>
+    <div id="send-email-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:10px"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('send-email-modal').classList.remove('open')">Annuler</button>
+      <button class="btn-g" id="send-email-confirm-btn" onclick="confirmSendEmail()">📧 Envoyer</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION BANNER -->
+<div class="notif-banner" id="notif-banner">
+  <div class="notif-icon" id="notif-icon">🔔</div>
+  <div class="notif-body">
+    <div class="notif-title" id="notif-title">Rappel</div>
+    <div class="notif-msg" id="notif-msg"></div>
+  </div>
+  <button class="notif-close" onclick="closeNotifBanner()">×</button>
+</div>
+
+<!-- MODAL HISTORIQUE CLIENT -->
+<div class="client-history-modal" id="client-history-modal" onclick="if(event.target===this)$('client-history-modal').classList.remove('open')">
+  <div class="client-history-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div class="sh-title" id="client-history-title">Historique client</div>
+      <button class="btn-s" onclick="$('client-history-modal').classList.remove('open')">✕ Fermer</button>
+    </div>
+    <div id="client-history-content"></div>
+  </div>
+</div>
+
+
+
+<!-- MODAL OLSX SIMULATEUR -->
+<div class="olsx-modal" id="olsx-modal" onclick="if(event.target===this)closeOlsxModal()">
+  <div class="olsx-box">
+    <div class="olsx-toolbar">
+      <div>
+        <div class="olsx-toolbar-title">⚡ Simulateur OLSX — Gains moteur</div>
+        <div class="olsx-toolbar-hint">Sélectionne le véhicule dans le simulateur, puis clique "Importer les gains"</div>
+      </div>
+      <button class="btn-s" onclick="closeOlsxModal()">✕</button>
+    </div>
+    <iframe class="olsx-iframe" id="olsx-iframe"
+      src="https://api.olsx.eu/iframe?token=165|nY954hlsQT6tK8OLuaZtdtnj7zS0HYzBRIWsYYQk7966bc37&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=on&mailcontact=arthur%40areprog.fr"
+      allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox">
+    </iframe>
+    <div class="olsx-footer">
+      <div class="olsx-gains-preview" id="olsx-gains-preview">Aucun gain sélectionné</div>
+      <button class="btn-s" onclick="closeOlsxModal()">Annuler</button>
+      <button class="btn-g" id="olsx-import-btn" onclick="importOlsxGains()" style="display:none">✓ Importer les gains</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CARNET (sélection) -->
+<div class="carnet-modal" id="carnet-modal" onclick="if(event.target===this)closeCarnetModal()">
+  <div class="carnet-box">
+    <div class="carnet-box-title">👥 Choisir un client</div>
+    <div class="carnet-search">
+      <input id="carnet-modal-search" type="text" placeholder="Rechercher..." oninput="renderCarnetModal()"/>
+    </div>
+    <div class="carnet-grid" id="carnet-modal-grid" style="max-height:400px;overflow-y:auto"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px;align-items:center">
+      <button class="btn-s" onclick="openAddClientModal()">+ Nouveau client</button>
+      <button class="btn-s" onclick="closeCarnetModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AJOUT CLIENT -->
+<div class="carnet-modal" id="add-client-modal" onclick="if(event.target===this)closeAddClientModal()">
+  <div class="carnet-box">
+    <div class="carnet-box-title" id="add-client-title">Nouveau client</div>
+    <div class="fg2" style="margin-bottom:0">
+      <div>
+        <div class="fr"><label>Nom / Société</label><input id="ac-nom" type="text" placeholder="Prénom NOM"/></div>
+        <div class="fr"><label>Téléphone</label><input id="ac-tel" type="text" placeholder="06 XX XX XX XX"/></div>
+        <div class="fr"><label>Email</label><input id="ac-email" type="email" placeholder="client@email.fr"/></div>
+        <div class="fr"><label>Adresse</label><input id="ac-adr" type="text" placeholder="10 rue des Lilas"/></div>
+        <div class="fr"><label>Ville + CP</label><input id="ac-ville" type="text" placeholder="64100 Bayonne"/></div>
+      </div>
+      <div>
+        <div class="fr" style="margin-bottom:6px">
+          <label>Véhicules</label>
+          <div id="ac-veh-list" class="veh-list"></div>
+          <button class="veh-add-btn" onclick="addVehicleRow()">+ Ajouter un véhicule</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="closeAddClientModal()">Annuler</button>
+      <button class="btn-g" onclick="saveClient()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SÉLECTION VÉHICULE -->
+<div class="rdv-modal" id="veh-select-modal" onclick="if(event.target===this)$('veh-select-modal').classList.remove('open')" style="z-index:325">
+  <div class="rdv-box" style="max-width:440px">
+    <div class="rdv-box-title">🚗 Sélectionner un véhicule</div>
+    <div id="veh-select-list" class="veh-list" style="max-height:360px;overflow-y:auto"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('veh-select-modal').classList.remove('open')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TEMPLATE PLEIN ÉCRAN -->
+<div class="tpl-modal" id="tpl-modal">
+  <div class="tpl-wrap">
+    <div class="tpl-panel">
+      <div class="tpl-panel-title">
+        🎨 Template
+        <button class="btn-s" onclick="closeTplModal()" style="font-size:12px">✕ Fermer</button>
+      </div>
+      <div style="flex:1;overflow-y:auto">
+        <div class="tpl-section">
+          <div class="tpl-section-title">Entreprise</div>
+          <div class="tpl-row"><label>Nom</label><input id="tpl2-nom" type="text" oninput="syncTpl('nom',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Activité</label><input id="tpl2-activite" type="text" oninput="syncTpl('activite',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Zones</label><input id="tpl2-zones" type="text" oninput="syncTpl('zones',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Téléphone</label><input id="tpl2-tel" type="text" oninput="syncTpl('tel',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Site web</label><input id="tpl2-web" type="text" oninput="syncTpl('web',this.value);livePreview()"/></div>
+          <div class="tpl-row"><label>Mentions légales</label><textarea id="tpl2-legal" rows="2" oninput="syncTpl('legal',this.value);livePreview()"></textarea></div>
+        </div>
+        <div class="tpl-section">
+          <div class="tpl-section-title">Style</div>
+          <div class="tpl-row"><label>Couleur principale</label>
+            <div class="tpl-color">
+              <input type="color" id="tpl2-color-pick" oninput="syncTpl('color',this.value);$('tpl2-color-hex').value=this.value;livePreview()"/>
+              <input type="text" id="tpl2-color-hex" oninput="syncTpl('color',this.value);$('tpl2-color-pick').value=this.value;livePreview()"/>
+            </div>
+          </div>
+          <div class="tpl-row"><label>Pied de page</label><textarea id="tpl2-footer" rows="3" oninput="syncTpl('footer',this.value);livePreview()"></textarea></div>
+        </div>
+      </div>
+      <div class="tpl-actions">
+        <button class="btn-s" onclick="resetTemplate();livePreview()">↺ Réinitialiser</button>
+        <button class="btn-g" onclick="saveTemplate();closeTplModal()">💾 Enregistrer & fermer</button>
+      </div>
+    </div>
+    <div class="tpl-preview-panel">
+      <div class="tpl-preview-bar">
+        <span class="tpl-preview-bar-title">Aperçu en direct</span>
+        <button class="btn-p" style="font-size:12px" onclick="printFromModal()">🖨 Imprimer</button>
+      </div>
+      <div class="tpl-preview-scroll">
+        <div class="tpl-preview-doc" id="tpl-live-preview"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ÉDITION SERVICE -->
+<div class="cat-modal" id="cat-item-modal" onclick="if(event.target===this)closeCatModal()">
+  <div class="cat-box">
+    <div class="cat-box-title" id="cat-modal-title">Modifier le service</div>
+    <div class="fr"><label>Nom du service</label>
+      <input id="cat-item-label" type="text" placeholder="Ex : Stage 1 — Reprogrammation moteur"/>
+    </div>
+    <div class="fr"><label>Prix indicatif (€ HT) — mettre 0 pour "Sur devis"</label>
+      <input id="cat-item-price" type="number" min="0" step="1" placeholder="330"/>
+    </div>
+    <div class="fr">
+      <label>Gains / bénéfices (un par ligne — affichés sur le devis)</label>
+      <textarea id="cat-item-gains" rows="4" placeholder="Ex :&#10;Meilleure réactivité moteur&#10;100% réversible&#10;Agrément de conduite amélioré"></textarea>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Ces gains apparaîtront dans l'encart bleu sur le devis/facture PDF</div>
+    </div>
+    <div class="fr"><label>Catégorie</label>
+      <select id="cat-item-group"></select>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="closeCatModal()">Annuler</button>
+      <button class="btn-g" onclick="saveCatItem()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AJOUT CATÉGORIE -->
+<div class="cat-modal" id="cat-group-modal" onclick="if(event.target===this)$('cat-group-modal').classList.remove('open')">
+  <div class="cat-box">
+    <div class="cat-box-title">Nouvelle catégorie</div>
+    <div class="fr"><label>Nom de la catégorie</label>
+      <input id="cat-group-name-input" type="text" placeholder="Ex : Prestations spéciales"/>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('cat-group-modal').classList.remove('open')">Annuler</button>
+      <button class="btn-g" onclick="confirmAddGroup()">✓ Créer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RDV -->
+<div class="rdv-modal" id="rdv-modal" onclick="if(event.target===this)closeRdvModal()">
+  <div class="rdv-box">
+    <div class="rdv-box-title" id="rdv-modal-title">Nouveau rendez-vous</div>
+    <div class="fg2" style="margin-bottom:0">
+      <div>
+        <div class="fr"><label>Titre / Objet</label>
+          <input id="rdv-title" type="text" placeholder="Intervention Stage 1 — Golf 7"/>
+        </div>
+        <div class="fr"><label>Type</label>
+          <select id="rdv-type">
+            <option value="rdv">🔵 Rendez-vous client</option>
+            <option value="relance">🟡 Relance devis</option>
+            <option value="impaye">🔴 Relance facture impayée</option>
+            <option value="perso">🟣 Rappel personnel</option>
+          </select>
+        </div>
+        <div class="fr"><label>Date</label>
+          <input id="rdv-date" type="date"/>
+        </div>
+        <div class="fr"><label>Heure (optionnel)</label>
+          <input id="rdv-heure" type="time" placeholder="09:00"/>
+        </div>
+        <div class="fr">
+          <label style="display:flex;align-items:center;justify-content:space-between">
+            <span>Rappels par email</span>
+            <button type="button" class="btn-s" style="font-size:11px;padding:3px 8px" onclick="addRappelRow()">+ Ajouter</button>
+          </label>
+          <div id="rdv-rappels-list" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px">📧 Un email sera envoyé à <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bcddcec8d4c9cefcddced9ccced3db92dace">[email&#160;protected]</a></div>
+        </div>
+      </div>
+      <div>
+        <div class="fr"><label>Client lié (optionnel)</label>
+          <select id="rdv-client" onchange="updateRdvVehSelect()">
+            <option value="">— Aucun client —</option>
+          </select>
+        </div>
+        <div class="fr" id="rdv-veh-row" style="display:none">
+          <label>Véhicule concerné</label>
+          <select id="rdv-vehicule">
+            <option value="">— Tous les véhicules —</option>
+          </select>
+        </div>
+        <div class="fr"><label>Document lié (optionnel)</label>
+          <select id="rdv-doc">
+            <option value="">— Aucun document —</option>
           </select>
         </div>
         <div class="fr"><label>Notes</label>
@@ -1632,78 +1784,6 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<!-- MODAL SWITCH UTILISATEUR -->
-<div class="user-switch-modal" id="user-switch-modal" onclick="if(event.target===this)$('user-switch-modal').classList.remove('open')">
-  <div class="user-switch-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-family:var(--fh);font-size:18px;font-weight:700">Changer d'utilisateur</div>
-      <button class="btn-s" style="padding:5px 10px" onclick="$('user-switch-modal').classList.remove('open')">✕</button>
-    </div>
-    <div id="user-list"></div>
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-      <button class="btn-s" style="width:100%;font-size:12px" onclick="openManageUsers()">⚙️ Gérer les utilisateurs (admin)</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL PIN -->
-<div class="pin-modal" id="pin-modal">
-  <div class="pin-box">
-    <div class="pin-title" id="pin-username">Code PIN</div>
-    <div class="pin-sub">Entrez votre code PIN à 4 chiffres</div>
-    <div class="pin-dots" id="pin-dots">
-      <div class="pin-dot"></div>
-      <div class="pin-dot"></div>
-      <div class="pin-dot"></div>
-      <div class="pin-dot"></div>
-    </div>
-    <div class="pin-grid">
-      <button class="pin-key" onclick="pinKey(1)">1</button>
-      <button class="pin-key" onclick="pinKey(2)">2</button>
-      <button class="pin-key" onclick="pinKey(3)">3</button>
-      <button class="pin-key" onclick="pinKey(4)">4</button>
-      <button class="pin-key" onclick="pinKey(5)">5</button>
-      <button class="pin-key" onclick="pinKey(6)">6</button>
-      <button class="pin-key" onclick="pinKey(7)">7</button>
-      <button class="pin-key" onclick="pinKey(8)">8</button>
-      <button class="pin-key" onclick="pinKey(9)">9</button>
-      <button class="pin-key" onclick="pinKey('C')" style="font-size:13px;color:var(--red)">✕</button>
-      <button class="pin-key" onclick="pinKey(0)">0</button>
-      <button class="pin-key" onclick="pinKey('OK')" style="font-size:13px;color:var(--green)">✓</button>
-    </div>
-    <div class="pin-err" id="pin-err"></div>
-    <button class="btn-s" style="width:100%;margin-top:12px;font-size:12px" onclick="$('pin-modal').classList.remove('open')">Annuler</button>
-  </div>
-</div>
-
-<!-- MODAL GESTION UTILISATEURS (admin) -->
-<div class="user-switch-modal" id="manage-users-modal" onclick="if(event.target===this)$('manage-users-modal').classList.remove('open')">
-  <div class="user-switch-box" style="width:500px;max-height:90vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-family:var(--fh);font-size:18px;font-weight:700">⚙️ Gestion des utilisateurs</div>
-      <button class="btn-s" style="padding:5px 10px" onclick="$('manage-users-modal').classList.remove('open')">✕</button>
-    </div>
-    <div id="manage-users-list"></div>
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-      <button class="btn-p" onclick="openAddUserForm()" style="width:100%">+ Ajouter un utilisateur</button>
-    </div>
-    <div id="add-user-form" style="display:none;margin-top:14px;background:var(--bg3);border-radius:8px;padding:14px">
-      <div class="fr"><label>Nom</label><input id="nu-nom" type="text" placeholder="Ex : Thomas"/></div>
-      <div class="fr"><label>Rôle</label>
-        <select id="nu-role">
-          <option value="technicien">Technicien</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-      <div class="fr"><label>Code PIN (4 chiffres)</label><input id="nu-pin" type="password" maxlength="4" placeholder="0000"/></div>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px">Le technicien verra ses propres RDVs et pourra créer des devis.</div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn-s" onclick="$('add-user-form').style.display='none'">Annuler</button>
-        <button class="btn-g" onclick="saveNewUser()">💾 Créer</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL APERÇU -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
@@ -2194,12 +2274,9 @@ function initApp() {
     syncFromFirebase(function() {
       startRealtimeSync();
       syncRdvsFromFirebase();
-      syncAccountsFromFirebase();
     });
   }, 500);
   // Rôle et restrictions
-  applyRoleRestrictions();
-  fillRdvTechSelect();
   // Vérifier rappels agenda
   setTimeout(checkTodayNotifs, 2000);
 
@@ -3331,7 +3408,6 @@ function renderAgenda() {
   renderSideEvents(calSelected);
   renderAutoAlerts();
   fillRdvClientSelect();
-  // push badge supprimé — EmailJS utilisé
 }
 
 function calPrev() { calDate.setMonth(calDate.getMonth()-1); renderCalendar(); }
@@ -3412,13 +3488,8 @@ function renderSideEvents(d) {
       + '<div class="rdv-title">'+escHtml(r.title)+'</div>'
       + (clientName ? '<div class="rdv-sub">👤 '+escHtml(clientName)+'</div>' : '')
       + (rdvVehLabel ? '<div class="rdv-sub">🚗 '+escHtml(rdvVehLabel)+'</div>' : '')
-      + (function(){
-          if (!r.technicienId) return '';
-          var tech = loadUsers().find(function(u){ return u.id === r.technicienId; });
-          return tech ? '<div class="rdv-sub">👷 '+escHtml(tech.nom)+'</div>' : '';
-        })()
+
       + (r.lieu ? '<div class="rdv-sub">📍 '+escHtml(r.lieu)+'</div>' : '')
-      + (r.tech ? '<div class="rdv-sub" style="margin-top:4px">'+getTechBadge(r.tech)+'</div>' : '')
       + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
       + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
         + '<button class="btn-s btn-sm" onclick="openRdvModal(\''+r.id+'\',null)">✏️ Modifier</button>'
@@ -3485,14 +3556,13 @@ function openRdvModal(rdvId) {
     setRappels(rdv.rappels || (rdv.rappel ? [rdv.rappel] : []));
     $('rdv-client').value = rdv.clientId || '';
     updateRdvVehSelect();
-    fillRdvTechnicienSelect(rdv.technicienId || null);
+
     if (rdv.vehIdx !== null && rdv.vehIdx !== undefined && $('rdv-vehicule')) {
       $('rdv-vehicule').value = String(rdv.vehIdx);
     }
     $('rdv-doc').value = rdv.docId || '';
     $('rdv-lieu').value = rdv.lieu || '';
     $('rdv-notes').value = rdv.notes || '';
-    if ($('rdv-tech')) { fillRdvTechSelect(); $('rdv-tech').value = rdv.tech || ''; }
     $('rdv-delete-btn').style.display = 'inline-flex';
     $('rdv-copy-btn').style.display = 'inline-flex';
   } else {
@@ -3506,7 +3576,6 @@ function openRdvModal(rdvId) {
     $('rdv-doc').value = '';
     $('rdv-lieu').value = '';
     $('rdv-notes').value = '';
-    if ($('rdv-tech')) { fillRdvTechSelect(); $('rdv-tech').value = getCurrentUserEmail(); }
     $('rdv-delete-btn').style.display = 'none';
     $('rdv-copy-btn').style.display = 'none';
   }
@@ -3587,10 +3656,9 @@ function saveRdv() {
     clientId: $('rdv-client').value ? parseInt($('rdv-client').value) : null,
     vehIdx:   $('rdv-vehicule') && $('rdv-vehicule').value !== '' ? parseInt($('rdv-vehicule').value) : null,
     docId:    $('rdv-doc').value ? parseInt($('rdv-doc').value) : null,
-    technicienId: $('rdv-technicien') && $('rdv-technicien').value ? parseInt($('rdv-technicien').value) : null,
+
     lieu:     $('rdv-lieu').value,
     notes:    $('rdv-notes').value,
-    tech:     $('rdv-tech') ? $('rdv-tech').value : '',
   };
 
   var rdvs = loadRdvs();
@@ -3633,19 +3701,34 @@ var EJS_FROM_EMAIL    = 'arthur@areprog.fr';
 var notifTimer        = null;
 var _currentDocForEmail = null; // doc en cours d'affichage dans le modal
 
-// Init EmailJS — après chargement du DOM
+// Init EmailJS — robuste, attend que le SDK soit chargé
 var _ejsReady = false;
 function initEmailJS() {
-  if (_ejsReady || typeof emailjs !== 'undefined') {
-    try {
-      emailjs.init({ publicKey: '3xdOxKiXtMqhlc7ei' });
-      _ejsReady = true;
-    } catch(e) { console.warn('EmailJS init:', e); }
+  if (_ejsReady) return; // déjà initialisé
+  if (typeof emailjs === 'undefined') return; // SDK pas encore chargé
+  try {
+    emailjs.init({ publicKey: '3xdOxKiXtMqhlc7ei' });
+    _ejsReady = true;
+    console.log('EmailJS initialisé ✓');
+  } catch(e) {
+    console.warn('EmailJS init erreur:', e);
   }
 }
-// Essayer immédiatement puis au chargement complet
+// Tenter à l'exécution du script
 initEmailJS();
-window.addEventListener('load', initEmailJS);
+// Tenter après chargement complet de la page (scripts externes inclus)
+window.addEventListener('load', function() {
+  initEmailJS();
+  // Si toujours pas prêt, réessayer toutes les 500ms jusqu'à 5s
+  if (!_ejsReady) {
+    var attempts = 0;
+    var retryInterval = setInterval(function() {
+      initEmailJS();
+      attempts++;
+      if (_ejsReady || attempts >= 10) clearInterval(retryInterval);
+    }, 500);
+  }
+});
 
 // ── Rappels multiples UI ──────────────────────────────────────
 var RAPPEL_OPTIONS = [
@@ -3693,12 +3776,14 @@ function setRappels(arr) {
 
 // ── Envoi email rappel RDV ────────────────────────────────────
 function sendReminderEmail(rdv, minutes) {
-  if (!_ejsReady && typeof emailjs === 'undefined') return;
+  if (!_ejsReady) initEmailJS();
+  if (!_ejsReady) return;
   var cl = rdv.clientId ? loadClients().find(function(c){ return c.id===rdv.clientId; }) : null;
   var vehs = cl && cl.vehs && cl.vehs.length ? cl.vehs : (cl&&cl.vm?[{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||''}]:[]);
   var selV = (rdv.vehIdx!=null && vehs[rdv.vehIdx]) ? vehs[rdv.vehIdx] : vehs[0];
   var vehLabel = selV ? [selV.vm,selV.vmo,selV.vmot,selV.van?'('+selV.van+')':''].filter(Boolean).join(' ') : '';
   var opt = RAPPEL_OPTIONS.find(function(o){ return parseInt(o.v)===minutes; });
+  if (typeof emailjs === 'undefined') return;
   emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
     to_email:    EJS_FROM_EMAIL,
     rdv_title:   rdv.title||'',
@@ -3780,8 +3865,10 @@ async function confirmSendEmail() {
     showSendStatus('error', 'Email invalide.');
     return;
   }
-  if (!_ejsReady && typeof emailjs === 'undefined') {
-    showSendStatus('error', 'EmailJS non disponible. Vérifiez votre connexion.');
+  // Tenter une dernière init si pas encore prêt
+  if (!_ejsReady) initEmailJS();
+  if (!_ejsReady) {
+    showSendStatus('error', 'Service email non disponible. Rechargez la page et réessayez.');
     return;
   }
 
@@ -4325,8 +4412,8 @@ function exportCSV() {
 //  TABS (complet)
 // ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services','agenda','stats','search','comptes'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search','comptes'][i]===t); });
+  ['dash','form','liste','carnet','template','services','agenda','stats','search'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search'][i]===t); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
@@ -4335,211 +4422,6 @@ function showTab(t) {
   if(t==='agenda')   renderAgenda();
   if(t==='stats')    renderStats();
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
-  if(t==='comptes')  renderComptes();
-}
-
-// ══════════════════════════════════════════════════════════════
-//  GESTION DES COMPTES & TECHNICIENS
-// ══════════════════════════════════════════════════════════════
-var ACCOUNTS_KEY = 'ar_accounts';
-var MAIN_EMAIL   = 'arthur@areprog.fr'; // compte principal immuable
-
-function loadAccounts() {
-  try { return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '[]'); } catch(e) { return []; }
-}
-function saveAccounts(arr) {
-  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(arr));
-  // Sync Firebase
-  if (db && syncOk) {
-    db.collection('config').doc('accounts').set({ accounts: arr })
-      .catch(function(e){ console.warn('Firebase accounts:', e); });
-  }
-}
-
-function getCurrentUserEmail() {
-  var s = getSession();
-  if (!s) return '';
-  try {
-    var payload = JSON.parse(atob(s.split('.')[1]));
-    return payload.email || '';
-  } catch(e) { return ''; }
-}
-
-function isMainAccount() {
-  return getCurrentUserEmail().toLowerCase() === MAIN_EMAIL.toLowerCase();
-}
-
-function getAccountByEmail(email) {
-  if (!email) return null;
-  var accounts = loadAccounts();
-  return accounts.find(function(a){ return a.email.toLowerCase() === email.toLowerCase(); }) || null;
-}
-
-function getCurrentAccount() {
-  var email = getCurrentUserEmail();
-  if (email.toLowerCase() === MAIN_EMAIL.toLowerCase()) {
-    return { nom: 'Arthur', email: MAIN_EMAIL, color: '#1E90FF', role: 'admin' };
-  }
-  var acc = getAccountByEmail(email);
-  return acc ? Object.assign({}, acc, { role: 'tech' }) : null;
-}
-
-// ══════════════════════════════════════════════════════════════
-//  MULTI-UTILISATEURS — Comptes + PIN
-// ══════════════════════════════════════════════════════════════
-var USERS_KEY    = 'ar_users';
-var CUR_USER_KEY = 'ar_current_user';
-
-var DEFAULT_USERS = [
-  { id:1, nom:'Arthur', role:'admin', pin:'0000', color:'#1E90FF', initiales:'AR' },
-];
-
-function loadUsers() {
-  try {
-    var u=JSON.parse(localStorage.getItem(USERS_KEY)||'null');
-    if(!u) return DEFAULT_USERS;
-    if(!u.find(function(x){ return x.id===1; })) u.unshift(DEFAULT_USERS[0]);
-    return u;
-  } catch(e){ return DEFAULT_USERS; }
-}
-function saveUsers(arr){ localStorage.setItem(USERS_KEY,JSON.stringify(arr)); }
-function loadCurrentUser(){
-  try{ var u=localStorage.getItem(CUR_USER_KEY); return u?JSON.parse(u):DEFAULT_USERS[0]; }
-  catch(e){ return DEFAULT_USERS[0]; }
-}
-function saveCurrentUser(u){ localStorage.setItem(CUR_USER_KEY,JSON.stringify(u)); }
-function getCurrentUser(){ return loadCurrentUser(); }
-function isAdmin(){ return getCurrentUser().role==='admin'; }
-
-function updateUserBadge(){
-  var u=getCurrentUser(), badge=$('current-user-badge');
-  if(!badge) return;
-  badge.textContent=(u.initiales||u.nom.slice(0,2).toUpperCase())+' '+u.nom;
-  badge.className='user-badge'+(u.role==='admin'?' admin':'');
-}
-
-function openUserSwitch(){ renderUserList(); $('user-switch-modal').classList.add('open'); }
-
-function renderUserList(){
-  var users=loadUsers(), cur=getCurrentUser();
-  var colors=['#1E90FF','#22c55e','#f59e0b','#a855f7','#ef4444','#06b6d4'];
-  $('user-list').innerHTML=users.map(function(u){
-    var active=u.id===cur.id, col=u.color||colors[u.id%colors.length];
-    return '<div class="user-card'+(active?' active':'')+'" onclick="switchToUser('+u.id+')">'
-      +'<div class="user-avatar" style="background:'+col+'20;color:'+col+'">'+(u.initiales||u.nom.slice(0,2).toUpperCase())+'</div>'
-      +'<div class="user-info"><div class="user-name">'+escHtml(u.nom)+(active?' <span style="font-size:10px;color:var(--green)">● actif</span>':'')+'</div>'
-      +'<div class="user-role">'+(u.role==='admin'?'👑 Admin':'🔧 Technicien')+'</div></div>'
-      +(active?'<span style="color:var(--green);font-size:18px">✓</span>':'<span style="color:var(--text-muted)">→</span>')
-    +'</div>';
-  }).join('');
-}
-
-var _pendingSwitchUserId=null, _pinBuffer='';
-
-function switchToUser(userId){
-  var u=loadUsers().find(function(u){ return u.id===userId; });
-  if(!u) return;
-  if(u.id===getCurrentUser().id){ $('user-switch-modal').classList.remove('open'); return; }
-  _pendingSwitchUserId=userId; _pinBuffer='';
-  $('pin-username').textContent=u.nom; $('pin-err').textContent='';
-  updatePinDots();
-  $('user-switch-modal').classList.remove('open');
-  $('pin-modal').classList.add('open');
-}
-
-function pinKey(key){
-  if(key==='C'){ _pinBuffer=_pinBuffer.slice(0,-1); updatePinDots(); return; }
-  if(key==='OK'){ validatePin(); return; }
-  if(_pinBuffer.length>=4) return;
-  _pinBuffer+=String(key); updatePinDots();
-  if(_pinBuffer.length===4) setTimeout(validatePin,150);
-}
-
-function updatePinDots(){
-  var dots=$('pin-dots').querySelectorAll('.pin-dot');
-  dots.forEach(function(d,i){ d.classList.toggle('filled',i<_pinBuffer.length); });
-}
-
-function validatePin(){
-  var u=loadUsers().find(function(u){ return u.id===_pendingSwitchUserId; });
-  if(!u) return;
-  if(_pinBuffer===u.pin){
-    saveCurrentUser(u); updateUserBadge();
-    $('pin-modal').classList.remove('open'); _pinBuffer='';
-    showNotifBanner('👤','Connecté : '+u.nom,u.role==='admin'?'Accès admin':'Accès technicien');
-    applyUserPermissions(); renderDash();
-  } else {
-    $('pin-err').textContent='Code PIN incorrect'; _pinBuffer=''; updatePinDots();
-    setTimeout(function(){ $('pin-err').textContent=''; },2000);
-  }
-}
-
-function applyUserPermissions(){
-  var isAdm=isAdmin();
-  var manageBtn=document.querySelector('[onclick="openManageUsers()"]');
-  if(manageBtn) manageBtn.style.display=isAdm?'':'none';
-}
-
-function openManageUsers(){
-  if(!isAdmin()){ showNotifBanner('🔒','Accès refusé','Seul l\'admin peut gérer les utilisateurs.'); return; }
-  renderManageUsers(); $('user-switch-modal').classList.remove('open'); $('manage-users-modal').classList.add('open');
-}
-
-function renderManageUsers(){
-  var users=loadUsers();
-  var colors=['#1E90FF','#22c55e','#f59e0b','#a855f7','#ef4444','#06b6d4'];
-  $('manage-users-list').innerHTML=users.map(function(u){
-    var isMain=u.id===1, col=u.color||colors[u.id%colors.length];
-    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)">'
-      +'<div class="user-avatar" style="background:'+col+'20;color:'+col+'">'+(u.initiales||u.nom.slice(0,2).toUpperCase())+'</div>'
-      +'<div style="flex:1"><div style="font-size:13px;font-weight:600">'+escHtml(u.nom)+(isMain?' <span style="font-size:10px;color:var(--orange)">Principal</span>':'')+'</div>'
-      +'<div style="font-size:11px;color:var(--text-muted)">'+(u.role==='admin'?'Admin':'Technicien')+'</div></div>'
-      +(!isMain?'<button class="btn-s btn-sm" onclick="editUserPin('+u.id+')">✏️ PIN</button>':'')
-      +(!isMain?'<button class="btn-d btn-sm" onclick="deleteUser('+u.id+')">🗑</button>':'')
-    +'</div>';
-  }).join('');
-}
-
-function openAddUserForm(){ $('add-user-form').style.display='block'; $('nu-nom').value=''; $('nu-pin').value=''; $('nu-role').value='technicien'; }
-
-function saveNewUser(){
-  var nom=$('nu-nom').value.trim(), pin=$('nu-pin').value.trim(), role=$('nu-role').value;
-  if(!nom){ alert('Le nom est obligatoire.'); return; }
-  if(pin.length!==4||!/[0-9]{4}/.test(pin)){ alert('Le PIN doit comporter 4 chiffres.'); return; }
-  var users=loadUsers();
-  var colors=['#1E90FF','#22c55e','#f59e0b','#a855f7','#ef4444','#06b6d4'];
-  var newId=Math.max.apply(null,users.map(function(u){ return u.id; }))+1;
-  users.push({ id:newId, nom:nom, role:role, pin:pin, color:colors[newId%colors.length], initiales:nom.slice(0,2).toUpperCase() });
-  saveUsers(users); $('add-user-form').style.display='none';
-  renderManageUsers(); showNotifBanner('✅','Utilisateur créé',nom);
-}
-
-function deleteUser(userId){
-  if(!confirm('Supprimer cet utilisateur ?')) return;
-  saveUsers(loadUsers().filter(function(u){ return u.id!==userId; }));
-  renderManageUsers();
-}
-
-function editUserPin(userId){
-  var u=loadUsers().find(function(u){ return u.id===userId; });
-  if(!u) return;
-  var p=prompt('Nouveau PIN pour '+u.nom+' (4 chiffres) :');
-  if(!p||!/[0-9]{4}/.test(p)){ alert('PIN invalide.'); return; }
-  var users=loadUsers(); var idx=users.findIndex(function(u){ return u.id===userId; });
-  if(idx>=0){ users[idx].pin=p; saveUsers(users); }
-  showNotifBanner('✅','PIN mis à jour',u.nom);
-}
-
-// ── Technicien dans les RDVs ──────────────────────────────────
-function fillRdvTechnicienSelect(selectedId){
-  var sel=$('rdv-technicien');
-  if(!sel) return;
-  var users=loadUsers();
-  sel.innerHTML='<option value="">— Non assigné —</option>'
-    +users.map(function(u){
-      return '<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+escHtml(u.nom)+' ('+(u.role==='admin'?'Admin':'Tech')+')</option>';
-    }).join('');
-  if(!selectedId) sel.value=String(getCurrentUser().id);
 }
 
 // ══════════════════════════════════════════════════════════════
