@@ -8,7 +8,7 @@
 <!-- Auth : appel direct API Netlify Identity via fetch -->
 <!-- PWA Manifest pour installation iOS/Android -->
 <link rel="manifest" href="/manifest.json"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="AREPROG"/>
 <meta name="theme-color" content="#0a0c10"/>
@@ -209,6 +209,70 @@ select option{background:#1d222d}
 /* TABS */
 .tc{display:none}.tc.on{display:block}
 
+/* ── AUTO-SAVE INDICATOR ── */
+.autosave-bar{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--text-muted);padding:4px 0;
+  transition:color .3s;
+}
+.autosave-bar.saved{color:var(--green)}
+.autosave-bar.saving{color:var(--orange)}
+.autosave-bar.restored{color:var(--blue)}
+.autosave-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ── FILTRES AVANCÉS ── */
+.filter-bar{
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  padding:12px 0;margin-bottom:4px;
+}
+.filter-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg3);
+  color:var(--text-dim);cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.filter-chip:hover{border-color:var(--blue);color:var(--blue)}
+.filter-chip.active{background:rgba(30,144,255,.15);border-color:var(--blue);color:var(--blue)}
+.filter-chip.active-green{background:rgba(34,197,94,.12);border-color:var(--green);color:var(--green)}
+.filter-chip.active-orange{background:rgba(245,158,11,.12);border-color:var(--orange);color:var(--orange)}
+.filter-chip.active-red{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)}
+.filter-count{
+  font-size:10px;padding:1px 5px;border-radius:10px;
+  background:rgba(255,255,255,.1);margin-left:2px;
+}
+
+/* ── RACCOURCIS CLAVIER ── */
+.kbd-hint{
+  display:inline-flex;align-items:center;gap:3px;
+  font-family:var(--fm);font-size:10px;color:var(--text-muted);
+}
+.kbd{
+  padding:1px 5px;border-radius:3px;border:1px solid var(--border);
+  background:var(--bg3);font-size:10px;line-height:1.4;
+}
+
+/* ── MODALE RACCOURCIS ── */
+.shortcuts-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:350;align-items:center;justify-content:center;padding:20px}
+.shortcuts-modal.open{display:flex}
+.shortcuts-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:500px;max-width:100%;padding:26px;max-height:80vh;overflow-y:auto}
+.shortcut-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.shortcut-row:last-child{border-bottom:none}
+.shortcut-desc{font-size:13px;color:var(--text-dim)}
+.shortcut-keys{display:flex;gap:4px}
+
+/* ── BARRE DE RECHERCHE ── */
+.search-bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;margin-bottom:20px;
+}
+.search-bar input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-size:14px;min-width:0;
+}
+.search-bar input::placeholder{color:var(--text-muted)}
+.search-icon{color:var(--text-muted);font-size:16px;flex-shrink:0}
+
 .search-bar input::placeholder{color:var(--text-muted)}
 .search-icon{color:var(--text-muted);font-size:16px;flex-shrink:0}
 .search-results{display:flex;flex-direction:column;gap:6px}
@@ -254,9 +318,6 @@ select option{background:#1d222d}
 .bar-fill{width:100%;border-radius:3px 3px 0 0;background:var(--blue);min-height:2px;transition:height .4s ease}
 .bar-label{font-size:9px;color:var(--text-muted);text-align:center}
 .bar-val{font-size:9px;color:var(--text-dim);font-family:var(--fm)}
-.pie-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.pie-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim)}
-.pie-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .kpi-item{text-align:center;padding:12px;background:var(--bg3);border-radius:8px}
 .kpi-val{font-family:var(--fh);font-size:22px;font-weight:700;color:var(--blue)}
@@ -572,8 +633,6 @@ select option{background:#1d222d}
   .d-gains-olsx-grid{grid-template-columns:1fr 1fr}
 }
 
-/* WhatsApp parser supprimé */
-
 /* ═══════════════════════════════════════════
    RESPONSIVE MOBILE — Refonte complète
 ═══════════════════════════════════════════ */
@@ -824,7 +883,8 @@ select option{background:#1d222d}
   <div class="topbar">
     <div class="topbar-row1">
       <div class="tb-brand">ARE<span>PROG</span></div>
-      <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <button onclick="$('shortcuts-modal').classList.add('open')" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:14px;font-weight:700" title="Raccourcis clavier (?)">?</button>
         <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
       </div>
     </div>
@@ -897,7 +957,13 @@ select option{background:#1d222d}
     <!-- FORM -->
     <div class="tc" id="t-form">
       <div class="sh">
-        <div class="sh-title" id="form-h">Nouveau devis</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="sh-title" id="form-h">Nouveau devis</div>
+          <div class="autosave-bar" id="autosave-bar">
+            <div class="autosave-dot"></div>
+            <span id="autosave-label">Prêt</span>
+          </div>
+        </div>
         <div class="sh-actions">
           <button class="btn-s" onclick="openCarnetModal()">👥 Carnet clients</button>
           <button class="btn-s" onclick="openOlsxModal()">⚡ Gains OLSX</button>
@@ -912,7 +978,7 @@ select option{background:#1d222d}
         <div class="card">
           <div class="card-title">Document</div>
           <div class="fr"><label>Type</label>
-            <select id="f-type" onchange="onTypeChange()">
+            <select id="f-type" onchange="onTypeChange();onFormChange()">
               <option value="devis">Devis</option>
               <option value="facture">Facture</option>
             </select>
@@ -931,7 +997,7 @@ select option{background:#1d222d}
         </div>
         <div class="card">
           <div class="card-title">Client</div>
-          <div class="fr"><label>Nom / Société</label><input id="f-cnom" type="text" placeholder="Prénom NOM"/></div>
+          <div class="fr"><label>Nom / Société</label><input id="f-cnom" type="text" oninput="onFormChange()" placeholder="Prénom NOM"/></div>
           <div class="fr"><label>Adresse</label><input id="f-cadr" type="text" placeholder="10 rue des Lilas"/></div>
           <div class="fr"><label>Ville + Code postal</label><input id="f-cville" type="text" placeholder="64100 Bayonne"/></div>
           <div class="fr"><label>Téléphone</label><input id="f-ctel" type="text" placeholder="06 XX XX XX XX"/></div>
@@ -981,7 +1047,7 @@ select option{background:#1d222d}
         <div class="card">
           <div class="card-title">Notes & conditions</div>
           <div class="fr"><label>Mentions imprimées sur le document</label>
-            <textarea id="f-notes" rows="3">Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.</textarea>
+            <textarea id="f-notes" rows="3" oninput="onFormChange()">Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.</textarea>
           </div>
           <div class="fr"><label>Notes internes (non imprimées)</label>
             <textarea id="f-nint" rows="2" placeholder="Mémo interne..."></textarea>
@@ -1208,21 +1274,33 @@ select option{background:#1d222d}
     <div class="tc" id="t-liste">
       <div class="sh">
         <div class="sh-title">Tous les documents</div>
-        <div class="sh-actions">
-          <select id="flt" onchange="renderListe()" style="padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px">
-            <option value="">Tous</option>
-            <option value="devis">Devis</option>
-            <option value="facture">Factures</option>
-          </select>
-          <button class="btn-p" onclick="newDoc()">+ Nouveau</button>
-        </div>
+        <button class="btn-p" onclick="newDoc()">+ Nouveau</button>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-chip active" id="fchip-all" onclick="setListeFilter('',this)">Tous <span class="filter-count" id="fcount-all"></span></button>
+        <button class="filter-chip" id="fchip-devis" onclick="setListeFilter('devis',this)">📄 Devis <span class="filter-count" id="fcount-devis"></span></button>
+        <button class="filter-chip" id="fchip-facture" onclick="setListeFilter('facture',this)">🧾 Factures <span class="filter-count" id="fcount-facture"></span></button>
+        <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+        <button class="filter-chip" id="fchip-envoye" onclick="setStatutFilter('envoyé',this)">📤 Envoyés</button>
+        <button class="filter-chip" id="fchip-accepte" onclick="setStatutFilter('accepté',this)">👍 Acceptés</button>
+        <button class="filter-chip" id="fchip-paye" onclick="setStatutFilter('payé',this)">✅ Payés</button>
+        <button class="filter-chip" id="fchip-impaye" onclick="setStatutFilter('impayé',this)">⚠️ Impayés</button>
+        <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+        <select id="flt-period" onchange="renderListe()" style="padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px">
+          <option value="">Toute période</option>
+          <option value="7">7 derniers jours</option>
+          <option value="30">Ce mois</option>
+          <option value="90">Ce trimestre</option>
+          <option value="365">Cette année</option>
+        </select>
+        <input type="hidden" id="flt" value=""/>
+        <input type="hidden" id="flt-statut" value=""/>
       </div>
       <div id="liste-body"></div>
     </div>
 
   </div>
 </div>
-
 
 <!-- MODAL OLSX SIMULATEUR -->
 <div class="olsx-modal" id="olsx-modal" onclick="if(event.target===this)closeOlsxModal()">
@@ -1500,8 +1578,6 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-
-
 <!-- MODAL OLSX SIMULATEUR -->
 <div class="olsx-modal" id="olsx-modal" onclick="if(event.target===this)closeOlsxModal()">
   <div class="olsx-box">
@@ -1774,6 +1850,26 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
+<!-- MODAL RACCOURCIS CLAVIER -->
+<div class="shortcuts-modal" id="shortcuts-modal" onclick="if(event.target===this)$('shortcuts-modal').classList.remove('open')">
+  <div class="shortcuts-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-family:var(--fh);font-size:18px;font-weight:700">⌨️ Raccourcis clavier</div>
+      <button class="btn-s" onclick="$('shortcuts-modal').classList.remove('open')">✕</button>
+    </div>
+    <div class="shortcut-row"><span class="shortcut-desc">Nouveau devis</span><div class="shortcut-keys"><span class="kbd">N</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Sauvegarder</span><div class="shortcut-keys"><span class="kbd">Ctrl</span>+<span class="kbd">S</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Aperçu / Imprimer</span><div class="shortcut-keys"><span class="kbd">Ctrl</span>+<span class="kbd">P</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Envoyer par email</span><div class="shortcut-keys"><span class="kbd">Ctrl</span>+<span class="kbd">E</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Ajouter une ligne</span><div class="shortcut-keys"><span class="kbd">Ctrl</span>+<span class="kbd">+</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Dashboard</span><div class="shortcut-keys"><span class="kbd">G</span><span class="kbd">D</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Mes documents</span><div class="shortcut-keys"><span class="kbd">G</span><span class="kbd">L</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Agenda</span><div class="shortcut-keys"><span class="kbd">G</span><span class="kbd">A</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Recherche</span><div class="shortcut-keys"><span class="kbd">Ctrl</span>+<span class="kbd">K</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Fermer / Annuler</span><div class="shortcut-keys"><span class="kbd">Echap</span></div></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Ce panneau</span><div class="shortcut-keys"><span class="kbd">?</span></div></div>
+  </div>
+</div>
 
 <!-- MODAL APERÇU -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
@@ -2243,7 +2339,6 @@ function genNum(prefix) {
 // ============================================================
 //  TABS
 // ============================================================
-// showTab v1 supprimée (remplacée)
 
 // ============================================================
 //  FORM STATE
@@ -2256,16 +2351,20 @@ function initApp() {
   fillTplForm(loadTemplate());
   renderDash();
   renderCarnet();
+  initKeyboardShortcuts();
   // Firebase
   initFirebase();
   setTimeout(function() {
     syncFromFirebase(function() {
       startRealtimeSync();
       syncRdvsFromFirebase();
+      setTimeout(startRdvsRealtimeSync, 1000);
     });
   }, 500);
   // Vérifier rappels agenda
   setTimeout(checkTodayNotifs, 2000);
+  // Vérifier si un brouillon existe
+  setTimeout(checkAndRestoreDraft, 500);
 }
 
 function resetForm(goToForm) {
@@ -2382,6 +2481,13 @@ function lineField(inp, lid, field) {
 // ============================================================
 //  TOTAUX
 // ============================================================
+function onFormChange() {
+  // Appelé par chaque changement de champ du formulaire
+  if ($('t-form') && $('t-form').classList.contains('on')) {
+    triggerAutoSave();
+  }
+}
+
 function calcTotaux() {
   var ht = lines.reduce(function(s, l) { return s + (l.offert ? 0 : l.qte * l.pu); }, 0);
   var tvaRate = parseFloat($('f-tva').value) / 100;
@@ -2448,6 +2554,42 @@ function saveDoc() {
     }
   }
   alert('Document enregistré ✓');
+}
+
+// Charger un objet doc directement dans le formulaire (draft restore)
+function loadDocData(doc) {
+  if (!doc) return;
+  editId = doc.id || null;
+  $('f-type').value  = doc.type  || 'devis';
+  $('f-num').value   = doc.num   || '';
+  $('f-date').value  = doc.date  || today();
+  $('f-ech').value   = doc.ech   || '';
+  $('f-statut').value= doc.statut|| 'envoyé';
+  $('f-cnom').value  = doc.cn    || '';
+  $('f-cadr').value  = doc.ca    || '';
+  $('f-cville').value= doc.cv    || '';
+  $('f-ctel').value  = doc.ct    || '';
+  $('f-cemail').value= doc.ce    || '';
+  $('f-vm').value    = doc.vm    || '';
+  $('f-vmo').value   = doc.vmo   || '';
+  $('f-vmot').value  = doc.vmot  || '';
+  $('f-van').value   = doc.van   || '';
+  $('f-vim').value   = doc.vim   || '';
+  $('f-tva').value   = String(doc.tvaRate || 0);
+  $('f-notes').value = doc.notes || '';
+  $('f-nint').value  = doc.nint  || '';
+  lines = doc.lines ? JSON.parse(JSON.stringify(doc.lines)) : [];
+  currentGains = doc.gains ? JSON.parse(JSON.stringify(doc.gains)) : null;
+  if ($('f-gains')) {
+    $('f-gains').value = (doc.customGains||[]).join('\n');
+    previewGainsBadge();
+  }
+  onTypeChange();
+  renderLines();
+  calcTotaux();
+  renderGainsBar();
+  fillTplForm(loadTemplate());
+  showTab('form');
 }
 
 function loadDoc(docId) {
@@ -2684,10 +2826,28 @@ function renderDash() {
 // ============================================================
 function renderListe() {
   var all = loadDocs();
-  var flt = $('flt').value;
-  var docs = flt ? all.filter(function(d){ return d.type === flt; }) : all;
-  $('liste-body').innerHTML = docs.length ? buildTable(docs, true)
-    : '<div class="empty"><div class="empty-icon">📂</div><div>Aucun document trouvé.</div></div>';
+  var flt        = $('flt') ? $('flt').value : '';
+  var fltStatut  = $('flt-statut') ? $('flt-statut').value : '';
+  var fltPeriod  = $('flt-period') ? parseInt($('flt-period').value) : 0;
+  var docs = all;
+  if (flt) docs = docs.filter(function(d){ return d.type === flt; });
+  if (fltStatut) {
+    if (fltStatut === 'impayé') {
+      docs = docs.filter(function(d){ return d.type==='facture' && d.statut!=='payé' && d.statut!=='annulé'; });
+    } else {
+      docs = docs.filter(function(d){ return d.statut === fltStatut; });
+    }
+  }
+  if (fltPeriod) {
+    var cutoff = Date.now() - fltPeriod * 86400000;
+    docs = docs.filter(function(d){ return new Date(d.date).getTime() >= cutoff; });
+  }
+  updateListeFilterCounts();
+  var countInfo = docs.length !== all.length
+    ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">'+docs.length+' document'+(docs.length>1?'s':'')+' sur '+all.length+'</div>'
+    : '';
+  $('liste-body').innerHTML = countInfo + (docs.length ? buildTable(docs, true)
+    : '<div class="empty"><div class="empty-icon">📂</div><div>Aucun document trouvé pour ce filtre.</div></div>');
 }
 
 function buildTable(docs, withDelete) {
@@ -2948,8 +3108,6 @@ function previewGainsBadge() {
   }).join('');
 }
 
-
-
 function openOlsxModal() {
   olsxDetected = null;
   $('olsx-gains-preview').textContent = 'Sélectionne un véhicule dans le simulateur…';
@@ -3031,7 +3189,6 @@ window.addEventListener('message', function(e) {
 // ============================================================
 //  TABS (mis à jour avec carnet)
 // ============================================================
-// showTab v2 supprimée (remplacée)
 
 // ============================================================
 //  GESTIONNAIRE CATALOGUE
@@ -4070,7 +4227,6 @@ function syncRdvsFromFirebase() {
 // ============================================================
 //  TABS (complet avec agenda)
 // ============================================================
-// showTab déplacé ci-dessus
 
 // ============================================================
 //  STATUT RAPIDE
@@ -4408,6 +4564,257 @@ function showTab(t) {
   if(t==='agenda')   renderAgenda();
   if(t==='stats')    renderStats();
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  AUTO-SAVE DU FORMULAIRE
+// ══════════════════════════════════════════════════════════════
+var AUTOSAVE_KEY  = 'ar_form_draft';
+var _autoSaveTimer = null;
+var _lastSavedHash = '';
+
+function getFormHash() {
+  // Hash simple pour détecter les changements
+  var obj = buildObj();
+  return JSON.stringify(obj.lines) + obj.cn + obj.type + obj.notes + (obj.gains||'');
+}
+
+function triggerAutoSave() {
+  clearTimeout(_autoSaveTimer);
+  setAutoSaveStatus('saving');
+  _autoSaveTimer = setTimeout(function() {
+    var hash = getFormHash();
+    if (hash === _lastSavedHash) { setAutoSaveStatus('saved'); return; }
+    try {
+      var draft = buildObj();
+      draft._isDraft = true;
+      draft._savedAt = Date.now();
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(draft));
+      _lastSavedHash = hash;
+      setAutoSaveStatus('saved');
+    } catch(e) {
+      console.warn('Auto-save error:', e);
+    }
+  }, 800);
+}
+
+function setAutoSaveStatus(status) {
+  var bar = $('autosave-bar');
+  var lbl = $('autosave-label');
+  if (!bar || !lbl) return;
+  bar.className = 'autosave-bar ' + status;
+  if (status === 'saving') lbl.textContent = 'Sauvegarde…';
+  else if (status === 'saved') lbl.textContent = 'Brouillon sauvegardé';
+  else if (status === 'restored') lbl.textContent = 'Brouillon restauré ↺';
+  else lbl.textContent = 'Prêt';
+}
+
+function checkAndRestoreDraft() {
+  var raw = localStorage.getItem(AUTOSAVE_KEY);
+  if (!raw) return;
+  try {
+    var draft = JSON.parse(raw);
+    if (!draft._isDraft || !draft.lines || !draft.lines.length) return;
+    var age = Date.now() - (draft._savedAt || 0);
+    if (age > 24 * 3600000) { // Ignorer les drafts > 24h
+      localStorage.removeItem(AUTOSAVE_KEY);
+      return;
+    }
+    var mins = Math.round(age / 60000);
+    var ageLabel = mins < 1 ? 'il y a moins d\'1 min' : 'il y a ' + mins + ' min';
+    if (confirm('Un brouillon non enregistré a été trouvé (' + ageLabel + '). Voulez-vous le restaurer ?')) {
+      loadDocData(draft);
+      setAutoSaveStatus('restored');
+      showNotifBanner('↺', 'Brouillon restauré', draft.cn || 'Document sans client');
+    } else {
+      localStorage.removeItem(AUTOSAVE_KEY);
+    }
+  } catch(e) {}
+}
+
+function clearDraft() {
+  localStorage.removeItem(AUTOSAVE_KEY);
+  _lastSavedHash = '';
+  setAutoSaveStatus('');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FILTRES AVANCÉS LISTE
+// ══════════════════════════════════════════════════════════════
+var _currentListeFilter = '';
+var _currentStatutFilter = '';
+
+function setListeFilter(type, btn) {
+  _currentListeFilter = type;
+  _currentStatutFilter = '';
+  // Reset tous les chips statut
+  ['envoye','accepte','paye','impaye'].forEach(function(s) {
+    var chip = $('fchip-'+s);
+    if (chip) chip.className = 'filter-chip';
+  });
+  // Activer le bon chip type
+  ['all','devis','facture'].forEach(function(t) {
+    var chip = $('fchip-'+t);
+    if (chip) chip.className = 'filter-chip' + (t === (type||'all') ? ' active' : '');
+  });
+  if ($('flt')) $('flt').value = type;
+  if ($('flt-statut')) $('flt-statut').value = '';
+  renderListe();
+}
+
+function setStatutFilter(statut, btn) {
+  var isActive = _currentStatutFilter === statut;
+  _currentStatutFilter = isActive ? '' : statut;
+  _currentListeFilter = '';
+  // Reset chips type
+  ['all','devis','facture'].forEach(function(t) {
+    var chip = $('fchip-'+t);
+    if (chip) chip.className = 'filter-chip' + (t === 'all' ? ' active' : '');
+  });
+  // Activer/désactiver chip statut
+  var colorMap = { 'envoyé':'', 'accepté':'active', 'payé':'active-green', 'impayé':'active-red active-orange' };
+  ['envoye','accepte','paye','impaye'].forEach(function(s) {
+    var chipStatut = { 'envoye':'envoyé', 'accepte':'accepté', 'paye':'payé', 'impaye':'impayé' }[s];
+    var chip = $('fchip-'+s);
+    if (!chip) return;
+    if (chipStatut === _currentStatutFilter) {
+      chip.className = 'filter-chip ' + (colorMap[chipStatut] || 'active');
+    } else {
+      chip.className = 'filter-chip';
+    }
+  });
+  if ($('flt')) $('flt').value = '';
+  if ($('flt-statut')) $('flt-statut').value = _currentStatutFilter;
+  renderListe();
+}
+
+function updateListeFilterCounts() {
+  var all = loadDocs();
+  var cnt = function(fn) { return all.filter(fn).length; };
+  [
+    ['fcount-all',    function(){ return true; }],
+    ['fcount-devis',  function(d){ return d.type==='devis'; }],
+    ['fcount-facture',function(d){ return d.type==='facture'; }],
+  ].forEach(function(pair) {
+    var el = $(pair[0]);
+    if (el) el.textContent = cnt(pair[1]);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SYNC RDVS EN TEMPS RÉEL (Firebase onSnapshot)
+// ══════════════════════════════════════════════════════════════
+function startRdvsRealtimeSync() {
+  if (!db || !syncOk) return;
+  // Remplacer le one-shot get par un listener temps réel
+  db.collection('rdvs').doc('all').onSnapshot(function(doc) {
+    if (doc.exists && doc.data().rdvs) {
+      localStorage.setItem(RDV_KEY, JSON.stringify(doc.data().rdvs));
+      // Rafraîchir l'agenda si ouvert
+      if ($('t-agenda') && $('t-agenda').classList.contains('on')) {
+        renderCalendar();
+        renderSideEvents(calSelected);
+      }
+    }
+  }, function(err) {
+    console.warn('RDV realtime sync error:', err);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RACCOURCIS CLAVIER
+// ══════════════════════════════════════════════════════════════
+var _gKeyPressed = false;
+var _gKeyTimer = null;
+
+function initKeyboardShortcuts() {
+  document.addEventListener('keydown', function(e) {
+    // Ignorer si dans un input/textarea/select
+    var tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    // Ignorer si modal ouverte (sauf Echap)
+    var modalOpen = document.querySelector('.rdv-modal.open, .olsx-modal.open, .wa-modal.open');
+
+    var key = e.key;
+    var ctrl = e.ctrlKey || e.metaKey;
+
+    // Fermer modaux avec Echap
+    if (key === 'Escape') {
+      document.querySelectorAll('.rdv-modal.open, .olsx-modal.open, .shortcuts-modal.open, .client-history-modal.open').forEach(function(m) {
+        m.classList.remove('open');
+      });
+      return;
+    }
+
+    if (modalOpen) return;
+
+    // Ctrl+S — Sauvegarder
+    if (ctrl && key === 's') {
+      e.preventDefault();
+      if ($('t-form') && $('t-form').classList.contains('on')) {
+        saveDoc();
+        showNotifBanner('💾', 'Sauvegardé', 'Document enregistré');
+      }
+      return;
+    }
+    // Ctrl+P — Aperçu/Imprimer
+    if (ctrl && key === 'p') {
+      e.preventDefault();
+      if ($('t-form') && $('t-form').classList.contains('on')) printDoc();
+      return;
+    }
+    // Ctrl+E — Envoyer par email
+    if (ctrl && (key === 'e' || key === 'E')) {
+      e.preventDefault();
+      if ($('t-form') && $('t-form').classList.contains('on')) {
+        openPreview();
+        setTimeout(sendDocByEmail, 300);
+      }
+      return;
+    }
+    // Ctrl+K — Recherche globale
+    if (ctrl && key === 'k') {
+      e.preventDefault();
+      showTab('search');
+      setTimeout(function(){ $('global-search') && $('global-search').focus(); }, 100);
+      return;
+    }
+    // Ctrl++ — Ajouter une ligne prestation
+    if (ctrl && (key === '+' || key === '=')) {
+      e.preventDefault();
+      if ($('t-form') && $('t-form').classList.contains('on')) addLine();
+      return;
+    }
+    // ? — Raccourcis
+    if (key === '?') {
+      $('shortcuts-modal').classList.add('open');
+      return;
+    }
+    // N — Nouveau devis
+    if (key === 'n' || key === 'N') {
+      newDoc();
+      return;
+    }
+    // Navigation G+lettre (type Gmail)
+    if (key === 'g' || key === 'G') {
+      _gKeyPressed = true;
+      clearTimeout(_gKeyTimer);
+      _gKeyTimer = setTimeout(function(){ _gKeyPressed = false; }, 1500);
+      return;
+    }
+    if (_gKeyPressed) {
+      _gKeyPressed = false;
+      clearTimeout(_gKeyTimer);
+      var navMap = {
+        'd': 'dash', 'D': 'dash',
+        'l': 'liste', 'L': 'liste',
+        'c': 'carnet', 'C': 'carnet',
+        'a': 'agenda', 'A': 'agenda',
+        's': 'stats', 'S': 'stats',
+      };
+      if (navMap[key]) { showTab(navMap[key]); return; }
+    }
+  });
 }
 
 // ══════════════════════════════════════════════════════════════
