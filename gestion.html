@@ -1578,27 +1578,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<!-- MODAL OLSX SIMULATEUR -->
-<div class="olsx-modal" id="olsx-modal" onclick="if(event.target===this)closeOlsxModal()">
-  <div class="olsx-box">
-    <div class="olsx-toolbar">
-      <div>
-        <div class="olsx-toolbar-title">⚡ Simulateur OLSX — Gains moteur</div>
-        <div class="olsx-toolbar-hint">Sélectionne le véhicule dans le simulateur, puis clique "Importer les gains"</div>
-      </div>
-      <button class="btn-s" onclick="closeOlsxModal()">✕</button>
-    </div>
-    <iframe class="olsx-iframe" id="olsx-iframe"
-      src="https://api.olsx.eu/iframe?token=165|nY954hlsQT6tK8OLuaZtdtnj7zS0HYzBRIWsYYQk7966bc37&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=on&mailcontact=arthur%40areprog.fr"
-      allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox">
-    </iframe>
-    <div class="olsx-footer">
-      <div class="olsx-gains-preview" id="olsx-gains-preview">Aucun gain sélectionné</div>
-      <button class="btn-s" onclick="closeOlsxModal()">Annuler</button>
-      <button class="btn-g" id="olsx-import-btn" onclick="importOlsxGains()" style="display:none">✓ Importer les gains</button>
-    </div>
-  </div>
-</div>
+
 
 <!-- MODAL CARNET (sélection) -->
 <div class="carnet-modal" id="carnet-modal" onclick="if(event.target===this)closeCarnetModal()">
