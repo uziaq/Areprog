@@ -2078,7 +2078,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<!-- email-decode retiré : non disponible sur Netlify --><script>
 // AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
 function $(s) { return document.getElementById(s); }
 
@@ -5426,7 +5426,7 @@ function crmOnClientChange(){
     var label = [v.vm, v.vmo].filter(Boolean).join(' ');
     var detail = [v.vmot, v.van ? '('+v.van+')' : ''].filter(Boolean).join(' ');
     var immat = v.vim ? v.vim.toUpperCase() : '';
-    return '<div class="crm-veh-chip" onclick="crmSelectVehChip(this,'+i+',''+clientId+'')" data-idx="'+i+'">' +
+    return '<div class="crm-veh-chip" onclick="crmSelectVehChip(this,'+i+',\''+clientId+'\')" data-idx="'+i+'">' +
       '<div>' +
         '<div class="crm-veh-chip-marque">'+(label||'Véhicule '+( i+1))+'</div>' +
         (detail?'<div class="crm-veh-chip-detail">'+detail+'</div>':'')+
