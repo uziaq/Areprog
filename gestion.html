@@ -18,6 +18,7 @@
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -965,6 +966,21 @@ select option{background:#1d222d}
 .crm-empty-text{font-size:14px;color:var(--text-dim);margin-bottom:4px}
 .crm-empty-sub{font-size:12px}
 
+/* Chips véhicule dans la modale */
+.crm-veh-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--border);
+  cursor:pointer;transition:all .15s;max-width:100%
+}
+.crm-veh-chip:hover{border-color:var(--blue);background:rgba(30,144,255,.08)}
+.crm-veh-chip.selected{border-color:var(--blue);background:rgba(30,144,255,.15);box-shadow:0 0 0 2px rgba(30,144,255,.2)}
+.crm-veh-chip-marque{font-weight:700;font-size:13px;color:#fff}
+.crm-veh-chip-detail{font-size:11px;color:var(--text-dim)}
+.crm-veh-chip-immat{font-family:var(--fm);font-size:11px;color:var(--blue);font-weight:600;
+  background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.2);
+  border-radius:4px;padding:1px 6px;flex-shrink:0}
+
 /* Filtres CRM */
 .crm-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
 .crm-filter-input{flex:1;min-width:180px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;font-size:13px;transition:border-color .2s}
@@ -987,7 +1003,7 @@ select option{background:#1d222d}
   <div class="login-box">
     <div class="login-logo">ARE<span>PROG</span></div>
     <div class="login-sub">Espace professionnel</div>
-    <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="arthur@areprog.fr" autocomplete="email"/></div>
+    <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="Email" autocomplete="username"/></div>
     <div class="lf"><label>Mot de passe</label><input id="l-pass" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
     <button class="login-btn" id="login-btn" onclick="if(typeof doLogin==='function')doLogin()">Se connecter →</button>
     <div class="login-err" id="lerr" style="display:none"></div>
@@ -2066,23 +2082,11 @@ Cordialement, AREPROG"></textarea>
 // AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
 function $(s) { return document.getElementById(s); }
 
-var IDENTITY_URL = 'https://areprog.fr/.netlify/identity';
-var SESSION_KEY  = 'ar_session';
-var SESSION_DURATION = 60 * 60 * 1000; // 1 heure
-
-function setSession(token) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now(), token: token }));
-}
-function getSession() {
-  try {
-    var raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    var data = JSON.parse(raw);
-    if ((Date.now() - data.t) < SESSION_DURATION) return data;
-    return null;
-  } catch(e) { return null; }
-}
-function clearSession() { localStorage.removeItem(SESSION_KEY); }
+// ══════════════════════════════════════════════════════════════
+//  AUTH — Firebase Authentication (remplace Netlify Identity)
+//  Aucun email en clair. Session gérée par Firebase SDK.
+// ══════════════════════════════════════════════════════════════
+var _fbAuth = null; // instance firebase.auth()
 
 function showApp() {
   $('login-screen').style.display = 'none';
@@ -2092,46 +2096,57 @@ function showApp() {
 function showLogin() {
   $('app').style.display = 'none';
   $('login-screen').style.display = 'flex';
+  $('lerr').style.display = 'none';
+  $('lerr').textContent = '';
+  var btn = $('login-btn');
+  if(btn){ btn.disabled = false; btn.textContent = 'Se connecter →'; }
 }
 function setLoginLoading(on) {
   var btn = $('login-btn');
+  if(!btn) return;
   btn.disabled = on;
   btn.textContent = on ? 'Connexion…' : 'Se connecter →';
 }
 function showLoginErr(msg) {
   var el = $('lerr');
+  if(!el) return;
   el.textContent = msg;
   el.style.display = 'block';
 }
 
-async function doLogin() {
-  var email = $('l-email').value.trim();
-  var pass  = $('l-pass').value;
+// Connexion via Firebase Auth
+function doLogin() {
+  var email = ($('l-email').value || '').trim();
+  var pass  = $('l-pass').value || '';
   $('lerr').style.display = 'none';
   if (!email || !pass) { showLoginErr('Renseigne ton email et mot de passe.'); return; }
   setLoginLoading(true);
-  try {
-    var resp = await fetch(IDENTITY_URL + '/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
+  _fbAuth.signInWithEmailAndPassword(email, pass)
+    .then(function() {
+      // onAuthStateChanged prend le relais → showApp() automatique
+    })
+    .catch(function(e) {
+      setLoginLoading(false);
+      var msgs = {
+        'auth/user-not-found':     'Utilisateur inconnu.',
+        'auth/wrong-password':     'Mot de passe incorrect.',
+        'auth/invalid-email':      'Email invalide.',
+        'auth/invalid-credential': 'Email ou mot de passe incorrect.',
+        'auth/too-many-requests':  'Trop de tentatives. Réessaie dans quelques minutes.'
+      };
+      showLoginErr(msgs[e.code] || 'Erreur de connexion.');
     });
-    var data = await resp.json();
-    if (!resp.ok || !data.access_token) {
-      throw new Error(data.error_description || 'Identifiants incorrects');
-    }
-    setSession(data.access_token);
-    showApp();
-  } catch(e) {
-    setLoginLoading(false);
-    showLoginErr('Email ou mot de passe incorrect.');
-    console.error(e);
-  }
 }
 
+// Déconnexion
 function doLogout() {
-  clearSession();
-  showLogin();
+  _fbAuth.signOut();
+  // onAuthStateChanged → showLogin() automatique
+}
+
+// Compatibilité : getSession() retourne vrai si utilisateur connecté
+function getSession() {
+  return _fbAuth && _fbAuth.currentUser ? { user: _fbAuth.currentUser } : null;
 }
 
 // Au chargement : session encore valide → connecter directement
@@ -2160,12 +2175,20 @@ document.addEventListener('DOMContentLoaded', function() {
   var le = $('l-email');
   if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
 
-  // Auto-login si session valide
-  if (getSession()) {
-    showApp();
-  }
+  // Firebase Auth — observer d'état (gère auto-login et déconnexion)
+  if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
+  _fbAuth = firebase.auth();
+  _fbAuth.onAuthStateChanged(function(user) {
+    if (user) {
+      // Connecté → afficher l'app
+      showApp();
+    } else {
+      // Déconnecté → afficher le login
+      showLogin();
+    }
+  });
 
-  // Relier le bouton proprement (évite tout souci de timing)
+  // Relier le bouton
   var btn = $('login-btn');
   if (btn) btn.onclick = doLogin;
   // Enter dans les modals catalogue
@@ -2178,6 +2201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================================================
 //  FIREBASE — Synchronisation cloud
 // ============================================================
+// ⚠️ Firebase Auth requis — règles Firestore : allow read,write: if request.auth != null
 var FB_CONFIG = {
   apiKey:            "AIzaSyCAPjBtmwrcNUUg9Nlkn_2ltUa_P_90yV4",
   authDomain:        "areprog-devis.firebaseapp.com",
@@ -2192,7 +2216,7 @@ var syncOk = false;
 
 function initFirebase() {
   try {
-    if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
+    // Firebase déjà initialisé dans DOMContentLoaded (Firebase Auth)
     db = firebase.firestore();
     db.collection('docs').limit(1).get()
       .then(function() { setSyncStatus(true, 'Firebase connecté'); })
@@ -3676,21 +3700,12 @@ function openTemplateModal(){ fillTplForm(readTplForm()); livePreview(); $('tpl-
 function closeTplModal(){ $('tpl-modal').classList.remove('open'); }
 function livePreview() {
   var tpl = readTplForm();
-  var sampleDoc = {
-    type:'devis',num:'DEV-2026-001',date:new Date().toISOString().split('T')[0],
-    ech:new Date(Date.now()+30*86400000).toISOString().split('T')[0],statut:'envoyé',
-    cn:'Dupont Thomas',ca:'12 rue des Pins',cv:'64100 Bayonne',
-    ct:'06 12 34 56 78',ce:'thomas@email.fr',
-    vm:'Volkswagen',vmo:'Golf 7 GTI',vmot:'2.0 TSI 220ch',van:'2019',vim:'AB-123-CD',
-    lines:[
-      {label:'Stage 1 — Reprogrammation moteur (essence & diesel turbo)',qte:1,pu:330,offert:false},
-      {label:'Conversion E85 — Bioéthanol natif ECU',qte:1,pu:330,offert:false},
-      {label:'Diagnostic ODIS VAG',qte:1,pu:0,offert:true},
-    ],
-    tvaRate:0,ht:660,tva:0,ttc:660,
-    notes:'Prestation réalisée à domicile. Garantie 2 ans. 100% réversible.',
-    gains:{ch:220,chOrig:180,nm:380,nmOrig:320},
-  };
+  var sampleDoc = {id:Date.now(),type:'devis',num:'DEV-001',date:new Date().toISOString().split('T')[0],statut:'envoyé',
+    cn:'Client Exemple',ca:'',cv:'',
+    ct:'',ce:'',
+    vm:'',vmo:'',vmot:'',van:'',vim:'',
+    lines:[{label:'Reprogrammation Stage 1',qty:1,pu:350,tva:20}],
+    note:''};
   var html = renderDocHTML(sampleDoc, tpl);
   var m=$('tpl-mini-preview'); if(m) m.innerHTML=html;
   var l=$('tpl-live-preview'); if(l) l.innerHTML=html;
@@ -4017,7 +4032,7 @@ function deleteRdvFromModal() {
 var EJS_SERVICE       = 'service_6dj8dmv';
 var EJS_TPL_RAPPEL    = 'template_mlbev47';  // Rappels agenda
 var EJS_TPL_DOC       = 'template_l6jwa72';  // Envoi devis/factures
-var EJS_FROM_EMAIL    = 'arthur@areprog.fr';
+var EJS_FROM_EMAIL    = ''; // Configuré dans l'onglet Template → champ Email
 var notifTimer        = null;
 var _currentDocForEmail = null; // doc en cours d'affichage dans le modal
 
@@ -5352,22 +5367,122 @@ function crmGoToEcuForVeh(vehId){
 }
 
 /* ── Modal véhicule ─────────────────────────────────────────── */
-function crmOpenVehModal(id){
+function crmOpenVehModal(id, preClientId){
   crmEditVehId = id || null;
   var v = id ? CRM.vehicules.find(function(x){ return x.id===id; }) : null;
   document.getElementById('crm-veh-modal-title').textContent = v ? 'Modifier le dossier' : 'Nouveau dossier véhicule';
+
+  // Peupler le select client
   crmPopulateClientFilter();
+
+  // Remplir les champs si édition
   var fields = { 'crm-veh-marque':'marque','crm-veh-modele':'modele','crm-veh-annee':'annee','crm-veh-moteur':'moteur','crm-veh-immat':'immat','crm-veh-vin':'vin','crm-veh-ecu':'ecu','crm-veh-outil':'outil','crm-veh-proto':'proto','crm-veh-pw-ori':'pwOri','crm-veh-pw-new':'pwNew','crm-veh-notes':'notes' };
   Object.keys(fields).forEach(function(elId){
     var el = document.getElementById(elId);
     if(el) el.value = v ? (v[fields[elId]] || '') : '';
   });
+
   var selCl = document.getElementById('crm-veh-client-id');
-  if(selCl) selCl.value = v ? v.clientId : '';
+  if(selCl){
+    selCl.value = v ? v.clientId : (preClientId || '');
+    // Déclencher le picker si client déjà sélectionné
+    if(selCl.value) crmOnClientChange();
+    else crmHideVehPicker();
+  }
+
   document.getElementById('crm-veh-modal').classList.add('open');
-  setTimeout(function(){ var el = document.getElementById('crm-veh-marque'); if(el) el.focus(); }, 120);
+  setTimeout(function(){
+    var focus = selCl && !selCl.value ? selCl : document.getElementById('crm-veh-marque');
+    if(focus) focus.focus();
+  }, 120);
 }
-function crmCloseVehModal(){ document.getElementById('crm-veh-modal').classList.remove('open'); }
+function crmCloseVehModal(){
+  document.getElementById('crm-veh-modal').classList.remove('open');
+  crmHideVehPicker();
+}
+
+/* ── Sélecteur de véhicule depuis le carnet client ── */
+function crmOnClientChange(){
+  var clientId = document.getElementById('crm-veh-client-id').value;
+  if(!clientId){ crmHideVehPicker(); return; }
+
+  var clients = typeof loadClients === 'function' ? loadClients() : [];
+  var cl = clients.find(function(c){ return String(c.id) === String(clientId); });
+  if(!cl){ crmHideVehPicker(); return; }
+
+  // Récupérer ses véhicules depuis le carnet
+  var vehs = cl.vehs && cl.vehs.length
+    ? cl.vehs
+    : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
+
+  if(!vehs.length){ crmHideVehPicker(); return; }
+
+  // Afficher le picker
+  var wrap = document.getElementById('crm-veh-picker-wrap');
+  var list = document.getElementById('crm-veh-picker-list');
+  if(!wrap || !list) return;
+
+  list.innerHTML = vehs.map(function(v, i){
+    var label = [v.vm, v.vmo].filter(Boolean).join(' ');
+    var detail = [v.vmot, v.van ? '('+v.van+')' : ''].filter(Boolean).join(' ');
+    var immat = v.vim ? v.vim.toUpperCase() : '';
+    return '<div class="crm-veh-chip" onclick="crmSelectVehChip(this,'+i+',''+clientId+'')" data-idx="'+i+'">' +
+      '<div>' +
+        '<div class="crm-veh-chip-marque">'+(label||'Véhicule '+( i+1))+'</div>' +
+        (detail?'<div class="crm-veh-chip-detail">'+detail+'</div>':'')+
+      '</div>'+
+      (immat?'<span class="crm-veh-chip-immat">'+immat+'</span>':'')+
+    '</div>';
+  }).join('');
+
+  wrap.style.display = '';
+}
+
+function crmHideVehPicker(){
+  var wrap = document.getElementById('crm-veh-picker-wrap');
+  if(wrap) wrap.style.display = 'none';
+  // Enlever la sélection sur tous les chips
+  document.querySelectorAll('.crm-veh-chip').forEach(function(c){ c.classList.remove('selected'); });
+}
+
+function crmSelectVehChip(chipEl, vehIdx, clientId){
+  // Marquer le chip sélectionné
+  document.querySelectorAll('.crm-veh-chip').forEach(function(c){ c.classList.remove('selected'); });
+  chipEl.classList.add('selected');
+
+  // Récupérer le véhicule depuis le carnet
+  var clients = typeof loadClients === 'function' ? loadClients() : [];
+  var cl = clients.find(function(c){ return String(c.id) === String(clientId); });
+  if(!cl) return;
+
+  var vehs = cl.vehs && cl.vehs.length
+    ? cl.vehs
+    : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
+
+  var veh = vehs[vehIdx];
+  if(!veh) return;
+
+  // Remplir automatiquement les champs du formulaire
+  var marqueEl = document.getElementById('crm-veh-marque');
+  var modeleEl = document.getElementById('crm-veh-modele');
+  var moteurEl = document.getElementById('crm-veh-moteur');
+  var anneeEl  = document.getElementById('crm-veh-annee');
+  var immatEl  = document.getElementById('crm-veh-immat');
+
+  if(marqueEl) marqueEl.value = veh.vm  || '';
+  if(modeleEl) modeleEl.value = veh.vmo || '';
+  if(moteurEl) moteurEl.value = veh.vmot|| '';
+  if(anneeEl)  anneeEl.value  = veh.van || '';
+  if(immatEl)  immatEl.value  = (veh.vim|| '').toUpperCase();
+
+  // Flash visuel sur les champs remplis
+  [marqueEl, modeleEl, moteurEl, anneeEl, immatEl].forEach(function(el){
+    if(!el || !el.value) return;
+    el.style.transition = 'border-color .1s';
+    el.style.borderColor = 'var(--blue)';
+    setTimeout(function(){ el.style.borderColor = ''; }, 800);
+  });
+}
 
 function crmSaveVehicule(){
   var clientId = document.getElementById('crm-veh-client-id').value;
@@ -5681,11 +5796,23 @@ document.addEventListener('keydown', function(e){
     <div class="crm-modal-title" id="crm-veh-modal-title">Nouveau dossier véhicule</div>
     <button class="crm-modal-close" onclick="crmCloseVehModal()">✕</button>
 
+    <!-- Sélecteur client -->
     <div class="crm-fr">
       <label>Client *</label>
-      <select id="crm-veh-client-id">
+      <select id="crm-veh-client-id" onchange="crmOnClientChange()">
         <option value="">— Sélectionner un client —</option>
       </select>
+    </div>
+
+    <!-- Sélecteur véhicule existant du client -->
+    <div id="crm-veh-picker-wrap" style="display:none;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:8px">
+        Véhicule enregistré dans le carnet
+      </div>
+      <div id="crm-veh-picker-list" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted)">
+        ou renseigne manuellement un nouveau véhicule ci-dessous ↓
+      </div>
     </div>
 
     <div class="crm-modal-sep"></div>
