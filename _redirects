@@ -4,8 +4,6 @@
 # ============================================================
 
 # ── Netlify Identity — callback tokens ─────────────────────
-# OBLIGATOIRE : intercepte les liens d'invitation et reset mdp
-# Le hash (#invite_token=...) est géré par admin.html côté client
 /                                   /admin.html                         200! splat=true path=/*#invite_token=*
 /admin                              /admin.html                         200
 
@@ -39,10 +37,15 @@
 /reprogrammation-moteur-dax              /reprogrammation-moteur-dax.html              200
 /reprogrammation-moteur-auxerre          /reprogrammation-moteur-auxerre.html          200
 
-# Espace pro
+# Espace pro — Devis & Factures (existant)
 /gestion                            /gestion.html                       200
 /devis                              /gestion.html                       200
 /pro                                /gestion.html                       200
+
+# ── CRM Véhicules (NOUVEAU) ──────────────────────────────────
+/crm                                /crm.html                           200
+/dossiers                           /crm.html                           200
+/clients                            /crm.html                           200
 
 # ── Redirections 301 anciennes URLs ─────────────────────────
 /boutique                           /contact                            301
