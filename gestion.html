@@ -966,6 +966,32 @@ select option{background:#1d222d}
 .crm-empty-text{font-size:14px;color:var(--text-dim);margin-bottom:4px}
 .crm-empty-sub{font-size:12px}
 
+/* Bannière détection ECU/VIN */
+.ecu-detect-banner{
+  background:var(--bg3);border:1px solid rgba(30,144,255,.3);
+  border-radius:10px;padding:14px 16px;margin-bottom:12px;
+  animation:fadeInDown .25s ease;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start
+}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.ecu-detect-banner-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:6px
+}
+.ecu-detect-field{flex:1;min-width:140px}
+.ecu-detect-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px}
+.ecu-detect-val{font-size:13px;color:#fff;font-family:var(--fm);display:flex;align-items:center;gap:8px}
+.ecu-detect-val.dim{color:var(--text-muted);font-style:italic;font-family:var(--fb);font-size:12px}
+.ecu-detect-apply{
+  padding:5px 12px;border-radius:6px;border:1px solid rgba(30,144,255,.4);
+  background:rgba(30,144,255,.12);color:var(--blue);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0
+}
+.ecu-detect-apply:hover{background:var(--blue);color:#fff}
+.ecu-detect-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;
+  background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.25)}
+.ecu-detect-tag.orange{background:rgba(245,158,11,.12);color:var(--orange);border-color:rgba(245,158,11,.25)}
+.ecu-detect-tag.purple{background:rgba(168,85,247,.12);color:#a855f7;border-color:rgba(168,85,247,.25)}
+
 /* Chips véhicule dans la modale */
 .crm-veh-chip{
   display:inline-flex;align-items:center;gap:8px;
@@ -1505,6 +1531,7 @@ select option{background:#1d222d}
       </div>
 
       <div id="ecu-progress-list"></div>
+      <div id="ecu-detect-result" style="display:none"></div>
       <div id="ecu-files-container">
         <div style="color:var(--text-muted);font-size:13px;padding:20px">Chargement…</div>
       </div>
@@ -5575,14 +5602,23 @@ function ecuOnDragLeave(){ document.getElementById('ecu-dropzone').classList.rem
 function ecuOnDrop(e){
   e.preventDefault();
   document.getElementById('ecu-dropzone').classList.remove('drag-over');
-  ecuUploadFiles(Array.from(e.dataTransfer.files));
+  var files = Array.from(e.dataTransfer.files);
+  ecuShowDetection(files); // détection immédiate avant upload
+  ecuUploadFiles(files);
 }
-function ecuOnFileSelect(e){ ecuUploadFiles(Array.from(e.target.files)); e.target.value=''; }
+function ecuOnFileSelect(e){
+  var files = Array.from(e.target.files);
+  ecuShowDetection(files); // détection immédiate avant upload
+  ecuUploadFiles(files);
+  e.target.value='';
+}
 
 function ecuUploadFiles(files){
   var clientId = (document.getElementById('ecu-upload-client')||{value:''}).value;
   var vehId    = (document.getElementById('ecu-upload-veh')||{value:''}).value;
   if(!clientId||!vehId){ crmToast('Sélectionnez un client et un véhicule d\'abord','warning'); return; }
+  // Déclencher la détection automatique sur les fichiers sélectionnés
+  ecuShowDetection(files);
   var warn = document.getElementById('ecu-size-warn');
   files.forEach(function(file){
     if(file.size > ECU_MAX_BYTES){
@@ -5593,6 +5629,274 @@ function ecuUploadFiles(files){
     if(warn) warn.style.display = 'none';
     ecuReadAndStore(file, clientId, vehId);
   });
+}
+
+/* ══════════════════════════════════════════════════════════
+   DÉTECTION AUTOMATIQUE ECU + VIN depuis le nom de fichier
+   ══════════════════════════════════════════════════════════ */
+
+/* Base de correspondance ECU → fabricant + description */
+var ECU_DB = {
+  // Bosch diesel
+  'EDC15':    {fab:'Bosch', desc:'EDC15 — Diesel ancien (TDI 90-150ch)'},
+  'EDC15C':   {fab:'Bosch', desc:'EDC15C — Diesel PSA/Renault'},
+  'EDC15P':   {fab:'Bosch', desc:'EDC15P+ — Diesel VAG (1.9 TDI)'},
+  'EDC16':    {fab:'Bosch', desc:'EDC16 — Diesel (2003-2008)'},
+  'EDC16U':   {fab:'Bosch', desc:'EDC16U — Diesel VAG/PSA'},
+  'EDC16C':   {fab:'Bosch', desc:'EDC16C — Diesel Bosch'},
+  'EDC17C06': {fab:'Bosch', desc:'EDC17C06 — BMW Diesel (N47/N57)'},
+  'EDC17C10': {fab:'Bosch', desc:'EDC17C10 — PSA 2.0 HDi'},
+  'EDC17C46': {fab:'Bosch', desc:'EDC17C46 — VW 2.0 TDI EA189'},
+  'EDC17C50': {fab:'Bosch', desc:'EDC17C50 — BMW Diesel'},
+  'EDC17C60': {fab:'Bosch', desc:'EDC17C60 — PSA 1.6/2.0 BlueHDi'},
+  'EDC17C64': {fab:'Bosch', desc:'EDC17C64 — VW Diesel'},
+  'EDC17C66': {fab:'Bosch', desc:'EDC17C66 — Mercedes Diesel'},
+  'EDC17C74': {fab:'Bosch', desc:'EDC17C74 — VW/Audi 2.0 TDI EA288'},
+  'EDC17C84': {fab:'Bosch', desc:'EDC17C84 — Renault Diesel'},
+  'EDC17CP09':{fab:'Bosch', desc:'EDC17CP09 — BMW Diesel'},
+  'EDC17CP20':{fab:'Bosch', desc:'EDC17CP20 — VW Diesel'},
+  'EDC17CP37':{fab:'Bosch', desc:'EDC17CP37 — Toyota Diesel'},
+  'EDC17CP46':{fab:'Bosch', desc:'EDC17CP46 — Mercedes CDI'},
+  // Bosch essence
+  'ME7':      {fab:'Bosch', desc:'ME7 — Essence (Audi/VW/BMW)'},
+  'ME9':      {fab:'Bosch', desc:'ME9 — Essence Bosch'},
+  'MED17':    {fab:'Bosch', desc:'MED17 — Essence TSI/TFSI'},
+  'MEVD17':   {fab:'Bosch', desc:'MEVD17 — BMW Essence (N13/N20)'},
+  'MEDC17':   {fab:'Bosch', desc:'MEDC17 — JLR Diesel'},
+  'MD1CS003': {fab:'Bosch', desc:'MD1CS003 — PSA 1.5/2.0 BlueHDi récent'},
+  'DCU17PC':  {fab:'Bosch', desc:'DCU17 — Diesel Allison/ALL'},
+  // Siemens/Continental
+  'SID201':   {fab:'Siemens', desc:'SID201 — Peugeot/Citroën HDi'},
+  'SID202':   {fab:'Siemens', desc:'SID202 — Ford/PSA Diesel'},
+  'SID305':   {fab:'Continental', desc:'SID305 — Renault Diesel'},
+  'SID306':   {fab:'Continental', desc:'SID306 — Renault Diesel'},
+  'SID807':   {fab:'Continental', desc:'SID807 — PSA Diesel récent'},
+  // Delphi
+  'DCM3.5':   {fab:'Delphi', desc:'DCM3.5 — PSA 1.6 e-HDi'},
+  'DCM3.7':   {fab:'Delphi', desc:'DCM3.7 — VAG 1.6 TDI'},
+  'CRD2':     {fab:'Delphi', desc:'CRD2 — Mercedes CRDi'},
+  // Continental essence
+  'SIMOS8':   {fab:'Continental', desc:'SIMOS8 — VAG FSI/TFSI'},
+  'SIMOS10':  {fab:'Continental', desc:'SIMOS10 — VAG TSI/TDI'},
+  'SIMOS12':  {fab:'Continental', desc:'SIMOS12 — VAG TDI'},
+  'SIMOS18':  {fab:'Continental', desc:'SIMOS18 — VAG Essence récent'},
+  'SIMOSPCR': {fab:'Continental', desc:'SIMOS PCR2.1 — VAG 1.6/2.0 TDI EA288'},
+  'EMS24':    {fab:'Continental', desc:'EMS24xx — Ford Essence'},
+};
+
+/* Marque → nom affiché */
+var MARQUE_KESS = {
+  'vag':'VAG (VW/Audi/Seat/Skoda)','volkswagen':'Volkswagen','vw':'Volkswagen',
+  'audi':'Audi','bmw':'BMW','mb':'Mercedes','mercedes':'Mercedes',
+  'psa':'PSA (Peugeot/Citroën/DS)','peugeot':'Peugeot','citroen':'Citroën',
+  'renault':'Renault','fomoco':'Ford','ford':'Ford','toyota':'Toyota',
+  'jlr':'Jaguar / Land Rover','mini':'Mini','seat':'Seat','skoda':'Skoda',
+  'opel':'Opel','all':'Allison / Divers','nissan':'Nissan',
+};
+
+function ecuParseFilename(filename){
+  var fn  = filename || '';
+  var fnU = fn.toUpperCase();
+  var fnL = fn.toLowerCase();
+  var result = {
+    ecu:'', fabricant:'', protocole:'', marque:'',
+    vin:'', sw:'', date:'', options:[],
+    description:'', confidence:0
+  };
+
+  // ── 1. FORMAT KESS3 standard ──────────────────────────────
+  // Pattern: {marque}_{fab}_{ecu}_{protocole}_{...}_{timestamp}.bin
+  var kessRe = /^([a-z0-9]+?)_([a-z]+)_([a-z0-9\.\+]+?)_([a-z]+)/i;
+  var kessM  = kessRe.exec(fn);
+  if(kessM){
+    var rawMarque = kessM[1].toLowerCase();
+    var rawFab    = kessM[2].toLowerCase();
+    var rawEcu    = kessM[3].toLowerCase();
+    var rawProto  = kessM[4].toLowerCase();
+
+    result.marque    = MARQUE_KESS[rawMarque] || rawMarque.toUpperCase();
+    result.fabricant = ({bosch:'Bosch',delphi:'Delphi',continental:'Continental',
+                         siemens:'Siemens',denso:'Denso',valeo:'Valeo'})[rawFab] || rawFab;
+    result.ecu       = rawEcu.toUpperCase();
+    result.protocole = rawProto.toUpperCase().replace('VIRTUALMAPS','OBD').replace('MAPS','OBD').replace('FULL','OBD');
+    if(fnL.includes('bench'))  result.protocole = 'BENCH';
+    if(fnL.includes('boot'))   result.protocole = 'BOOT';
+    if(fnL.includes('bdm'))    result.protocole = 'BDM';
+    if(fnL.includes('inteeprom')) result.protocole += '+EEPROM';
+    result.confidence = 80;
+  }
+
+  // ── 2. FORMAT BMW CAFD (BMWCoding) ───────────────────────
+  // Pattern: BMW_Fxx_WBA3K11060F857302_00000C66_...cafd
+  if(!result.ecu && /^BMW_/i.test(fn)){
+    result.marque = 'BMW'; result.fabricant = 'BMW'; result.confidence = 70;
+  }
+
+  // ── 3. DÉTECTION ECU PAR MOT-CLÉ ─────────────────────────
+  if(!result.ecu){
+    var ecuKeys = Object.keys(ECU_DB).sort(function(a,b){return b.length-a.length;});
+    for(var i=0;i<ecuKeys.length;i++){
+      if(fnU.includes(ecuKeys[i])){
+        result.ecu = ecuKeys[i];
+        result.fabricant = result.fabricant || ECU_DB[ecuKeys[i]].fab;
+        result.confidence = Math.max(result.confidence, 60);
+        break;
+      }
+    }
+  }
+
+  // ── 4. DESCRIPTION ECU depuis la base ────────────────────
+  if(result.ecu){
+    var ecuKeys2 = Object.keys(ECU_DB).sort(function(a,b){return b.length-a.length;});
+    for(var j=0;j<ecuKeys2.length;j++){
+      if(result.ecu.toUpperCase().startsWith(ecuKeys2[j].toUpperCase())){
+        result.description = ECU_DB[ecuKeys2[j]].desc;
+        if(!result.fabricant) result.fabricant = ECU_DB[ecuKeys2[j]].fab;
+        break;
+      }
+    }
+  }
+
+  // ── 5. VIN : 17 chars alphanumériques (sans I, O, Q) ─────
+  var vinRe = /([A-HJ-NPR-Z0-9]{17})/i;
+  var parts  = fn.replace(/[_\-\.]/g,' ').split(' ');
+  for(var k=0;k<parts.length;k++){
+    var p = parts[k].toUpperCase();
+    if(p.length===17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(p)){
+      // Vérifier que ce n'est pas un hash hex (timestamp ou checksum) sans voyelles
+      var hasAlpha = /[A-Z]/i.test(p);
+      var seemsVin = hasAlpha && (
+        /^(W[A-Z0-9]{2}|VF[0-9]|SA[A-Z]|WF0|1FA|1G1|JTD|SCC|VNK|TMB|TRU)/i.test(p) || // WMI connu
+        result.confidence >= 60 // si on a déjà identifié l'ECU, on fait confiance
+      );
+      if(seemsVin){ result.vin = p; result.confidence = Math.max(result.confidence, 85); break; }
+    }
+  }
+  // Fallback: vin_ ou _vin_ pattern explicite
+  var vinExp = /[\._]vin[\._]([A-HJ-NPR-Z0-9]{17})/i.exec(fn);
+  if(vinExp && !result.vin) result.vin = vinExp[1].toUpperCase();
+
+  // ── 6. OPTIONS depuis le nom FW ──────────────────────────
+  var optMap = {
+    'DPF':'DPF OFF','EGR':'EGR OFF','ADBLUE':'AdBlue OFF','NOX':'NOx OFF',
+    'VMAX':'Vmax OFF','IMMO':'Immo OFF','LAMBDA':'Lambda OFF','CAT':'Cat OFF',
+    'E85':'E85','STAGE1':'Stage 1','STAGE2':'Stage 2','TVA':'TVA',
+    'DTCOFF':'DTC OFF','P242F':'FAP','LAUNCH':'Launch Control'
+  };
+  Object.keys(optMap).forEach(function(k){
+    if(fnU.includes(k)) result.options.push(optMap[k]);
+  });
+
+  // ── 7. Date ───────────────────────────────────────────────
+  var dateM = /_(\d{4})(\d{2})(\d{2})\d{6}/.exec(fn);
+  if(dateM) result.date = dateM[3]+'/'+dateM[2]+'/'+dateM[1];
+
+  // ── 8. Fichier ORI vs MOD ─────────────────────────────────
+  if(fnU.includes('.FW.') || fnU.endsWith(' .FW.BIN') || result.options.length > 0){
+    result.fileType = 'mod';
+  } else if(fnU.includes('ORI') || fnU.includes('BACKUP') || fnU.includes('FULLBACKUP') || fnU.includes('INTFLASH') && result.options.length === 0){
+    result.fileType = 'ori';
+  } else {
+    result.fileType = 'ecu';
+  }
+
+  return result;
+}
+
+/* Afficher la bannière de détection après sélection fichier */
+function ecuShowDetection(files){
+  var container = document.getElementById('ecu-detect-result');
+  if(!container) return;
+
+  // Analyser tous les fichiers
+  var detected = files.map(function(f){ return { file:f, info: ecuParseFilename(f.name) }; });
+
+  // Prendre les infos du premier fichier pertinent
+  var best = detected.find(function(d){ return d.info.confidence > 0; }) || detected[0];
+  if(!best || best.info.confidence === 0){ container.style.display='none'; return; }
+
+  var info = best.info;
+
+  function tag(text, color){
+    return '<span class="ecu-detect-tag'+(color?' '+color:'')+'">'+ text +'</span>';
+  }
+
+  // Construire le label ECU complet
+  var ecuLabel = [info.fabricant, info.ecu].filter(Boolean).join(' ');
+  if(!ecuLabel) ecuLabel = '';
+
+  var html = '<div class="ecu-detect-banner">';
+  html += '<div style="width:100%"><div class="ecu-detect-banner-title">🔍 Détection automatique — '+
+    (info.confidence >= 80 ? tag('Fiable','') : tag('Partielle','orange'))+
+    (info.date ? ' <span style="font-size:11px;color:var(--text-muted);font-weight:400;margin-left:8px">'+info.date+'</span>' : '')+
+  '</div>';
+
+  // Ligne 1 : ECU + Marque + Protocole
+  html += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px">';
+  if(ecuLabel) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">ECU détecté</div><div class="ecu-detect-val">'+ecuLabel+'</div>'+(info.description?'<div style="font-size:11px;color:var(--text-muted);margin-top:2px">'+info.description+'</div>':'')+'</div>';
+  if(info.marque) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Marque fichier</div><div class="ecu-detect-val">'+info.marque+'</div></div>';
+  if(info.protocole) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Protocole</div><div class="ecu-detect-val">'+tag(info.protocole, info.protocole==='BENCH'?'purple':info.protocole==='BOOT'?'orange':'')+'</div></div>';
+  if(info.fileType) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Type</div><div class="ecu-detect-val">'+tag(info.fileType==='ori'?'🟢 ORI':info.fileType==='mod'?'🔵 MOD':'📁 ECU', info.fileType==='ori'?'':info.fileType==='mod'?'purple':'orange')+'</div></div>';
+  html += '</div>';
+
+  // Ligne 2 : VIN + Options
+  html += '<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">';
+  if(info.vin){
+    html += '<div class="ecu-detect-field"><div class="ecu-detect-label">VIN détecté</div>'+
+      '<div class="ecu-detect-val" style="font-size:14px;color:var(--blue);letter-spacing:1px">'+info.vin+'</div>'+
+      '<button class="ecu-detect-apply" onclick="ecuApplyVin(''+info.vin+'')" style="margin-top:6px">→ Appliquer au dossier</button>'+
+    '</div>';
+  } else {
+    html += '<div class="ecu-detect-field"><div class="ecu-detect-label">VIN</div><div class="ecu-detect-val dim">Non détecté dans le nom</div></div>';
+  }
+  if(info.options.length){
+    html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Modifications détectées</div>'+
+      '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">'+
+      info.options.map(function(o){ return '<span class="ecu-detect-tag purple">'+o+'</span>'; }).join('')+
+      '</div></div>';
+  }
+  // Bouton appliquer ECU au dossier
+  if(ecuLabel){
+    html += '<div class="ecu-detect-field" style="margin-left:auto;text-align:right">'+
+      '<button class="ecu-detect-apply" onclick="ecuApplyToVehicule(''+info.ecu+'',''+info.protocole+'',''+info.fabricant+'')">→ Appliquer ECU au dossier</button>'+
+    '</div>';
+  }
+  html += '</div>';
+  html += '</div></div>';
+
+  container.innerHTML = html;
+  container.style.display = '';
+}
+
+/* Appliquer le VIN détecté au dossier véhicule en cours */
+function ecuApplyVin(vin){
+  var vehId = (document.getElementById('ecu-upload-veh')||{value:''}).value;
+  if(!vehId){ crmToast('Sélectionnez un véhicule d\'abord','warning'); return; }
+  if(!db){ crmToast('Firebase non disponible','error'); return; }
+  db.collection('crm_vehicules').doc(vehId).update({ vin: vin })
+    .then(function(){
+      crmToast('✅ VIN '+vin+' enregistré sur le dossier','success');
+      // Rafraîchir le détail si ouvert
+      if(crmCurrentDossier === vehId) crmRenderDetail(vehId);
+    })
+    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
+}
+
+/* Appliquer ECU + Protocole + Fabricant au dossier véhicule */
+function ecuApplyToVehicule(ecu, proto, fab){
+  var vehId = (document.getElementById('ecu-upload-veh')||{value:''}).value;
+  if(!vehId){ crmToast('Sélectionnez un véhicule d\'abord','warning'); return; }
+  if(!db){ crmToast('Firebase non disponible','error'); return; }
+  var upd = {};
+  if(ecu)  upd.ecu   = ecu;
+  if(proto) upd.proto = proto;
+  if(fab)  upd.outil = fab + ' (KESS3)';
+  db.collection('crm_vehicules').doc(vehId).update(upd)
+    .then(function(){
+      crmToast('✅ ECU '+ecu+' enregistré sur le dossier','success');
+      if(crmCurrentDossier === vehId) crmRenderDetail(vehId);
+    })
+    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
 }
 
 function ecuReadAndStore(file, clientId, vehId){
@@ -5626,11 +5930,19 @@ function ecuReadAndStore(file, clientId, vehId){
     var pctEl = document.getElementById('ppct-'+fileId);
     if(fill) fill.style.width = '90%';
     if(pctEl) pctEl.textContent = 'Enregistrement…';
+    var detected = ecuParseFilename(file.name);
     var data = {
       vehiculeId: vehId, clientId: clientId,
       name: file.name, ext: ext,
       size: file.size, b64: b64,
-      ts: crmTs()
+      ts: crmTs(),
+      detectedEcu:      detected.ecu       || '',
+      detectedFab:      detected.fabricant  || '',
+      detectedProto:    detected.protocole  || '',
+      detectedVin:      detected.vin        || '',
+      detectedOptions:  detected.options    || [],
+      detectedFileType: detected.fileType   || 'ecu',
+      detectedDate:     detected.date       || ''
     };
     db.collection('crm_files').doc(fileId).set(data)
       .then(function(){
