@@ -5,9 +5,9 @@ var CACHE_NAME = 'areprog-v2';
 var OFFLINE_URLS = [
   '/gestion',
   '/gestion.html',
-  '/favicon32x32.png',
-  '/favicon512.png',
-  '/logonav.png',
+  '/favicon-32x32.png',
+  '/favicon-512.png',
+  '/logo-nav.png',
 ];
 
 // Installation — pré-cacher les ressources essentielles
@@ -89,8 +89,8 @@ self.addEventListener('push', function(e) {
   e.waitUntil(
     self.registration.showNotification(data.title || 'AREPROG', {
       body: data.body || '',
-      icon: '/favicon512.png',
-      badge: '/favicon32x32.png',
+      icon: '/favicon-512.png',
+      badge: '/favicon-32x32.png',
       tag: 'areprog-rdv',
     })
   );
