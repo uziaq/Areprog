@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
 <!-- EmailJS + jsPDF + html2canvas : chargés dynamiquement après DOMContentLoaded -->
-<!-- Auth : appel direct API Netlify Identity via fetch -->
+<!-- Auth : Firebase Authentication -->
 <!-- PWA Manifest pour installation iOS/Android -->
 <link rel="manifest" href="/manifest.json"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -13,10 +13,8 @@
 <meta name="apple-mobile-web-app-title" content="AREPROG"/>
 <meta name="theme-color" content="#0a0c10"/>
 <!-- Firebase SDK -->
-<script type="module">
-  // Firebase initialisé dans le bloc principal — voir bas de page
-</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
@@ -1990,24 +1988,7 @@ Cordialement, AREPROG"></textarea>
 // AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
 function $(s) { return document.getElementById(s); }
 
-var IDENTITY_URL = 'https://areprog.fr/.netlify/identity';
-var SESSION_KEY  = 'ar_session';
-var SESSION_DURATION = 60 * 60 * 1000; // 1 heure
-
-function setSession(token) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now(), token: token }));
-}
-function getSession() {
-  try {
-    var raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    var data = JSON.parse(raw);
-    if ((Date.now() - data.t) < SESSION_DURATION) return data;
-    return null;
-  } catch(e) { return null; }
-}
-function clearSession() { localStorage.removeItem(SESSION_KEY); }
-
+// ── Auth : Firebase Authentication ──────────────────────────
 function showApp() {
   $('login-screen').style.display = 'none';
   $('app').style.display = 'block';
@@ -2035,27 +2016,19 @@ async function doLogin() {
   if (!email || !pass) { showLoginErr('Renseigne ton email et mot de passe.'); return; }
   setLoginLoading(true);
   try {
-    var resp = await fetch(IDENTITY_URL + '/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
-    });
-    var data = await resp.json();
-    if (!resp.ok || !data.access_token) {
-      throw new Error(data.error_description || 'Identifiants incorrects');
-    }
-    setSession(data.access_token);
-    showApp();
+    await firebase.auth().signInWithEmailAndPassword(email, pass);
+    // onAuthStateChanged prend le relais automatiquement
   } catch(e) {
     setLoginLoading(false);
-    showLoginErr('Email ou mot de passe incorrect.');
+    var msg = 'Email ou mot de passe incorrect.';
+    if (e.code === 'auth/too-many-requests') msg = 'Trop de tentatives. Réessaie dans quelques minutes.';
+    showLoginErr(msg);
     console.error(e);
   }
 }
 
 function doLogout() {
-  clearSession();
-  showLogin();
+  firebase.auth().signOut();
 }
 
 // Au chargement : session encore valide → connecter directement
@@ -2084,10 +2057,16 @@ document.addEventListener('DOMContentLoaded', function() {
   var le = $('l-email');
   if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
 
-  // Auto-login si session valide
-  if (getSession()) {
-    showApp();
-  }
+  // Gestion de session via Firebase Auth
+  // onAuthStateChanged est appelé à chaque changement d'état (login, logout, expiration)
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      showApp();
+    } else {
+      setLoginLoading(false);
+      showLogin();
+    }
+  });
 
   // Relier le bouton proprement (évite tout souci de timing)
   var btn = $('login-btn');
@@ -2118,6 +2097,10 @@ function initFirebase() {
   try {
     if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
     db = firebase.firestore();
+    // Test de connexion : seulement si l'utilisateur est authentifié (garanti par onAuthStateChanged)
+    firebase.auth().currentUser
+      ? setSyncStatus(true, 'Firebase connecté')
+      : setSyncStatus(false, 'Non authentifié');
     db.collection('docs').limit(1).get()
       .then(function() { setSyncStatus(true, 'Firebase connecté'); })
       .catch(function(e) { setSyncStatus(false, 'Firestore inaccessible'); console.warn(e); });
@@ -2757,14 +2740,14 @@ function deleteDoc(docId) {
 // ============================================================
 function renderDocHTML(doc, tplOverride) {
   var tpl = tplOverride || loadTemplate();
-  var accentColor = tpl.color || '#1E90FF';
+  var accentColor = sanitizeCssColor(tpl.color || '#1E90FF');
   var ht = doc.ht || doc.lines.reduce(function(s,l){return s+l.qte*l.pu;},0);
   var tvaRate = (doc.tvaRate || 0) / 100;
   var tva = ht * tvaRate;
   var ttc = ht + tva;
   var isDevis = doc.type === 'devis';
   var gains = getGains(doc.lines);
-  var vehStr = [doc.vm, doc.vmo, doc.vmot, doc.van ? '(' + doc.van + ')' : ''].filter(Boolean).join(' ');
+  var vehStr = [escHtml(doc.vm||''), escHtml(doc.vmo||''), escHtml(doc.vmot||''), doc.van ? '(' + escHtml(doc.van) + ')' : ''].filter(Boolean).join(' ');
 
   var noticeHTML = doc.statut === 'payé'
     ? '<div class="d-notice paye">✓ FACTURE RÉGLÉE — Paiement reçu</div>'
@@ -2775,7 +2758,7 @@ function renderDocHTML(doc, tplOverride) {
   var linesHTML = doc.lines.map(function(l) {
     var puStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : (l.pu||0).toFixed(2) + ' €';
     var totStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + ((l.qte||1)*(l.pu||0)).toFixed(2) + ' €</strong>';
-    return '<tr><td>' + (l.label || '—') + '</td><td>' + l.qte + '</td><td>' + puStr + '</td><td>' + totStr + '</td></tr>';
+    return '<tr><td>' + escHtml(l.label || '—') + '</td><td>' + l.qte + '</td><td>' + puStr + '</td><td>' + totStr + '</td></tr>';
   }).join('');
 
   var gainsHTML = '';
@@ -2785,7 +2768,7 @@ function renderDocHTML(doc, tplOverride) {
   var customGainsArr = doc.customGains && doc.customGains.length ? doc.customGains : null;
   if (customGainsArr && tpl.showGains !== false) {
     gainsHTML = '<div class="d-gains"><div class="d-gains-title">✦ Bénéfices de votre prestation</div><div class="d-gains-grid">'
-      + customGainsArr.map(function(g){return '<div class="d-gain">'+g+'</div>';}).join('')
+      + customGainsArr.map(function(g){return '<div class="d-gain">'+escHtml(g)+'</div>';}).join('')
       + '</div></div>';
   } else if (doc.gains && (doc.gains.chOrig || doc.gains.ch || doc.gains.nm || doc.gains.conso)) {
     var g = doc.gains;
@@ -2807,11 +2790,11 @@ function renderDocHTML(doc, tplOverride) {
 
   return '<div class="d-header" style="border-bottom:2px solid ' + accentColor + '22">'
     + '<div><div class="d-brand">' + buildLogoHTML(tpl) + '</div>'
-    + '<div class="d-brand-info">' + (tpl.activite||'')
-    + (tpl.zones ? '<br>' + tpl.zones : '')
-    + (tpl.tel ? '<br>' + tpl.tel : '')
-    + (tpl.email ? ' &nbsp;·&nbsp; ' + tpl.email : '')
-    + (tpl.web ? ' &nbsp;·&nbsp; ' + tpl.web : '')
+    + '<div class="d-brand-info">' + escHtml(tpl.activite||'')
+    + (tpl.zones ? '<br>' + escHtml(tpl.zones) : '')
+    + (tpl.tel ? '<br>' + escHtml(tpl.tel) : '')
+    + (tpl.email ? ' &nbsp;·&nbsp; ' + escHtml(tpl.email) : '')
+    + (tpl.web ? ' &nbsp;·&nbsp; ' + escHtml(tpl.web) : '')
     + '</div></div>'
     + '<div class="d-right">'
     + '<div class="d-type">' + (isDevis ? 'DEVIS' : 'FACTURE') + '</div>'
@@ -2820,22 +2803,22 @@ function renderDocHTML(doc, tplOverride) {
     + (doc.ech ? '<div class="d-date">' + (isDevis ? 'Valable jusqu\'au' : 'Échéance') + ' ' + fmtDate(doc.ech) + '</div>' : '')
     + '</div></div>'
     + '<div class="d-parties">'
-    + '<div class="d-party"><div class="d-party-label">Prestataire</div><div class="d-party-name">' + (tpl.nom||'AREPROG') + '</div>'
-    + '<div class="d-party-info">' + (tpl.activite||'')
-    + (tpl.zones ? '<br>' + tpl.zones : '')
-    + (tpl.adresse ? '<br>' + tpl.adresse : '')
-    + (tpl.tel ? '<br>' + tpl.tel : '')
-    + (tpl.email ? '<br>' + tpl.email : '')
-    + (tpl.web ? '<br>' + tpl.web : '')
-    + (tpl.legal ? '<br><small style="color:#aaa">' + tpl.legal + '</small>' : '')
+    + '<div class="d-party"><div class="d-party-label">Prestataire</div><div class="d-party-name">' + escHtml(tpl.nom||'AREPROG') + '</div>'
+    + '<div class="d-party-info">' + escHtml(tpl.activite||'')
+    + (tpl.zones ? '<br>' + escHtml(tpl.zones) : '')
+    + (tpl.adresse ? '<br>' + escHtml(tpl.adresse) : '')
+    + (tpl.tel ? '<br>' + escHtml(tpl.tel) : '')
+    + (tpl.email ? '<br>' + escHtml(tpl.email) : '')
+    + (tpl.web ? '<br>' + escHtml(tpl.web) : '')
+    + (tpl.legal ? '<br><small style="color:#aaa">' + escHtml(tpl.legal) + '</small>' : '')
     + '</div></div>'
-    + '<div class="d-party"><div class="d-party-label">Client</div><div class="d-party-name">' + (doc.cn || '—') + '</div>'
+    + '<div class="d-party"><div class="d-party-label">Client</div><div class="d-party-name">' + escHtml(doc.cn || '—') + '</div>'
     + '<div class="d-party-info">'
-    + (doc.ca ? doc.ca + '<br>' : '') + (doc.cv || '')
-    + (doc.ct ? '<br>' + doc.ct : '')
-    + (doc.ce ? '<br>' + doc.ce : '')
+    + (doc.ca ? escHtml(doc.ca) + '<br>' : '') + escHtml(doc.cv || '')
+    + (doc.ct ? '<br>' + escHtml(doc.ct) : '')
+    + (doc.ce ? '<br>' + escHtml(doc.ce) : '')
     + (vehStr ? '<br><br><strong>Véhicule :</strong> ' + vehStr : '')
-    + (doc.vim ? '<br>Immatriculation : <strong>' + doc.vim.toUpperCase() + '</strong>' : '')
+    + (doc.vim ? '<br>Immatriculation : <strong>' + escHtml(doc.vim.toUpperCase()) + '</strong>' : '')
     + '</div></div></div>'
     + noticeHTML
     + '<table class="d-table"><thead><tr>'
@@ -2850,8 +2833,8 @@ function renderDocHTML(doc, tplOverride) {
     + '<div class="d-tot-row big" style="color:' + accentColor + '"><span>TOTAL TTC</span><span>' + ttc.toFixed(2) + ' €</span></div>'
     + '</div></div>'
     + gainsHTML
-    + (doc.notes ? '<div class="d-notes"><strong>Conditions & mentions</strong><p>' + doc.notes + '</p></div>' : '')
-    + (tpl.showFooter !== false ? '<div class="d-footer">' + (tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
+    + (doc.notes ? '<div class="d-notes"><strong>Conditions & mentions</strong><p>' + escHtml(doc.notes).replace(/\n/g,'<br>') + '</p></div>' : '')
+    + (tpl.showFooter !== false ? '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
 }
 
 // Construit le nom de fichier PDF : AREPROG_TYPE_NUMERO_CLIENT
@@ -3029,7 +3012,7 @@ function clientCard(cl, selectable) {
     : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
   var vehsHTML = vehs.map(function(v) {
     var label = [v.vm, v.vmo, v.vmot, v.van ? '(' + v.van + ')' : ''].filter(Boolean).join(' ');
-    var immat = v.vim ? ' <span style="font-family:var(--fm);font-size:10px;color:var(--text-muted)">' + v.vim.toUpperCase() + '</span>' : '';
+    var immat = v.vim ? ' <span style="font-family:var(--fm);font-size:10px;color:var(--text-muted)">' + escHtml(v.vim.toUpperCase()) + '</span>' : '';
     return label ? '<div class="carnet-card-veh">🚗 ' + escHtml(label) + immat + '</div>' : '';
   }).filter(Boolean).join('');
   return '<div class="carnet-card" ' + onclick + '>'
@@ -3516,17 +3499,20 @@ function syncCatalogueFromFirebase() {
 // ============================================================
 //  LOGO HTML pour les documents
 // ============================================================
+function sanitizeCssColor(c) {
+  return /^#[0-9a-fA-F]{3,8}$|^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$|^rgba\(/.test(c||'') ? c : '#1E90FF';
+}
 function buildLogoHTML(tpl) {
   var nom = tpl.nom || 'AREPROG';
   var style = tpl.logoStyle || 'split';
-  var color = tpl.color || '#1E90FF';
+  var color = sanitizeCssColor(tpl.color || '#1E90FF');
   if (style === 'split') {
     var half = Math.ceil(nom.length / 2);
-    return nom.slice(0,half) + '<span style="color:' + color + '">' + nom.slice(half) + '</span>';
+    return escHtml(nom.slice(0,half)) + '<span style="color:' + color + '">' + escHtml(nom.slice(half)) + '</span>';
   } else if (style === 'full') {
-    return '<span style="color:' + color + '">' + nom + '</span>';
+    return '<span style="color:' + color + '">' + escHtml(nom) + '</span>';
   }
-  return nom;
+  return escHtml(nom);
 }
 
 // ============================================================
@@ -3885,7 +3871,7 @@ function updateRdvVehSelect() {
   sel.innerHTML = '<option value="">— Tous les véhicules —</option>'
     + vehs.map(function(v, i) {
         var label = [v.vm, v.vmo, v.vmot, v.van?'('+v.van+')':''].filter(Boolean).join(' ');
-        return '<option value="'+i+'">' + escHtml(label) + (v.vim?' · '+v.vim.toUpperCase():'') + '</option>';
+        return '<option value="'+i+'">' + escHtml(label) + (v.vim?' · '+escHtml(v.vim.toUpperCase()):'') + '</option>';
       }).join('');
 }
 

@@ -71,15 +71,15 @@ const NAV_HTML = `
  </div>
  <div class="nav-mobile-group">
  <div class="nav-mobile-group-label">Services</div>
- <a href="/stage1" class="nav-mobile-sub">Stage 1</a>
- <a href="/stage2" class="nav-mobile-sub">Stage 2</a>
- <a href="/conversion-e85" class="nav-mobile-sub">Conversion E85</a>
- <a href="/ethanol-prix" class="nav-mobile-sub">Prix E85 en temps réel</a>
- <a href="/optimisation-consommation" class="nav-mobile-sub">Optimisation consommation</a>
- <a href="/desactivation-egr" class="nav-mobile-sub">Désactivation EGR</a>
- <a href="/desactivation-fap" class="nav-mobile-sub">Désactivation FAP</a>
- <a href="/desactivation-adblue" class="nav-mobile-sub">Désactivation AdBlue</a>
- <a href="/odis" class="nav-mobile-sub">Diagnostic ODIS VAG</a>
+ <a href="/stage1" class="nav-mobile-sub" data-page="stage1">Stage 1</a>
+ <a href="/stage2" class="nav-mobile-sub" data-page="stage2">Stage 2</a>
+ <a href="/conversion-e85" class="nav-mobile-sub" data-page="conversion-e85">Conversion E85</a>
+ <a href="/ethanol-prix" class="nav-mobile-sub" data-page="ethanol-prix">Prix E85 en temps réel</a>
+ <a href="/optimisation-consommation" class="nav-mobile-sub" data-page="optimisation-consommation">Optimisation consommation</a>
+ <a href="/desactivation-egr" class="nav-mobile-sub" data-page="desactivation-egr">Désactivation EGR</a>
+ <a href="/desactivation-fap" class="nav-mobile-sub" data-page="desactivation-fap">Désactivation FAP</a>
+ <a href="/desactivation-adblue" class="nav-mobile-sub" data-page="desactivation-adblue">Désactivation AdBlue</a>
+ <a href="/odis" class="nav-mobile-sub" data-page="odis">Diagnostic ODIS VAG</a>
  </div>
  <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
  <a href="/about" data-page="about">À propos</a>
@@ -188,11 +188,18 @@ document.addEventListener('DOMContentLoaded', () => {
  menu.classList.toggle('open');
  });
  });
+ // Fermer les dropdowns au clic en dehors (capture:true pour iOS Safari)
  document.addEventListener('click', (e) => {
  if (!e.target.closest('.nav-dropdown')) {
  document.querySelectorAll('.nav-dropdown-menu.open').forEach(m => m.classList.remove('open'));
  }
- });
+ }, { capture: true });
+ // Fermer également au touch (mobile sans délai 300ms)
+ document.addEventListener('touchstart', (e) => {
+ if (!e.target.closest('.nav-dropdown')) {
+ document.querySelectorAll('.nav-dropdown-menu.open').forEach(m => m.classList.remove('open'));
+ }
+ }, { passive: true });
 
  // WhatsApp widget : chargé directement via <script src="whatsapp-widget.js"> dans chaque page HTML
 

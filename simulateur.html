@@ -812,7 +812,7 @@
             ════════════════════════════════════════════════════════
           -->
           <iframe id="sim-iframe"
-            src="https://api.olsx.eu/iframe?token=165|nY954hlsQT6tK8OLuaZtdtnj7zS0HYzBRIWsYYQk7966bc37&lang=fr&darkmode=on&color=sky&descriptions=on&currency=%E2%82%AC&hideprice=on&mailcontact=arthur%40areprog.fr"
+            src="about:blank"
             title="Simulateur de gains reprogrammation moteur AREPROG" loading="lazy" allow="fullscreen" allowfullscreen
             sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
             aria-label="Simulateur de gains moteur interactif"></iframe>
@@ -1028,16 +1028,24 @@
       var fallback = document.getElementById('iframeFallback');
       var wrapper = document.getElementById('iframeWrapper');
 
-      // If no src set → show fallback immediately
-      if (!iframe.src || iframe.src === window.location.href || iframe.src === '') {
+      function showFallback() {
         loading.classList.add('hidden');
         fallback.classList.add('visible');
         iframe.style.display = 'none';
-        return;
       }
+
+      // Charger l'URL depuis la Netlify Function (token non exposé dans le HTML)
+      fetch('/.netlify/functions/olsx-token')
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+          if (!data || !data.url) { showFallback(); return; }
+          iframe.src = data.url;
+        })
+        .catch(function() { showFallback(); });
 
       // Hide loading when iframe loaded
       iframe.addEventListener('load', function () {
+        if (iframe.src === 'about:blank') return; // ignorer le chargement initial
         loading.classList.add('hidden');
       });
 

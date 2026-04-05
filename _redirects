@@ -3,9 +3,8 @@
 #  À placer à la RACINE du repo
 # ============================================================
 
-# ── Netlify Identity — callback tokens ─────────────────────
-/                                   /admin.html                         200! splat=true path=/*#invite_token=*
-/admin                              /admin.html                         200
+# ── Admin (anciennement Netlify Identity — migré vers Firebase Auth) ─────
+/admin                              /gestion.html                       301
 
 # ── Clean URLs (sans .html) ─────────────────────────────────
 /stage1                             /stage1.html                        200
@@ -54,4 +53,4 @@
 /produit.html                       /contact                            301
 /confirmation                       /                                   301
 /confirmation.html                  /                                   301
-/admin.html                         /admin.html                         200
+/admin.html                         /gestion.html                       301
