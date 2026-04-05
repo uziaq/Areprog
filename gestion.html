@@ -2057,6 +2057,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var le = $('l-email');
   if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
 
+  // Initialiser Firebase avant tout appel à firebase.auth()
+  if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
+  db = firebase.firestore();
+
   // Gestion de session via Firebase Auth
   // onAuthStateChanged est appelé à chaque changement d'état (login, logout, expiration)
   firebase.auth().onAuthStateChanged(function(user) {
@@ -2095,12 +2099,10 @@ var syncOk = false;
 
 function initFirebase() {
   try {
-    if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
-    db = firebase.firestore();
-    // Test de connexion : seulement si l'utilisateur est authentifié (garanti par onAuthStateChanged)
-    firebase.auth().currentUser
-      ? setSyncStatus(true, 'Firebase connecté')
-      : setSyncStatus(false, 'Non authentifié');
+    // Firebase est déjà initialisé dans DOMContentLoaded avant onAuthStateChanged
+    // On s'assure juste que db est disponible
+    if (!db) db = firebase.firestore();
+    // Test de connexion Firestore
     db.collection('docs').limit(1).get()
       .then(function() { setSyncStatus(true, 'Firebase connecté'); })
       .catch(function(e) { setSyncStatus(false, 'Firestore inaccessible'); console.warn(e); });
