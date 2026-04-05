@@ -14,7 +14,16 @@ var OFFLINE_URLS = [
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(OFFLINE_URLS);
+      // fetch individuel pour éviter qu'une 404 bloque toute l'installation
+      return Promise.all(
+        OFFLINE_URLS.map(function(url) {
+          return fetch(url).then(function(r) {
+            if (r.ok) return cache.put(url, r);
+          }).catch(function() {
+            console.warn('[SW] Impossible de cacher:', url);
+          });
+        })
+      );
     }).then(function() {
       return self.skipWaiting();
     })
