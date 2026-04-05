@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
 <!-- EmailJS + jsPDF + html2canvas : chargés dynamiquement après DOMContentLoaded -->
-<!-- Auth : appel direct API Netlify Identity via fetch -->
+<!-- Auth : Firebase Authentication -->
 <!-- PWA Manifest pour installation iOS/Android -->
 <link rel="manifest" href="/manifest.json"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -18,6 +18,7 @@
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -1866,26 +1867,10 @@ Cordialement, AREPROG"></textarea>
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
+// AUTH — Firebase Authentication
 function $(s) { return document.getElementById(s); }
 
-var IDENTITY_URL = 'https://areprog.fr/.netlify/identity';
-var SESSION_KEY  = 'ar_session';
-var SESSION_DURATION = 60 * 60 * 1000; // 1 heure
-
-function setSession(token) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now(), token: token }));
-}
-function getSession() {
-  try {
-    var raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    var data = JSON.parse(raw);
-    if ((Date.now() - data.t) < SESSION_DURATION) return data;
-    return null;
-  } catch(e) { return null; }
-}
-function clearSession() { localStorage.removeItem(SESSION_KEY); }
+var auth = null; // initialisé après Firebase
 
 function showApp() {
   $('login-screen').style.display = 'none';
@@ -1907,6 +1892,20 @@ function showLoginErr(msg) {
   el.style.display = 'block';
 }
 
+// Messages d'erreur Firebase traduits en français
+function firebaseErrMsg(code) {
+  var msgs = {
+    'auth/user-not-found':      'Aucun compte trouvé pour cet email.',
+    'auth/wrong-password':      'Mot de passe incorrect.',
+    'auth/invalid-email':       'Adresse email invalide.',
+    'auth/invalid-credential':  'Email ou mot de passe incorrect.',
+    'auth/too-many-requests':   'Trop de tentatives. Réessaie dans quelques minutes.',
+    'auth/network-request-failed': 'Erreur réseau. Vérifie ta connexion.',
+    'auth/user-disabled':       'Ce compte a été désactivé.',
+  };
+  return msgs[code] || 'Connexion impossible. Réessaie.';
+}
+
 async function doLogin() {
   var email = $('l-email').value.trim();
   var pass  = $('l-pass').value;
@@ -1914,30 +1913,23 @@ async function doLogin() {
   if (!email || !pass) { showLoginErr('Renseigne ton email et mot de passe.'); return; }
   setLoginLoading(true);
   try {
-    var resp = await fetch(IDENTITY_URL + '/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
-    });
-    var data = await resp.json();
-    if (!resp.ok || !data.access_token) {
-      throw new Error(data.error_description || 'Identifiants incorrects');
-    }
-    setSession(data.access_token);
-    showApp();
+    await firebase.auth().signInWithEmailAndPassword(email, pass);
+    // onAuthStateChanged prendra le relais
   } catch(e) {
     setLoginLoading(false);
-    showLoginErr('Email ou mot de passe incorrect.');
-    console.error(e);
+    showLoginErr(firebaseErrMsg(e.code));
+    console.error('Firebase Auth:', e.code, e.message);
   }
 }
 
 function doLogout() {
-  clearSession();
-  showLogin();
+  if (auth) {
+    auth.signOut().catch(function(e){ console.warn('Logout error:', e); });
+  }
+  // onAuthStateChanged gère l'affichage du login
 }
 
-// Au chargement : session encore valide → connecter directement
+// Au chargement : Firebase Auth gère la persistance de session automatiquement
 document.addEventListener('DOMContentLoaded', function() {
   // Charger EmailJS, jsPDF, html2canvas dynamiquement
   function loadScript(src, cb) {
@@ -1963,12 +1955,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var le = $('l-email');
   if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
 
-  // Auto-login si session valide
-  if (getSession()) {
-    showApp();
-  }
-
-  // Relier le bouton proprement (évite tout souci de timing)
+  // Relier le bouton
   var btn = $('login-btn');
   if (btn) btn.onclick = doLogin;
   // Enter dans les modals catalogue
@@ -1997,9 +1984,31 @@ function initFirebase() {
   try {
     if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
     db = firebase.firestore();
-    db.collection('docs').limit(1).get()
-      .then(function() { setSyncStatus(true, 'Firebase connecté'); })
-      .catch(function(e) { setSyncStatus(false, 'Firestore inaccessible'); console.warn(e); });
+    auth = firebase.auth();
+
+    // Persistance de session automatique (LOCAL par défaut = reste connecté même après fermeture)
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(){});
+
+    // Observateur d'état — point central de la connexion/déconnexion
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // Utilisateur connecté
+        setLoginLoading(false);
+        // Vérifier Firestore une fois connecté
+        db.collection('docs').limit(1).get()
+          .then(function() { setSyncStatus(true, 'Firebase connecté'); })
+          .catch(function(e) { setSyncStatus(false, 'Firestore inaccessible'); console.warn(e); });
+        // Afficher l'app si on est sur l'écran de login
+        if ($('login-screen') && $('login-screen').style.display !== 'none') {
+          showApp();
+        }
+      } else {
+        // Utilisateur déconnecté → afficher le login
+        setSyncStatus(false, 'Non connecté');
+        showLogin();
+      }
+    });
+
   } catch(e) {
     setSyncStatus(false, 'Firebase non disponible');
     console.warn('Firebase init failed:', e);
@@ -2024,6 +2033,17 @@ function setSyncLoading(msg) {
   var lbl = $('sync-status');
   if (dot) dot.className = 'sync-dot loading';
   if (lbl) lbl.textContent = msg || 'Synchronisation…';
+}
+
+// Initialiser Firebase dès que possible (avant tout DOMContentLoaded)
+// pour que onAuthStateChanged soit prêt immédiatement
+if (typeof firebase !== 'undefined') {
+  initFirebase();
+} else {
+  // Attendre que le SDK soit chargé
+  window.addEventListener('load', function() {
+    if (typeof firebase !== 'undefined') initFirebase();
+  });
 }
 
 // ── DOCS ────────────────────────────────────────────────────────────────────
@@ -2332,8 +2352,8 @@ function initApp() {
   renderDash();
   renderCarnet();
   initKeyboardShortcuts();
-  // Firebase
-  initFirebase();
+  // Firebase est déjà initialisé par initFirebase() au démarrage
+  // On lance juste la synchro des données
   setTimeout(function() {
     syncFromFirebase(function() {
       startRealtimeSync();
@@ -4798,9 +4818,9 @@ function initKeyboardShortcuts() {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  START — Netlify Identity gère l'auth
+//  START — Firebase Auth gère l'auth
 // ============================================================
-// L'initialisation est gérée par netlifyIdentity.on('init') ci-dessus
+// L'initialisation est gérée par initFirebase() et onAuthStateChanged
 </script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
