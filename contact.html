@@ -441,6 +441,7 @@
       const required = [
         {id:'f-prenom', err:'err-prenom'},
         {id:'f-tel',    err:'err-tel'},
+        {id:'f-zone',   err:'err-zone'},
         {id:'f-marque', err:'err-marque'},
         {id:'f-modele', err:'err-modele'},
       ];
@@ -492,7 +493,8 @@
       if (annee) msg += ` (${annee})`;
       if (immat) msg += ` · ${immat}`;
       if (moteur) msg += `\n⚙️ ${moteur}`;
-      if (km) msg += `\n📊 ${parseInt(km).toLocaleString('fr')} km`;
+      const kmNum = parseInt(km, 10);
+      if (km && !isNaN(kmNum)) msg += `\n📊 ${kmNum.toLocaleString('fr')} km`;
       if (prestations) msg += `\n\n🔧 *Prestations souhaitées*\n${prestations}`;
       if (message) msg += `\n\n💬 *Précisions*\n${message}`;
       msg += `\n\nMerci !`;

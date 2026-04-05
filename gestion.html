@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
 <!-- EmailJS + jsPDF + html2canvas : chargés dynamiquement après DOMContentLoaded -->
-<!-- Auth : appel direct API Netlify Identity via fetch -->
+<!-- Auth : Firebase Authentication -->
 <!-- PWA Manifest pour installation iOS/Android -->
 <link rel="manifest" href="/manifest.json"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -13,10 +13,8 @@
 <meta name="apple-mobile-web-app-title" content="AREPROG"/>
 <meta name="theme-color" content="#0a0c10"/>
 <!-- Firebase SDK -->
-<script type="module">
-  // Firebase initialisé dans le bloc principal — voir bas de page
-</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
@@ -1990,24 +1988,7 @@ Cordialement, AREPROG"></textarea>
 // AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
 function $(s) { return document.getElementById(s); }
 
-var IDENTITY_URL = 'https://areprog.fr/.netlify/identity';
-var SESSION_KEY  = 'ar_session';
-var SESSION_DURATION = 60 * 60 * 1000; // 1 heure
-
-function setSession(token) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now(), token: token }));
-}
-function getSession() {
-  try {
-    var raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    var data = JSON.parse(raw);
-    if ((Date.now() - data.t) < SESSION_DURATION) return data;
-    return null;
-  } catch(e) { return null; }
-}
-function clearSession() { localStorage.removeItem(SESSION_KEY); }
-
+// ── Auth : Firebase Authentication ──────────────────────────
 function showApp() {
   $('login-screen').style.display = 'none';
   $('app').style.display = 'block';
@@ -2035,27 +2016,19 @@ async function doLogin() {
   if (!email || !pass) { showLoginErr('Renseigne ton email et mot de passe.'); return; }
   setLoginLoading(true);
   try {
-    var resp = await fetch(IDENTITY_URL + '/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
-    });
-    var data = await resp.json();
-    if (!resp.ok || !data.access_token) {
-      throw new Error(data.error_description || 'Identifiants incorrects');
-    }
-    setSession(data.access_token);
-    showApp();
+    await firebase.auth().signInWithEmailAndPassword(email, pass);
+    // onAuthStateChanged prend le relais automatiquement
   } catch(e) {
     setLoginLoading(false);
-    showLoginErr('Email ou mot de passe incorrect.');
+    var msg = 'Email ou mot de passe incorrect.';
+    if (e.code === 'auth/too-many-requests') msg = 'Trop de tentatives. Réessaie dans quelques minutes.';
+    showLoginErr(msg);
     console.error(e);
   }
 }
 
 function doLogout() {
-  clearSession();
-  showLogin();
+  firebase.auth().signOut();
 }
 
 // Au chargement : session encore valide → connecter directement
@@ -2084,10 +2057,16 @@ document.addEventListener('DOMContentLoaded', function() {
   var le = $('l-email');
   if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
 
-  // Auto-login si session valide
-  if (getSession()) {
-    showApp();
-  }
+  // Gestion de session via Firebase Auth
+  // onAuthStateChanged est appelé à chaque changement d'état (login, logout, expiration)
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      showApp();
+    } else {
+      setLoginLoading(false);
+      showLogin();
+    }
+  });
 
   // Relier le bouton proprement (évite tout souci de timing)
   var btn = $('login-btn');
@@ -2118,6 +2097,10 @@ function initFirebase() {
   try {
     if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
     db = firebase.firestore();
+    // Test de connexion : seulement si l'utilisateur est authentifié (garanti par onAuthStateChanged)
+    firebase.auth().currentUser
+      ? setSyncStatus(true, 'Firebase connecté')
+      : setSyncStatus(false, 'Non authentifié');
     db.collection('docs').limit(1).get()
       .then(function() { setSyncStatus(true, 'Firebase connecté'); })
       .catch(function(e) { setSyncStatus(false, 'Firestore inaccessible'); console.warn(e); });
@@ -3029,7 +3012,7 @@ function clientCard(cl, selectable) {
     : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
   var vehsHTML = vehs.map(function(v) {
     var label = [v.vm, v.vmo, v.vmot, v.van ? '(' + v.van + ')' : ''].filter(Boolean).join(' ');
-    var immat = v.vim ? ' <span style="font-family:var(--fm);font-size:10px;color:var(--text-muted)">' + v.vim.toUpperCase() + '</span>' : '';
+    var immat = v.vim ? ' <span style="font-family:var(--fm);font-size:10px;color:var(--text-muted)">' + escHtml(v.vim.toUpperCase()) + '</span>' : '';
     return label ? '<div class="carnet-card-veh">🚗 ' + escHtml(label) + immat + '</div>' : '';
   }).filter(Boolean).join('');
   return '<div class="carnet-card" ' + onclick + '>'
@@ -3885,7 +3868,7 @@ function updateRdvVehSelect() {
   sel.innerHTML = '<option value="">— Tous les véhicules —</option>'
     + vehs.map(function(v, i) {
         var label = [v.vm, v.vmo, v.vmot, v.van?'('+v.van+')':''].filter(Boolean).join(' ');
-        return '<option value="'+i+'">' + escHtml(label) + (v.vim?' · '+v.vim.toUpperCase():'') + '</option>';
+        return '<option value="'+i+'">' + escHtml(label) + (v.vim?' · '+escHtml(v.vim.toUpperCase()):'') + '</option>';
       }).join('');
 }
 
