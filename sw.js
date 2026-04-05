@@ -5,16 +5,25 @@ var CACHE_NAME = 'areprog-v2';
 var OFFLINE_URLS = [
   '/gestion',
   '/gestion.html',
-  '/favicon32x32.png',
-  '/favicon512.png',
-  '/logonav.png',
+  '/favicon-32x32.png',
+  '/favicon-512.png',
+  '/logo-nav.png',
 ];
 
 // Installation — pré-cacher les ressources essentielles
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(OFFLINE_URLS);
+      // fetch individuel pour éviter qu'une 404 bloque toute l'installation
+      return Promise.all(
+        OFFLINE_URLS.map(function(url) {
+          return fetch(url).then(function(r) {
+            if (r.ok) return cache.put(url, r);
+          }).catch(function() {
+            console.warn('[SW] Impossible de cacher:', url);
+          });
+        })
+      );
     }).then(function() {
       return self.skipWaiting();
     })
@@ -89,8 +98,8 @@ self.addEventListener('push', function(e) {
   e.waitUntil(
     self.registration.showNotification(data.title || 'AREPROG', {
       body: data.body || '',
-      icon: '/favicon512.png',
-      badge: '/favicon32x32.png',
+      icon: '/favicon-512.png',
+      badge: '/favicon-32x32.png',
       tag: 'areprog-rdv',
     })
   );
