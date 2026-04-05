@@ -18,7 +18,6 @@
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -863,163 +862,6 @@ select option{background:#1d222d}
   .modal-toolbar{display:none!important}
   .modal-inner{box-shadow:none!important;border-radius:0!important;width:100%!important}
 }
-
-/* ══════════════════════════════════════════════════════════════
-   CRM DOSSIERS & FICHIERS ECU — Styles additionnels
-   ══════════════════════════════════════════════════════════════ */
-
-/* Sous-onglets CRM */
-.crm-tabs{display:flex;gap:2px;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:20px;width:fit-content}
-.crm-tab{padding:6px 14px;border-radius:6px;border:none;background:transparent;color:var(--text-dim);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.3px}
-.crm-tab:hover{color:var(--text)}
-.crm-tab.on{background:var(--bg2);color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
-
-/* Dossiers véhicule */
-.dossier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-bottom:24px}
-.dossier-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;transition:all .15s}
-.dossier-card:hover{border-color:rgba(30,144,255,.4)}
-.dossier-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.dossier-card-title{font-weight:700;font-size:14px;color:#fff}
-.dossier-card-client{font-size:11px;color:var(--blue);margin-top:2px}
-.dossier-card-meta{font-size:11px;color:var(--text-muted);margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap}
-.dossier-card-meta span{display:flex;align-items:center;gap:4px}
-.dossier-chip{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:4px}
-.dossier-chip.note{background:rgba(30,144,255,.15);color:var(--blue);border:1px solid rgba(30,144,255,.25)}
-.dossier-chip.interv{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.25)}
-.dossier-chip.modif{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.25)}
-.dossier-chip.file{background:rgba(245,158,11,.15);color:var(--orange);border:1px solid rgba(245,158,11,.25)}
-.dossier-card-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
-
-/* Vue détail dossier */
-.dossier-detail-wrap{animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.dossier-breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;color:var(--text-dim)}
-.dossier-breadcrumb a{color:var(--blue);text-decoration:none;cursor:pointer}
-.dossier-breadcrumb a:hover{text-decoration:underline}
-.dossier-breadcrumb-sep{color:var(--text-muted)}
-.dossier-info-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:18px}
-.dossier-info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:14px}
-.dossier-info-item-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:3px;font-weight:600}
-.dossier-info-item-val{font-size:13px;color:var(--text);font-family:'JetBrains Mono',monospace}
-
-/* Timeline historique */
-.crm-timeline{margin-top:4px}
-.crm-tl-item{display:flex;gap:12px;margin-bottom:10px}
-.crm-tl-dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex-shrink:0;border:2px solid}
-.crm-tl-dot.note{background:rgba(30,144,255,.3);border-color:var(--blue)}
-.crm-tl-dot.interv{background:rgba(34,197,94,.3);border-color:#22c55e}
-.crm-tl-dot.modif{background:rgba(168,85,247,.3);border-color:#a855f7}
-.crm-tl-body{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px}
-.crm-tl-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-.crm-tl-date{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace}
-.crm-tl-text{font-size:13px;color:var(--text);line-height:1.55;white-space:pre-wrap}
-
-/* Fichiers ECU */
-.ecu-dropzone{border:2px dashed var(--border);border-radius:10px;padding:28px;text-align:center;transition:all .2s;cursor:pointer;background:var(--bg3);margin-bottom:16px}
-.ecu-dropzone:hover,.ecu-dropzone.drag-over{border-color:var(--blue);background:rgba(30,144,255,.06)}
-.ecu-dropzone-icon{font-size:28px;margin-bottom:8px}
-.ecu-dropzone-text{color:var(--text-dim);font-size:13px}
-.ecu-dropzone-sub{color:var(--text-muted);font-size:11px;margin-top:4px}
-.ecu-file-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:7px;transition:border-color .15s}
-.ecu-file-item:hover{border-color:rgba(30,144,255,.3)}
-.ecu-file-icon{width:36px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;flex-shrink:0;letter-spacing:0}
-.ecu-file-icon.bin{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
-.ecu-file-icon.ori{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
-.ecu-file-icon.mod{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
-.ecu-file-icon.pdf{background:rgba(245,158,11,.15);color:var(--orange);border:1px solid rgba(245,158,11,.2)}
-.ecu-file-icon.other{background:var(--bg4);color:var(--text-dim);border:1px solid var(--border)}
-.ecu-file-meta{flex:1;min-width:0}
-.ecu-file-name{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ecu-file-info{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:2px}
-.ecu-file-actions{display:flex;gap:5px;flex-shrink:0}
-.ecu-file-size-warn{font-size:11px;color:var(--orange);margin-top:4px;padding:6px 10px;background:rgba(245,158,11,.08);border-radius:6px;border:1px solid rgba(245,158,11,.2)}
-
-/* Progress upload */
-.ecu-progress{background:var(--bg3);border:1px solid rgba(30,144,255,.25);border-radius:8px;padding:10px 14px;margin-bottom:8px}
-.ecu-progress-name{font-size:12px;color:var(--text-dim);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ecu-progress-bar{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
-.ecu-progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .15s}
-.ecu-progress-pct{font-size:11px;color:var(--blue);margin-top:4px;text-align:right;font-family:'JetBrains Mono',monospace}
-
-/* CRM modals */
-.crm-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:350;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
-.crm-modal.open{display:flex}
-.crm-modal-box{background:var(--bg2);border:1px solid rgba(30,144,255,.3);border-radius:14px;width:580px;max-width:100%;padding:26px;margin-top:40px;position:relative}
-.crm-modal-box.wide{width:700px}
-.crm-modal-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;margin-bottom:18px;color:#fff}
-.crm-modal-close{position:absolute;top:14px;right:14px;background:transparent;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1}
-.crm-modal-close:hover{background:var(--bg4);color:var(--text)}
-.crm-modal-sep{height:1px;background:var(--border);margin:14px 0}
-.crm-modal-footer{margin-top:18px;display:flex;gap:8px;justify-content:flex-end}
-.crm-fr{margin-bottom:12px}
-.crm-fr label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:5px}
-.crm-fr input,.crm-fr select,.crm-fr textarea{width:100%;padding:9px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;transition:border-color .2s;font-size:13px;font-family:'Barlow',sans-serif}
-.crm-fr input:focus,.crm-fr select:focus,.crm-fr textarea:focus{border-color:var(--blue)}
-.crm-fr textarea{resize:vertical;min-height:80px;line-height:1.5}
-.crm-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.crm-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.crm-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin:14px 0 10px}
-
-/* Empty states CRM */
-.crm-empty{text-align:center;padding:50px 20px;color:var(--text-muted)}
-.crm-empty-icon{font-size:36px;margin-bottom:10px;opacity:.4}
-.crm-empty-text{font-size:14px;color:var(--text-dim);margin-bottom:4px}
-.crm-empty-sub{font-size:12px}
-
-/* Bannière détection ECU/VIN */
-.ecu-detect-banner{
-  background:var(--bg3);border:1px solid rgba(30,144,255,.3);
-  border-radius:10px;padding:14px 16px;margin-bottom:12px;
-  animation:fadeInDown .25s ease;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start
-}
-@keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.ecu-detect-banner-title{
-  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
-  color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:6px
-}
-.ecu-detect-field{flex:1;min-width:140px}
-.ecu-detect-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px}
-.ecu-detect-val{font-size:13px;color:#fff;font-family:var(--fm);display:flex;align-items:center;gap:8px}
-.ecu-detect-val.dim{color:var(--text-muted);font-style:italic;font-family:var(--fb);font-size:12px}
-.ecu-detect-apply{
-  padding:5px 12px;border-radius:6px;border:1px solid rgba(30,144,255,.4);
-  background:rgba(30,144,255,.12);color:var(--blue);font-size:12px;font-weight:600;
-  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0
-}
-.ecu-detect-apply:hover{background:var(--blue);color:#fff}
-.ecu-detect-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;
-  background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.25)}
-.ecu-detect-tag.orange{background:rgba(245,158,11,.12);color:var(--orange);border-color:rgba(245,158,11,.25)}
-.ecu-detect-tag.purple{background:rgba(168,85,247,.12);color:#a855f7;border-color:rgba(168,85,247,.25)}
-
-/* Chips véhicule dans la modale */
-.crm-veh-chip{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:8px;
-  background:var(--bg3);border:1px solid var(--border);
-  cursor:pointer;transition:all .15s;max-width:100%
-}
-.crm-veh-chip:hover{border-color:var(--blue);background:rgba(30,144,255,.08)}
-.crm-veh-chip.selected{border-color:var(--blue);background:rgba(30,144,255,.15);box-shadow:0 0 0 2px rgba(30,144,255,.2)}
-.crm-veh-chip-marque{font-weight:700;font-size:13px;color:#fff}
-.crm-veh-chip-detail{font-size:11px;color:var(--text-dim)}
-.crm-veh-chip-immat{font-family:var(--fm);font-size:11px;color:var(--blue);font-weight:600;
-  background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.2);
-  border-radius:4px;padding:1px 6px;flex-shrink:0}
-
-/* Filtres CRM */
-.crm-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-.crm-filter-input{flex:1;min-width:180px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;font-size:13px;transition:border-color .2s}
-.crm-filter-input:focus{border-color:var(--blue)}
-.crm-filter-select{padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none}
-.crm-filter-select:focus{border-color:var(--blue)}
-
-@media(max-width:768px){
-  .crm-row2,.crm-row3{grid-template-columns:1fr}
-  .dossier-grid{grid-template-columns:1fr}
-  .crm-modal-box{padding:18px 14px}
-}
-
 </style>
 </head>
 <body>
@@ -1029,7 +871,7 @@ select option{background:#1d222d}
   <div class="login-box">
     <div class="login-logo">ARE<span>PROG</span></div>
     <div class="login-sub">Espace professionnel</div>
-    <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="Email" autocomplete="username"/></div>
+    <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="arthur@areprog.fr" autocomplete="email"/></div>
     <div class="lf"><label>Mot de passe</label><input id="l-pass" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
     <button class="login-btn" id="login-btn" onclick="if(typeof doLogin==='function')doLogin()">Se connecter →</button>
     <div class="login-err" id="lerr" style="display:none"></div>
@@ -1056,8 +898,6 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
-      <button class="nb" data-crm="1" onclick="showTab('dossiers')">📁 Dossiers</button>
-      <button class="nb" data-crm="1" onclick="showTab('ecu')">💾 ECU</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -1458,86 +1298,6 @@ select option{background:#1d222d}
       </div>
       <div id="liste-body"></div>
     </div>
-
-
-    <!-- ══ DOSSIERS VÉHICULES ═══════════════════════════════ -->
-    <div class="tc" id="t-dossiers">
-      <div class="sh">
-        <div class="sh-title">📁 Dossiers véhicules</div>
-        <button class="btn-p" onclick="crmOpenVehModal()">+ Nouveau dossier</button>
-      </div>
-
-      <!-- Vue liste des dossiers -->
-      <div id="crm-dossiers-list-view">
-        <div class="crm-filters">
-          <input type="text" class="crm-filter-input" id="crm-dossier-search" placeholder="Rechercher par client, marque, modèle, immat…" oninput="crmRenderDossiers()"/>
-          <select class="crm-filter-select" id="crm-dossier-filter-client" onchange="crmRenderDossiers()">
-            <option value="">Tous les clients</option>
-          </select>
-        </div>
-        <div class="dossier-grid" id="crm-dossiers-grid">
-          <div style="color:var(--text-muted);font-size:13px;padding:20px">Chargement…</div>
-        </div>
-      </div>
-
-      <!-- Vue détail d'un dossier -->
-      <div id="crm-dossier-detail-view" style="display:none"></div>
-    </div>
-
-    <!-- ══ FICHIERS ECU ═══════════════════════════════════════ -->
-    <div class="tc" id="t-ecu">
-      <div class="sh">
-        <div class="sh-title">💾 Fichiers ECU</div>
-      </div>
-
-      <div class="crm-filters">
-        <select class="crm-filter-select" id="ecu-filter-client" onchange="ecuOnClientChange()">
-          <option value="">Tous les clients</option>
-        </select>
-        <select class="crm-filter-select" id="ecu-filter-veh" onchange="ecuRenderFiles()">
-          <option value="">Tous les véhicules</option>
-        </select>
-        <select class="crm-filter-select" id="ecu-filter-type" onchange="ecuRenderFiles()">
-          <option value="">Tous types</option>
-          <option value="bin">.BIN</option>
-          <option value="ori">.ORI</option>
-          <option value="mod">.MOD</option>
-          <option value="pdf">.PDF</option>
-          <option value="other">Autres</option>
-        </select>
-        <input type="text" class="crm-filter-input" id="ecu-filter-search" placeholder="Rechercher un fichier…" oninput="ecuRenderFiles()"/>
-      </div>
-
-      <!-- Zone upload -->
-      <div class="ecu-dropzone" id="ecu-dropzone"
-           onclick="document.getElementById('ecu-file-input').click()"
-           ondragover="ecuOnDragOver(event)" ondragleave="ecuOnDragLeave(event)" ondrop="ecuOnDrop(event)">
-        <div class="ecu-dropzone-icon">📂</div>
-        <div class="ecu-dropzone-text">Glisser des fichiers ici ou cliquer pour sélectionner</div>
-        <div class="ecu-dropzone-sub">Formats : .bin .ori .mod .pdf et autres — Max recommandé : 700 Ko par fichier (limite Firestore)</div>
-        <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap" onclick="event.stopPropagation()">
-          <select class="crm-filter-select" id="ecu-upload-client" onchange="ecuOnUploadClientChange()">
-            <option value="">— Sélectionner un client —</option>
-          </select>
-          <select class="crm-filter-select" id="ecu-upload-veh">
-            <option value="">— Sélectionner un véhicule —</option>
-          </select>
-        </div>
-        <input type="file" id="ecu-file-input" style="display:none" multiple onchange="ecuOnFileSelect(event)"/>
-      </div>
-
-      <div class="ecu-file-size-warn" id="ecu-size-warn" style="display:none">
-        ⚠️ Fichier trop volumineux pour Firestore (&gt; 700 Ko). Utilisez un lien externe (Google Drive, WeTransfer) ou découpez le fichier.
-      </div>
-
-      <div id="ecu-progress-list"></div>
-      <div id="ecu-detect-result" style="display:none"></div>
-      <div id="ecu-files-container">
-        <div style="color:var(--text-muted);font-size:13px;padding:20px">Chargement…</div>
-      </div>
-    </div>
-
-
 
   </div>
 </div>
@@ -2105,15 +1865,27 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<!-- email-decode retiré : non disponible sur Netlify --><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // AUTH — Appel direct API Netlify Identity (fetch natif, zéro dépendance)
 function $(s) { return document.getElementById(s); }
 
-// ══════════════════════════════════════════════════════════════
-//  AUTH — Firebase Authentication (remplace Netlify Identity)
-//  Aucun email en clair. Session gérée par Firebase SDK.
-// ══════════════════════════════════════════════════════════════
-var _fbAuth = null; // instance firebase.auth()
+var IDENTITY_URL = 'https://areprog.fr/.netlify/identity';
+var SESSION_KEY  = 'ar_session';
+var SESSION_DURATION = 60 * 60 * 1000; // 1 heure
+
+function setSession(token) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ t: Date.now(), token: token }));
+}
+function getSession() {
+  try {
+    var raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    var data = JSON.parse(raw);
+    if ((Date.now() - data.t) < SESSION_DURATION) return data;
+    return null;
+  } catch(e) { return null; }
+}
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
 function showApp() {
   $('login-screen').style.display = 'none';
@@ -2123,57 +1895,46 @@ function showApp() {
 function showLogin() {
   $('app').style.display = 'none';
   $('login-screen').style.display = 'flex';
-  $('lerr').style.display = 'none';
-  $('lerr').textContent = '';
-  var btn = $('login-btn');
-  if(btn){ btn.disabled = false; btn.textContent = 'Se connecter →'; }
 }
 function setLoginLoading(on) {
   var btn = $('login-btn');
-  if(!btn) return;
   btn.disabled = on;
   btn.textContent = on ? 'Connexion…' : 'Se connecter →';
 }
 function showLoginErr(msg) {
   var el = $('lerr');
-  if(!el) return;
   el.textContent = msg;
   el.style.display = 'block';
 }
 
-// Connexion via Firebase Auth
-function doLogin() {
-  var email = ($('l-email').value || '').trim();
-  var pass  = $('l-pass').value || '';
+async function doLogin() {
+  var email = $('l-email').value.trim();
+  var pass  = $('l-pass').value;
   $('lerr').style.display = 'none';
   if (!email || !pass) { showLoginErr('Renseigne ton email et mot de passe.'); return; }
   setLoginLoading(true);
-  _fbAuth.signInWithEmailAndPassword(email, pass)
-    .then(function() {
-      // onAuthStateChanged prend le relais → showApp() automatique
-    })
-    .catch(function(e) {
-      setLoginLoading(false);
-      var msgs = {
-        'auth/user-not-found':     'Utilisateur inconnu.',
-        'auth/wrong-password':     'Mot de passe incorrect.',
-        'auth/invalid-email':      'Email invalide.',
-        'auth/invalid-credential': 'Email ou mot de passe incorrect.',
-        'auth/too-many-requests':  'Trop de tentatives. Réessaie dans quelques minutes.'
-      };
-      showLoginErr(msgs[e.code] || 'Erreur de connexion.');
+  try {
+    var resp = await fetch(IDENTITY_URL + '/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
     });
+    var data = await resp.json();
+    if (!resp.ok || !data.access_token) {
+      throw new Error(data.error_description || 'Identifiants incorrects');
+    }
+    setSession(data.access_token);
+    showApp();
+  } catch(e) {
+    setLoginLoading(false);
+    showLoginErr('Email ou mot de passe incorrect.');
+    console.error(e);
+  }
 }
 
-// Déconnexion
 function doLogout() {
-  _fbAuth.signOut();
-  // onAuthStateChanged → showLogin() automatique
-}
-
-// Compatibilité : getSession() retourne vrai si utilisateur connecté
-function getSession() {
-  return _fbAuth && _fbAuth.currentUser ? { user: _fbAuth.currentUser } : null;
+  clearSession();
+  showLogin();
 }
 
 // Au chargement : session encore valide → connecter directement
@@ -2202,20 +1963,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var le = $('l-email');
   if (le) le.addEventListener('keydown', function(e){ if(e.key==='Enter') $('l-pass').focus(); });
 
-  // Firebase Auth — observer d'état (gère auto-login et déconnexion)
-  if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
-  _fbAuth = firebase.auth();
-  _fbAuth.onAuthStateChanged(function(user) {
-    if (user) {
-      // Connecté → afficher l'app
-      showApp();
-    } else {
-      // Déconnecté → afficher le login
-      showLogin();
-    }
-  });
+  // Auto-login si session valide
+  if (getSession()) {
+    showApp();
+  }
 
-  // Relier le bouton
+  // Relier le bouton proprement (évite tout souci de timing)
   var btn = $('login-btn');
   if (btn) btn.onclick = doLogin;
   // Enter dans les modals catalogue
@@ -2228,7 +1981,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================================================
 //  FIREBASE — Synchronisation cloud
 // ============================================================
-// ⚠️ Firebase Auth requis — règles Firestore : allow read,write: if request.auth != null
 var FB_CONFIG = {
   apiKey:            "AIzaSyCAPjBtmwrcNUUg9Nlkn_2ltUa_P_90yV4",
   authDomain:        "areprog-devis.firebaseapp.com",
@@ -2243,7 +1995,7 @@ var syncOk = false;
 
 function initFirebase() {
   try {
-    // Firebase déjà initialisé dans DOMContentLoaded (Firebase Auth)
+    if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
     db = firebase.firestore();
     db.collection('docs').limit(1).get()
       .then(function() { setSyncStatus(true, 'Firebase connecté'); })
@@ -3727,12 +3479,21 @@ function openTemplateModal(){ fillTplForm(readTplForm()); livePreview(); $('tpl-
 function closeTplModal(){ $('tpl-modal').classList.remove('open'); }
 function livePreview() {
   var tpl = readTplForm();
-  var sampleDoc = {id:Date.now(),type:'devis',num:'DEV-001',date:new Date().toISOString().split('T')[0],statut:'envoyé',
-    cn:'Client Exemple',ca:'',cv:'',
-    ct:'',ce:'',
-    vm:'',vmo:'',vmot:'',van:'',vim:'',
-    lines:[{label:'Reprogrammation Stage 1',qty:1,pu:350,tva:20}],
-    note:''};
+  var sampleDoc = {
+    type:'devis',num:'DEV-2026-001',date:new Date().toISOString().split('T')[0],
+    ech:new Date(Date.now()+30*86400000).toISOString().split('T')[0],statut:'envoyé',
+    cn:'Dupont Thomas',ca:'12 rue des Pins',cv:'64100 Bayonne',
+    ct:'06 12 34 56 78',ce:'thomas@email.fr',
+    vm:'Volkswagen',vmo:'Golf 7 GTI',vmot:'2.0 TSI 220ch',van:'2019',vim:'AB-123-CD',
+    lines:[
+      {label:'Stage 1 — Reprogrammation moteur (essence & diesel turbo)',qte:1,pu:330,offert:false},
+      {label:'Conversion E85 — Bioéthanol natif ECU',qte:1,pu:330,offert:false},
+      {label:'Diagnostic ODIS VAG',qte:1,pu:0,offert:true},
+    ],
+    tvaRate:0,ht:660,tva:0,ttc:660,
+    notes:'Prestation réalisée à domicile. Garantie 2 ans. 100% réversible.',
+    gains:{ch:220,chOrig:180,nm:380,nmOrig:320},
+  };
   var html = renderDocHTML(sampleDoc, tpl);
   var m=$('tpl-mini-preview'); if(m) m.innerHTML=html;
   var l=$('tpl-live-preview'); if(l) l.innerHTML=html;
@@ -4059,7 +3820,7 @@ function deleteRdvFromModal() {
 var EJS_SERVICE       = 'service_6dj8dmv';
 var EJS_TPL_RAPPEL    = 'template_mlbev47';  // Rappels agenda
 var EJS_TPL_DOC       = 'template_l6jwa72';  // Envoi devis/factures
-var EJS_FROM_EMAIL    = ''; // Configuré dans l'onglet Template → champ Email
+var EJS_FROM_EMAIL    = 'arthur@areprog.fr';
 var notifTimer        = null;
 var _currentDocForEmail = null; // doc en cours d'affichage dans le modal
 
@@ -4773,10 +4534,8 @@ function exportCSV() {
 //  TABS (complet)
 // ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services','agenda','stats','search','dossiers','ecu'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  // Nav buttons CRM exclus du toggle automatique (gérés séparément)
-  document.querySelectorAll('.nb:not([data-crm])').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search'][i]===t); });
-  document.querySelectorAll('.nb[data-crm]').forEach(function(b){ b.classList.toggle('on', b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+t+"'")); });
+  ['dash','form','liste','carnet','template','services','agenda','stats','search'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search'][i]===t); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
@@ -4785,8 +4544,6 @@ function showTab(t) {
   if(t==='agenda')   renderAgenda();
   if(t==='stats')    renderStats();
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
-  if(t==='dossiers') { crmPopulateClientFilter(); crmRenderDossiers(); }
-  if(t==='ecu')      { ecuPopulateSelects(); ecuRenderFiles(); }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -5044,1168 +4801,7 @@ function initKeyboardShortcuts() {
 //  START — Netlify Identity gère l'auth
 // ============================================================
 // L'initialisation est gérée par netlifyIdentity.on('init') ci-dessus
-
-
-// ══════════════════════════════════════════════════════════════
-//  CRM — DOSSIERS VÉHICULES & FICHIERS ECU
-//  Stockage : Firestore (crm_vehicules, crm_history, crm_files)
-//  Pas de Firebase Storage — fichiers en base64 dans Firestore
-//  Limite recommandée : 700 Ko par fichier (doc Firestore = 1 Mo)
-// ══════════════════════════════════════════════════════════════
-
-/* ── État CRM ──────────────────────────────────────────────── */
-var CRM = {
-  vehicules: [],   // [{id, clientId, marque, modele, ...}]
-  history:   [],   // [{id, vehiculeId, type, content, ts}]
-  files:     [],   // [{id, vehiculeId, name, ext, size, b64, ts}]
-  loaded: false
-};
-var crmEditVehId    = null;
-var crmCurrentDossier = null; // vehId en cours de consultation
-
-/* ── Helpers ───────────────────────────────────────────────── */
-function crmUid(){ return '_crm_' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
-function crmTs(){ return Date.now(); }
-function crmFmt(ts){ return ts ? new Date(ts).toLocaleDateString('fr-FR') + ' ' + new Date(ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) : '—'; }
-function crmEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function crmFmtSize(b){
-  if(!b) return '';
-  if(b < 1024) return b + ' o';
-  if(b < 1048576) return Math.round(b/1024) + ' Ko';
-  return (b/1048576).toFixed(1) + ' Mo';
-}
-function crmToast(msg, type){
-  // Réutilise showToast si elle existe, sinon alert
-  if(typeof showToast === 'function') { showToast(msg, type); return; }
-  // Fallback : créer un toast minimal
-  var c = document.getElementById('crm-toast-host');
-  if(!c){ c = document.createElement('div'); c.id='crm-toast-host'; c.style.cssText='position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none'; document.body.appendChild(c); }
-  var colors = { success:'#16a34a', error:'#ef4444', info:'#1E90FF', warning:'#f59e0b' };
-  var el = document.createElement('div');
-  el.style.cssText = 'padding:11px 16px;border-radius:9px;color:#fff;font-size:13px;font-weight:500;max-width:300px;background:' + (colors[type||'info']||colors.info) + ';animation:toastIn .2s ease;pointer-events:auto';
-  el.textContent = msg;
-  c.appendChild(el);
-  setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(function(){ el.remove(); }, 300); }, 3000);
-}
-
-/* ── Firebase collections CRM ──────────────────────────────── */
-var crmListeners = [];
-
-function crmInitFirestore(){
-  if(!db){ setTimeout(crmInitFirestore, 500); return; }
-  // Véhicules
-  var u1 = db.collection('crm_vehicules').orderBy('ts','desc').onSnapshot(function(snap){
-    CRM.vehicules = [];
-    snap.forEach(function(d){ CRM.vehicules.push(Object.assign({id:d.id}, d.data())); });
-    crmOnUpdate();
-  }, function(e){ console.warn('crm_vehicules', e); });
-
-  // Historique
-  var u2 = db.collection('crm_history').orderBy('ts','desc').onSnapshot(function(snap){
-    CRM.history = [];
-    snap.forEach(function(d){ CRM.history.push(Object.assign({id:d.id}, d.data())); });
-    crmOnUpdate();
-  }, function(e){ console.warn('crm_history', e); });
-
-  // Fichiers ECU (metadata + base64)
-  var u3 = db.collection('crm_files').orderBy('ts','desc').onSnapshot(function(snap){
-    CRM.files = [];
-    snap.forEach(function(d){ CRM.files.push(Object.assign({id:d.id}, d.data())); });
-    CRM.loaded = true;
-    crmOnUpdate();
-  }, function(e){ console.warn('crm_files', e); });
-
-  crmListeners = [u1, u2, u3];
-}
-
-function crmOnUpdate(){
-  // Rafraîchit la vue active
-  var activeTab = document.querySelector('.tc.on');
-  if(!activeTab) return;
-  var id = activeTab.id;
-  if(id === 't-dossiers'){
-    crmPopulateClientFilter();
-    if(crmCurrentDossier) crmRenderDetail(crmCurrentDossier);
-    else crmRenderDossiers();
-  }
-  if(id === 't-ecu'){
-    ecuPopulateSelects();
-    ecuRenderFiles();
-  }
-}
-
-/* ── Peupler les selects clients ───────────────────────────── */
-function crmPopulateClientFilter(){
-  var clients = typeof loadClients === 'function' ? loadClients() : [];
-  // Dossiers filter
-  var sel1 = document.getElementById('crm-dossier-filter-client');
-  if(sel1){
-    var cur = sel1.value;
-    sel1.innerHTML = '<option value="">Tous les clients</option>';
-    clients.forEach(function(c){ var o=document.createElement('option'); o.value=c.id; o.textContent=c.nom; sel1.appendChild(o); });
-    if(cur) sel1.value = cur;
-  }
-  // Modal client select
-  var sel2 = document.getElementById('crm-veh-client-id');
-  if(sel2){
-    var cur2 = sel2.value;
-    sel2.innerHTML = '<option value="">— Sélectionner un client —</option>';
-    clients.forEach(function(c){ var o=document.createElement('option'); o.value=c.id; o.textContent=c.nom; sel2.appendChild(o); });
-    if(cur2) sel2.value = cur2;
-  }
-}
-
-function ecuPopulateSelects(){
-  var clients = typeof loadClients === 'function' ? loadClients() : [];
-  ['ecu-filter-client','ecu-upload-client'].forEach(function(sid){
-    var el = document.getElementById(sid);
-    if(!el) return;
-    var cur = el.value;
-    var isFilter = sid.includes('filter');
-    el.innerHTML = isFilter ? '<option value="">Tous les clients</option>' : '<option value="">— Sélectionner un client —</option>';
-    clients.forEach(function(c){ var o=document.createElement('option'); o.value=c.id; o.textContent=c.nom; el.appendChild(o); });
-    if(cur) el.value = cur;
-  });
-  ecuOnClientChange();
-}
-
-function ecuOnClientChange(){
-  var cid = (document.getElementById('ecu-filter-client')||{value:''}).value;
-  var sel = document.getElementById('ecu-filter-veh');
-  if(sel){
-    var cur = sel.value;
-    sel.innerHTML = '<option value="">Tous les véhicules</option>';
-    CRM.vehicules.filter(function(v){ return !cid || v.clientId==cid; }).forEach(function(v){
-      var o=document.createElement('option'); o.value=v.id; o.textContent=v.marque+' '+v.modele; sel.appendChild(o);
-    });
-    if(cur) sel.value = cur;
-  }
-  ecuRenderFiles();
-}
-
-function ecuOnUploadClientChange(){
-  var cid = (document.getElementById('ecu-upload-client')||{value:''}).value;
-  var sel = document.getElementById('ecu-upload-veh');
-  if(!sel) return;
-  sel.innerHTML = '<option value="">— Sélectionner un véhicule —</option>';
-  CRM.vehicules.filter(function(v){ return !cid || v.clientId==cid; }).forEach(function(v){
-    var o=document.createElement('option'); o.value=v.id; o.textContent=v.marque+' '+v.modele; sel.appendChild(o);
-  });
-}
-
-/* ══════════════════════════════════════════════════════════════
-   DOSSIERS VÉHICULES
-   ══════════════════════════════════════════════════════════════ */
-
-function crmRenderDossiers(){
-  var q   = (document.getElementById('crm-dossier-search')||{value:''}).value.toLowerCase();
-  var cid = (document.getElementById('crm-dossier-filter-client')||{value:''}).value;
-  var grid = document.getElementById('crm-dossiers-grid');
-  if(!grid) return;
-
-  var list = CRM.vehicules.filter(function(v){
-    if(cid && v.clientId != cid) return false;
-    if(!q) return true;
-    var clients = typeof loadClients==='function' ? loadClients() : [];
-    var cl = clients.find(function(c){ return c.id == v.clientId; });
-    var clNom = cl ? cl.nom.toLowerCase() : '';
-    return (v.marque+' '+v.modele+' '+(v.immat||'')+(v.moteur||'')).toLowerCase().includes(q) || clNom.includes(q);
-  });
-
-  if(!list.length){
-    grid.innerHTML = '<div class="crm-empty"><div class="crm-empty-icon">🚗</div><div class="crm-empty-text">' +
-      (CRM.vehicules.length ? 'Aucun résultat' : 'Aucun dossier — cliquez sur "Nouveau dossier"') +
-      '</div></div>';
-    return;
-  }
-
-  var clients = typeof loadClients==='function' ? loadClients() : [];
-  grid.innerHTML = list.map(function(v){
-    var cl    = clients.find(function(c){ return c.id == v.clientId; });
-    var notes = CRM.history.filter(function(h){ return h.vehiculeId===v.id; });
-    var files = CRM.files.filter(function(f){ return f.vehiculeId===v.id; });
-    var typeCounts = { interv:0, note:0, modif:0 };
-    notes.forEach(function(n){ if(typeCounts[n.type]!==undefined) typeCounts[n.type]++; });
-    var lastNote = notes[0];
-    return '<div class="dossier-card">' +
-      '<div class="dossier-card-header">' +
-        '<div><div class="dossier-card-title">'+crmEsc(v.marque)+' '+crmEsc(v.modele)+'</div>' +
-        '<div class="dossier-card-client">'+crmEsc(cl?cl.nom:'Client inconnu')+'</div></div>' +
-        (v.annee?'<span style="font-size:11px;color:var(--text-muted)">'+crmEsc(String(v.annee))+'</span>':'') +
-      '</div>' +
-      '<div class="dossier-card-meta">' +
-        (v.moteur?'<span>⚙️ '+crmEsc(v.moteur)+'</span>':'')+
-        (v.immat?'<span style="font-family:var(--fm)">'+crmEsc(v.immat.toUpperCase())+'</span>':'')+
-        (v.ecu?'<span>🖥 '+crmEsc(v.ecu)+'</span>':'')+
-      '</div>' +
-      '<div style="margin-bottom:8px">' +
-        (typeCounts.interv?'<span class="dossier-chip interv">🔧 '+typeCounts.interv+' interv.</span>':'')+
-        (typeCounts.note?'<span class="dossier-chip note">📝 '+typeCounts.note+' notes</span>':'')+
-        (typeCounts.modif?'<span class="dossier-chip modif">⚙️ '+typeCounts.modif+' modifs</span>':'')+
-        (files.length?'<span class="dossier-chip file">💾 '+files.length+' fichiers</span>':'')+
-      '</div>' +
-      (lastNote?'<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Dernière entrée : '+crmFmt(lastNote.ts)+'</div>':'')+
-      '<div class="dossier-card-actions">' +
-        '<button class="btn-p btn-sm" onclick="crmOpenDetail(\''+v.id+'\')">📋 Ouvrir dossier</button>' +
-        '<button class="btn-s btn-sm" onclick="crmOpenVehModal(\''+v.id+'\')">✏️</button>' +
-        '<button class="btn-s btn-sm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="crmDeleteVehicule(\''+v.id+'\')">🗑</button>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-/* ── Détail dossier ─────────────────────────────────────────── */
-function crmOpenDetail(vehId){
-  crmCurrentDossier = vehId;
-  document.getElementById('crm-dossiers-list-view').style.display = 'none';
-  document.getElementById('crm-dossier-detail-view').style.display = '';
-  crmRenderDetail(vehId);
-}
-
-function crmCloseDetail(){
-  crmCurrentDossier = null;
-  document.getElementById('crm-dossiers-list-view').style.display = '';
-  document.getElementById('crm-dossier-detail-view').style.display = 'none';
-}
-
-function crmRenderDetail(vehId){
-  var v = CRM.vehicules.find(function(x){ return x.id===vehId; });
-  if(!v){ crmCloseDetail(); return; }
-  var clients = typeof loadClients==='function' ? loadClients() : [];
-  var cl  = clients.find(function(c){ return c.id == v.clientId; });
-  var notes = CRM.history.filter(function(h){ return h.vehiculeId===vehId; });
-  var files = CRM.files.filter(function(f){ return f.vehiculeId===vehId; });
-
-  // Champs info
-  function infoItem(label, val){
-    if(!val) return '';
-    return '<div><div class="dossier-info-item-label">'+crmEsc(label)+'</div><div class="dossier-info-item-val">'+crmEsc(String(val))+'</div></div>';
-  }
-
-  var html = '<div class="dossier-detail-wrap">';
-
-  // Breadcrumb
-  html += '<div class="dossier-breadcrumb">' +
-    '<a onclick="crmCloseDetail()">← Dossiers</a>' +
-    '<span class="dossier-breadcrumb-sep">›</span>' +
-    '<span>'+crmEsc(v.marque)+' '+crmEsc(v.modele)+(cl?' — '+crmEsc(cl.nom):'')+'</span>' +
-  '</div>';
-
-  // Infos carte
-  html += '<div class="dossier-info-card">' +
-    '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">' +
-      '<div>' +
-        '<div style="font-family:var(--fh);font-size:22px;font-weight:700;color:#fff">'+crmEsc(v.marque)+' '+crmEsc(v.modele)+' <span style="color:var(--blue)">'+crmEsc(v.moteur||'')+'</span></div>'+
-        '<div style="font-size:12px;color:var(--text-dim);margin-top:4px">'+crmEsc(cl?'Client : '+cl.nom:'')+(v.annee?' · '+v.annee:'')+'</div>'+
-      '</div>' +
-      '<div style="display:flex;gap:7px;flex-wrap:wrap">' +
-        '<button class="btn-s btn-sm" onclick="crmOpenVehModal(\''+vehId+'\')">✏️ Modifier</button>' +
-        '<button class="btn-p btn-sm" onclick="crmOpenNoteModal(\''+vehId+'\')">+ Entrée</button>' +
-        '<button class="btn-s btn-sm" onclick="crmGoToEcuForVeh(\''+vehId+'\')">💾 Fichiers ECU</button>' +
-      '</div>' +
-    '</div>' +
-    '<div class="dossier-info-grid">' +
-      infoItem('Motorisation', v.moteur) +
-      infoItem('Puissance origine', v.pwOri ? v.pwOri+' ch' : null) +
-      infoItem('Puissance reprog.', v.pwNew ? v.pwNew+' ch' : null) +
-      infoItem('Immatriculation', v.immat) +
-      infoItem('VIN', v.vin) +
-      infoItem('ECU', v.ecu) +
-      infoItem('Outil', v.outil) +
-      infoItem('Protocole', v.proto) +
-    '</div>' +
-    (v.notes ? '<div style="margin-top:12px;padding:10px 14px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--text-dim);border-left:3px solid var(--blue);white-space:pre-wrap">'+crmEsc(v.notes)+'</div>' : '') +
-  '</div>';
-
-  // Sous-onglets
-  html += '<div class="crm-tabs" style="margin-bottom:16px">' +
-    '<button class="crm-tab on" id="crm-stab-history" onclick="crmSwitchDetailTab(\'history\')">📋 Historique ('+notes.length+')</button>' +
-    '<button class="crm-tab" id="crm-stab-files" onclick="crmSwitchDetailTab(\'files\')">💾 Fichiers ECU ('+files.length+')</button>' +
-  '</div>';
-
-  // Onglet historique
-  html += '<div id="crm-detail-tab-history">';
-  if(!notes.length){
-    html += '<div class="crm-empty"><div class="crm-empty-icon">📋</div><div class="crm-empty-text">Aucune entrée</div><div class="crm-empty-sub">Cliquez sur "+ Entrée" pour commencer</div></div>';
-  } else {
-    html += '<div class="crm-timeline">';
-    notes.forEach(function(n){
-      var typeLabel = { interv:'🔧 Intervention', note:'📝 Note technique', modif:'⚙️ Modif. ECU' }[n.type] || '📝 Note';
-      html += '<div class="crm-tl-item">' +
-        '<div class="crm-tl-dot '+crmEsc(n.type||'note')+'"></div>' +
-        '<div class="crm-tl-body">' +
-          '<div class="crm-tl-meta">' +
-            '<span class="dossier-chip '+crmEsc(n.type||'note')+'">'+typeLabel+'</span>' +
-            '<span class="crm-tl-date">'+crmFmt(n.ts)+'</span>' +
-            '<button style="margin-left:auto;background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:4px" onclick="crmDeleteHistory(\''+n.id+'\',\''+vehId+'\')" title="Supprimer">🗑</button>' +
-          '</div>' +
-          '<div class="crm-tl-text">'+crmEsc(n.content)+'</div>' +
-        '</div>' +
-      '</div>';
-    });
-    html += '</div>';
-  }
-  html += '</div>';
-
-  // Onglet fichiers
-  html += '<div id="crm-detail-tab-files" style="display:none">';
-  if(!files.length){
-    html += '<div class="crm-empty"><div class="crm-empty-icon">💾</div><div class="crm-empty-text">Aucun fichier ECU</div><div class="crm-empty-sub">Cliquez sur "Fichiers ECU" pour en ajouter</div></div>';
-  } else {
-    files.forEach(function(f){
-      html += crmFileItemHTML(f);
-    });
-  }
-  html += '</div>';
-
-  html += '</div>'; // dossier-detail-wrap
-
-  document.getElementById('crm-dossier-detail-view').innerHTML = html;
-}
-
-function crmSwitchDetailTab(t){
-  ['history','files'].forEach(function(tab){
-    var el = document.getElementById('crm-detail-tab-'+tab);
-    var btn = document.getElementById('crm-stab-'+tab);
-    if(el) el.style.display = tab===t ? '' : 'none';
-    if(btn) btn.classList.toggle('on', tab===t);
-  });
-}
-
-function crmGoToEcuForVeh(vehId){
-  var v = CRM.vehicules.find(function(x){ return x.id===vehId; });
-  showTab('ecu');
-  setTimeout(function(){
-    if(v){
-      var selC = document.getElementById('ecu-upload-client');
-      if(selC){ selC.value = v.clientId; ecuOnUploadClientChange(); }
-      setTimeout(function(){
-        var selV = document.getElementById('ecu-upload-veh');
-        if(selV) selV.value = vehId;
-        // Filtres
-        var fc = document.getElementById('ecu-filter-client');
-        var fv = document.getElementById('ecu-filter-veh');
-        if(fc) fc.value = v.clientId;
-        ecuOnClientChange();
-        setTimeout(function(){ if(fv) fv.value = vehId; ecuRenderFiles(); }, 150);
-      }, 150);
-    }
-  }, 100);
-}
-
-/* ── Modal véhicule ─────────────────────────────────────────── */
-function crmOpenVehModal(id, preClientId){
-  crmEditVehId = id || null;
-  var v = id ? CRM.vehicules.find(function(x){ return x.id===id; }) : null;
-  document.getElementById('crm-veh-modal-title').textContent = v ? 'Modifier le dossier' : 'Nouveau dossier véhicule';
-
-  // Peupler le select client
-  crmPopulateClientFilter();
-
-  // Remplir les champs si édition
-  var fields = { 'crm-veh-marque':'marque','crm-veh-modele':'modele','crm-veh-annee':'annee','crm-veh-moteur':'moteur','crm-veh-immat':'immat','crm-veh-vin':'vin','crm-veh-ecu':'ecu','crm-veh-outil':'outil','crm-veh-proto':'proto','crm-veh-pw-ori':'pwOri','crm-veh-pw-new':'pwNew','crm-veh-notes':'notes' };
-  Object.keys(fields).forEach(function(elId){
-    var el = document.getElementById(elId);
-    if(el) el.value = v ? (v[fields[elId]] || '') : '';
-  });
-
-  var selCl = document.getElementById('crm-veh-client-id');
-  if(selCl){
-    selCl.value = v ? v.clientId : (preClientId || '');
-    // Déclencher le picker si client déjà sélectionné
-    if(selCl.value) crmOnClientChange();
-    else crmHideVehPicker();
-  }
-
-  document.getElementById('crm-veh-modal').classList.add('open');
-  setTimeout(function(){
-    var focus = selCl && !selCl.value ? selCl : document.getElementById('crm-veh-marque');
-    if(focus) focus.focus();
-  }, 120);
-}
-function crmCloseVehModal(){
-  document.getElementById('crm-veh-modal').classList.remove('open');
-  crmHideVehPicker();
-}
-
-/* ── Sélecteur de véhicule depuis le carnet client ── */
-function crmOnClientChange(){
-  var clientId = document.getElementById('crm-veh-client-id').value;
-  if(!clientId){ crmHideVehPicker(); return; }
-
-  var clients = typeof loadClients === 'function' ? loadClients() : [];
-  var cl = clients.find(function(c){ return String(c.id) === String(clientId); });
-  if(!cl){ crmHideVehPicker(); return; }
-
-  // Récupérer ses véhicules depuis le carnet
-  var vehs = cl.vehs && cl.vehs.length
-    ? cl.vehs
-    : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
-
-  if(!vehs.length){ crmHideVehPicker(); return; }
-
-  // Afficher le picker
-  var wrap = document.getElementById('crm-veh-picker-wrap');
-  var list = document.getElementById('crm-veh-picker-list');
-  if(!wrap || !list) return;
-
-  list.innerHTML = vehs.map(function(v, i){
-    var label = [v.vm, v.vmo].filter(Boolean).join(' ');
-    var detail = [v.vmot, v.van ? '('+v.van+')' : ''].filter(Boolean).join(' ');
-    var immat = v.vim ? v.vim.toUpperCase() : '';
-    return '<div class="crm-veh-chip" onclick="crmSelectVehChip(this,'+i+',\''+clientId+'\')" data-idx="'+i+'">' +
-      '<div>' +
-        '<div class="crm-veh-chip-marque">'+(label||'Véhicule '+( i+1))+'</div>' +
-        (detail?'<div class="crm-veh-chip-detail">'+detail+'</div>':'')+
-      '</div>'+
-      (immat?'<span class="crm-veh-chip-immat">'+immat+'</span>':'')+
-    '</div>';
-  }).join('');
-
-  wrap.style.display = '';
-}
-
-function crmHideVehPicker(){
-  var wrap = document.getElementById('crm-veh-picker-wrap');
-  if(wrap) wrap.style.display = 'none';
-  // Enlever la sélection sur tous les chips
-  document.querySelectorAll('.crm-veh-chip').forEach(function(c){ c.classList.remove('selected'); });
-}
-
-function crmSelectVehChip(chipEl, vehIdx, clientId){
-  // Marquer le chip sélectionné
-  document.querySelectorAll('.crm-veh-chip').forEach(function(c){ c.classList.remove('selected'); });
-  chipEl.classList.add('selected');
-
-  // Récupérer le véhicule depuis le carnet
-  var clients = typeof loadClients === 'function' ? loadClients() : [];
-  var cl = clients.find(function(c){ return String(c.id) === String(clientId); });
-  if(!cl) return;
-
-  var vehs = cl.vehs && cl.vehs.length
-    ? cl.vehs
-    : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
-
-  var veh = vehs[vehIdx];
-  if(!veh) return;
-
-  // Remplir automatiquement les champs du formulaire
-  var marqueEl = document.getElementById('crm-veh-marque');
-  var modeleEl = document.getElementById('crm-veh-modele');
-  var moteurEl = document.getElementById('crm-veh-moteur');
-  var anneeEl  = document.getElementById('crm-veh-annee');
-  var immatEl  = document.getElementById('crm-veh-immat');
-
-  if(marqueEl) marqueEl.value = veh.vm  || '';
-  if(modeleEl) modeleEl.value = veh.vmo || '';
-  if(moteurEl) moteurEl.value = veh.vmot|| '';
-  if(anneeEl)  anneeEl.value  = veh.van || '';
-  if(immatEl)  immatEl.value  = (veh.vim|| '').toUpperCase();
-
-  // Flash visuel sur les champs remplis
-  [marqueEl, modeleEl, moteurEl, anneeEl, immatEl].forEach(function(el){
-    if(!el || !el.value) return;
-    el.style.transition = 'border-color .1s';
-    el.style.borderColor = 'var(--blue)';
-    setTimeout(function(){ el.style.borderColor = ''; }, 800);
-  });
-}
-
-function crmSaveVehicule(){
-  var clientId = document.getElementById('crm-veh-client-id').value;
-  var marque   = document.getElementById('crm-veh-marque').value.trim();
-  var modele   = document.getElementById('crm-veh-modele').value.trim();
-  var moteur   = document.getElementById('crm-veh-moteur').value.trim();
-  if(!clientId){ crmToast('Sélectionnez un client','error'); return; }
-  if(!marque||!modele){ crmToast('Marque et modèle obligatoires','error'); return; }
-  var data = {
-    clientId: clientId,
-    marque:marque, modele:modele, moteur:moteur,
-    annee: parseInt(document.getElementById('crm-veh-annee').value)||null,
-    immat: (document.getElementById('crm-veh-immat').value||'').trim().toUpperCase(),
-    vin:   (document.getElementById('crm-veh-vin').value||'').trim().toUpperCase(),
-    ecu:   document.getElementById('crm-veh-ecu').value.trim(),
-    outil: document.getElementById('crm-veh-outil').value.trim(),
-    proto: document.getElementById('crm-veh-proto').value.trim(),
-    pwOri: parseInt(document.getElementById('crm-veh-pw-ori').value)||null,
-    pwNew: parseInt(document.getElementById('crm-veh-pw-new').value)||null,
-    notes: document.getElementById('crm-veh-notes').value.trim(),
-    ts: crmTs()
-  };
-  var ref = crmEditVehId
-    ? db.collection('crm_vehicules').doc(crmEditVehId)
-    : db.collection('crm_vehicules').doc(crmUid());
-  ref.set(data, {merge:true})
-    .then(function(){ crmToast(crmEditVehId?'Dossier modifié':'Dossier créé','success'); crmCloseVehModal(); })
-    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
-}
-
-function crmDeleteVehicule(id){
-  var v = CRM.vehicules.find(function(x){ return x.id===id; });
-  if(!v) return;
-  var nbH = CRM.history.filter(function(h){ return h.vehiculeId===id; }).length;
-  var nbF = CRM.files.filter(function(f){ return f.vehiculeId===id; }).length;
-  var msg = 'Supprimer le dossier '+v.marque+' '+v.modele+' ?';
-  if(nbH||nbF) msg += '\n\n⚠️ '+nbH+' entrée(s) d\'historique et '+nbF+' fichier(s) associés seront aussi supprimés.';
-  if(!confirm(msg)) return;
-  var batch = db.batch();
-  batch.delete(db.collection('crm_vehicules').doc(id));
-  CRM.history.filter(function(h){ return h.vehiculeId===id; }).forEach(function(h){ batch.delete(db.collection('crm_history').doc(h.id)); });
-  CRM.files.filter(function(f){ return f.vehiculeId===id; }).forEach(function(f){ batch.delete(db.collection('crm_files').doc(f.id)); });
-  batch.commit()
-    .then(function(){ crmToast('Dossier supprimé','success'); if(crmCurrentDossier===id) crmCloseDetail(); })
-    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
-}
-
-/* ── Modal note ─────────────────────────────────────────────── */
-function crmOpenNoteModal(vehId){
-  document.getElementById('crm-note-veh-id').value = vehId;
-  document.getElementById('crm-note-content').value = '';
-  document.getElementById('crm-note-type').value = 'interv';
-  document.getElementById('crm-note-modal').classList.add('open');
-  setTimeout(function(){ document.getElementById('crm-note-content').focus(); }, 120);
-}
-function crmCloseNoteModal(){ document.getElementById('crm-note-modal').classList.remove('open'); }
-
-function crmSaveNote(){
-  var vehId   = document.getElementById('crm-note-veh-id').value;
-  var type    = document.getElementById('crm-note-type').value;
-  var content = document.getElementById('crm-note-content').value.trim();
-  if(!content){ crmToast('Le contenu est obligatoire','error'); return; }
-  db.collection('crm_history').doc(crmUid()).set({ vehiculeId:vehId, type:type, content:content, ts:crmTs() })
-    .then(function(){
-      crmToast('Entrée enregistrée','success');
-      crmCloseNoteModal();
-      if(crmCurrentDossier===vehId) crmRenderDetail(vehId);
-    })
-    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
-}
-
-function crmDeleteHistory(hId, vehId){
-  if(!confirm('Supprimer cette entrée ?')) return;
-  db.collection('crm_history').doc(hId).delete()
-    .then(function(){
-      crmToast('Entrée supprimée','success');
-      if(crmCurrentDossier===vehId) crmRenderDetail(vehId);
-    })
-    .catch(function(e){ crmToast('Erreur','error'); });
-}
-
-/* ══════════════════════════════════════════════════════════════
-   FICHIERS ECU — Base64 dans Firestore
-   Limite : 700 Ko par fichier (doc Firestore max 1 Mo)
-   ══════════════════════════════════════════════════════════════ */
-var ECU_MAX_BYTES = 700 * 1024; // 700 Ko
-
-function ecuOnDragOver(e){ e.preventDefault(); document.getElementById('ecu-dropzone').classList.add('drag-over'); }
-function ecuOnDragLeave(){ document.getElementById('ecu-dropzone').classList.remove('drag-over'); }
-function ecuOnDrop(e){
-  e.preventDefault();
-  document.getElementById('ecu-dropzone').classList.remove('drag-over');
-  var files = Array.from(e.dataTransfer.files);
-  ecuShowDetection(files); // détection immédiate avant upload
-  ecuUploadFiles(files);
-}
-function ecuOnFileSelect(e){
-  var files = Array.from(e.target.files);
-  ecuShowDetection(files); // détection immédiate avant upload
-  ecuUploadFiles(files);
-  e.target.value='';
-}
-
-function ecuUploadFiles(files){
-  var clientId = (document.getElementById('ecu-upload-client')||{value:''}).value;
-  var vehId    = (document.getElementById('ecu-upload-veh')||{value:''}).value;
-  if(!clientId||!vehId){ crmToast('Sélectionnez un client et un véhicule d\'abord','warning'); return; }
-  // Déclencher la détection automatique sur les fichiers sélectionnés
-  ecuShowDetection(files);
-  var warn = document.getElementById('ecu-size-warn');
-  files.forEach(function(file){
-    if(file.size > ECU_MAX_BYTES){
-      if(warn) warn.style.display = '';
-      crmToast('Fichier trop lourd (max 700 Ko) : '+file.name,'error');
-      return;
-    }
-    if(warn) warn.style.display = 'none';
-    ecuReadAndStore(file, clientId, vehId);
-  });
-}
-
-/* ══════════════════════════════════════════════════════════
-   DÉTECTION AUTOMATIQUE ECU + VIN depuis le nom de fichier
-   ══════════════════════════════════════════════════════════ */
-
-/* Base de correspondance ECU → fabricant + description */
-var ECU_DB = {
-  // Bosch diesel
-  'EDC15':    {fab:'Bosch', desc:'EDC15 — Diesel ancien (TDI 90-150ch)'},
-  'EDC15C':   {fab:'Bosch', desc:'EDC15C — Diesel PSA/Renault'},
-  'EDC15P':   {fab:'Bosch', desc:'EDC15P+ — Diesel VAG (1.9 TDI)'},
-  'EDC16':    {fab:'Bosch', desc:'EDC16 — Diesel (2003-2008)'},
-  'EDC16U':   {fab:'Bosch', desc:'EDC16U — Diesel VAG/PSA'},
-  'EDC16C':   {fab:'Bosch', desc:'EDC16C — Diesel Bosch'},
-  'EDC17C06': {fab:'Bosch', desc:'EDC17C06 — BMW Diesel (N47/N57)'},
-  'EDC17C10': {fab:'Bosch', desc:'EDC17C10 — PSA 2.0 HDi'},
-  'EDC17C46': {fab:'Bosch', desc:'EDC17C46 — VW 2.0 TDI EA189'},
-  'EDC17C50': {fab:'Bosch', desc:'EDC17C50 — BMW Diesel'},
-  'EDC17C60': {fab:'Bosch', desc:'EDC17C60 — PSA 1.6/2.0 BlueHDi'},
-  'EDC17C64': {fab:'Bosch', desc:'EDC17C64 — VW Diesel'},
-  'EDC17C66': {fab:'Bosch', desc:'EDC17C66 — Mercedes Diesel'},
-  'EDC17C74': {fab:'Bosch', desc:'EDC17C74 — VW/Audi 2.0 TDI EA288'},
-  'EDC17C84': {fab:'Bosch', desc:'EDC17C84 — Renault Diesel'},
-  'EDC17CP09':{fab:'Bosch', desc:'EDC17CP09 — BMW Diesel'},
-  'EDC17CP20':{fab:'Bosch', desc:'EDC17CP20 — VW Diesel'},
-  'EDC17CP37':{fab:'Bosch', desc:'EDC17CP37 — Toyota Diesel'},
-  'EDC17CP46':{fab:'Bosch', desc:'EDC17CP46 — Mercedes CDI'},
-  // Bosch essence
-  'ME7':      {fab:'Bosch', desc:'ME7 — Essence (Audi/VW/BMW)'},
-  'ME9':      {fab:'Bosch', desc:'ME9 — Essence Bosch'},
-  'MED17':    {fab:'Bosch', desc:'MED17 — Essence TSI/TFSI'},
-  'MEVD17':   {fab:'Bosch', desc:'MEVD17 — BMW Essence (N13/N20)'},
-  'MEDC17':   {fab:'Bosch', desc:'MEDC17 — JLR Diesel'},
-  'MD1CS003': {fab:'Bosch', desc:'MD1CS003 — PSA 1.5/2.0 BlueHDi récent'},
-  'DCU17PC':  {fab:'Bosch', desc:'DCU17 — Diesel Allison/ALL'},
-  // Siemens/Continental
-  'SID201':   {fab:'Siemens', desc:'SID201 — Peugeot/Citroën HDi'},
-  'SID202':   {fab:'Siemens', desc:'SID202 — Ford/PSA Diesel'},
-  'SID305':   {fab:'Continental', desc:'SID305 — Renault Diesel'},
-  'SID306':   {fab:'Continental', desc:'SID306 — Renault Diesel'},
-  'SID807':   {fab:'Continental', desc:'SID807 — PSA Diesel récent'},
-  // Delphi
-  'DCM3.5':   {fab:'Delphi', desc:'DCM3.5 — PSA 1.6 e-HDi'},
-  'DCM3.7':   {fab:'Delphi', desc:'DCM3.7 — VAG 1.6 TDI'},
-  'CRD2':     {fab:'Delphi', desc:'CRD2 — Mercedes CRDi'},
-  // Continental essence
-  'SIMOS8':   {fab:'Continental', desc:'SIMOS8 — VAG FSI/TFSI'},
-  'SIMOS10':  {fab:'Continental', desc:'SIMOS10 — VAG TSI/TDI'},
-  'SIMOS12':  {fab:'Continental', desc:'SIMOS12 — VAG TDI'},
-  'SIMOS18':  {fab:'Continental', desc:'SIMOS18 — VAG Essence récent'},
-  'SIMOSPCR': {fab:'Continental', desc:'SIMOS PCR2.1 — VAG 1.6/2.0 TDI EA288'},
-  'EMS24':    {fab:'Continental', desc:'EMS24xx — Ford Essence'},
-};
-
-/* Marque → nom affiché */
-var MARQUE_KESS = {
-  'vag':'VAG (VW/Audi/Seat/Skoda)','volkswagen':'Volkswagen','vw':'Volkswagen',
-  'audi':'Audi','bmw':'BMW','mb':'Mercedes','mercedes':'Mercedes',
-  'psa':'PSA (Peugeot/Citroën/DS)','peugeot':'Peugeot','citroen':'Citroën',
-  'renault':'Renault','fomoco':'Ford','ford':'Ford','toyota':'Toyota',
-  'jlr':'Jaguar / Land Rover','mini':'Mini','seat':'Seat','skoda':'Skoda',
-  'opel':'Opel','all':'Allison / Divers','nissan':'Nissan',
-};
-
-function ecuParseFilename(filename){
-  var fn  = filename || '';
-  var fnU = fn.toUpperCase();
-  var fnL = fn.toLowerCase();
-  var result = {
-    ecu:'', fabricant:'', protocole:'', marque:'',
-    vin:'', sw:'', date:'', options:[],
-    description:'', confidence:0
-  };
-
-  // ── 1. FORMAT KESS3 standard ──────────────────────────────
-  // Pattern: {marque}_{fab}_{ecu}_{protocole}_{...}_{timestamp}.bin
-  var kessRe = /^([a-z0-9]+?)_([a-z]+)_([a-z0-9\.\+]+?)_([a-z]+)/i;
-  var kessM  = kessRe.exec(fn);
-  if(kessM){
-    var rawMarque = kessM[1].toLowerCase();
-    var rawFab    = kessM[2].toLowerCase();
-    var rawEcu    = kessM[3].toLowerCase();
-    var rawProto  = kessM[4].toLowerCase();
-
-    result.marque    = MARQUE_KESS[rawMarque] || rawMarque.toUpperCase();
-    result.fabricant = ({bosch:'Bosch',delphi:'Delphi',continental:'Continental',
-                         siemens:'Siemens',denso:'Denso',valeo:'Valeo'})[rawFab] || rawFab;
-    result.ecu       = rawEcu.toUpperCase();
-    result.protocole = rawProto.toUpperCase().replace('VIRTUALMAPS','OBD').replace('MAPS','OBD').replace('FULL','OBD');
-    if(fnL.includes('bench'))  result.protocole = 'BENCH';
-    if(fnL.includes('boot'))   result.protocole = 'BOOT';
-    if(fnL.includes('bdm'))    result.protocole = 'BDM';
-    if(fnL.includes('inteeprom')) result.protocole += '+EEPROM';
-    result.confidence = 80;
-  }
-
-  // ── 2. FORMAT BMW CAFD (BMWCoding) ───────────────────────
-  // Pattern: BMW_Fxx_WBA3K11060F857302_00000C66_...cafd
-  if(!result.ecu && /^BMW_/i.test(fn)){
-    result.marque = 'BMW'; result.fabricant = 'BMW'; result.confidence = 70;
-  }
-
-  // ── 3. DÉTECTION ECU PAR MOT-CLÉ ─────────────────────────
-  if(!result.ecu){
-    var ecuKeys = Object.keys(ECU_DB).sort(function(a,b){return b.length-a.length;});
-    for(var i=0;i<ecuKeys.length;i++){
-      if(fnU.includes(ecuKeys[i])){
-        result.ecu = ecuKeys[i];
-        result.fabricant = result.fabricant || ECU_DB[ecuKeys[i]].fab;
-        result.confidence = Math.max(result.confidence, 60);
-        break;
-      }
-    }
-  }
-
-  // ── 4. DESCRIPTION ECU depuis la base ────────────────────
-  if(result.ecu){
-    var ecuKeys2 = Object.keys(ECU_DB).sort(function(a,b){return b.length-a.length;});
-    for(var j=0;j<ecuKeys2.length;j++){
-      if(result.ecu.toUpperCase().startsWith(ecuKeys2[j].toUpperCase())){
-        result.description = ECU_DB[ecuKeys2[j]].desc;
-        if(!result.fabricant) result.fabricant = ECU_DB[ecuKeys2[j]].fab;
-        break;
-      }
-    }
-  }
-
-  // ── 5. VIN : 17 chars alphanumériques (sans I, O, Q) ─────
-  var vinRe = /([A-HJ-NPR-Z0-9]{17})/i;
-  var parts  = fn.replace(/[_\-\.]/g,' ').split(' ');
-  for(var k=0;k<parts.length;k++){
-    var p = parts[k].toUpperCase();
-    if(p.length===17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(p)){
-      // Vérifier que ce n'est pas un hash hex (timestamp ou checksum) sans voyelles
-      var hasAlpha = /[A-Z]/i.test(p);
-      var seemsVin = hasAlpha && (
-        /^(W[A-Z0-9]{2}|VF[0-9]|SA[A-Z]|WF0|1FA|1G1|JTD|SCC|VNK|TMB|TRU)/i.test(p) || // WMI connu
-        result.confidence >= 60 // si on a déjà identifié l'ECU, on fait confiance
-      );
-      if(seemsVin){ result.vin = p; result.confidence = Math.max(result.confidence, 85); break; }
-    }
-  }
-  // Fallback: vin_ ou _vin_ pattern explicite
-  var vinExp = /[\._]vin[\._]([A-HJ-NPR-Z0-9]{17})/i.exec(fn);
-  if(vinExp && !result.vin) result.vin = vinExp[1].toUpperCase();
-
-  // ── 6. OPTIONS depuis le nom FW ──────────────────────────
-  var optMap = {
-    'DPF':'DPF OFF','EGR':'EGR OFF','ADBLUE':'AdBlue OFF','NOX':'NOx OFF',
-    'VMAX':'Vmax OFF','IMMO':'Immo OFF','LAMBDA':'Lambda OFF','CAT':'Cat OFF',
-    'E85':'E85','STAGE1':'Stage 1','STAGE2':'Stage 2','TVA':'TVA',
-    'DTCOFF':'DTC OFF','P242F':'FAP','LAUNCH':'Launch Control'
-  };
-  Object.keys(optMap).forEach(function(k){
-    if(fnU.includes(k)) result.options.push(optMap[k]);
-  });
-
-  // ── 7. Date ───────────────────────────────────────────────
-  var dateM = /_(\d{4})(\d{2})(\d{2})\d{6}/.exec(fn);
-  if(dateM) result.date = dateM[3]+'/'+dateM[2]+'/'+dateM[1];
-
-  // ── 8. Fichier ORI vs MOD ─────────────────────────────────
-  if(fnU.includes('.FW.') || fnU.endsWith(' .FW.BIN') || result.options.length > 0){
-    result.fileType = 'mod';
-  } else if(fnU.includes('ORI') || fnU.includes('BACKUP') || fnU.includes('FULLBACKUP') || fnU.includes('INTFLASH') && result.options.length === 0){
-    result.fileType = 'ori';
-  } else {
-    result.fileType = 'ecu';
-  }
-
-  return result;
-}
-
-/* Afficher la bannière de détection après sélection fichier */
-function ecuShowDetection(files){
-  var container = document.getElementById('ecu-detect-result');
-  if(!container) return;
-
-  // Analyser tous les fichiers
-  var detected = files.map(function(f){ return { file:f, info: ecuParseFilename(f.name) }; });
-
-  // Prendre les infos du premier fichier pertinent
-  var best = detected.find(function(d){ return d.info.confidence > 0; }) || detected[0];
-  if(!best || best.info.confidence === 0){ container.style.display='none'; return; }
-
-  var info = best.info;
-
-  function tag(text, color){
-    return '<span class="ecu-detect-tag'+(color?' '+color:'')+'">'+ text +'</span>';
-  }
-
-  // Construire le label ECU complet
-  var ecuLabel = [info.fabricant, info.ecu].filter(Boolean).join(' ');
-  if(!ecuLabel) ecuLabel = '';
-
-  var html = '<div class="ecu-detect-banner">';
-  html += '<div style="width:100%"><div class="ecu-detect-banner-title">🔍 Détection automatique — '+
-    (info.confidence >= 80 ? tag('Fiable','') : tag('Partielle','orange'))+
-    (info.date ? ' <span style="font-size:11px;color:var(--text-muted);font-weight:400;margin-left:8px">'+info.date+'</span>' : '')+
-  '</div>';
-
-  // Ligne 1 : ECU + Marque + Protocole
-  html += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px">';
-  if(ecuLabel) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">ECU détecté</div><div class="ecu-detect-val">'+ecuLabel+'</div>'+(info.description?'<div style="font-size:11px;color:var(--text-muted);margin-top:2px">'+info.description+'</div>':'')+'</div>';
-  if(info.marque) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Marque fichier</div><div class="ecu-detect-val">'+info.marque+'</div></div>';
-  if(info.protocole) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Protocole</div><div class="ecu-detect-val">'+tag(info.protocole, info.protocole==='BENCH'?'purple':info.protocole==='BOOT'?'orange':'')+'</div></div>';
-  if(info.fileType) html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Type</div><div class="ecu-detect-val">'+tag(info.fileType==='ori'?'🟢 ORI':info.fileType==='mod'?'🔵 MOD':'📁 ECU', info.fileType==='ori'?'':info.fileType==='mod'?'purple':'orange')+'</div></div>';
-  html += '</div>';
-
-  // Ligne 2 : VIN + Options
-  html += '<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">';
-  if(info.vin){
-    html += '<div class="ecu-detect-field"><div class="ecu-detect-label">VIN détecté</div>'+
-      '<div class="ecu-detect-val" style="font-size:14px;color:var(--blue);letter-spacing:1px">'+info.vin+'</div>'+
-      '<button class="ecu-detect-apply" onclick="ecuApplyVin(''+info.vin+'')" style="margin-top:6px">→ Appliquer au dossier</button>'+
-    '</div>';
-  } else {
-    html += '<div class="ecu-detect-field"><div class="ecu-detect-label">VIN</div><div class="ecu-detect-val dim">Non détecté dans le nom</div></div>';
-  }
-  if(info.options.length){
-    html += '<div class="ecu-detect-field"><div class="ecu-detect-label">Modifications détectées</div>'+
-      '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">'+
-      info.options.map(function(o){ return '<span class="ecu-detect-tag purple">'+o+'</span>'; }).join('')+
-      '</div></div>';
-  }
-  // Bouton appliquer ECU au dossier
-  if(ecuLabel){
-    html += '<div class="ecu-detect-field" style="margin-left:auto;text-align:right">'+
-      '<button class="ecu-detect-apply" onclick="ecuApplyToVehicule(''+info.ecu+'',''+info.protocole+'',''+info.fabricant+'')">→ Appliquer ECU au dossier</button>'+
-    '</div>';
-  }
-  html += '</div>';
-  html += '</div></div>';
-
-  container.innerHTML = html;
-  container.style.display = '';
-}
-
-/* Appliquer le VIN détecté au dossier véhicule en cours */
-function ecuApplyVin(vin){
-  var vehId = (document.getElementById('ecu-upload-veh')||{value:''}).value;
-  if(!vehId){ crmToast('Sélectionnez un véhicule d\'abord','warning'); return; }
-  if(!db){ crmToast('Firebase non disponible','error'); return; }
-  db.collection('crm_vehicules').doc(vehId).update({ vin: vin })
-    .then(function(){
-      crmToast('✅ VIN '+vin+' enregistré sur le dossier','success');
-      // Rafraîchir le détail si ouvert
-      if(crmCurrentDossier === vehId) crmRenderDetail(vehId);
-    })
-    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
-}
-
-/* Appliquer ECU + Protocole + Fabricant au dossier véhicule */
-function ecuApplyToVehicule(ecu, proto, fab){
-  var vehId = (document.getElementById('ecu-upload-veh')||{value:''}).value;
-  if(!vehId){ crmToast('Sélectionnez un véhicule d\'abord','warning'); return; }
-  if(!db){ crmToast('Firebase non disponible','error'); return; }
-  var upd = {};
-  if(ecu)  upd.ecu   = ecu;
-  if(proto) upd.proto = proto;
-  if(fab)  upd.outil = fab + ' (KESS3)';
-  db.collection('crm_vehicules').doc(vehId).update(upd)
-    .then(function(){
-      crmToast('✅ ECU '+ecu+' enregistré sur le dossier','success');
-      if(crmCurrentDossier === vehId) crmRenderDetail(vehId);
-    })
-    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
-}
-
-function ecuReadAndStore(file, clientId, vehId){
-  var fileId = crmUid();
-  var ext    = file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : 'bin';
-
-  // Barre de progression UI
-  var progList = document.getElementById('ecu-progress-list');
-  var progEl   = document.createElement('div');
-  progEl.className = 'ecu-progress';
-  progEl.id = 'prog-'+fileId;
-  progEl.innerHTML =
-    '<div class="ecu-progress-name">'+crmEsc(file.name)+'</div>'+
-    '<div class="ecu-progress-bar"><div class="ecu-progress-fill" id="pfill-'+fileId+'" style="width:0%"></div></div>'+
-    '<div class="ecu-progress-pct" id="ppct-'+fileId+'">Lecture…</div>';
-  if(progList) progList.appendChild(progEl);
-
-  var reader = new FileReader();
-  reader.onprogress = function(e){
-    if(e.lengthComputable){
-      var pct = Math.round(e.loaded/e.total*80); // lecture = 80% du process
-      var fill = document.getElementById('pfill-'+fileId);
-      var pctEl = document.getElementById('ppct-'+fileId);
-      if(fill) fill.style.width = pct+'%';
-      if(pctEl) pctEl.textContent = pct+'%';
-    }
-  };
-  reader.onload = function(e){
-    var b64 = e.target.result; // data:...;base64,XXXXX
-    var fill = document.getElementById('pfill-'+fileId);
-    var pctEl = document.getElementById('ppct-'+fileId);
-    if(fill) fill.style.width = '90%';
-    if(pctEl) pctEl.textContent = 'Enregistrement…';
-    var detected = ecuParseFilename(file.name);
-    var data = {
-      vehiculeId: vehId, clientId: clientId,
-      name: file.name, ext: ext,
-      size: file.size, b64: b64,
-      ts: crmTs(),
-      detectedEcu:      detected.ecu       || '',
-      detectedFab:      detected.fabricant  || '',
-      detectedProto:    detected.protocole  || '',
-      detectedVin:      detected.vin        || '',
-      detectedOptions:  detected.options    || [],
-      detectedFileType: detected.fileType   || 'ecu',
-      detectedDate:     detected.date       || ''
-    };
-    db.collection('crm_files').doc(fileId).set(data)
-      .then(function(){
-        crmToast('✅ '+file.name+' enregistré','success');
-        progEl.remove();
-      })
-      .catch(function(err){
-        crmToast('Erreur Firestore : '+err.message,'error');
-        progEl.remove();
-      });
-  };
-  reader.onerror = function(){ crmToast('Erreur de lecture : '+file.name,'error'); progEl.remove(); };
-  reader.readAsDataURL(file);
-}
-
-function ecuRenderFiles(){
-  var cid   = (document.getElementById('ecu-filter-client')||{value:''}).value;
-  var vid   = (document.getElementById('ecu-filter-veh')||{value:''}).value;
-  var typeF = (document.getElementById('ecu-filter-type')||{value:''}).value;
-  var q     = (document.getElementById('ecu-filter-search')||{value:''}).value.toLowerCase();
-  var container = document.getElementById('ecu-files-container');
-  if(!container) return;
-
-  var filtered = CRM.files.filter(function(f){
-    if(cid && f.clientId !== cid) return false;
-    if(vid && f.vehiculeId !== vid) return false;
-    if(typeF){
-      var ext = (f.ext||'').toLowerCase();
-      if(typeF==='other' && ['bin','ori','mod','pdf'].includes(ext)) return false;
-      if(typeF!=='other' && ext!==typeF) return false;
-    }
-    if(q && !(f.name||'').toLowerCase().includes(q)) return false;
-    return true;
-  });
-
-  if(!filtered.length){
-    container.innerHTML = '<div class="crm-empty"><div class="crm-empty-icon">💾</div><div class="crm-empty-text">'+
-      (CRM.files.length?'Aucun fichier correspondant':'Aucun fichier — glissez des fichiers dans la zone ci-dessus')+
-      '</div></div>';
-    return;
-  }
-
-  // Grouper par client > véhicule
-  var clients = typeof loadClients==='function' ? loadClients() : [];
-  var groups = {};
-  filtered.forEach(function(f){
-    var key = (f.clientId||'_')+'__'+(f.vehiculeId||'_');
-    if(!groups[key]) groups[key]={ clientId:f.clientId, vehId:f.vehiculeId, files:[] };
-    groups[key].files.push(f);
-  });
-
-  var html = '';
-  Object.values(groups).forEach(function(g){
-    var cl = clients.find(function(c){ return c.id == g.clientId; });
-    var v  = CRM.vehicules.find(function(x){ return x.id===g.vehId; });
-    html += '<div style="margin-bottom:20px">'+
-      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px">'+
-        '<span style="color:var(--blue)">'+crmEsc(cl?cl.nom:'?')+'</span>'+
-        ' <span style="color:var(--text-muted)">›</span> '+
-        crmEsc(v?v.marque+' '+v.modele:'Véhicule inconnu')+
-      '</div>';
-    g.files.forEach(function(f){ html += crmFileItemHTML(f); });
-    html += '</div>';
-  });
-  container.innerHTML = html;
-}
-
-function crmFileItemHTML(f){
-  var ext   = (f.ext||'other').toLowerCase();
-  var label = ext.toUpperCase()||'?';
-  var cls   = ['bin','ori','mod','pdf'].includes(ext) ? ext : 'other';
-  return '<div class="ecu-file-item" id="ecu-item-'+f.id+'">'+
-    '<div class="ecu-file-icon '+cls+'">'+label+'</div>'+
-    '<div class="ecu-file-meta">'+
-      '<div class="ecu-file-name">'+crmEsc(f.name||'—')+'</div>'+
-      '<div class="ecu-file-info">'+crmFmtSize(f.size)+' · '+crmFmt(f.ts)+'</div>'+
-    '</div>'+
-    '<div class="ecu-file-actions">'+
-      '<button class="btn-s btn-sm" onclick="ecuDownloadFile(\''+f.id+'\')" title="Télécharger">⬇ Télécharger</button>'+
-      '<button class="btn-s btn-sm" onclick="crmOpenRenameModal(\''+f.id+'\',\''+crmEsc(f.name||'')+'\')">✏️</button>'+
-      '<button class="btn-s btn-sm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="ecuDeleteFile(\''+f.id+'\')">🗑</button>'+
-    '</div>'+
-  '</div>';
-}
-
-function ecuDownloadFile(fid){
-  var f = CRM.files.find(function(x){ return x.id===fid; });
-  if(!f||!f.b64){ crmToast('Fichier introuvable','error'); return; }
-  var a = document.createElement('a');
-  a.href = f.b64;
-  a.download = f.name||('fichier.'+f.ext);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-function ecuDeleteFile(fid){
-  var f = CRM.files.find(function(x){ return x.id===fid; });
-  if(!f||!confirm('Supprimer "'+f.name+'" ?')) return;
-  db.collection('crm_files').doc(fid).delete()
-    .then(function(){ crmToast('Fichier supprimé','success'); if(crmCurrentDossier===f.vehiculeId) crmRenderDetail(f.vehiculeId); })
-    .catch(function(e){ crmToast('Erreur','error'); });
-}
-
-/* ── Renommer ───────────────────────────────────────────────── */
-function crmOpenRenameModal(fid, name){
-  document.getElementById('crm-rename-file-id').value = fid;
-  document.getElementById('crm-rename-input').value = name;
-  document.getElementById('crm-rename-modal').classList.add('open');
-  setTimeout(function(){
-    var inp = document.getElementById('crm-rename-input');
-    if(!inp) return;
-    inp.focus();
-    var dot = name.lastIndexOf('.');
-    inp.setSelectionRange(0, dot>0?dot:name.length);
-  }, 120);
-}
-function crmCloseRenameModal(){ document.getElementById('crm-rename-modal').classList.remove('open'); }
-
-function crmDoRename(){
-  var fid     = document.getElementById('crm-rename-file-id').value;
-  var newName = document.getElementById('crm-rename-input').value.trim();
-  if(!newName){ crmToast('Nom invalide','error'); return; }
-  var f = CRM.files.find(function(x){ return x.id===fid; });
-  if(!f) return;
-  // Préserver l'extension si oubliée
-  var origExt = f.name && f.name.includes('.') ? '.'+f.name.split('.').pop() : '';
-  var newExt  = newName.includes('.') ? '.'+newName.split('.').pop() : '';
-  if(origExt && newExt!==origExt) newName += origExt;
-  db.collection('crm_files').doc(fid).update({ name: newName })
-    .then(function(){ crmToast('Renommé','success'); crmCloseRenameModal(); })
-    .catch(function(e){ crmToast('Erreur : '+e.message,'error'); });
-}
-
-/* ── Fermer modals CRM avec Escape ─────────────────────────── */
-document.addEventListener('keydown', function(e){
-  if(e.key!=='Escape') return;
-  ['crm-veh-modal','crm-note-modal','crm-rename-modal'].forEach(function(id){
-    var el = document.getElementById(id);
-    if(el) el.classList.remove('open');
-  });
-});
-['crm-veh-modal','crm-note-modal','crm-rename-modal'].forEach(function(mid){
-  var el = document.getElementById(mid);
-  if(el) el.addEventListener('click', function(e){ if(e.target===el) el.classList.remove('open'); });
-});
-
-/* ── Lancer CRM dès que Firebase est prêt ──────────────────── */
-(function waitForDb(){
-  if(typeof db !== 'undefined' && db && typeof syncOk !== 'undefined'){
-    crmInitFirestore();
-  } else {
-    setTimeout(waitForDb, 400);
-  }
-})();
-
-
 </script>
-
-<!-- ══ CRM MODAL : NOUVEAU/MODIFIER DOSSIER VÉHICULE ════════ -->
-<div class="crm-modal" id="crm-veh-modal" onclick="if(event.target===this)crmCloseVehModal()">
-  <div class="crm-modal-box wide">
-    <div class="crm-modal-title" id="crm-veh-modal-title">Nouveau dossier véhicule</div>
-    <button class="crm-modal-close" onclick="crmCloseVehModal()">✕</button>
-
-    <!-- Sélecteur client -->
-    <div class="crm-fr">
-      <label>Client *</label>
-      <select id="crm-veh-client-id" onchange="crmOnClientChange()">
-        <option value="">— Sélectionner un client —</option>
-      </select>
-    </div>
-
-    <!-- Sélecteur véhicule existant du client -->
-    <div id="crm-veh-picker-wrap" style="display:none;margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:8px">
-        Véhicule enregistré dans le carnet
-      </div>
-      <div id="crm-veh-picker-list" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted)">
-        ou renseigne manuellement un nouveau véhicule ci-dessous ↓
-      </div>
-    </div>
-
-    <div class="crm-modal-sep"></div>
-    <div class="crm-section-label">Identification du véhicule</div>
-
-    <div class="crm-row3">
-      <div class="crm-fr"><label>Marque *</label><input type="text" id="crm-veh-marque" placeholder="Volkswagen"/></div>
-      <div class="crm-fr"><label>Modèle *</label><input type="text" id="crm-veh-modele" placeholder="Golf 7"/></div>
-      <div class="crm-fr"><label>Année</label><input type="number" id="crm-veh-annee" placeholder="2018" min="1990" max="2035"/></div>
-    </div>
-    <div class="crm-row3">
-      <div class="crm-fr"><label>Motorisation *</label><input type="text" id="crm-veh-moteur" placeholder="2.0 TDI 150ch"/></div>
-      <div class="crm-fr"><label>Immatriculation</label><input type="text" id="crm-veh-immat" placeholder="AB-123-CD" style="text-transform:uppercase"/></div>
-      <div class="crm-fr"><label>N° VIN</label><input type="text" id="crm-veh-vin" placeholder="WVWZZZ1K…" style="text-transform:uppercase"/></div>
-    </div>
-
-    <div class="crm-modal-sep"></div>
-    <div class="crm-section-label">ECU & Reprogrammation</div>
-
-    <div class="crm-row3">
-      <div class="crm-fr"><label>Type d'ECU</label><input type="text" id="crm-veh-ecu" placeholder="Bosch EDC17C46"/></div>
-      <div class="crm-fr"><label>Outil utilisé</label><input type="text" id="crm-veh-outil" placeholder="KESS3 / CMD…"/></div>
-      <div class="crm-fr"><label>Protocole</label><input type="text" id="crm-veh-proto" placeholder="OBD / BDM / Boot"/></div>
-    </div>
-    <div class="crm-row2">
-      <div class="crm-fr"><label>Puissance origine (ch)</label><input type="number" id="crm-veh-pw-ori" placeholder="150"/></div>
-      <div class="crm-fr"><label>Puissance après reprog. (ch)</label><input type="number" id="crm-veh-pw-new" placeholder="185"/></div>
-    </div>
-    <div class="crm-fr"><label>Notes techniques</label><textarea id="crm-veh-notes" rows="3" placeholder="Particularités ECU, protections, remarques…"></textarea></div>
-
-    <div class="crm-modal-footer">
-      <button class="btn-s" onclick="crmCloseVehModal()">Annuler</button>
-      <button class="btn-p" onclick="crmSaveVehicule()">💾 Enregistrer</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ CRM MODAL : AJOUTER ENTRÉE HISTORIQUE ════════════════ -->
-<div class="crm-modal" id="crm-note-modal" onclick="if(event.target===this)crmCloseNoteModal()">
-  <div class="crm-modal-box">
-    <div class="crm-modal-title">Nouvelle entrée</div>
-    <button class="crm-modal-close" onclick="crmCloseNoteModal()">✕</button>
-    <div class="crm-fr">
-      <label>Type d'entrée</label>
-      <select id="crm-note-type">
-        <option value="interv">🔧 Intervention</option>
-        <option value="note">📝 Note technique</option>
-        <option value="modif">⚙️ Modification ECU</option>
-      </select>
-    </div>
-    <div class="crm-fr">
-      <label>Contenu *</label>
-      <textarea id="crm-note-content" rows="5" placeholder="Décrivez l'intervention, la modification ou la note…"></textarea>
-    </div>
-    <input type="hidden" id="crm-note-veh-id"/>
-    <div class="crm-modal-footer">
-      <button class="btn-s" onclick="crmCloseNoteModal()">Annuler</button>
-      <button class="btn-p" onclick="crmSaveNote()">💾 Enregistrer</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ CRM MODAL : RENOMMER FICHIER ECU ═════════════════════ -->
-<div class="crm-modal" id="crm-rename-modal" onclick="if(event.target===this)crmCloseRenameModal()">
-  <div class="crm-modal-box" style="width:420px">
-    <div class="crm-modal-title">Renommer le fichier</div>
-    <button class="crm-modal-close" onclick="crmCloseRenameModal()">✕</button>
-    <div class="crm-fr">
-      <label>Nouveau nom</label>
-      <input type="text" id="crm-rename-input" placeholder="nouveau-nom.bin"/>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">L'extension d'origine sera conservée si tu l'omets.</div>
-    </div>
-    <input type="hidden" id="crm-rename-file-id"/>
-    <div class="crm-modal-footer">
-      <button class="btn-s" onclick="crmCloseRenameModal()">Annuler</button>
-      <button class="btn-p" onclick="crmDoRename()">Renommer</button>
-    </div>
-  </div>
-</div>
-
-
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
 if ('serviceWorker' in navigator) {
