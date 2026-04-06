@@ -23,6 +23,8 @@ const NAV_HTML = `
  <li><a href="/desactivation-adblue">AdBlue</a></li>
  <li class="dropdown-divider"></li>
  <li><a href="/odis">Diagnostic ODIS <span class="nav-badge">VAG</span></a></li>
+ <li class="dropdown-divider"></li>
+ <li><a href="/codage-vag">Codage VAG <span class="nav-badge" style="color:var(--green);border-color:rgba(52,211,153,.4)">NEW</span></a></li>
  </ul>
  </li>
  <li class="nav-dropdown">
@@ -80,6 +82,7 @@ const NAV_HTML = `
  <a href="/desactivation-fap" class="nav-mobile-sub" data-page="desactivation-fap">Désactivation FAP</a>
  <a href="/desactivation-adblue" class="nav-mobile-sub" data-page="desactivation-adblue">Désactivation AdBlue</a>
  <a href="/odis" class="nav-mobile-sub" data-page="odis">Diagnostic ODIS VAG</a>
+ <a href="/codage-vag" class="nav-mobile-sub" data-page="codage-vag">Codage VAG — Options cachées</a>
  </div>
  <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
  <a href="/about" data-page="about">À propos</a>
@@ -107,6 +110,7 @@ const FOOTER_HTML = `
  <a href="/desactivation-fap">Désactivation FAP</a>
  <a href="/desactivation-adblue">Désactivation AdBlue</a>
  <a href="/odis">Diagnostic ODIS VAG</a>
+ <a href="/codage-vag">Codage VAG</a>
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Zones</div>
