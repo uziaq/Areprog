@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AREPROG — Admin Codage VAG</title>
+<meta name="robots" content="noindex, nofollow"/>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
+<style>
+:root{--blue:#1E90FF;--blue-dim:#1570cc;--blue-glow:rgba(30,144,255,.15);
+  --bg:#0a0c10;--bg2:#0f1117;--bg3:#161a22;--bg4:#1d222d;
+  --border:rgba(255,255,255,.08);--border-blue:rgba(30,144,255,.3);
+  --text:#e8eaf0;--text-dim:#7a8099;--text-muted:#4a5068;
+  --green:#22c55e;--orange:#f59e0b;--red:#ef4444;
+  --radius:10px;--fh:'Barlow Condensed',sans-serif;
+  --fb:'Barlow',sans-serif;--fm:'JetBrains Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;min-height:100vh}
+input,select,textarea,button{font-family:var(--fb);font-size:14px}button{cursor:pointer}
+select option{background:#1d222d}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:var(--bg) radial-gradient(ellipse 80% 50% at 50% -10%,rgba(30,144,255,.12) 0%,transparent 70%);}
+.login-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:16px;
+  padding:48px 40px;width:380px;text-align:center;
+  box-shadow:0 0 80px rgba(30,144,255,.1),0 2px 0 rgba(30,144,255,.3) inset;}
+.login-logo{font-family:var(--fh);font-size:36px;font-weight:800;color:#fff;letter-spacing:3px}
+.login-logo span{color:var(--blue)}
+.login-sub{color:var(--text-dim);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;margin-top:4px}
+.lf{margin-bottom:16px;text-align:left}
+.lf label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:6px}
+.lf input{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;transition:border-color .2s}
+.lf input:focus{border-color:var(--blue)}
+.login-btn{width:100%;padding:13px;background:var(--blue);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:15px;letter-spacing:.5px;margin-top:8px;transition:background .2s}
+.login-btn:hover{background:var(--blue-dim)}
+.login-err{color:var(--red);font-size:12px;margin-top:10px;display:none}
+
+/* APP */
+#app{display:none;min-height:100vh;flex-direction:column}
+.app-header{background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:14px 28px;}
+.app-logo{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:2px}
+.app-logo span{color:var(--blue)}
+.app-logo-sub{font-size:11px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.logout-btn{padding:8px 18px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-size:12px;letter-spacing:1px;text-transform:uppercase;transition:all .2s}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
+.app-body{display:flex;flex:1}
+.sidebar{width:200px;background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;flex-shrink:0}
+.sidebar-item{display:block;width:100%;padding:12px 24px;background:none;border:none;
+  color:var(--text-dim);font-size:13px;font-weight:500;text-align:left;cursor:pointer;
+  border-left:3px solid transparent;transition:all .15s;}
+.sidebar-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.sidebar-item.active{color:var(--blue);border-left-color:var(--blue);background:rgba(30,144,255,.06)}
+.main-panel{flex:1;padding:28px;overflow-x:auto}
+.panel{display:none}.panel.active{display:block}
+.panel-title{font-family:var(--fh);font-size:24px;font-weight:800;letter-spacing:1px;color:#fff;margin-bottom:20px}
+
+/* STATS */
+.stats-row{display:flex;gap:16px;margin-bottom:24px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;flex:1;min-width:0}
+.stat-value{font-family:var(--fm);font-size:28px;font-weight:700;color:#fff}
+.stat-label{font-size:12px;color:var(--text-dim);margin-top:4px}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{background:var(--bg3);color:var(--text-dim);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.data-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tr:hover td{background:rgba(255,255,255,.02)}
+.data-table tr.expanded-row td{background:var(--bg3)}
+.status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.status-nouveau{background:rgba(30,144,255,.15);color:var(--blue);border:1px solid rgba(30,144,255,.3)}
+.status-traite{background:rgba(245,158,11,.12);color:var(--orange);border:1px solid rgba(245,158,11,.3)}
+.status-termine{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.action-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text-dim);font-size:11px;cursor:pointer;transition:all .15s}
+.action-btn:hover{border-color:var(--blue);color:var(--blue)}
+.action-btn.danger:hover{border-color:var(--red);color:var(--red)}
+.detail-panel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:20px;margin:8px 0}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.detail-field label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:4px}
+.detail-field span{font-size:14px;color:var(--text)}
+.options-list{display:flex;flex-direction:column;gap:6px}
+.options-list-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg4);border-radius:6px;font-size:13px}
+.price-edit-input{background:var(--bg3);border:1px solid var(--border-blue);border-radius:6px;color:var(--text);padding:4px 8px;width:80px;font-family:var(--fm);font-size:13px;outline:none}
+.toggle-btn{width:44px;height:24px;border-radius:12px;border:none;cursor:pointer;position:relative;transition:background .2s}
+.toggle-btn.on{background:var(--green)}.toggle-btn.off{background:var(--text-muted)}
+.toggle-btn::after{content:'';position:absolute;top:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle-btn.on::after{left:22px}.toggle-btn.off::after{left:2px}
+.refresh-btn{padding:8px 18px;background:var(--blue);border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:background .2s}
+.refresh-btn:hover{background:var(--blue-dim)}
+.loading{text-align:center;padding:40px;color:var(--text-dim)}
+.status-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 8px;font-size:12px;cursor:pointer;outline:none}
+.status-select:focus{border-color:var(--blue)}
+.admin-note{font-size:12px;color:var(--text-dim);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:20px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">ARE<span>PROG</span></div>
+    <div class="login-sub">Admin Codage VAG</div>
+    <div class="lf"><label>Email</label><input type="email" id="login-email" placeholder="admin@areprog.fr"/></div>
+    <div class="lf"><label>Mot de passe</label><input type="password" id="login-pwd" placeholder="••••••••"/></div>
+    <button class="login-btn" onclick="doLogin()">Connexion</button>
+    <div id="login-err" class="login-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="app-header">
+    <div>
+      <div class="app-logo">ARE<span>PROG</span></div>
+      <div class="app-logo-sub">Admin · Codage VAG</div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
+  </div>
+  <div class="app-body">
+    <nav class="sidebar">
+      <button class="sidebar-item active" onclick="showPanel('orders')">📋 Demandes clients</button>
+      <button class="sidebar-item" onclick="showPanel('options')">⚙️ Gestion options</button>
+    </nav>
+    <div class="main-panel">
+
+      <!-- Panel : Demandes -->
+      <div id="panel-orders" class="panel active">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div class="panel-title">Demandes Clients</div>
+          <button class="refresh-btn" onclick="loadOrders()">↻ Actualiser</button>
+        </div>
+        <div class="stats-row" id="orders-stats"></div>
+        <div id="orders-table-wrap"><div class="loading">Chargement…</div></div>
+      </div>
+
+      <!-- Panel : Options -->
+      <div id="panel-options" class="panel">
+        <div class="panel-title">Gestion des Options</div>
+        <div class="admin-note">
+          ⚠ Les modifications de prix et d'état sont <strong>locales uniquement</strong> (session en cours).
+          Pour persister les changements, éditez le fichier <code>codage-vag-data.js</code>.
+        </div>
+        <div id="options-table-wrap"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="/codage-vag-data.js"></script>
+<script>
+const FIREBASE_CONFIG = {
+  apiKey:"VOTRE_API_KEY", authDomain:"VOTRE_PROJECT.firebaseapp.com",
+  projectId:"VOTRE_PROJECT_ID", storageBucket:"VOTRE_PROJECT.appspot.com",
+  messagingSenderId:"VOTRE_SENDER_ID", appId:"VOTRE_APP_ID"
+};
+if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+// ── Auth ──────────────────────────────────
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    loadOrders();
+  }
+});
+
+function doLogin() {
+  const email = document.getElementById('login-email').value;
+  const pwd   = document.getElementById('login-pwd').value;
+  const err   = document.getElementById('login-err');
+  err.style.display = 'none';
+  auth.signInWithEmailAndPassword(email, pwd)
+    .catch(e => { err.textContent = 'Identifiants incorrects.'; err.style.display = 'block'; });
+}
+
+function doLogout() {
+  auth.signOut().then(() => {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+  });
+}
+
+// ── Navigation ──────────────────────────
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(b => {
+    if (b.textContent.toLowerCase().includes(name === 'orders' ? 'demandes' : 'options'))
+      b.classList.add('active');
+  });
+  if (name === 'options') renderOptionsTable();
+}
+
+// ── Commandes ───────────────────────────
+let orders = [];
+function loadOrders() {
+  document.getElementById('orders-table-wrap').innerHTML = '<div class="loading">Chargement…</div>';
+  db.collection('vag_orders').orderBy('createdAt','desc').limit(100).get()
+    .then(snap => {
+      orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderOrdersStats();
+      renderOrdersTable();
+    })
+    .catch(() => {
+      document.getElementById('orders-table-wrap').innerHTML =
+        '<div class="loading">Impossible de charger. Vérifiez la config Firebase.</div>';
+    });
+}
+
+function renderOrdersStats() {
+  const total  = orders.length;
+  const nouveau = orders.filter(o => o.status === 'nouveau').length;
+  const ca = orders.reduce((s, o) => s + (o.total || 0), 0);
+  document.getElementById('orders-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Demandes totales</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--blue)">${nouveau}</div><div class="stat-label">Nouvelles</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--green)">${ca} €</div><div class="stat-label">CA estimé total</div></div>
+  `;
+}
+
+function renderOrdersTable() {
+  const wrap = document.getElementById('orders-table-wrap');
+  if (!orders.length) {
+    wrap.innerHTML = '<div class="loading">Aucune demande pour l\'instant.</div>';
+    return;
+  }
+  const rows = orders.map((o, i) => {
+    const date = o.createdAt && o.createdAt.seconds
+      ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'})
+      : 'N/A';
+    const nbOpts = Array.isArray(o.options) ? o.options.length : 0;
+    const statusClass = { nouveau:'status-nouveau', traite:'status-traite', termine:'status-termine' }[o.status] || 'status-nouveau';
+    const statusLabel = { nouveau:'Nouveau', traite:'Traité', termine:'Terminé' }[o.status] || o.status;
+    return `
+      <tr>
+        <td style="color:var(--text-dim);font-family:var(--fm);font-size:12px">${date}</td>
+        <td><strong>${o.name || '-'}</strong></td>
+        <td>${o.city || '-'}</td>
+        <td style="font-size:12px;color:var(--text-dim)">${(o.vehicle && o.vehicle.brand) ? o.vehicle.brand + ' ' + o.vehicle.model : '-'} ${(o.vehicle && o.vehicle.year) ? o.vehicle.year : ''}</td>
+        <td><span style="font-family:var(--fm)">${nbOpts}</span></td>
+        <td style="font-family:var(--fm);font-weight:700">${o.total || 0} €</td>
+        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+        <td style="display:flex;gap:6px;align-items:center">
+          <button class="action-btn" onclick="toggleDetail(${i})">Détail</button>
+          <select class="status-select" onchange="updateStatus('${o.id}',this.value)">
+            <option value="nouveau" ${o.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
+            <option value="traite"  ${o.status === 'traite'  ? 'selected' : ''}>Traité</option>
+            <option value="termine" ${o.status === 'termine' ? 'selected' : ''}>Terminé</option>
+          </select>
+        </td>
+      </tr>
+      <tr id="detail-row-${i}" style="display:none">
+        <td colspan="8" style="padding:0 14px 14px">
+          <div class="detail-panel">
+            <div class="detail-grid">
+              <div class="detail-field"><label>Nom</label><span>${o.name || '-'}</span></div>
+              <div class="detail-field"><label>Téléphone</label><span>${o.phone || '-'}</span></div>
+              <div class="detail-field"><label>Email</label><span>${o.email || '-'}</span></div>
+              <div class="detail-field"><label>Ville</label><span>${o.city || '-'}</span></div>
+              <div class="detail-field"><label>Véhicule</label><span>${o.vehicle ? o.vehicle.brand + ' ' + o.vehicle.model + ' ' + o.vehicle.year : '-'}</span></div>
+              <div class="detail-field"><label>Total</label><span style="color:var(--green);font-weight:700">${o.total || 0} €</span></div>
+            </div>
+            ${o.message ? `<div class="detail-field" style="margin-bottom:12px"><label>Message</label><span>${o.message}</span></div>` : ''}
+            <div><label style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px">Options demandées</label>
+            <div class="options-list">
+              ${Array.isArray(o.options) ? o.options.map(opt =>
+                `<div class="options-list-item"><span>${opt.name}</span><span style="font-family:var(--fm);color:var(--blue)">${opt.price} €</span></div>`
+              ).join('') : 'N/A'}
+            </div></div>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+  wrap.innerHTML = `
+    <table class="data-table">
+      <thead><tr>
+        <th>Date</th><th>Client</th><th>Ville</th><th>Véhicule</th>
+        <th>Opts</th><th>Total</th><th>Statut</th><th>Actions</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function toggleDetail(i) {
+  const row = document.getElementById('detail-row-' + i);
+  if (row) row.style.display = row.style.display === 'none' ? '' : 'none';
+}
+
+function updateStatus(orderId, newStatus) {
+  db.collection('vag_orders').doc(orderId).update({ status: newStatus })
+    .then(() => {
+      const o = orders.find(o => o.id === orderId);
+      if (o) o.status = newStatus;
+      renderOrdersStats();
+    });
+}
+
+// ── Gestion options ──────────────────────
+let localOpts = [];
+function renderOptionsTable() {
+  if (!localOpts.length) localOpts = VAG.OPTIONS.map(o => ({ ...o }));
+  const catColors = { confort:'#2196F3', eclairage:'#F59E0B', multimedia:'#34D399', assistance:'#FB923C', performance:'#F87171' };
+  const rows = localOpts.map((o, i) => `
+    <tr>
+      <td style="font-family:var(--fm);font-size:11px;color:var(--text-dim)">${o.id}</td>
+      <td style="max-width:260px"><strong>${o.name}</strong></td>
+      <td><span class="status-badge" style="background:${catColors[o.category] || '#888'}22;color:${catColors[o.category] || '#888'};border-color:${catColors[o.category] || '#888'}55">${o.category}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input class="price-edit-input" type="number" value="${o.price}" min="0" step="1"
+                 onchange="localOpts[${i}].price = parseInt(this.value)"/>
+          <span style="color:var(--text-dim);font-size:12px">€</span>
+        </div>
+      </td>
+      <td>
+        <button class="toggle-btn ${o.active ? 'on' : 'off'}" onclick="toggleOpt(${i})"></button>
+      </td>
+    </tr>`).join('');
+  document.getElementById('options-table-wrap').innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Actif</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function toggleOpt(i) {
+  localOpts[i].active = !localOpts[i].active;
+  renderOptionsTable();
+}
+</script>
+</body>
+</html>
