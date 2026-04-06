@@ -155,7 +155,8 @@
 document.addEventListener('DOMContentLoaded', function() {
   if (!window.VAG) return;
 
-  var brandSlug = location.pathname.replace(/^\/|\/$/g, '').split('/')[0];
+  // URL: /codage-vag/volkswagen
+  var brandSlug = location.pathname.replace(/^\/|\/$/g, '').split('/')[1] || '';
   var brand = VAG.BRANDS.find(function(b){ return b.slug === brandSlug; });
 
   if (!brand) {
@@ -168,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // ── SEO meta ──────────────────────────────────
   var pageTitle = 'Codage ' + brand.name + ' — Options cach\u00e9es | AREPROG';
   var pageDesc  = 'Activez les options cach\u00e9es de votre ' + brand.name + '. ' + models.length + ' mod\u00e8les support\u00e9s — Golf, Polo, Tiguan et plus. Codage VCDS \u00e0 domicile par AREPROG.';
-  var pageUrl   = 'https://areprog.fr/' + brandSlug;
+  var pageUrl   = 'https://areprog.fr/codage-vag/' + brandSlug;
 
   document.title = pageTitle;
   document.querySelector('meta[name="description"]').content = pageDesc;
@@ -185,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     "numberOfItems": models.length,
     "itemListElement": models.map(function(m, i){
       return { "@type":"ListItem", "position": i+1,
-        "url": "https://areprog.fr/" + brandSlug + "/" + m.slug,
+        "url": "https://areprog.fr/codage-vag/" + brandSlug + "/" + m.slug,
         "name": "Codage " + brand.name + " " + m.name };
     })
   });
@@ -236,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
             (!o.compatible.models.length || o.compatible.models.indexOf(m.id)!==-1) &&
             (!o.compatible.platforms.length || o.compatible.platforms.indexOf(m.platform)!==-1);
         }).length;
-        return '<a class="vc-brand-model-card" href="/' + brandSlug + '/' + m.slug + '">' +
+        return '<a class="vc-brand-model-card" href="/codage-vag/' + brandSlug + '/' + m.slug + '">' +
           '<div class="vc-bmc-name">' + m.name + '</div>' +
           '<div class="vc-bmc-code">' + m.code + '</div>' +
           '<div class="vc-bmc-years">' + m.yearMin + '\u2013' + m.yearMax + '</div>' +

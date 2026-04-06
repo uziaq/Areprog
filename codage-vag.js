@@ -498,10 +498,12 @@ const VCApp = (() => {
   function init() {
     initFirebase();
     // Sur /codage-vag, lire l'URL pour pré-charger brand/model si présent
+    // URL structure: /codage-vag/volkswagen/golf-8
     const parts = location.pathname.replace(/^\/|\/$/g, '').split('/');
-    if (parts.length >= 2 && parts[0] !== 'codage-vag') {
-      const brand = VAG.BRANDS.find(b => b.slug === parts[0]);
-      const model = brand ? VAG.MODELS.find(m => m.brandId === brand.id && m.slug === parts[1]) : null;
+    // parts[0]='codage-vag', parts[1]=brandSlug, parts[2]=modelSlug
+    if (parts[0] === 'codage-vag' && parts.length >= 3) {
+      const brand = VAG.BRANDS.find(b => b.slug === parts[1]);
+      const model = brand ? VAG.MODELS.find(m => m.brandId === brand.id && m.slug === parts[2]) : null;
       if (brand && model) {
         _preload(brand.id, model.id, model.yearMin);
         return;
@@ -527,13 +529,13 @@ const VCApp = (() => {
 
   // ── Navigation URL ─────────────────────────
   function pushBrandUrl(brand) {
-    if (brand && brand.slug && location.pathname.startsWith('/codage-vag')) {
-      history.pushState({}, '', '/' + brand.slug);
+    if (brand && brand.slug) {
+      history.pushState({}, '', '/codage-vag/' + brand.slug);
     }
   }
   function pushModelUrl(brand, model) {
     if (brand && model && brand.slug && model.slug) {
-      history.pushState({}, '', '/' + brand.slug + '/' + model.slug);
+      history.pushState({}, '', '/codage-vag/' + brand.slug + '/' + model.slug);
     }
   }
 

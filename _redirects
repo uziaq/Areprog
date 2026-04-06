@@ -51,20 +51,16 @@
 /codage-vag-admin                   /codage-vag-admin.html              200
 /boutique-vag                       /boutique-vag.html                  200
 
-# ── Pages marque (brand index) ────────────────────────────────
-/volkswagen                         /codage-marque.html                 200
-/audi                               /codage-marque.html                 200
-/seat                               /codage-marque.html                 200
-/cupra                              /codage-marque.html                 200
-/skoda                              /codage-marque.html                 200
+# ── Pages /codage-vag/marque  (ex: /codage-vag/volkswagen) ───
+/codage-vag/volkswagen              /codage-marque.html                 200
+/codage-vag/audi                    /codage-marque.html                 200
+/codage-vag/seat                    /codage-marque.html                 200
+/codage-vag/cupra                   /codage-marque.html                 200
+/codage-vag/skoda                   /codage-marque.html                 200
 
-# ── Pages marque/modèle (/volkswagen/golf-8, /audi/a3-8y …) ──
-# IMPORTANT : ces règles doivent être AVANT les 301 catch-all
-/volkswagen/:model                  /codage-modele.html                 200
-/audi/:model                        /codage-modele.html                 200
-/seat/:model                        /codage-modele.html                 200
-/cupra/:model                       /codage-modele.html                 200
-/skoda/:model                       /codage-modele.html                 200
+# ── Pages /codage-vag/marque/modele ──────────────────────────
+# ex: /codage-vag/volkswagen/golf-8, /codage-vag/audi/a3-8y
+/codage-vag/:brand/:model           /codage-modele.html                 200
 
 # ── Redirections 301 anciennes URLs ─────────────────────────
 /boutique                           /contact                            301
