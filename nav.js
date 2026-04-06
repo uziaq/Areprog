@@ -142,7 +142,7 @@ const FOOTER_HTML = `
  <div class="footer-bottom-links">
  <a href="/mentions-legales">Mentions légales</a>
    <a href="/politique-confidentialite">Confidentialité</a>
- <a href="/sitemap.xml">Plan du site</a>
+ <a href="/sitemap-visuel.html">Plan du site</a>
  </div>
  </div>
 </footer>

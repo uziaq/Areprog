@@ -102,7 +102,7 @@
 
  @media (max-width: 600px) {
  #wa-widget { bottom: 1.2rem; right: 1.2rem; }
- #wa-bubble { max-width: 180px; font-size: .78rem; }
+ #wa-bubble { display: none !important; }
  }
  `;
  document.head.appendChild(style);
