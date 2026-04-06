@@ -297,9 +297,10 @@
 document.addEventListener('DOMContentLoaded', function() {
   if (!window.VAG) { showNotFound('Données non disponibles.'); return; }
 
+  // URL: /codage-vag/volkswagen/golf-8
   const parts = location.pathname.replace(/^\/|\/$/g, '').split('/');
-  const brandSlug = parts[0] || '';
-  const modelSlug = parts[1] || '';
+  const brandSlug = parts[1] || '';  // parts[0]='codage-vag'
+  const modelSlug = parts[2] || '';
 
   const brand = VAG.BRANDS.find(b => b.slug === brandSlug);
   const model = brand ? VAG.MODELS.find(m => m.brandId === brand.id && m.slug === modelSlug) : null;
@@ -339,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // ── Breadcrumb ────────────────────────────────
   var bcBrand = document.getElementById('bc-brand');
   bcBrand.textContent = brand.name;
-  bcBrand.href = '/' + brandSlug;
+  bcBrand.href = '/codage-vag/' + brandSlug;
   document.getElementById('bc-model').textContent = model.name;
 
   // ── Hero ──────────────────────────────────────

@@ -190,424 +190,424 @@
 
   <!-- ═ Marques ═ -->
   <url>
-    <loc>https://areprog.fr/volkswagen</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi</loc>
+    <loc>https://areprog.fr/codage-vag/audi</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat</loc>
+    <loc>https://areprog.fr/codage-vag/seat</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/cupra</loc>
+    <loc>https://areprog.fr/codage-vag/cupra</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda</loc>
+    <loc>https://areprog.fr/codage-vag/skoda</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- ═ Modèles /marque/modele ═ -->
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-6</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-6</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-7</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-7</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-7-facelift</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-7-facelift</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-8</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-8</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-8-gte</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-8-gte</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-variant-7</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-variant-7</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-variant-8</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-variant-8</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-gti-7</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-gti-7</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-gti-8</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-gti-8</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-r-7</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-r-7</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/golf-r-8</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/golf-r-8</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/polo-5</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/polo-5</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/polo-6</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/polo-6</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/polo-gti-6</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/polo-gti-6</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/t-cross</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/t-cross</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/taigo</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/taigo</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/t-roc</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/t-roc</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/t-roc-r</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/t-roc-r</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/tiguan-1</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/tiguan-1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/tiguan-2</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/tiguan-2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/tiguan-allspace</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/tiguan-allspace</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/touran-2</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/touran-2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/passat-7</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/passat-7</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/passat-8</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/passat-8</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/arteon</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/arteon</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/scirocco</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/scirocco</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/caddy-5</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/caddy-5</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/multivan-t7</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/multivan-t7</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/touareg-3</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/touareg-3</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/id3</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/id3</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/id4</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/id4</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/id5</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/id5</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/volkswagen/id-buzz</loc>
+    <loc>https://areprog.fr/codage-vag/volkswagen/id-buzz</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a1-8x</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a1-8x</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a1-gb</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a1-gb</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a3-8v</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a3-8v</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a3-8y</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a3-8y</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/s3-8v</loc>
+    <loc>https://areprog.fr/codage-vag/audi/s3-8v</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/s3-8y</loc>
+    <loc>https://areprog.fr/codage-vag/audi/s3-8y</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/rs3-8v</loc>
+    <loc>https://areprog.fr/codage-vag/audi/rs3-8v</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/rs3-8y</loc>
+    <loc>https://areprog.fr/codage-vag/audi/rs3-8y</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/tt-8s</loc>
+    <loc>https://areprog.fr/codage-vag/audi/tt-8s</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/q2-ga</loc>
+    <loc>https://areprog.fr/codage-vag/audi/q2-ga</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/q3-8u</loc>
+    <loc>https://areprog.fr/codage-vag/audi/q3-8u</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/q3-f3</loc>
+    <loc>https://areprog.fr/codage-vag/audi/q3-f3</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a4-b9</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a4-b9</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a5-f5</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a5-f5</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/q5-fy</loc>
+    <loc>https://areprog.fr/codage-vag/audi/q5-fy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a6-c8</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a6-c8</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/a7-4k</loc>
+    <loc>https://areprog.fr/codage-vag/audi/a7-4k</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/q7-4m</loc>
+    <loc>https://areprog.fr/codage-vag/audi/q7-4m</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/q8-4m</loc>
+    <loc>https://areprog.fr/codage-vag/audi/q8-4m</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/audi/q4-etron</loc>
+    <loc>https://areprog.fr/codage-vag/audi/q4-etron</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/ibiza-6j</loc>
+    <loc>https://areprog.fr/codage-vag/seat/ibiza-6j</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/ibiza-kj</loc>
+    <loc>https://areprog.fr/codage-vag/seat/ibiza-kj</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/arona</loc>
+    <loc>https://areprog.fr/codage-vag/seat/arona</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/leon-5f</loc>
+    <loc>https://areprog.fr/codage-vag/seat/leon-5f</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/leon-4</loc>
+    <loc>https://areprog.fr/codage-vag/seat/leon-4</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/ateca</loc>
+    <loc>https://areprog.fr/codage-vag/seat/ateca</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/tarraco</loc>
+    <loc>https://areprog.fr/codage-vag/seat/tarraco</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/seat/alhambra</loc>
+    <loc>https://areprog.fr/codage-vag/seat/alhambra</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/cupra/leon</loc>
+    <loc>https://areprog.fr/codage-vag/cupra/leon</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/cupra/formentor</loc>
+    <loc>https://areprog.fr/codage-vag/cupra/formentor</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/cupra/ateca</loc>
+    <loc>https://areprog.fr/codage-vag/cupra/ateca</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/cupra/born</loc>
+    <loc>https://areprog.fr/codage-vag/cupra/born</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/cupra/tavascan</loc>
+    <loc>https://areprog.fr/codage-vag/cupra/tavascan</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/fabia-3</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/fabia-3</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/fabia-4</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/fabia-4</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/scala</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/scala</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/kamiq</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/kamiq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/rapid</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/rapid</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/octavia-3</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/octavia-3</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/octavia-4</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/octavia-4</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/superb-3</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/superb-3</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/superb-4</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/superb-4</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/karoq</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/karoq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/kodiaq</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/kodiaq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/kodiaq-2</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/kodiaq-2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/skoda/enyaq</loc>
+    <loc>https://areprog.fr/codage-vag/skoda/enyaq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
