@@ -3,15 +3,15 @@
    Wizard 3 étapes + panier + upsell + Firebase
    ═══════════════════════════════════════════ */
 
-const FIREBASE_CONFIG = {
-  apiKey:            "VOTRE_API_KEY",
-  authDomain:        "VOTRE_PROJECT.firebaseapp.com",
-  projectId:         "VOTRE_PROJECT_ID",
-  storageBucket:     "VOTRE_PROJECT.appspot.com",
-  messagingSenderId: "VOTRE_SENDER_ID",
-  appId:             "VOTRE_APP_ID"
+const firebaseConfig = {
+  apiKey: "AIzaSyCAPjBtmwrcNUUg9Nlkn_2ltUa_P_90yV4",
+  authDomain: "areprog-devis.firebaseapp.com",
+  projectId: "areprog-devis",
+  storageBucket: "areprog-devis.firebasestorage.app",
+  messagingSenderId: "1047582505562",
+  appId: "1:1047582505562:web:32cefe1cab9eeeb270f663",
+  measurementId: "G-L3DVK09YSV"
 };
-
 const VCApp = (() => {
 
   // ── État global ──────────────────────────────
