@@ -66,3 +66,13 @@
 
 /confirmation.html
   X-Robots-Tag: noindex, nofollow
+
+# -- Pas d'indexation sur les pages CRM (privees) --
+/crm
+  X-Robots-Tag: noindex, nofollow
+
+/dossiers
+  X-Robots-Tag: noindex, nofollow
+
+/clients
+  X-Robots-Tag: noindex, nofollow

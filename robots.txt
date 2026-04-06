@@ -10,6 +10,9 @@ Disallow: /admin
 Disallow: /admin.html
 Disallow: /confirmation
 Disallow: /confirmation.html
+Disallow: /crm
+Disallow: /dossiers
+Disallow: /clients
 Disallow: /simulateur
 Disallow: /simulateur.html
 

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sitemap — areprog.fr</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0b0d0f;
+    --surface: #13161a;
+    --border: #1e2228;
+    --accent: #e8ff47;
+    --accent2: #47c8ff;
+    --accent3: #ff6b35;
+    --text: #e8eaed;
+    --muted: #5a6072;
+    --tag-geo: #1a2a1a;
+    --tag-geo-text: #6ddd7a;
+    --tag-service: #1a1f2a;
+    --tag-service-text: #47c8ff;
+    --tag-codage: #2a1a2a;
+    --tag-codage-text: #c47aff;
+    --tag-info: #2a2218;
+    --tag-info-text: #ffb347;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 48px 40px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse 60% 120% at 10% 50%, rgba(232,255,71,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .logo-line {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-badge {
+    width: 40px; height: 40px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0b0d0f;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  h1 span {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    white-space: nowrap;
+  }
+
+  .meta-chip strong {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .stat {
+    flex: 1;
+    min-width: 120px;
+    padding: 20px 28px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .stat-num.geo { color: var(--tag-geo-text); }
+  .stat-num.service { color: var(--tag-service-text); }
+  .stat-num.codage { color: var(--tag-codage-text); }
+  .stat-num.info { color: var(--tag-info-text); }
+
+  /* ── Main layout ── */
+  main {
+    padding: 40px;
+    display: grid;
+    gap: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── Section ── */
+  .section {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.2s; }
+  .section:nth-child(5) { animation-delay: 0.25s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .section-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .section-dot.geo     { background: var(--tag-geo-text); }
+  .section-dot.service { background: var(--tag-service-text); }
+  .section-dot.codage  { background: var(--tag-codage-text); }
+  .section-dot.info    { background: var(--tag-info-text); }
+  .section-dot.home    { background: var(--accent); }
+
+  .section-title {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+
+  .section-count {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--border);
+    margin-left: auto;
+  }
+
+  /* ── URL grid ── */
+  .url-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 8px;
+  }
+
+  .url-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: default;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .url-card:hover {
+    border-color: rgba(232,255,71,0.2);
+    background: #15181d;
+  }
+
+  .url-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .url-icon.geo     { background: var(--tag-geo);    color: var(--tag-geo-text); }
+  .url-icon.service { background: var(--tag-service); color: var(--tag-service-text); }
+  .url-icon.codage  { background: var(--tag-codage);  color: var(--tag-codage-text); }
+  .url-icon.info    { background: var(--tag-info);    color: var(--tag-info-text); }
+  .url-icon.home    { background: rgba(232,255,71,0.12); color: var(--accent); }
+
+  .url-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .url-path {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+  }
+
+  .url-path .base {
+    color: var(--muted);
+  }
+
+  .url-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .url-priority {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    flex-shrink: 0;
+    width: 28px;
+    text-align: right;
+  }
+
+  /* ── Home card special ── */
+  .home-card {
+    background: rgba(232,255,71,0.04);
+    border-color: rgba(232,255,71,0.15);
+    grid-column: 1 / -1;
+    max-width: 400px;
+  }
+
+  .home-card .url-path {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* ── Codage subsections ── */
+  .codage-group {
+    margin-bottom: 20px;
+  }
+
+  .codage-group-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--tag-codage-text);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    padding-left: 4px;
+    opacity: 0.7;
+  }
+
+  .codage-group:last-child { margin-bottom: 0; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-line">
+    <div class="logo-badge">A</div>
+    <h1>areprog<span>.fr</span> — Sitemap</h1>
+  </div>
+  <div class="header-meta">
+    <div class="meta-chip">Mis à jour : <strong>06 avril 2026</strong></div>
+    <div class="meta-chip">Format : <strong>XML Sitemap Protocol</strong></div>
+    <div class="meta-chip">URLs : <strong>110</strong></div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num" style="color:var(--accent)">1</div>
+    <div class="stat-label">Accueil</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num geo">9</div>
+    <div class="stat-label">Pages locales</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num service">12</div>
+    <div class="stat-label">Services</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num info">6</div>
+    <div class="stat-label">Contenu / Info</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num codage">82</div>
+    <div class="stat-label">Codage VAG</div>
+  </div>
+</div>
+
+<main>
+
+  <!-- HOME -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot home"></div>
+      <div class="section-title">Page d'accueil</div>
+    </div>
+    <div class="url-grid">
+      <div class="url-card home-card">
+        <div class="url-icon home">⌂</div>
+        <div class="url-text">
+          <div class="url-path"><span class="base">areprog.fr</span>/</div>
+          <div class="url-label">Accueil · priorité 1.0 · monthly</div>
+        </div>
+        <div class="url-priority">1.0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GEO -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot geo"></div>
+      <div class="section-title">Pages locales — SEO géographique</div>
+      <div class="section-count">9 URLs</div>
+    </div>
+    <div class="url-grid">
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-bayonne" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>bayonne</strong></div>
+          <div class="url-label">Bayonne · priorité 0.95</div>
+        </div>
+        <div class="url-priority">0.95</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-pau" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>pau</strong></div>
+          <div class="url-label">Pau · priorité 0.95</div>
+        </div>
+        <div class="url-priority">0.95</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-biarritz" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>biarritz</strong></div>
+          <div class="url-label">Biarritz · priorité 0.90</div>
+        </div>
+        <div class="url-priority">0.90</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-anglet" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>anglet</strong></div>
+          <div class="url-label">Anglet · priorité 0.90</div>
+        </div>
+        <div class="url-priority">0.90</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-saint-jean-de-luz" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>saint-jean-de-luz</strong></div>
+          <div class="url-label">Saint-Jean-de-Luz · priorité 0.90</div>
+        </div>
+        <div class="url-priority">0.90</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-dax" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>dax</strong></div>
+          <div class="url-label">Dax · priorité 0.90</div>
+        </div>
+        <div class="url-priority">0.90</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-auxerre" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>auxerre</strong></div>
+          <div class="url-label">Auxerre · priorité 0.90</div>
+        </div>
+        <div class="url-priority">0.90</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/reprogrammation-moteur-hendaye" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/reprogrammation-moteur-<strong>hendaye</strong></div>
+          <div class="url-label">Hendaye · priorité 0.85</div>
+        </div>
+        <div class="url-priority">0.85</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/chip-tuning-pays-basque" target="_blank">
+        <div class="url-icon geo">📍</div>
+        <div class="url-text">
+          <div class="url-path">/chip-tuning-<strong>pays-basque</strong></div>
+          <div class="url-label">Pays Basque · priorité 0.85</div>
+        </div>
+        <div class="url-priority">0.85</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot service"></div>
+      <div class="section-title">Services</div>
+      <div class="section-count">12 URLs</div>
+    </div>
+    <div class="url-grid">
+
+      <a class="url-card" href="https://areprog.fr/stage1" target="_blank">
+        <div class="url-icon service">⚡</div>
+        <div class="url-text">
+          <div class="url-path">/stage1</div>
+          <div class="url-label">Reprogrammation Stage 1 · 0.85</div>
+        </div>
+        <div class="url-priority">0.85</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/stage2" target="_blank">
+        <div class="url-icon service">⚡</div>
+        <div class="url-text">
+          <div class="url-path">/stage2</div>
+          <div class="url-label">Reprogrammation Stage 2 · 0.80</div>
+        </div>
+        <div class="url-priority">0.80</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/conversion-e85" target="_blank">
+        <div class="url-icon service">🌿</div>
+        <div class="url-text">
+          <div class="url-path">/conversion-e85</div>
+          <div class="url-label">Conversion E85 · 0.85</div>
+        </div>
+        <div class="url-priority">0.85</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/desactivation-egr" target="_blank">
+        <div class="url-icon service">🔧</div>
+        <div class="url-text">
+          <div class="url-path">/desactivation-egr</div>
+          <div class="url-label">Désactivation EGR · 0.80</div>
+        </div>
+        <div class="url-priority">0.80</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/desactivation-fap" target="_blank">
+        <div class="url-icon service">🔧</div>
+        <div class="url-text">
+          <div class="url-path">/desactivation-fap</div>
+          <div class="url-label">Désactivation FAP · 0.80</div>
+        </div>
+        <div class="url-priority">0.80</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/desactivation-adblue" target="_blank">
+        <div class="url-icon service">🔧</div>
+        <div class="url-text">
+          <div class="url-path">/desactivation-adblue</div>
+          <div class="url-label">Désactivation AdBlue · 0.80</div>
+        </div>
+        <div class="url-priority">0.80</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/optimisation-consommation" target="_blank">
+        <div class="url-icon service">⛽</div>
+        <div class="url-text">
+          <div class="url-path">/optimisation-consommation</div>
+          <div class="url-label">Optimisation consommation · 0.75</div>
+        </div>
+        <div class="url-priority">0.75</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/odis" target="_blank">
+        <div class="url-icon service">💻</div>
+        <div class="url-text">
+          <div class="url-path">/odis</div>
+          <div class="url-label">ODIS / Diagnostic · 0.75</div>
+        </div>
+        <div class="url-priority">0.75</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/tarifs" target="_blank">
+        <div class="url-icon service">💶</div>
+        <div class="url-text">
+          <div class="url-path">/tarifs</div>
+          <div class="url-label">Tarifs · 0.80</div>
+        </div>
+        <div class="url-priority">0.80</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/codage-vag" target="_blank">
+        <div class="url-icon service">🖥️</div>
+        <div class="url-text">
+          <div class="url-path">/codage-vag</div>
+          <div class="url-label">Codage VAG (hub) · 0.90 · weekly</div>
+        </div>
+        <div class="url-priority">0.90</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/boutique-vag" target="_blank">
+        <div class="url-icon service">🛒</div>
+        <div class="url-text">
+          <div class="url-path">/boutique-vag</div>
+          <div class="url-label">Boutique VAG · 0.70 · weekly</div>
+        </div>
+        <div class="url-priority">0.70</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/ethanol-prix" target="_blank">
+        <div class="url-icon service">📊</div>
+        <div class="url-text">
+          <div class="url-path">/ethanol-prix</div>
+          <div class="url-label">Prix éthanol · 0.75 · weekly</div>
+        </div>
+        <div class="url-priority">0.75</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- INFO / CONTENU -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot info"></div>
+      <div class="section-title">Contenu & Information</div>
+      <div class="section-count">6 URLs</div>
+    </div>
+    <div class="url-grid">
+
+      <a class="url-card" href="https://areprog.fr/guide-reprogrammation-moteur" target="_blank">
+        <div class="url-icon info">📖</div>
+        <div class="url-text">
+          <div class="url-path">/guide-reprogrammation-moteur</div>
+          <div class="url-label">Guide reprogrammation · 0.80</div>
+        </div>
+        <div class="url-priority">0.80</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/faq" target="_blank">
+        <div class="url-icon info">❓</div>
+        <div class="url-text">
+          <div class="url-path">/faq</div>
+          <div class="url-label">FAQ · 0.75</div>
+        </div>
+        <div class="url-priority">0.75</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/contact" target="_blank">
+        <div class="url-icon info">✉️</div>
+        <div class="url-text">
+          <div class="url-path">/contact</div>
+          <div class="url-label">Contact · 0.70</div>
+        </div>
+        <div class="url-priority">0.70</div>
+      </a>
+
+      <a class="url-card" href="https://areprog.fr/about" target="_blank">
+        <div class="url-icon info">ℹ️</div>
+        <div class="url-text">
+          <div class="url-path">/about</div>
+          <div class="url-label">À propos · 0.55 · yearly</div>
+        </div>
+        <div class="url-priority">0.55</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- CODAGE VAG -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot codage"></div>
+      <div class="section-title">Codage VAG — Marques & Modèles</div>
+      <div class="section-count">82 URLs</div>
+    </div>
+
+    <!-- Volkswagen -->
+    <div class="codage-group">
+      <div class="codage-group-label">Volkswagen — 25 modèles</div>
+      <div class="url-grid">
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen" target="_blank"><div class="url-icon codage">🏷️</div><div class="url-text"><div class="url-path">/codage-vag/<strong>volkswagen</strong></div><div class="url-label">Page marque · 0.80</div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-6" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-6</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-7" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-7</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-7-facelift" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-7-facelift</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-8" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-8</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-8-gte" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-8-gte</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-variant-7" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-variant-7</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-variant-8" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-variant-8</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-gti-7" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-gti-7</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-gti-8" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-gti-8</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-r-7" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-r-7</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/golf-r-8" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>golf-r-8</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/polo-5" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>polo-5</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/polo-6" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>polo-6</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/polo-gti-6" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>polo-gti-6</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/t-cross" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>t-cross</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/taigo" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>taigo</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/t-roc" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>t-roc</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/t-roc-r" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>t-roc-r</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/tiguan-1" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>tiguan-1</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/tiguan-2" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>tiguan-2</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/tiguan-allspace" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>tiguan-allspace</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/touran-2" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>touran-2</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/passat-7" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>passat-7</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/passat-8" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>passat-8</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/arteon" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>arteon</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/scirocco" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>scirocco</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/caddy-5" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>caddy-5</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/multivan-t7" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>multivan-t7</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/touareg-3" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>touareg-3</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/id3" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>id3</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/id4" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>id4</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/id5" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>id5</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/volkswagen/id-buzz" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/volkswagen/<strong>id-buzz</strong></div></div></a>
+      </div>
+    </div>
+
+    <!-- Audi -->
+    <div class="codage-group">
+      <div class="codage-group-label">Audi — 21 modèles</div>
+      <div class="url-grid">
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi" target="_blank"><div class="url-icon codage">🏷️</div><div class="url-text"><div class="url-path">/codage-vag/<strong>audi</strong></div><div class="url-label">Page marque · 0.80</div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a1-8x" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a1-8x</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a1-gb" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a1-gb</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a3-8v" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a3-8v</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a3-8y" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a3-8y</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/s3-8v" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>s3-8v</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/s3-8y" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>s3-8y</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/rs3-8v" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>rs3-8v</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/rs3-8y" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>rs3-8y</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/tt-8s" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>tt-8s</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/q2-ga" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>q2-ga</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/q3-8u" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>q3-8u</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/q3-f3" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>q3-f3</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a4-b9" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a4-b9</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a5-f5" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a5-f5</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/q5-fy" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>q5-fy</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a6-c8" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a6-c8</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/a7-4k" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>a7-4k</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/q7-4m" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>q7-4m</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/q8-4m" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>q8-4m</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/audi/q4-etron" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/audi/<strong>q4-etron</strong></div></div></a>
+      </div>
+    </div>
+
+    <!-- SEAT -->
+    <div class="codage-group">
+      <div class="codage-group-label">SEAT — 9 modèles</div>
+      <div class="url-grid">
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat" target="_blank"><div class="url-icon codage">🏷️</div><div class="url-text"><div class="url-path">/codage-vag/<strong>seat</strong></div><div class="url-label">Page marque · 0.80</div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/ibiza-6j" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>ibiza-6j</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/ibiza-kj" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>ibiza-kj</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/arona" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>arona</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/leon-5f" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>leon-5f</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/leon-4" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>leon-4</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/ateca" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>ateca</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/tarraco" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>tarraco</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/seat/alhambra" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/seat/<strong>alhambra</strong></div></div></a>
+      </div>
+    </div>
+
+    <!-- CUPRA -->
+    <div class="codage-group">
+      <div class="codage-group-label">CUPRA — 6 modèles</div>
+      <div class="url-grid">
+        <a class="url-card" href="https://areprog.fr/codage-vag/cupra" target="_blank"><div class="url-icon codage">🏷️</div><div class="url-text"><div class="url-path">/codage-vag/<strong>cupra</strong></div><div class="url-label">Page marque · 0.80</div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/cupra/leon" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/cupra/<strong>leon</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/cupra/formentor" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/cupra/<strong>formentor</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/cupra/ateca" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/cupra/<strong>ateca</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/cupra/born" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/cupra/<strong>born</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/cupra/tavascan" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/cupra/<strong>tavascan</strong></div></div></a>
+      </div>
+    </div>
+
+    <!-- SKODA -->
+    <div class="codage-group">
+      <div class="codage-group-label">Škoda — 13 modèles</div>
+      <div class="url-grid">
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda" target="_blank"><div class="url-icon codage">🏷️</div><div class="url-text"><div class="url-path">/codage-vag/<strong>skoda</strong></div><div class="url-label">Page marque · 0.80</div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/fabia-3" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>fabia-3</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/fabia-4" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>fabia-4</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/scala" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>scala</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/kamiq" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>kamiq</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/rapid" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>rapid</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/octavia-3" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>octavia-3</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/octavia-4" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>octavia-4</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/superb-3" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>superb-3</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/superb-4" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>superb-4</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/karoq" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>karoq</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/kodiaq" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>kodiaq</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/kodiaq-2" target="_blank"><div class="url-icon codage">🚗</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>kodiaq-2</strong></div></div></a>
+        <a class="url-card" href="https://areprog.fr/codage-vag/skoda/enyaq" target="_blank"><div class="url-icon codage">⚡</div><div class="url-text"><div class="url-path">/codage-vag/skoda/<strong>enyaq</strong></div></div></a>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">sitemap.xml — areprog.fr · Généré le 06/04/2026 · 110 URLs indexées</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-geo-text)"></div>Géographique</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-service-text)"></div>Services</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-info-text)"></div>Contenu</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tag-codage-text)"></div>Codage VAG</div>
+  </div>
+</footer>
+
+</body>
+</html>
