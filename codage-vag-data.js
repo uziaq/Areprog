@@ -1,42 +1,109 @@
 /* ═══════════════════════════════════════════
-   AREPROG — VAG Coding Data v1.0
+   AREPROG — VAG Coding Data v2.0
    Base de données : marques, modèles, options, packs
+   Structure URL : /marque/modele
    ═══════════════════════════════════════════ */
 
 window.VAG = (function() {
 
   const BRANDS = [
-    { id: 'vw',   name: 'Volkswagen',   abbr: 'VW',   color: '#1B5E9B' },
-    { id: 'audi', name: 'Audi',         abbr: 'A',    color: '#BB0A14' },
-    { id: 'seat', name: 'Seat / Cupra', abbr: 'S/C',  color: '#1A1A2E' },
-    { id: 'skoda',name: 'Skoda',        abbr: 'Š',    color: '#4BA82E' }
+    { id:'vw',    name:'Volkswagen',   abbr:'VW',  color:'#1B5E9B', slug:'volkswagen' },
+    { id:'audi',  name:'Audi',         abbr:'A',   color:'#BB0A14', slug:'audi' },
+    { id:'seat',  name:'Seat',         abbr:'S',   color:'#FA0028', slug:'seat' },
+    { id:'cupra', name:'Cupra',        abbr:'C',   color:'#C6A84B', slug:'cupra' },
+    { id:'skoda', name:'Skoda',        abbr:'\u0160', color:'#4BA82E', slug:'skoda' }
   ];
 
   const MODELS = [
-    // ── Volkswagen ──────────────────────────────
-    { id:'golf7',    brandId:'vw',    name:'Golf 7',        code:'5G/AU',   platform:'MQB',      yearMin:2012, yearMax:2019 },
-    { id:'golf8',    brandId:'vw',    name:'Golf 8',        code:'CD1/5H',  platform:'MQB Evo',  yearMin:2019, yearMax:2024 },
-    { id:'polo6',    brandId:'vw',    name:'Polo 6',        code:'AW',      platform:'MQB-A0',   yearMin:2017, yearMax:2024 },
-    { id:'tiguan2',  brandId:'vw',    name:'Tiguan 2',      code:'AD/BW2',  platform:'MQB',      yearMin:2016, yearMax:2024 },
-    { id:'troc',     brandId:'vw',    name:'T-Roc',         code:'A11/AC7', platform:'MQB',      yearMin:2017, yearMax:2024 },
-    { id:'passat8',  brandId:'vw',    name:'Passat 8',      code:'3G/B8',   platform:'MQB',      yearMin:2014, yearMax:2023 },
-    { id:'arteon',   brandId:'vw',    name:'Arteon',        code:'3H',      platform:'MQB',      yearMin:2017, yearMax:2024 },
-    // ── Audi ────────────────────────────────────
-    { id:'a3_8v',    brandId:'audi',  name:'A3 8V',         code:'8V',      platform:'MQB',      yearMin:2012, yearMax:2020 },
-    { id:'a3_8y',    brandId:'audi',  name:'A3 8Y',         code:'8Y',      platform:'MQB Evo',  yearMin:2020, yearMax:2024 },
-    { id:'q3_2',     brandId:'audi',  name:'Q3 (2e gen)',   code:'F3',      platform:'MQB',      yearMin:2018, yearMax:2024 },
-    { id:'a4_b9',    brandId:'audi',  name:'A4 B9',         code:'B9/8W',   platform:'MLB Evo',  yearMin:2015, yearMax:2024 },
-    { id:'a6_c8',    brandId:'audi',  name:'A6 C8',         code:'C8/4A',   platform:'MLB Evo',  yearMin:2018, yearMax:2024 },
-    // ── Seat / Cupra ────────────────────────────
-    { id:'leon_5f',  brandId:'seat',  name:'Leon 5F',       code:'5F',      platform:'MQB',      yearMin:2012, yearMax:2020 },
-    { id:'leon_4',   brandId:'seat',  name:'Leon 4 (KL)',   code:'KL',      platform:'MQB Evo',  yearMin:2020, yearMax:2024 },
-    { id:'formentor',brandId:'seat',  name:'Cupra Formentor',code:'KM',     platform:'MQB Evo',  yearMin:2020, yearMax:2024 },
-    { id:'ateca',    brandId:'seat',  name:'Ateca',         code:'KH/5FP',  platform:'MQB',      yearMin:2016, yearMax:2024 },
-    // ── Skoda ────────────────────────────────────
-    { id:'octavia3', brandId:'skoda', name:'Octavia 3',     code:'5E',      platform:'MQB',      yearMin:2012, yearMax:2020 },
-    { id:'octavia4', brandId:'skoda', name:'Octavia 4',     code:'NX5',     platform:'MQB Evo',  yearMin:2020, yearMax:2024 },
-    { id:'karoq',    brandId:'skoda', name:'Karoq',         code:'NU7',     platform:'MQB',      yearMin:2017, yearMax:2024 },
-    { id:'kodiaq',   brandId:'skoda', name:'Kodiaq',        code:'NS7',     platform:'MQB',      yearMin:2016, yearMax:2024 }
+
+    // ══════════════════ VOLKSWAGEN ══════════════════
+    { id:'golf6',         brandId:'vw',    name:'Golf 6',              code:'5K/AJ',    platform:'PQ35',     yearMin:2008, yearMax:2012, slug:'golf-6' },
+    { id:'golf7',         brandId:'vw',    name:'Golf 7',              code:'5G/AU',    platform:'MQB',      yearMin:2012, yearMax:2019, slug:'golf-7' },
+    { id:'golf7_facelift',brandId:'vw',    name:'Golf 7.5 (facelift)', code:'5G/AU',    platform:'MQB',      yearMin:2017, yearMax:2019, slug:'golf-7-facelift' },
+    { id:'golf8',         brandId:'vw',    name:'Golf 8',              code:'CD1/5H',   platform:'MQB Evo',  yearMin:2019, yearMax:2024, slug:'golf-8' },
+    { id:'golf8_gte',     brandId:'vw',    name:'Golf 8 GTE',          code:'CD1',      platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'golf-8-gte' },
+    { id:'golf_variant7', brandId:'vw',    name:'Golf Variant 7',      code:'5G/BA2',   platform:'MQB',      yearMin:2013, yearMax:2020, slug:'golf-variant-7' },
+    { id:'golf_variant8', brandId:'vw',    name:'Golf Variant 8',      code:'CD/BF',    platform:'MQB Evo',  yearMin:2021, yearMax:2024, slug:'golf-variant-8' },
+    { id:'golf_gti7',     brandId:'vw',    name:'Golf GTI 7',          code:'5G',       platform:'MQB',      yearMin:2013, yearMax:2019, slug:'golf-gti-7' },
+    { id:'golf_gti8',     brandId:'vw',    name:'Golf GTI 8',          code:'CD1',      platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'golf-gti-8' },
+    { id:'golf_r7',       brandId:'vw',    name:'Golf R 7',            code:'5G',       platform:'MQB',      yearMin:2013, yearMax:2019, slug:'golf-r-7' },
+    { id:'golf_r8',       brandId:'vw',    name:'Golf R 8',            code:'CD1',      platform:'MQB Evo',  yearMin:2021, yearMax:2024, slug:'golf-r-8' },
+    { id:'polo5',         brandId:'vw',    name:'Polo 5',              code:'6R/6C',    platform:'PQ25',     yearMin:2009, yearMax:2017, slug:'polo-5' },
+    { id:'polo6',         brandId:'vw',    name:'Polo 6',              code:'AW',       platform:'MQB-A0',   yearMin:2017, yearMax:2024, slug:'polo-6' },
+    { id:'polo_gti6',     brandId:'vw',    name:'Polo GTI 6',          code:'AW',       platform:'MQB-A0',   yearMin:2018, yearMax:2024, slug:'polo-gti-6' },
+    { id:'t_cross',       brandId:'vw',    name:'T-Cross',             code:'C11/BF2',  platform:'MQB-A0',   yearMin:2018, yearMax:2024, slug:'t-cross' },
+    { id:'taigo',         brandId:'vw',    name:'Taigo',               code:'CS2',      platform:'MQB-A0',   yearMin:2021, yearMax:2024, slug:'taigo' },
+    { id:'troc',          brandId:'vw',    name:'T-Roc',               code:'A11/AC7',  platform:'MQB',      yearMin:2017, yearMax:2024, slug:'t-roc' },
+    { id:'troc_r',        brandId:'vw',    name:'T-Roc R',             code:'A11',      platform:'MQB',      yearMin:2019, yearMax:2024, slug:'t-roc-r' },
+    { id:'tiguan1',       brandId:'vw',    name:'Tiguan 1',            code:'5N',       platform:'PQ35',     yearMin:2007, yearMax:2016, slug:'tiguan-1' },
+    { id:'tiguan2',       brandId:'vw',    name:'Tiguan 2',            code:'AD/BW2',   platform:'MQB',      yearMin:2016, yearMax:2024, slug:'tiguan-2' },
+    { id:'tiguan_allspace',brandId:'vw',   name:'Tiguan Allspace',     code:'BW2',      platform:'MQB',      yearMin:2017, yearMax:2024, slug:'tiguan-allspace' },
+    { id:'touran2',       brandId:'vw',    name:'Touran 2',            code:'5T',       platform:'MQB',      yearMin:2015, yearMax:2024, slug:'touran-2' },
+    { id:'passat7',       brandId:'vw',    name:'Passat 7 (B7)',       code:'36',       platform:'PQ46',     yearMin:2010, yearMax:2014, slug:'passat-7' },
+    { id:'passat8',       brandId:'vw',    name:'Passat 8 (B8)',       code:'3G/B8',    platform:'MQB',      yearMin:2014, yearMax:2023, slug:'passat-8' },
+    { id:'arteon',        brandId:'vw',    name:'Arteon',              code:'3H',       platform:'MQB',      yearMin:2017, yearMax:2024, slug:'arteon' },
+    { id:'scirocco',      brandId:'vw',    name:'Scirocco',            code:'13E',      platform:'PQ35',     yearMin:2008, yearMax:2017, slug:'scirocco' },
+    { id:'caddy5',        brandId:'vw',    name:'Caddy 5',             code:'SB',       platform:'MQB',      yearMin:2020, yearMax:2024, slug:'caddy-5' },
+    { id:'multivan_t7',   brandId:'vw',    name:'Multivan T7',         code:'SH',       platform:'MQB Evo',  yearMin:2021, yearMax:2024, slug:'multivan-t7' },
+    { id:'touareg3',      brandId:'vw',    name:'Touareg 3 (CR7)',     code:'CR7',      platform:'MLB Evo',  yearMin:2018, yearMax:2024, slug:'touareg-3' },
+    { id:'id3',           brandId:'vw',    name:'ID.3',                code:'E11',      platform:'MEB',      yearMin:2019, yearMax:2024, slug:'id3' },
+    { id:'id4',           brandId:'vw',    name:'ID.4',                code:'E21',      platform:'MEB',      yearMin:2020, yearMax:2024, slug:'id4' },
+    { id:'id5',           brandId:'vw',    name:'ID.5',                code:'E39',      platform:'MEB',      yearMin:2021, yearMax:2024, slug:'id5' },
+    { id:'id_buzz',       brandId:'vw',    name:'ID. Buzz',            code:'EB',       platform:'MEB',      yearMin:2022, yearMax:2024, slug:'id-buzz' },
+
+    // ══════════════════ AUDI ══════════════════
+    { id:'a1_8x',         brandId:'audi',  name:'A1 (8X)',             code:'8X',       platform:'PQ25',     yearMin:2010, yearMax:2018, slug:'a1-8x' },
+    { id:'a1_gb',         brandId:'audi',  name:'A1 (GB)',             code:'GB',       platform:'MQB-A0',   yearMin:2018, yearMax:2024, slug:'a1-gb' },
+    { id:'a3_8v',         brandId:'audi',  name:'A3 8V',               code:'8V',       platform:'MQB',      yearMin:2012, yearMax:2020, slug:'a3-8v' },
+    { id:'a3_8y',         brandId:'audi',  name:'A3 8Y',               code:'8Y',       platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'a3-8y' },
+    { id:'s3_8v',         brandId:'audi',  name:'S3 (8V)',             code:'8V',       platform:'MQB',      yearMin:2013, yearMax:2020, slug:'s3-8v' },
+    { id:'s3_8y',         brandId:'audi',  name:'S3 (8Y)',             code:'8Y',       platform:'MQB Evo',  yearMin:2021, yearMax:2024, slug:'s3-8y' },
+    { id:'rs3_8v',        brandId:'audi',  name:'RS3 (8V)',            code:'8V',       platform:'MQB',      yearMin:2015, yearMax:2020, slug:'rs3-8v' },
+    { id:'rs3_8y',        brandId:'audi',  name:'RS3 (8Y)',            code:'8Y',       platform:'MQB Evo',  yearMin:2021, yearMax:2024, slug:'rs3-8y' },
+    { id:'tt_8s',         brandId:'audi',  name:'TT (8S)',             code:'8S/FV',    platform:'MQB',      yearMin:2014, yearMax:2023, slug:'tt-8s' },
+    { id:'q2_ga',         brandId:'audi',  name:'Q2 (GA)',             code:'GA',       platform:'MQB',      yearMin:2016, yearMax:2024, slug:'q2-ga' },
+    { id:'q3_1',          brandId:'audi',  name:'Q3 1e gen (8U)',      code:'8U',       platform:'PQ35',     yearMin:2011, yearMax:2018, slug:'q3-8u' },
+    { id:'q3_2',          brandId:'audi',  name:'Q3 2e gen (F3)',      code:'F3',       platform:'MQB',      yearMin:2018, yearMax:2024, slug:'q3-f3' },
+    { id:'a4_b9',         brandId:'audi',  name:'A4 (B9)',             code:'B9/8W',    platform:'MLB Evo',  yearMin:2015, yearMax:2024, slug:'a4-b9' },
+    { id:'a5_f5',         brandId:'audi',  name:'A5 (F5)',             code:'F5/8W',    platform:'MLB Evo',  yearMin:2016, yearMax:2024, slug:'a5-f5' },
+    { id:'q5_fy',         brandId:'audi',  name:'Q5 (FY)',             code:'FY/80A',   platform:'MLB Evo',  yearMin:2017, yearMax:2024, slug:'q5-fy' },
+    { id:'a6_c8',         brandId:'audi',  name:'A6 (C8)',             code:'C8/4A',    platform:'MLB Evo',  yearMin:2018, yearMax:2024, slug:'a6-c8' },
+    { id:'a7_4k',         brandId:'audi',  name:'A7 (4K)',             code:'4K/F2',    platform:'MLB Evo',  yearMin:2018, yearMax:2024, slug:'a7-4k' },
+    { id:'q7_4m',         brandId:'audi',  name:'Q7 (4M)',             code:'4M',       platform:'MLB Evo',  yearMin:2015, yearMax:2024, slug:'q7-4m' },
+    { id:'q8_4m',         brandId:'audi',  name:'Q8 (4M)',             code:'4M/F1',    platform:'MLB Evo',  yearMin:2018, yearMax:2024, slug:'q8-4m' },
+    { id:'q4_etron',      brandId:'audi',  name:'Q4 e-tron',           code:'F4E',      platform:'MEB',      yearMin:2021, yearMax:2024, slug:'q4-etron' },
+
+    // ══════════════════ SEAT ══════════════════
+    { id:'ibiza_6j',      brandId:'seat',  name:'Ibiza 6J',            code:'6J',       platform:'PQ25',     yearMin:2008, yearMax:2017, slug:'ibiza-6j' },
+    { id:'ibiza_kj',      brandId:'seat',  name:'Ibiza 6F (KJ)',       code:'KJ',       platform:'MQB-A0',   yearMin:2017, yearMax:2024, slug:'ibiza-kj' },
+    { id:'arona',         brandId:'seat',  name:'Arona',               code:'KJ',       platform:'MQB-A0',   yearMin:2017, yearMax:2024, slug:'arona' },
+    { id:'leon_5f',       brandId:'seat',  name:'Leon 5F',             code:'5F',       platform:'MQB',      yearMin:2012, yearMax:2020, slug:'leon-5f' },
+    { id:'leon_4',        brandId:'seat',  name:'Leon 4 (KL)',         code:'KL',       platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'leon-4' },
+    { id:'ateca',         brandId:'seat',  name:'Ateca',               code:'KH/5FP',   platform:'MQB',      yearMin:2016, yearMax:2024, slug:'ateca' },
+    { id:'tarraco',       brandId:'seat',  name:'Tarraco',             code:'KN2',      platform:'MQB',      yearMin:2018, yearMax:2024, slug:'tarraco' },
+    { id:'alhambra',      brandId:'seat',  name:'Alhambra 2',          code:'7N',       platform:'PQ46',     yearMin:2010, yearMax:2020, slug:'alhambra' },
+
+    // ══════════════════ CUPRA ══════════════════
+    { id:'cupra_leon',    brandId:'cupra', name:'Cupra Leon',          code:'KL',       platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'leon' },
+    { id:'formentor',     brandId:'cupra', name:'Cupra Formentor',     code:'KM',       platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'formentor' },
+    { id:'cupra_ateca',   brandId:'cupra', name:'Cupra Ateca',         code:'KH',       platform:'MQB',      yearMin:2016, yearMax:2024, slug:'ateca' },
+    { id:'born',          brandId:'cupra', name:'Cupra Born',          code:'BZ1',      platform:'MEB',      yearMin:2021, yearMax:2024, slug:'born' },
+    { id:'tavascan',      brandId:'cupra', name:'Cupra Tavascan',      code:'BZ2',      platform:'MEB',      yearMin:2024, yearMax:2024, slug:'tavascan' },
+
+    // ══════════════════ SKODA ══════════════════
+    { id:'fabia3',        brandId:'skoda', name:'Fabia 3 (NJ)',        code:'NJ',       platform:'MQB-A0',   yearMin:2014, yearMax:2021, slug:'fabia-3' },
+    { id:'fabia4',        brandId:'skoda', name:'Fabia 4 (PJ)',        code:'PJ',       platform:'MQB-A0',   yearMin:2021, yearMax:2024, slug:'fabia-4' },
+    { id:'scala',         brandId:'skoda', name:'Scala',               code:'NW',       platform:'MQB-A0',   yearMin:2018, yearMax:2024, slug:'scala' },
+    { id:'kamiq',         brandId:'skoda', name:'Kamiq',               code:'NW',       platform:'MQB-A0',   yearMin:2019, yearMax:2024, slug:'kamiq' },
+    { id:'rapid',         brandId:'skoda', name:'Rapid (NH)',          code:'NH',       platform:'PQ25',     yearMin:2012, yearMax:2019, slug:'rapid' },
+    { id:'octavia3',      brandId:'skoda', name:'Octavia 3 (5E)',      code:'5E',       platform:'MQB',      yearMin:2012, yearMax:2020, slug:'octavia-3' },
+    { id:'octavia4',      brandId:'skoda', name:'Octavia 4 (NX5)',     code:'NX5',      platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'octavia-4' },
+    { id:'superb3',       brandId:'skoda', name:'Superb 3 (3V)',       code:'3V/NP',    platform:'MQB',      yearMin:2015, yearMax:2023, slug:'superb-3' },
+    { id:'superb4',       brandId:'skoda', name:'Superb 4',            code:'B9',       platform:'MQB Evo',  yearMin:2024, yearMax:2024, slug:'superb-4' },
+    { id:'karoq',         brandId:'skoda', name:'Karoq',               code:'NU7',      platform:'MQB',      yearMin:2017, yearMax:2024, slug:'karoq' },
+    { id:'kodiaq',        brandId:'skoda', name:'Kodiaq',              code:'NS7',      platform:'MQB',      yearMin:2016, yearMax:2024, slug:'kodiaq' },
+    { id:'kodiaq2',       brandId:'skoda', name:'Kodiaq 2',            code:'NS9',      platform:'MQB Evo',  yearMin:2023, yearMax:2024, slug:'kodiaq-2' },
+    { id:'enyaq',         brandId:'skoda', name:'Enyaq',               code:'NX3',      platform:'MEB',      yearMin:2020, yearMax:2024, slug:'enyaq' }
   ];
 
   // ─────────────────────────────────────────────────────

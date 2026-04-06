@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Codage VAG — AREPROG</title>
+  <meta name="description" content="Options cachées VAG."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" id="canonical-url" href="https://areprog.fr/codage-vag"/>
+  <meta id="og-title"       property="og:title"       content="Codage VAG — AREPROG"/>
+  <meta id="og-description" property="og:description" content="Options cachées VAG."/>
+  <meta id="og-url"         property="og:url"         content="https://areprog.fr/codage-vag"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.webp"/>
+  <meta property="og:type"  content="website"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,300&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="/shared.css"/>
+  <link rel="stylesheet" href="/codage-vag.css"/>
+  <script type="application/ld+json" id="page-schema">{}</script>
+  <style>
+    .vc-breadcrumb {
+      display:flex; align-items:center; gap:.5rem;
+      font-family:var(--font-mono); font-size:.7rem; color:var(--muted);
+      padding:1.2rem 5rem; border-bottom:1px solid var(--border); background:var(--bg-warm); flex-wrap:wrap;
+    }
+    .vc-breadcrumb a{color:var(--muted);text-decoration:none;transition:color .15s}
+    .vc-breadcrumb a:hover{color:var(--text)}
+    .vc-breadcrumb span{color:var(--muted2)}
+    .vc-breadcrumb .current{color:var(--text2)}
+
+    .vc-brand-hero {
+      padding: 3.5rem 5rem 2.5rem;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-warm) 100%);
+      border-bottom: 1px solid var(--border); position:relative; overflow:hidden;
+    }
+    .vc-brand-hero::before {
+      content:''; position:absolute; top:-60px; right:-60px;
+      width:360px; height:360px; border-radius:50%;
+      background:var(--blue-dim); filter:blur(70px); pointer-events:none;
+    }
+    .vc-brand-hero-abbr {
+      font-family:var(--font-display); font-size:clamp(4rem,10vw,8rem);
+      font-weight:800; opacity:.07; position:absolute;
+      top:50%; right:5rem; transform:translateY(-50%);
+      color:var(--text); letter-spacing:-.02em; line-height:1; user-select:none;
+    }
+    .vc-brand-hero h1 {
+      font-family:var(--font-display); font-weight:800;
+      font-size:clamp(2rem,5vw,3.6rem); text-transform:uppercase;
+      line-height:.95; color:var(--text); margin-bottom:.8rem;
+    }
+    .vc-brand-hero h1 em { font-style:italic; font-weight:300; color:var(--blue-light); }
+    .vc-brand-hero-sub { color:var(--text2); font-size:.95rem; max-width:560px; }
+
+    /* Models grid on brand page */
+    .vc-brand-models-section { padding: 3rem 5rem; }
+    .vc-brand-models-section h2 {
+      font-family:var(--font-display); font-size:1.6rem; font-weight:800;
+      text-transform:uppercase; margin-bottom:.4rem; color:var(--text);
+    }
+    .vc-brand-models-section .sub { color:var(--muted); font-size:.85rem; margin-bottom:2rem; }
+    .vc-brand-platform-group { margin-bottom:2.5rem; }
+    .vc-platform-label {
+      font-family:var(--font-mono); font-size:.65rem; font-weight:700;
+      letter-spacing:.2em; text-transform:uppercase;
+      color:var(--green); margin-bottom:1rem;
+      display:flex; align-items:center; gap:.6rem;
+    }
+    .vc-platform-label::before { content:''; display:block; width:20px; height:1px; background:var(--green); }
+    .vc-brand-model-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:1rem;
+    }
+    .vc-brand-model-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius-lg); padding:1.4rem 1.2rem;
+      text-decoration:none; display:flex; flex-direction:column; gap:.4rem;
+      transition:border-color .2s, background .2s, transform .2s;
+      cursor:pointer;
+    }
+    .vc-brand-model-card:hover {
+      border-color:var(--blue); background:var(--surface2); transform:translateY(-2px);
+    }
+    .vc-bmc-name { font-weight:600; font-size:.95rem; color:var(--text); }
+    .vc-bmc-code { font-family:var(--font-mono); font-size:.68rem; color:var(--muted); }
+    .vc-bmc-years { font-size:.78rem; color:var(--text2); }
+    .vc-bmc-count {
+      font-family:var(--font-mono); font-size:.62rem; color:var(--blue-light);
+      background:var(--blue-dim); padding:.2rem .5rem; border-radius:2px;
+      align-self:flex-start; margin-top:.2rem;
+    }
+
+    /* SEO section */
+    .vc-seo-brand { padding:4rem 5rem; background:var(--bg-warm); border-top:1px solid var(--border); }
+    .vc-seo-brand h2 {
+      font-family:var(--font-display); font-size:1.6rem; font-weight:800;
+      text-transform:uppercase; margin-bottom:1rem;
+    }
+    .vc-seo-brand p { color:var(--text2); line-height:1.75; margin-bottom:1rem; max-width:760px; }
+
+    @media(max-width:768px){
+      .vc-breadcrumb{ padding:1rem 1.5rem; }
+      .vc-brand-hero{ padding:2rem 1.5rem 1.5rem; }
+      .vc-brand-models-section{ padding:2rem 1.5rem; }
+      .vc-seo-brand{ padding:3rem 1.5rem; }
+      .vc-brand-hero-abbr{ display:none; }
+    }
+  </style>
+</head>
+<body data-page="codage-vag">
+<div id="nav-container"></div>
+<div class="page-wrap">
+
+  <!-- Breadcrumb -->
+  <nav class="vc-breadcrumb" id="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">AREPROG</a><span>›</span>
+    <a href="/codage-vag">Codage VAG</a><span>›</span>
+    <span class="current" id="bc-brand">Marque</span>
+  </nav>
+
+  <!-- Brand Hero -->
+  <div class="vc-brand-hero" id="brand-hero">
+    <div class="vc-brand-hero-abbr" id="hero-abbr"></div>
+    <div class="section-label" id="hero-label">Codage VAG</div>
+    <h1 id="hero-title">Marque <em>VAG</em></h1>
+    <p class="vc-brand-hero-sub" id="hero-sub"></p>
+  </div>
+
+  <!-- Models by platform -->
+  <div class="vc-brand-models-section" id="models-section">
+    <h2 id="models-heading">Modèles disponibles</h2>
+    <p class="sub" id="models-sub"></p>
+    <div id="platform-groups"></div>
+  </div>
+
+  <!-- SEO content -->
+  <section class="vc-seo-brand" id="seo-section">
+    <div class="section-label">Expertise VAG</div>
+    <h2 id="seo-h2">Codage spécialiste</h2>
+    <p id="seo-p1"></p>
+    <p>Notre technicien intervient à domicile avec une interface VCDS officielle ou OBDeleven Pro. Chaque intervention est reversible et sans impact sur le réseau de distribution. Devis gratuit sous 24h.</p>
+    <div style="margin-top:1.5rem">
+      <a href="/codage-vag" class="btn btn-outline" style="margin-right:1rem">Configurateur complet</a>
+      <a href="/contact" class="btn btn-primary">Devis gratuit</a>
+    </div>
+  </section>
+
+</div>
+<div id="footer-container"></div>
+
+<script src="/codage-vag-data.js"></script>
+<script src="/nav.js"></script>
+<script src="/whatsapp-widget.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (!window.VAG) return;
+
+  var brandSlug = location.pathname.replace(/^\/|\/$/g, '').split('/')[0];
+  var brand = VAG.BRANDS.find(function(b){ return b.slug === brandSlug; });
+
+  if (!brand) {
+    document.getElementById('hero-title').innerHTML = '<em>Marque introuvable</em>';
+    return;
+  }
+
+  var models = VAG.MODELS.filter(function(m){ return m.brandId === brand.id; });
+
+  // ── SEO meta ──────────────────────────────────
+  var pageTitle = 'Codage ' + brand.name + ' — Options cach\u00e9es | AREPROG';
+  var pageDesc  = 'Activez les options cach\u00e9es de votre ' + brand.name + '. ' + models.length + ' mod\u00e8les support\u00e9s — Golf, Polo, Tiguan et plus. Codage VCDS \u00e0 domicile par AREPROG.';
+  var pageUrl   = 'https://areprog.fr/' + brandSlug;
+
+  document.title = pageTitle;
+  document.querySelector('meta[name="description"]').content = pageDesc;
+  document.getElementById('canonical-url').href = pageUrl;
+  document.getElementById('og-title').content = pageTitle;
+  document.getElementById('og-description').content = pageDesc;
+  document.getElementById('og-url').content = pageUrl;
+
+  document.getElementById('page-schema').textContent = JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"ItemList",
+    "name":"Codage options cach\u00e9es " + brand.name,
+    "url": pageUrl,
+    "numberOfItems": models.length,
+    "itemListElement": models.map(function(m, i){
+      return { "@type":"ListItem", "position": i+1,
+        "url": "https://areprog.fr/" + brandSlug + "/" + m.slug,
+        "name": "Codage " + brand.name + " " + m.name };
+    })
+  });
+
+  // ── Breadcrumb + hero ─────────────────────────
+  document.getElementById('bc-brand').textContent = brand.name;
+  document.getElementById('hero-abbr').textContent = brand.abbr;
+  document.getElementById('hero-label').textContent = brand.name + ' — Codage VAG';
+  document.getElementById('hero-title').innerHTML = 'Codage <em>' + brand.name + '</em>';
+  document.getElementById('hero-sub').textContent =
+    models.length + ' mod\u00e8les support\u00e9s. Activez les fonctions cach\u00e9es de votre ' +
+    brand.name + ' directement depuis votre domicile avec VCDS ou OBDeleven.';
+
+  // ── Models heading ────────────────────────────
+  document.getElementById('models-heading').textContent = brand.name + ' — ' + models.length + ' mod\u00e8les';
+  document.getElementById('models-sub').textContent =
+    'Cliquez sur votre mod\u00e8le pour voir les ' + (function(){
+      var total = 0;
+      models.forEach(function(m){
+        total += VAG.OPTIONS.filter(function(o){
+          return o.active &&
+            (!o.compatible.models.length || o.compatible.models.indexOf(m.id)!==-1) &&
+            (!o.compatible.platforms.length || o.compatible.platforms.indexOf(m.platform)!==-1);
+        }).length;
+      });
+      return Math.round(total / models.length);
+    })() + ' options disponibles en moyenne.';
+
+  // ── Group by platform ─────────────────────────
+  var platforms = {};
+  models.forEach(function(m){
+    if (!platforms[m.platform]) platforms[m.platform] = [];
+    platforms[m.platform].push(m);
+  });
+
+  var platformOrder = ['MQB Evo','MEB','MQB','MQB-A0','MLB Evo','PQ35','PQ46','PQ25'];
+  var container = document.getElementById('platform-groups');
+
+  platformOrder.forEach(function(plat){
+    if (!platforms[plat]) return;
+    var ms = platforms[plat];
+    var group = document.createElement('div');
+    group.className = 'vc-brand-platform-group';
+    group.innerHTML = '<div class="vc-platform-label">' + plat + '</div><div class="vc-brand-model-grid">' +
+      ms.map(function(m){
+        var optCount = VAG.OPTIONS.filter(function(o){
+          return o.active &&
+            (!o.compatible.models.length || o.compatible.models.indexOf(m.id)!==-1) &&
+            (!o.compatible.platforms.length || o.compatible.platforms.indexOf(m.platform)!==-1);
+        }).length;
+        return '<a class="vc-brand-model-card" href="/' + brandSlug + '/' + m.slug + '">' +
+          '<div class="vc-bmc-name">' + m.name + '</div>' +
+          '<div class="vc-bmc-code">' + m.code + '</div>' +
+          '<div class="vc-bmc-years">' + m.yearMin + '\u2013' + m.yearMax + '</div>' +
+          '<div class="vc-bmc-count">' + optCount + ' options</div>' +
+          '</a>';
+      }).join('') + '</div>';
+    container.appendChild(group);
+  });
+
+  // ── SEO section ───────────────────────────────
+  document.getElementById('seo-h2').textContent = 'Codage ' + brand.name + ' — notre expertise';
+  document.getElementById('seo-p1').textContent =
+    'Sp\u00e9cialiste du groupe Volkswagen (VAG), AREPROG propose le codage d\'options cach\u00e9es sur tous les mod\u00e8les ' + brand.name +
+    ' bas\u00e9s sur les plateformes MQB, MQB Evo et MEB. Nos techniciens utilisent exclusivement des outils agr\u00e9\u00e9s (VCDS HEX-V2 et OBDeleven Pro) pour des interventions s\u00e9curis\u00e9es \u00e0 domicile.';
+});
+</script>
+</body>
+</html>
