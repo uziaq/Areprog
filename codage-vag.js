@@ -109,6 +109,7 @@ const VCApp = (() => {
       c.classList.toggle('selected', c.dataset.brandId === brandId);
     });
     renderModels(brandId);
+    pushBrandUrl(state.selectedBrand);
     goToStep(2);
   }
 
@@ -141,6 +142,7 @@ const VCApp = (() => {
 
   function confirmModel() {
     if (!state.selectedModel || !state.selectedYear) return;
+    pushModelUrl(state.selectedBrand, state.selectedModel);
     goToStep(3);
   }
 
@@ -495,8 +497,44 @@ const VCApp = (() => {
   // ── Init ──────────────────────────────────
   function init() {
     initFirebase();
+    // Sur /codage-vag, lire l'URL pour pré-charger brand/model si présent
+    const parts = location.pathname.replace(/^\/|\/$/g, '').split('/');
+    if (parts.length >= 2 && parts[0] !== 'codage-vag') {
+      const brand = VAG.BRANDS.find(b => b.slug === parts[0]);
+      const model = brand ? VAG.MODELS.find(m => m.brandId === brand.id && m.slug === parts[1]) : null;
+      if (brand && model) {
+        _preload(brand.id, model.id, model.yearMin);
+        return;
+      }
+    }
     renderBrands();
     updateStepIndicator();
+  }
+
+  // ── Preload brand+model (utilisé par les pages /marque/modele) ──────
+  function _preload(brandId, modelId, year) {
+    state.selectedBrand = getBrandById(brandId);
+    state.selectedModel = getModelById(modelId);
+    state.selectedYear  = String(year || state.selectedModel?.yearMin || '');
+    // Met à jour les labels de l'indicateur d'étapes si présents
+    const l1 = document.getElementById('step-label-1');
+    const l2 = document.getElementById('step-label-2');
+    if (l1 && state.selectedBrand) l1.textContent = state.selectedBrand.name;
+    if (l2 && state.selectedModel) l2.textContent = state.selectedModel.name;
+    initFirebase();
+    goToStep(3);
+  }
+
+  // ── Navigation URL ─────────────────────────
+  function pushBrandUrl(brand) {
+    if (brand && brand.slug && location.pathname.startsWith('/codage-vag')) {
+      history.pushState({}, '', '/' + brand.slug);
+    }
+  }
+  function pushModelUrl(brand, model) {
+    if (brand && model && brand.slug && model.slug) {
+      history.pushState({}, '', '/' + brand.slug + '/' + model.slug);
+    }
   }
 
   // ── API publique ──────────────────────────
@@ -504,7 +542,7 @@ const VCApp = (() => {
     init, goToStep, selectBrand, selectModel,
     confirmModel, filterByCategory, toggleOption,
     expandOption, openLeadModal, closeLeadModal,
-    submitLead, closeUpsell
+    submitLead, closeUpsell, _preload
   };
 
 })();

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO meta set dynamically by JS below -->
+  <title>Codage VAG — AREPROG</title>
+  <meta name="description" content="Activation des options cachées sur votre véhicule VAG. Codage VCDS professionnel à domicile."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" id="canonical-url" href="https://areprog.fr/codage-vag"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="AREPROG"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.webp"/>
+  <meta id="og-title"       property="og:title"       content="Codage VAG — AREPROG"/>
+  <meta id="og-description" property="og:description" content="Activation des options cachées."/>
+  <meta id="og-url"         property="og:url"         content="https://areprog.fr/codage-vag"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,300&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="/shared.css"/>
+  <link rel="stylesheet" href="/codage-vag.css"/>
+  <script type="application/ld+json" id="page-schema">{}</script>
+  <style>
+    /* ── Breadcrumb ─────────────────────────── */
+    .vc-breadcrumb {
+      display: flex; align-items: center; gap: .5rem;
+      font-family: var(--font-mono); font-size: .7rem;
+      color: var(--muted); padding: 1.2rem 5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-warm);
+      flex-wrap: wrap;
+    }
+    .vc-breadcrumb a { color: var(--muted); text-decoration: none; transition: color .15s; }
+    .vc-breadcrumb a:hover { color: var(--text); }
+    .vc-breadcrumb span { color: var(--muted2); }
+    .vc-breadcrumb .current { color: var(--text2); }
+
+    /* ── Model hero ─────────────────────────── */
+    .vc-model-hero {
+      padding: 3rem 5rem 2rem;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-warm) 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .vc-model-hero::before {
+      content:'';position:absolute;top:-80px;right:-80px;
+      width:400px;height:400px;border-radius:50%;
+      background:var(--blue-dim);filter:blur(80px);pointer-events:none;
+    }
+    .vc-model-hero-meta {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .vc-brand-pill {
+      font-family: var(--font-mono); font-size: .65rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      padding: .3rem .8rem; border-radius: 3px;
+      background: var(--blue-dim); color: var(--blue-light);
+      border: 1px solid rgba(33,150,243,.3);
+    }
+    .vc-platform-pill {
+      font-family: var(--font-mono); font-size: .62rem;
+      padding: .25rem .6rem; border-radius: 3px;
+      background: rgba(52,211,153,.08); color: var(--green);
+      border: 1px solid rgba(52,211,153,.25);
+    }
+    .vc-model-hero h1 {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      text-transform: uppercase; line-height: .95;
+      color: var(--text); margin-bottom: .8rem;
+    }
+    .vc-model-hero h1 em { font-style:italic; font-weight:300; color:var(--blue-light); }
+    .vc-model-hero-sub { color: var(--text2); font-size: .95rem; max-width: 560px; }
+    .vc-model-hero-sub strong { color: var(--text); }
+    .vc-model-stats {
+      display: flex; gap: 2rem; margin-top: 1.8rem; flex-wrap: wrap;
+    }
+    .vc-model-stat { display: flex; flex-direction: column; gap: .2rem; }
+    .vc-model-stat-val {
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+      color: var(--blue-light);
+    }
+    .vc-model-stat-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+
+    /* ── Not found ────────────────────────── */
+    .vc-notfound {
+      min-height: 60vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1rem;
+      padding: 4rem 2rem; text-align: center;
+    }
+    .vc-notfound h2 { font-family: var(--font-display); font-size: 2rem; text-transform: uppercase; }
+    .vc-notfound p { color: var(--text2); max-width: 440px; }
+
+    /* ── SEO section ──────────────────────── */
+    .vc-seo-model { padding: 4rem 5rem; background: var(--bg-warm); }
+    .vc-seo-model h2 {
+      font-family: var(--font-display); font-size: 1.8rem;
+      font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .vc-seo-model p { color: var(--text2); line-height: 1.75; margin-bottom: 1rem; max-width: 760px; }
+    .vc-seo-model .vc-options-list {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      gap: .6rem; margin-top: 1.5rem;
+    }
+    .vc-seo-model .vc-opt-item {
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .85rem; color: var(--text2);
+      padding: .5rem .8rem; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .vc-seo-model .vc-opt-item::before { content:'✓'; color: var(--green); font-weight: 700; }
+
+    /* ── Responsive ───────────────────────── */
+    @media(max-width:768px){
+      .vc-breadcrumb { padding: 1rem 1.5rem; }
+      .vc-model-hero { padding: 2rem 1.5rem 1.5rem; }
+      .vc-seo-model { padding: 3rem 1.5rem; }
+    }
+  </style>
+</head>
+<body data-page="codage-vag">
+<div id="nav-container"></div>
+<div class="page-wrap">
+
+  <!-- Breadcrumb -->
+  <nav class="vc-breadcrumb" id="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">AREPROG</a><span>›</span>
+    <a href="/codage-vag">Codage VAG</a><span>›</span>
+    <a href="#" id="bc-brand"></a><span>›</span>
+    <span class="current" id="bc-model"></span>
+  </nav>
+
+  <!-- Model Hero -->
+  <div class="vc-model-hero" id="model-hero">
+    <div class="vc-model-hero-meta">
+      <span class="vc-brand-pill" id="hero-brand"></span>
+      <span class="vc-platform-pill" id="hero-platform"></span>
+    </div>
+    <h1 id="hero-title">Codage <em>VAG</em></h1>
+    <p class="vc-model-hero-sub" id="hero-sub"></p>
+    <div class="vc-model-stats" id="hero-stats"></div>
+  </div>
+
+  <!-- Wizard (step 3 pré-chargé) -->
+  <div id="vc-wizard" class="vc-wizard">
+    <div class="vc-wizard-inner">
+
+      <!-- Steps indicator -->
+      <div class="vc-steps" id="vc-steps">
+        <div class="vc-step completed" id="step-ind-1">
+          <div class="vc-step-circle">✓</div>
+          <div class="vc-step-label" id="step-label-1">Marque</div>
+        </div>
+        <div class="vc-step-line completed"></div>
+        <div class="vc-step completed" id="step-ind-2">
+          <div class="vc-step-circle">✓</div>
+          <div class="vc-step-label" id="step-label-2">Modèle</div>
+        </div>
+        <div class="vc-step-line active"></div>
+        <div class="vc-step active" id="step-ind-3">
+          <div class="vc-step-circle">3</div>
+          <div class="vc-step-label">OPTIONS</div>
+        </div>
+      </div>
+
+      <!-- Step 1 hidden -->
+      <div id="step-1" class="vc-step-panel hidden">
+        <div class="vc-step-header"><h2>Choisissez votre marque</h2></div>
+        <div id="vc-brands-grid" class="vc-brand-grid"></div>
+      </div>
+
+      <!-- Step 2 hidden -->
+      <div id="step-2" class="vc-step-panel hidden">
+        <div class="vc-step-header">
+          <button class="vc-back-btn" onclick="VCApp.goBack()">← Retour</button>
+          <h2>Choisissez votre modèle</h2>
+        </div>
+        <div id="vc-models-grid" class="vc-model-grid"></div>
+        <div id="vc-year-selector" class="vc-year-selector hidden">
+          <label class="vc-year-label">Année de mise en circulation</label>
+          <div id="vc-year-btns" class="vc-year-btns"></div>
+          <button class="btn btn-primary" onclick="VCApp.confirmModel()" style="margin-top:1.5rem">Voir les options →</button>
+        </div>
+      </div>
+
+      <!-- Step 3 — Options (visible) -->
+      <div id="step-3" class="vc-step-panel">
+        <div class="vc-options-layout">
+          <!-- Left: filter + options -->
+          <div class="vc-options-col">
+            <div class="vc-step-header">
+              <button class="vc-back-btn" onclick="VCApp.goBack()">← Changer de modèle</button>
+              <h2 id="options-heading">Options disponibles</h2>
+            </div>
+            <div id="vc-categories" class="vc-categories"></div>
+            <div id="vc-options-grid" class="vc-options-grid"></div>
+          </div>
+          <!-- Right: cart -->
+          <div class="vc-cart" id="vc-cart">
+            <div class="vc-cart-header">
+              <span class="vc-cart-title">Ma sélection</span>
+              <span class="vc-cart-count" id="cart-count">0</span>
+            </div>
+            <div class="vc-vehicle-recap" id="vehicle-recap"></div>
+            <div id="vc-pack-banner" class="vc-pack-banner hidden"></div>
+            <div id="vc-cart-items" class="vc-cart-items"></div>
+            <div class="vc-cart-total" id="cart-total-line"></div>
+            <button class="btn btn-primary vc-cart-cta" id="cart-cta-btn" onclick="VCApp.openLeadModal()" disabled>
+              Demander un devis gratuit
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEO content section -->
+  <section class="vc-seo-model" id="seo-section">
+    <div class="section-label">Codage professionnel</div>
+    <h2 id="seo-h2">Options cachées disponibles</h2>
+    <p id="seo-intro"></p>
+    <p>Notre technicien intervient à domicile avec une interface VCDS ou OBDeleven. Toutes les opérations sont réversibles et sans impact sur la garantie constructeur dans le cadre d'un usage normal.</p>
+    <div class="vc-options-list" id="seo-options-list"></div>
+  </section>
+
+  <!-- Lead modal (same as codage-vag.html) -->
+  <div id="vc-lead-modal" class="vc-lead-modal hidden" role="dialog" aria-modal="true">
+    <div class="vc-modal-backdrop" onclick="VCApp.closeLeadModal()"></div>
+    <div class="vc-modal-box">
+      <button class="vc-modal-close" onclick="VCApp.closeLeadModal()" aria-label="Fermer">✕</button>
+      <div id="vc-lead-form-wrap">
+        <div class="vc-modal-header">
+          <h3 id="vc-modal-title">Votre devis gratuit</h3>
+          <p class="vc-modal-sub" id="modal-recap-line"></p>
+        </div>
+        <form class="vc-lead-form" id="vc-lead-form" onsubmit="VCApp.submitLead(event)">
+          <div class="vc-form-row">
+            <label>Nom complet *</label>
+            <input type="text" id="lead-name" placeholder="Jean Dupont" required autocomplete="name"/>
+          </div>
+          <div class="vc-form-row">
+            <label>Téléphone *</label>
+            <input type="tel" id="lead-phone" placeholder="06 XX XX XX XX" required autocomplete="tel"/>
+          </div>
+          <div class="vc-form-row">
+            <label>Email *</label>
+            <input type="email" id="lead-email" placeholder="jean@email.fr" required autocomplete="email"/>
+          </div>
+          <div class="vc-form-row">
+            <label>Ville *</label>
+            <input type="text" id="lead-city" placeholder="Bayonne" required autocomplete="address-level2"/>
+          </div>
+          <div class="vc-form-row">
+            <label>Message (optionnel)</label>
+            <textarea id="lead-message" rows="3" placeholder="Informations complémentaires…"></textarea>
+          </div>
+          <p class="vc-form-legal">En soumettant ce formulaire, vous acceptez d'être contacté par AREPROG pour votre demande de codage VAG.</p>
+          <button type="submit" class="btn btn-primary vc-form-submit" id="lead-submit-btn">
+            Envoyer ma demande
+          </button>
+          <p class="vc-form-error hidden" id="lead-error"></p>
+        </form>
+      </div>
+      <div id="vc-confirmation" class="vc-confirmation hidden">
+        <div class="vc-confirm-icon">✓</div>
+        <h3>Demande envoyée !</h3>
+        <p>Nous vous rappelons sous 24h pour organiser l'intervention.</p>
+        <div id="vc-confirm-recap" class="vc-confirm-recap"></div>
+        <a href="/codage-vag" class="btn btn-outline" style="margin-top:1rem">Retour</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upsell toast -->
+  <div id="vc-upsell-toast" class="vc-upsell-toast hidden" role="status">
+    <span id="upsell-text"></span>
+    <button onclick="VCApp.closeUpsell()" class="vc-upsell-close">✕</button>
+  </div>
+
+</div><!-- .page-wrap -->
+<div id="footer-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="/codage-vag-data.js"></script>
+<script src="/codage-vag.js"></script>
+<script src="/nav.js"></script>
+<script src="/whatsapp-widget.js"></script>
+<script>
+/* ── Model page init ────────────────────────────────────────
+   Reads /volkswagen/golf-8 → brandSlug='volkswagen', modelSlug='golf-8'
+   Pre-loads VCApp at step 3 with the correct brand+model
+─────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  if (!window.VAG) { showNotFound('Données non disponibles.'); return; }
+
+  const parts = location.pathname.replace(/^\/|\/$/g, '').split('/');
+  const brandSlug = parts[0] || '';
+  const modelSlug = parts[1] || '';
+
+  const brand = VAG.BRANDS.find(b => b.slug === brandSlug);
+  const model = brand ? VAG.MODELS.find(m => m.brandId === brand.id && m.slug === modelSlug) : null;
+
+  if (!brand || !model) {
+    showNotFound('Modèle introuvable. <a href="/codage-vag">Accéder au configurateur</a>');
+    return;
+  }
+
+  // ── SEO meta ──────────────────────────────────
+  const pageTitle = 'Codage ' + model.name + ' (' + model.code + ') — Options cach\u00e9es ' + brand.name + ' | AREPROG';
+  const pageDesc  = 'Activez les options cach\u00e9es de votre ' + brand.name + ' ' + model.name + ' (' + model.yearMin + '-' + model.yearMax + '). Codage VCDS / OBDeleven \u00e0 domicile — Confort, \u00e9clairage, multim\u00e9dia, performance. Devis gratuit.';
+  const pageUrl   = 'https://areprog.fr/' + brandSlug + '/' + modelSlug;
+
+  document.title = pageTitle;
+  document.querySelector('meta[name="description"]').content = pageDesc;
+  document.getElementById('canonical-url').href = pageUrl;
+  document.getElementById('og-title').content = pageTitle;
+  document.getElementById('og-description').content = pageDesc;
+  document.getElementById('og-url').content = pageUrl;
+
+  // ── Schema.org ────────────────────────────────
+  const compatOpts = VAG.OPTIONS.filter(o => o.active && isModelCompatible(o, model));
+  document.getElementById('page-schema').textContent = JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"Service",
+    "name": "Codage VAG " + model.name,
+    "description": pageDesc,
+    "provider": { "@type":"LocalBusiness", "name":"AREPROG", "url":"https://areprog.fr" },
+    "serviceType": "Codage options cach\u00e9es " + brand.name + " " + model.name,
+    "offers": { "@type":"AggregateOffer", "priceCurrency":"EUR",
+      "lowPrice": Math.min(...compatOpts.map(o => o.price)),
+      "highPrice": Math.max(...compatOpts.map(o => o.price)),
+      "offerCount": compatOpts.length }
+  });
+
+  // ── Breadcrumb ────────────────────────────────
+  var bcBrand = document.getElementById('bc-brand');
+  bcBrand.textContent = brand.name;
+  bcBrand.href = '/' + brandSlug;
+  document.getElementById('bc-model').textContent = model.name;
+
+  // ── Hero ──────────────────────────────────────
+  document.getElementById('hero-brand').textContent = brand.name;
+  document.getElementById('hero-platform').textContent = model.platform;
+  document.getElementById('hero-title').innerHTML = 'Codage <em>' + model.name + '</em>';
+  document.getElementById('hero-sub').innerHTML = 
+    'Activez les options cach\u00e9es de votre <strong>' + brand.name + ' ' + model.name + 
+    ' (' + model.code + ')</strong> &mdash; ' + model.yearMin + '\u2013' + model.yearMax + 
+    '. Intervention \u00e0 domicile avec VCDS ou OBDeleven.';
+
+  var stats = document.getElementById('hero-stats');
+  var optCount = compatOpts.length;
+  var minPrice = optCount ? Math.min(...compatOpts.map(o=>o.price)) : 0;
+  stats.innerHTML = [
+    stat(optCount + '+', 'Options disponibles'),
+    stat('\u00e0 partir de ' + minPrice + '\u20ac', 'par option'),
+    stat(model.platform, 'Plateforme'),
+    stat(model.yearMin + '\u2013' + model.yearMax, 'Ann\u00e9es')
+  ].join('');
+
+  // ── Step labels ───────────────────────────────
+  document.getElementById('step-label-1').textContent = brand.name;
+  document.getElementById('step-label-2').textContent = model.name;
+  document.getElementById('options-heading').textContent = 'Options pour le ' + brand.name + ' ' + model.name;
+
+  // ── Pre-load app ──────────────────────────────
+  // Inject brand+model into VCApp state before its init runs
+  // VCApp.init was already called by DOMContentLoaded in codage-vag.js
+  // We override after the fact:
+  VCApp._preload(brand.id, model.id, model.yearMin);
+
+  // ── SEO section ───────────────────────────────
+  document.getElementById('seo-h2').textContent = 'Options cach\u00e9es ' + brand.name + ' ' + model.name;
+  document.getElementById('seo-intro').textContent = 
+    'Votre ' + brand.name + ' ' + model.name + ' (' + model.platform + ', ' + model.yearMin + '\u2013' + model.yearMax + 
+    ') est \u00e9quip\u00e9 de nombreuses fonctions d\u00e9sactiv\u00e9es en usine. Notre technicien intervient \u00e0 domicile avec une interface VCDS ou OBDeleven pour activer ' + optCount + ' options disponibles sur votre mod\u00e8le.';
+
+  var list = document.getElementById('seo-options-list');
+  list.innerHTML = compatOpts.slice(0, 18).map(function(o) {
+    return '<div class="vc-opt-item">' + o.name + '</div>';
+  }).join('');
+
+  function stat(val, label) {
+    return '<div class="vc-model-stat"><div class="vc-model-stat-val">' + val + '</div><div class="vc-model-stat-label">' + label + '</div></div>';
+  }
+
+  function isModelCompatible(opt, m) {
+    var c = opt.compatible;
+    if (c.models && c.models.length && c.models.indexOf(m.id) === -1) return false;
+    if (c.platforms && c.platforms.length && c.platforms.indexOf(m.platform) === -1) return false;
+    return true;
+  }
+
+  function showNotFound(msg) {
+    document.getElementById('model-hero').innerHTML = '<div class="vc-notfound"><h2>Mod\u00e8le introuvable</h2><p>' + msg + '</p></div>';
+    document.getElementById('vc-wizard').style.display = 'none';
+    document.getElementById('seo-section').style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
