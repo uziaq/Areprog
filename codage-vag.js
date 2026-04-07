@@ -218,6 +218,37 @@ const VCApp = (() => {
     if (state.upsellTimeout) clearTimeout(state.upsellTimeout);
   }
 
+  // ── WhatsApp devis ────────────────────────
+  const WA_NUMBER = '33667924630';
+  function buildWhatsAppMessage() {
+    const b = state.selectedBrand ? state.selectedBrand.name : '';
+    const m = state.selectedModel;
+    const { subtotal, discount, total, activePacks } = getCartTotal();
+    let msg = 'Bonjour AREPROG \uD83D\uDC4B\n';
+    msg += 'Je souhaite un devis pour du *codage d\'options VAG*.\n\n';
+    msg += '\uD83D\uDE97 *Mon v\u00e9hicule*\n';
+    if (b || m) {
+      msg += b + (m ? ' ' + m.name : '');
+      if (m && m.code) msg += ' (' + m.code + ')';
+      if (state.selectedYear) msg += ' \u00b7 ' + state.selectedYear;
+      msg += '\n';
+      if (m && m.platform) msg += 'Plateforme\u00a0: ' + m.platform + '\n';
+    }
+    if (state.cart.length) {
+      msg += '\n\u2699\uFE0F *Options souhait\u00e9es (' + state.cart.length + ')*\n';
+      state.cart.forEach(function(o) { msg += '\u2022 ' + o.name + ' \u2014 ' + o.price + '\u20ac\n'; });
+      msg += '\n\uD83D\uDCB0 *Estimation\u00a0: ' + total + '\u20ac*';
+      if (discount > 0) msg += '\n(R\u00e9duction pack\u00a0: \u2212' + discount + '\u20ac)';
+      if (activePacks.length) msg += '\n\uD83C\uDF81 ' + activePacks[0].name + ' appliqu\u00e9';
+    }
+    msg += '\n\nMerci\u00a0!';
+    return msg;
+  }
+  function openWhatsApp() {
+    if (!state.cart.length) return;
+    window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildWhatsAppMessage()), '_blank');
+  }
+
   // ── Modale lead ───────────────────────────
   function openLeadModal() {
     if (!state.cart.length) return;
@@ -330,25 +361,37 @@ const VCApp = (() => {
       </div>`).join('');
   }
 
-  // ── Render : options ──────────────────────
+  // ── Render : options (uniquement compatibles) ──────────
   function renderOptions() {
     const grid = qs('vc-options-grid');
     if (!grid) return;
-    let opts = VAG.OPTIONS.filter(o => o.active);
+
+    // N'afficher QUE les options compatibles avec le véhicule sélectionné
+    let opts = VAG.OPTIONS.filter(o => o.active && isCompatible(o));
     if (state.activeCategory !== 'all') {
       opts = opts.filter(o => o.category === state.activeCategory);
     }
-    const compat = opts.filter(o => isCompatible(o));
-    const incompat = opts.filter(o => !isCompatible(o));
-    const renderCard = (opt, incompatible) => {
-      const inCart    = isInCart(opt.id);
-      const expanded  = state.expandedOption === opt.id;
-      const reqEquip  = opt.compatible.requiresEquipment;
-      const diffLabel = { facile: 'Facile', moyen: 'Moyen', avance: 'Avancé' }[opt.difficulty] || opt.difficulty;
+
+    if (!opts.length) {
+      grid.innerHTML = `<div class="vc-options-empty">
+        <div style="font-size:2rem;margin-bottom:.8rem">⚙️</div>
+        <strong>Aucune option dans cette catégorie</strong>
+        <p>Essayez une autre catégorie ou contactez-nous pour un codage sur mesure.</p>
+      </div>`;
+      renderCategoryBar();
+      renderVehicleSummary();
+      return;
+    }
+
+    const renderCard = opt => {
+      const inCart   = isInCart(opt.id);
+      const expanded = state.expandedOption === opt.id;
+      const reqEquip = opt.compatible.requiresEquipment;
+      const diffLabel = { facile:'Facile', moyen:'Moyen', avance:'Avancé' }[opt.difficulty] || opt.difficulty;
       return `
-        <div class="vc-option-card${inCart ? ' selected' : ''}${incompatible ? ' incompatible' : ''}"
+        <div class="vc-option-card${inCart ? ' selected' : ''}"
              data-opt-id="${opt.id}"
-             onclick="${incompatible ? '' : 'VCApp.toggleOption(\'' + opt.id + '\')'}">
+             onclick="VCApp.toggleOption('${opt.id}')">
           <div class="vc-option-header">
             <div class="vc-option-check">
               <svg class="vc-option-check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
@@ -368,26 +411,26 @@ const VCApp = (() => {
               </button>
             </div>
           </div>
-          ${incompatible ? `<div class="vc-incompat-msg">⚠ Incompatible avec votre véhicule</div>` : ''}
           <div class="vc-option-details${expanded ? '' : ' hidden'}">
             ${opt.techDescription || ''}
-            ${reqEquip && reqEquip.length ? `<div class="vc-option-requires">⚠ Équipement requis : ${reqEquip.join(', ')}</div>` : ''}
+            ${reqEquip && reqEquip.length ? `<div class="vc-option-requires">📋 Équipement requis : ${reqEquip.join(', ')}</div>` : ''}
           </div>
         </div>`;
     };
-    renderCategoryBar(opts.length);
-    grid.innerHTML = compat.map(o => renderCard(o, false)).join('') +
-                     incompat.map(o => renderCard(o, true)).join('');
+
+    renderCategoryBar();
+    grid.innerHTML = opts.map(renderCard).join('');
     renderVehicleSummary();
   }
 
-  function renderCategoryBar(totalCount) {
+  function renderCategoryBar() {
     const bar = qs('vc-categories-bar');
     if (!bar) return;
+    const compatOpts = VAG.OPTIONS.filter(o => o.active && isCompatible(o));
     bar.innerHTML = VAG.CATEGORIES.map(c => {
       const count = c.id === 'all'
-        ? VAG.OPTIONS.filter(o => o.active).length
-        : VAG.OPTIONS.filter(o => o.active && o.category === c.id).length;
+        ? compatOpts.length
+        : compatOpts.filter(o => o.category === c.id).length;
       return `
         <button class="vc-cat-btn${state.activeCategory === c.id ? ' active' : ''}"
                 data-cat="${c.id}" onclick="VCApp.filterByCategory('${c.id}')">
@@ -428,7 +471,7 @@ const VCApp = (() => {
         </div>`;
       if (totalEl) totalEl.innerHTML = '';
       if (packEl)  packEl.classList.add('hidden');
-      if (devisBtn) { devisBtn.disabled = true; devisBtn.textContent = 'Demander un devis gratuit'; }
+      if (devisBtn) { devisBtn.disabled = true; devisBtn.textContent = '\uD83D\uDCAC Demander un devis WhatsApp'; }
       return;
     }
     itemsEl.innerHTML = state.cart.map(o => `
@@ -464,7 +507,7 @@ const VCApp = (() => {
     }
     if (devisBtn) {
       devisBtn.disabled = false;
-      devisBtn.textContent = `Demander un devis — ${fmt(total)}`;
+      devisBtn.textContent = `\uD83D\uDCAC Devis WhatsApp — ${fmt(total)}`;
     }
   }
 
@@ -544,7 +587,7 @@ const VCApp = (() => {
     init, goToStep, selectBrand, selectModel,
     confirmModel, filterByCategory, toggleOption,
     expandOption, openLeadModal, closeLeadModal,
-    submitLead, closeUpsell, _preload
+    submitLead, closeUpsell, openWhatsApp, _preload
   };
 
 })();
