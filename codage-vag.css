@@ -255,6 +255,30 @@
 }
 .vc-vehicle-summary strong { color:var(--blue-light); }
 
+/* Search bar */
+.vc-search-wrap {
+  position:relative; margin-bottom:1rem;
+}
+.vc-search-icon {
+  position:absolute; left:.9rem; top:50%; transform:translateY(-50%);
+  color:var(--muted); pointer-events:none;
+}
+.vc-search-input {
+  width:100%; padding:.7rem 2.8rem .7rem 2.6rem;
+  background:var(--surface); border:1px solid var(--border2);
+  border-radius:var(--radius); color:var(--text);
+  font-family:var(--font-body); font-size:.88rem;
+  outline:none; transition:border-color .2s; box-sizing:border-box;
+}
+.vc-search-input:focus { border-color:var(--blue); }
+.vc-search-input::placeholder { color:var(--muted); }
+.vc-search-clear {
+  position:absolute; right:.7rem; top:50%; transform:translateY(-50%);
+  background:none; border:none; color:var(--muted);
+  font-size:1.2rem; cursor:pointer; padding:.2rem .4rem; line-height:1;
+}
+.vc-search-clear:hover { color:var(--text); }
+
 /* Categories filter bar */
 .vc-categories {
   display:flex; gap:.5rem; flex-wrap:wrap;

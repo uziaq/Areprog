@@ -50,6 +50,14 @@ window.VAG = (function() {
     { id:'id4',           brandId:'vw',    name:'ID.4',                code:'E21',      platform:'MEB',      yearMin:2020, yearMax:2024, slug:'id4' },
     { id:'id5',           brandId:'vw',    name:'ID.5',                code:'E39',      platform:'MEB',      yearMin:2021, yearMax:2024, slug:'id5' },
     { id:'id_buzz',       brandId:'vw',    name:'ID. Buzz',            code:'EB',       platform:'MEB',      yearMin:2022, yearMax:2024, slug:'id-buzz' },
+    { id:'golf5',         brandId:'vw',    name:'Golf 5',              code:'1K',       platform:'PQ35',     yearMin:2003, yearMax:2009, slug:'golf-5' },
+    { id:'up',            brandId:'vw',    name:'Up!',                 code:'AA',       platform:'PQ25',     yearMin:2011, yearMax:2023, slug:'up' },
+    { id:'jetta6',        brandId:'vw',    name:'Jetta 6',             code:'162/5C',   platform:'MQB',      yearMin:2011, yearMax:2018, slug:'jetta-6' },
+    { id:'sharan2',       brandId:'vw',    name:'Sharan 2',            code:'7N',       platform:'PQ46',     yearMin:2010, yearMax:2022, slug:'sharan-2' },
+    { id:'touran1',       brandId:'vw',    name:'Touran 1',            code:'1T',       platform:'PQ35',     yearMin:2003, yearMax:2015, slug:'touran-1' },
+    { id:'beetle',        brandId:'vw',    name:'Beetle (5C)',         code:'5C',       platform:'PQ35',     yearMin:2011, yearMax:2019, slug:'beetle' },
+    { id:'golf_sportsvan',brandId:'vw',    name:'Golf Sportsvan',      code:'AM1',      platform:'MQB',      yearMin:2014, yearMax:2019, slug:'golf-sportsvan' },
+    { id:'amarok',        brandId:'vw',    name:'Amarok (2H)',         code:'2H',       platform:'PQ46',     yearMin:2010, yearMax:2022, slug:'amarok' },
 
     // ══════════════════ AUDI ══════════════════
     { id:'a1_8x',         brandId:'audi',  name:'A1 (8X)',             code:'8X',       platform:'PQ25',     yearMin:2010, yearMax:2018, slug:'a1-8x' },
@@ -72,6 +80,15 @@ window.VAG = (function() {
     { id:'q7_4m',         brandId:'audi',  name:'Q7 (4M)',             code:'4M',       platform:'MLB Evo',  yearMin:2015, yearMax:2024, slug:'q7-4m' },
     { id:'q8_4m',         brandId:'audi',  name:'Q8 (4M)',             code:'4M/F1',    platform:'MLB Evo',  yearMin:2018, yearMax:2024, slug:'q8-4m' },
     { id:'q4_etron',      brandId:'audi',  name:'Q4 e-tron',           code:'F4E',      platform:'MEB',      yearMin:2021, yearMax:2024, slug:'q4-etron' },
+    { id:'a3_8p',         brandId:'audi',  name:'A3 (8P)',             code:'8P',       platform:'PQ35',     yearMin:2003, yearMax:2013, slug:'a3-8p' },
+    { id:'s3_8p',         brandId:'audi',  name:'S3 (8P)',             code:'8P',       platform:'PQ35',     yearMin:2006, yearMax:2013, slug:'s3-8p' },
+    { id:'a4_b8',         brandId:'audi',  name:'A4 (B8)',             code:'8K',       platform:'MLB',      yearMin:2007, yearMax:2015, slug:'a4-b8' },
+    { id:'a5_8t',         brandId:'audi',  name:'A5 (8T)',             code:'8T',       platform:'MLB',      yearMin:2007, yearMax:2017, slug:'a5-8t' },
+    { id:'q5_8r',         brandId:'audi',  name:'Q5 1e gen (8R)',      code:'8R',       platform:'MLB',      yearMin:2008, yearMax:2017, slug:'q5-8r' },
+    { id:'a6_c7',         brandId:'audi',  name:'A6 (C7)',             code:'4G',       platform:'MLB',      yearMin:2011, yearMax:2018, slug:'a6-c7' },
+    { id:'a8_d5',         brandId:'audi',  name:'A8 (D5)',             code:'4N',       platform:'MLB Evo',  yearMin:2017, yearMax:2024, slug:'a8-d5' },
+    { id:'etron_ge',      brandId:'audi',  name:'e-tron (GE)',         code:'GE',       platform:'MEB',      yearMin:2018, yearMax:2023, slug:'etron' },
+    { id:'sq5_fy',        brandId:'audi',  name:'SQ5 (FY)',            code:'FY',       platform:'MLB Evo',  yearMin:2017, yearMax:2024, slug:'sq5-fy' },
 
     // ══════════════════ SEAT ══════════════════
     { id:'ibiza_6j',      brandId:'seat',  name:'Ibiza 6J',            code:'6J',       platform:'PQ25',     yearMin:2008, yearMax:2017, slug:'ibiza-6j' },
@@ -82,6 +99,9 @@ window.VAG = (function() {
     { id:'ateca',         brandId:'seat',  name:'Ateca',               code:'KH/5FP',   platform:'MQB',      yearMin:2016, yearMax:2024, slug:'ateca' },
     { id:'tarraco',       brandId:'seat',  name:'Tarraco',             code:'KN2',      platform:'MQB',      yearMin:2018, yearMax:2024, slug:'tarraco' },
     { id:'alhambra',      brandId:'seat',  name:'Alhambra 2',          code:'7N',       platform:'PQ46',     yearMin:2010, yearMax:2020, slug:'alhambra' },
+    { id:'altea',         brandId:'seat',  name:'Altea / XL (5P)',     code:'5P',       platform:'PQ35',     yearMin:2004, yearMax:2015, slug:'altea' },
+    { id:'toledo4',       brandId:'seat',  name:'Toledo 4 (KG)',       code:'KG',       platform:'MQB-A0',   yearMin:2013, yearMax:2019, slug:'toledo-4' },
+    { id:'mii',           brandId:'seat',  name:'Mii',                 code:'AA',       platform:'PQ25',     yearMin:2011, yearMax:2021, slug:'mii' },
 
     // ══════════════════ CUPRA ══════════════════
     { id:'cupra_leon',    brandId:'cupra', name:'Cupra Leon',          code:'KL',       platform:'MQB Evo',  yearMin:2020, yearMax:2024, slug:'leon' },
@@ -89,6 +109,7 @@ window.VAG = (function() {
     { id:'cupra_ateca',   brandId:'cupra', name:'Cupra Ateca',         code:'KH',       platform:'MQB',      yearMin:2016, yearMax:2024, slug:'ateca' },
     { id:'born',          brandId:'cupra', name:'Cupra Born',          code:'BZ1',      platform:'MEB',      yearMin:2021, yearMax:2024, slug:'born' },
     { id:'tavascan',      brandId:'cupra', name:'Cupra Tavascan',      code:'BZ2',      platform:'MEB',      yearMin:2024, yearMax:2024, slug:'tavascan' },
+    { id:'terramar',      brandId:'cupra', name:'Cupra Terramar',      code:'KQ',       platform:'MQB Evo',  yearMin:2024, yearMax:2025, slug:'terramar' },
 
     // ══════════════════ SKODA ══════════════════
     { id:'fabia3',        brandId:'skoda', name:'Fabia 3 (NJ)',        code:'NJ',       platform:'MQB-A0',   yearMin:2014, yearMax:2021, slug:'fabia-3' },
@@ -103,7 +124,11 @@ window.VAG = (function() {
     { id:'karoq',         brandId:'skoda', name:'Karoq',               code:'NU7',      platform:'MQB',      yearMin:2017, yearMax:2024, slug:'karoq' },
     { id:'kodiaq',        brandId:'skoda', name:'Kodiaq',              code:'NS7',      platform:'MQB',      yearMin:2016, yearMax:2024, slug:'kodiaq' },
     { id:'kodiaq2',       brandId:'skoda', name:'Kodiaq 2',            code:'NS9',      platform:'MQB Evo',  yearMin:2023, yearMax:2024, slug:'kodiaq-2' },
-    { id:'enyaq',         brandId:'skoda', name:'Enyaq',               code:'NX3',      platform:'MEB',      yearMin:2020, yearMax:2024, slug:'enyaq' }
+    { id:'enyaq',         brandId:'skoda', name:'Enyaq',               code:'NX3',      platform:'MEB',      yearMin:2020, yearMax:2024, slug:'enyaq' },
+    { id:'fabia2',        brandId:'skoda', name:'Fabia 2 (5J)',        code:'5J',       platform:'PQ25',     yearMin:2006, yearMax:2014, slug:'fabia-2' },
+    { id:'yeti',          brandId:'skoda', name:'Yeti (5L)',           code:'5L',       platform:'PQ35',     yearMin:2009, yearMax:2017, slug:'yeti' },
+    { id:'citigo',        brandId:'skoda', name:'Citigo',              code:'NH',       platform:'PQ25',     yearMin:2011, yearMax:2019, slug:'citigo' },
+    { id:'kodiaq_rs',     brandId:'skoda', name:'Kodiaq RS',           code:'NS7',      platform:'MQB',      yearMin:2018, yearMax:2023, slug:'kodiaq-rs' },
   ];
 
   // ─────────────────────────────────────────────────────
@@ -846,9 +871,119 @@ window.VAG = (function() {
       compatible:{ models:[], platforms:['MQB Evo'], yearMin:2019, yearMax:2024, requiresEquipment:['Moteur TSI/TDI avec OPF'] },
       difficulty:'moyen', timeMin:25, price:49, active:true,
       upsellIds:['opt_soundaktor_max']
+    },
+
+
+    // ════════════════ OPTIONS SUPPLEMENTAIRES (toutes plateformes) ════════════════
+    {
+      id:'opt_kessy', name:'Activation KESSY — acc\u00e8s mains libres',
+      description:'Activez la fonction d\'acc\u00e8s mains libres si votre v\u00e9hicule est pr\u00e9-c\u00e2bl\u00e9 sans l\'avoir command\u00e9e en option.',
+      techDescription:'Module 46 ou 09 — Long Coding activation KESSY. N\u00e9cessite poign\u00e9es c\u00e2bl\u00e9es et antennes.',
+      category:'confort',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:['Poign\u00e9es KESSY c\u00e2bl\u00e9es'] },
+      difficulty:'moyen', timeMin:25, price:59, active:true,
+      upsellIds:['opt_mirror_fold','opt_confort_entry']
+    },
+    {
+      id:'opt_pdc_beep_off', name:'D\u00e9sactivation bip PDC en man\u0153uvre lente',
+      description:'Supprimez le signal sonore des capteurs de recul lors des man\u0153uvres \u00e0 tr\u00e8s faible allure — discr\u00e9tion en stationnement.',
+      techDescription:'Module 76 — Einparkhilfe. Adaptation seuil d\u00e9clenchement ou d\u00e9sactivation son PDC.',
+      category:'confort',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MQB-A0','MLB Evo','PQ35','PQ46'], yearMin:2007, yearMax:2024, requiresEquipment:['PDC OEM'] },
+      difficulty:'facile', timeMin:10, price:19, active:true,
+      upsellIds:['opt_park_assist']
+    },
+    {
+      id:'opt_seat_memory', name:'M\u00e9morisation position si\u00e8ge conducteur',
+      description:'Activez la m\u00e9morisation de position si\u00e8ge et r\u00e9troviseurs pour plusieurs profils conducteur.',
+      techDescription:'Module 52 — Si\u00e8ge. Long Coding activation m\u00e9moire position (si c\u00e2bl\u00e9).',
+      category:'confort',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2014, yearMax:2024, requiresEquipment:['Si\u00e8ge \u00e9lectrique OEM'] },
+      difficulty:'moyen', timeMin:25, price:49, active:true,
+      upsellIds:['opt_easy_entry','opt_seat_heat']
+    },
+    {
+      id:'opt_clim_auto', name:'Climatisation — m\u00e9morisation des r\u00e9glages',
+      description:'M\u00e9morisez la temp\u00e9rature et la ventilation entre les d\u00e9marrages — votre confort pr\u00e9f\u00e9r\u00e9 d\u00e8s le premier instant.',
+      techDescription:'Module 08 — Climatronic. Adaptation m\u00e9morisation profil utilisateur.',
+      category:'confort',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:['Climatisation automatique OEM'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_seat_heat']
+    },
+    {
+      id:'opt_speedlimiter', name:'Limiteur de vitesse — activation et configuration',
+      description:'Activez le limiteur de vitesse et r\u00e9glez le seuil d\'alerte selon vos pr\u00e9f\u00e9rences.',
+      techDescription:'Module 17 — Instrumentation. Activation Speed Limiter et seuil via adaptation.',
+      category:'assistance',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MQB-A0','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_acc_config']
+    },
+    {
+      id:'opt_trailer_assist', name:'Aide au recul remorque (Trailer Assist)',
+      description:'Activez l\'assistance au recul de remorque — le v\u00e9hicule g\u00e8re la direction lors des man\u0153uvres arri\u00e8re.',
+      techDescription:'Module 76 — Einparkhilfe. Activation Trailer Assist via Long Coding + adaptation.',
+      category:'assistance',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2015, yearMax:2024, requiresEquipment:['Attelage \u00e9lectrique OEM','Cam\u00e9ra de recul'] },
+      difficulty:'avance', timeMin:30, price:59, active:true,
+      upsellIds:['opt_park_assist','opt_rear_camera']
+    },
+    {
+      id:'opt_off_road', name:'Mode Offroad / Terrain — activation',
+      description:'D\u00e9bloquez le mode conduite tout-terrain avec r\u00e9partition de couple optimis\u00e9e et contr\u00f4le de descente.',
+      techDescription:'Module 09 — Long Coding activation profil Offroad. Adaptation r\u00e9partition couple 4Motion.',
+      category:'performance',
+      compatible:{ models:['tiguan2','tiguan_allspace','touareg3','q7_4m','q8_4m','kodiaq','kodiaq2'], platforms:['MQB','MLB Evo'], yearMin:2016, yearMax:2024, requiresEquipment:['4Motion / Quattro OEM'] },
+      difficulty:'moyen', timeMin:20, price:39, active:true,
+      upsellIds:['opt_sport_mode']
+    },
+    {
+      id:'opt_acc_stop_go', name:'ACC Stop & Go — arr\u00eat complet et reprise',
+      description:'Activez la fonction Stop & Go de l\'ACC permettant un arr\u00eat complet suivi d\'une reprise automatique sans toucher la p\u00e9dale.',
+      techDescription:'Module ACC. Long Coding activation Stop & Go. N\u00e9cessite ACC + PDC avant actifs.',
+      category:'assistance',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2016, yearMax:2024, requiresEquipment:['ACC OEM','PDC avant'] },
+      difficulty:'moyen', timeMin:20, price:39, active:true,
+      upsellIds:['opt_traffic_jam','opt_acc_config']
+    },
+    {
+      id:'opt_virtual_cockpit_activate', name:'Activation Virtual Cockpit (d\u00e9blocage logiciel)',
+      description:'D\u00e9bloquez et configurez le Virtual Cockpit si votre v\u00e9hicule est pr\u00e9-\u00e9quip\u00e9 — \u00e9vitez le retrofit mat\u00e9riel.',
+      techDescription:'Module 17 — Instrumentation. Long Coding activation VC si c\u00e2bl\u00e9. N\u00e9cessite v\u00e9rification pr\u00e9alable.',
+      category:'multimedia',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2015, yearMax:2024, requiresEquipment:['Virtual Cockpit c\u00e2bl\u00e9'] },
+      difficulty:'moyen', timeMin:25, price:49, active:true,
+      upsellIds:['opt_virtual_cockpit_style']
+    },
+    {
+      id:'opt_night_vision', name:'Activation Night Vision (vision nocturne)',
+      description:'Activez et calibrez la cam\u00e9ra thermique de vision nocturne sur les mod\u00e8les MLB haut de gamme.',
+      techDescription:'Module NV (Night Vision). Activation et calibrage via ODIS/VCDS sur mod\u00e8les \u00e9quip\u00e9s.',
+      category:'assistance',
+      compatible:{ models:['a6_c8','a7_4k','q7_4m','q8_4m','touareg3','a8_d5'], platforms:['MLB Evo'], yearMin:2018, yearMax:2024, requiresEquipment:['Night Vision OEM'] },
+      difficulty:'avance', timeMin:30, price:69, active:true,
+      upsellIds:['opt_acc_config']
+    },
+    {
+      id:'opt_pq35_gra', name:'R\u00e9gulateur de vitesse — activation logicielle (PQ35)',
+      description:'Activez le r\u00e9gulateur de vitesse par codage si votre v\u00e9hicule est c\u00e2bl\u00e9 mais non activ\u00e9 en usine.',
+      techDescription:'Module 09 — Long Coding GRA bit. Activation sans mat\u00e9riel suppl\u00e9mentaire si c\u00e2bl\u00e9.',
+      category:'performance',
+      compatible:{ models:[], platforms:['PQ35','PQ46'], yearMin:2005, yearMax:2016, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_pq35_mirror_fold']
+    },
+    {
+      id:'opt_pq35_remote_windows', name:'Commande vitres via t\u00e9l\u00e9commande (PQ35)',
+      description:'Maintenez le bouton de la t\u00e9l\u00e9commande pour ouvrir ou fermer toutes les vitres \u00e0 distance.',
+      techDescription:'Module 09 — Long Coding activation commande fen\u00eatres distance.',
+      category:'confort',
+      compatible:{ models:[], platforms:['PQ35','PQ46'], yearMin:2005, yearMax:2016, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_pq35_mirror_fold']
     }
 
-,
   ]; // end OPTIONS
 
   // ─────────────────────────────────────────────────────

@@ -23,7 +23,8 @@ const VCApp = (() => {
     cart:           [],
     activeCategory: 'all',
     expandedOption: null,
-    upsellTimeout:  null
+    upsellTimeout:  null,
+    searchQuery:    ''
   };
 
   let db = null;
@@ -83,6 +84,7 @@ const VCApp = (() => {
       if (panel) panel.classList.toggle('hidden', i !== n);
     });
     updateStepIndicator();
+    if (n !== 3) { state.searchQuery = ''; }
     if (n === 3) { renderOptions(); renderCart(); }
     window.scrollTo({ top: qs('wizard') ? qs('wizard').offsetTop - 80 : 0, behavior: 'smooth' });
   }
@@ -152,6 +154,22 @@ const VCApp = (() => {
     document.querySelectorAll('.vc-cat-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.cat === cat);
     });
+    renderOptions();
+  }
+
+  // ── Recherche options ─────────────────────
+  function searchOptions(query) {
+    state.searchQuery = query;
+    const clearBtn = document.getElementById('vc-search-clear');
+    if (clearBtn) clearBtn.classList.toggle('hidden', !query);
+    renderOptions();
+  }
+  function clearSearch() {
+    state.searchQuery = '';
+    const inp = document.getElementById('vc-search-input');
+    if (inp) inp.value = '';
+    const clearBtn = document.getElementById('vc-search-clear');
+    if (clearBtn) clearBtn.classList.add('hidden');
     renderOptions();
   }
 
@@ -371,13 +389,20 @@ const VCApp = (() => {
     if (state.activeCategory !== 'all') {
       opts = opts.filter(o => o.category === state.activeCategory);
     }
+    if (state.searchQuery) {
+      const q = state.searchQuery.toLowerCase();
+      opts = opts.filter(o =>
+        o.name.toLowerCase().includes(q) ||
+        (o.description || '').toLowerCase().includes(q) ||
+        (o.category || '').toLowerCase().includes(q)
+      );
+    }
 
     if (!opts.length) {
-      grid.innerHTML = `<div class="vc-options-empty">
-        <div style="font-size:2rem;margin-bottom:.8rem">⚙️</div>
-        <strong>Aucune option dans cette catégorie</strong>
-        <p>Essayez une autre catégorie ou contactez-nous pour un codage sur mesure.</p>
-      </div>`;
+      const emptyMsg = state.searchQuery
+        ? `<strong>Aucun r\u00e9sultat pour "\u00ab\u00a0${state.searchQuery}\u00a0\u00bb"</strong><p>Essayez un autre terme ou une autre cat\u00e9gorie.</p>`
+        : `<strong>Aucune option dans cette cat\u00e9gorie</strong><p>Essayez une autre cat\u00e9gorie ou contactez-nous pour un codage sur mesure.</p>`;
+      grid.innerHTML = `<div class="vc-options-empty"><div style="font-size:2rem;margin-bottom:.8rem">\u2699\uFE0F</div>${emptyMsg}</div>`;
       renderCategoryBar();
       renderVehicleSummary();
       return;
@@ -587,7 +612,8 @@ const VCApp = (() => {
     init, goToStep, selectBrand, selectModel,
     confirmModel, filterByCategory, toggleOption,
     expandOption, openLeadModal, closeLeadModal,
-    submitLead, closeUpsell, openWhatsApp, _preload
+    submitLead, closeUpsell, openWhatsApp,
+    searchOptions, clearSearch, _preload
   };
 
 })();
