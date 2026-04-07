@@ -2,6 +2,9 @@
    AREPROG — Codage VAG Platform CSS v1.0
    ═══════════════════════════════════════════ */
 
+/* Generic hidden utility */
+.hidden { display:none !important; }
+
 /* ── HERO ──────────────────────────────────── */
 .vc-hero {
   position: relative;
