@@ -615,8 +615,240 @@ window.VAG = (function() {
       compatible:{ models:['golf7','golf8','a3_8v','a3_8y','leon_5f','leon_4','formentor'], platforms:['MQB','MQB Evo'], yearMin:2015, yearMax:2024, requiresEquipment:['Moteur TSI/TFSI avec turbo OEM'] },
       difficulty:'avance', timeMin:30, price:59, active:true,
       upsellIds:['opt_throttle','opt_launch']
+    },
+
+    // ════════════════ OPTIONS PQ35 / PQ25 (anciens modèles) ════════════════
+    {
+      id:'opt_pq35_mirror_fold', name:'Rétroviseurs rabattables via télécommande',
+      description:'Repliez vos rétroviseurs automatiquement en verrouillant le véhicule.',
+      techDescription:'Module 09 — Long Coding. Bit 7 du byte 0 = 1. Compatible Golf 6, Tiguan 1, A3 8P.',
+      category:'confort',
+      compatible:{ models:[], platforms:['PQ35','PQ46'], yearMin:2005, yearMax:2016, requiresEquipment:['Rétroviseurs électriques rabattables'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_pq35_alarm_horn','opt_pq35_us_lights']
+    },
+    {
+      id:'opt_pq35_alarm_horn', name:'Alarme silencieuse (sans klaxon)',
+      description:'L\'alarme se déclenche sans le coup de klaxon — idéal la nuit en résidence.',
+      techDescription:'Module 46 ou 09 — désactivation du klaxon lors du déclenchement alarme.',
+      category:'confort',
+      compatible:{ models:[], platforms:['PQ35','PQ25','PQ46'], yearMin:2002, yearMax:2016, requiresEquipment:['Alarme OEM'] },
+      difficulty:'facile', timeMin:10, price:19, active:true,
+      upsellIds:['opt_pq35_mirror_fold']
+    },
+    {
+      id:'opt_pq35_belt_beep', name:'Désactivation bip ceinture',
+      description:'Supprimez le bip de rappel de ceinture (pour l\'atelier ou les manœuvres).',
+      techDescription:'Module 17 — Instruments. Long Coding byte 0.',
+      category:'confort',
+      compatible:{ models:[], platforms:['PQ35','PQ25','PQ46'], yearMin:2002, yearMax:2018, requiresEquipment:[] },
+      difficulty:'facile', timeMin:10, price:19, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_pq35_us_lights', name:'Activation feux US (clignotants orange)',
+      description:'Active les répétiteurs de clignotants orange sur les rétroviseurs (norme US).',
+      techDescription:'Module 09 ou 52 — Bit clignotants US. Valable sur Golf 5/6, Tiguan 1, A3 8P.',
+      category:'eclairage',
+      compatible:{ models:[], platforms:['PQ35','PQ25','PQ46'], yearMin:2004, yearMax:2018, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_pq35_coming_home']
+    },
+    {
+      id:'opt_pq35_coming_home', name:'Coming Home / Leaving Home',
+      description:'Les phares restent allumés quelques secondes après fermeture du véhicule.',
+      techDescription:'Module 09 — Lumières de sortie/entrée. Durée paramétrable en adaptation.',
+      category:'eclairage',
+      compatible:{ models:[], platforms:['PQ35','PQ25','PQ46'], yearMin:2004, yearMax:2018, requiresEquipment:['Phares automatiques ou xénons'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_pq35_us_lights']
+    },
+    {
+      id:'opt_pq35_video_motion', name:'Vidéo en roulant (DVD / TV)',
+      description:'Déverrouillez la lecture vidéo/DVD sur l\'autoradio pendant que le véhicule est en mouvement.',
+      techDescription:'Module 5F — Autoradio. Adaptation canal 36 — valeur 3. Compatible RNS 510/315.',
+      category:'multimedia',
+      compatible:{ models:[], platforms:['PQ35','PQ46'], yearMin:2004, yearMax:2016, requiresEquipment:['RNS 510 ou RNS 315'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_pq35_hidden_menu']
+    },
+    {
+      id:'opt_pq35_hidden_menu', name:'Menu caché autoradio RNS/RCD',
+      description:'Accédez au menu de service de votre autoradio d\'origine pour des réglages avancés.',
+      techDescription:'Module 5F — Adaptation. Green-menu activation via Long Coding.',
+      category:'multimedia',
+      compatible:{ models:[], platforms:['PQ35','PQ25','PQ46'], yearMin:2004, yearMax:2018, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_pq35_startstop', name:'Désactivation Start/Stop permanent',
+      description:'Le système Start/Stop reste désactivé à chaque démarrage sans manipulation.',
+      techDescription:'Module 17 ou ECO module — Long coding bit désactivation auto SSM.',
+      category:'performance',
+      compatible:{ models:[], platforms:['PQ35'], yearMin:2011, yearMax:2016, requiresEquipment:['Start/Stop OEM'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_pq35_dsg_coast', name:'Mode roue libre boîte DSG (Coast)',
+      description:'La boîte DSG passe au point mort à faible charge pour réduire la consommation.',
+      techDescription:'Module 02 — Boîte automatique. Activation coast-mode via Long Coding.',
+      category:'performance',
+      compatible:{ models:[], platforms:['PQ35','PQ46'], yearMin:2008, yearMax:2018, requiresEquipment:['Boîte DSG/S-Tronic'] },
+      difficulty:'moyen', timeMin:20, price:39, active:true,
+      upsellIds:[]
+    },
+
+    // ════════════════ OPTIONS MEB (électriques) ════════════════
+    {
+      id:'opt_meb_one_pedal', name:'One-Pedal Driving — niveau récupération maximal',
+      description:'Augmentez le niveau de récupération d\'énergie au freinage pour une conduite à une pédale.',
+      techDescription:'Module 08 — Climatisation/énergie. Adaptation niveau B régénération max.',
+      category:'performance',
+      compatible:{ models:[], platforms:['MEB'], yearMin:2019, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_meb_battery_display']
+    },
+    {
+      id:'opt_meb_battery_display', name:'Affichage batterie en pourcentage',
+      description:'Affichez le niveau de charge en % directement sur le compteur de bord.',
+      techDescription:'Module 17 — Virtual Cockpit. Long Coding activation batterie %.',
+      category:'multimedia',
+      compatible:{ models:[], platforms:['MEB'], yearMin:2019, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:10, price:19, active:true,
+      upsellIds:['opt_meb_one_pedal']
+    },
+    {
+      id:'opt_meb_charging_sound', name:'Son de charge personnalisé',
+      description:'Modifiez le son émis lors du branchement sur borne de charge.',
+      techDescription:'Module 77 — son de charge. Adaptation valeur souhaitée.',
+      category:'confort',
+      compatible:{ models:[], platforms:['MEB'], yearMin:2019, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:10, price:19, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_meb_range_mode', name:'Mode économie d\'énergie personnalisé',
+      description:'Configurez le profil de conduite éco pour maximiser l\'autonomie réelle.',
+      techDescription:'Module 08 — Gestion énergie. Profil éco personnalisé.',
+      category:'performance',
+      compatible:{ models:[], platforms:['MEB'], yearMin:2019, yearMax:2024, requiresEquipment:[] },
+      difficulty:'moyen', timeMin:20, price:29, active:true,
+      upsellIds:['opt_meb_one_pedal']
+    },
+    {
+      id:'opt_meb_ambient_light', name:'Ambiance intérieure étendue',
+      description:'Activez les zones lumineuses supplémentaires de l\'habitacle (si câblé).',
+      techDescription:'Module 0A (système d\'ambiance). Long coding zones supplémentaires.',
+      category:'eclairage',
+      compatible:{ models:[], platforms:['MEB'], yearMin:2019, yearMax:2024, requiresEquipment:['Éclairage ambiance OEM'] },
+      difficulty:'moyen', timeMin:25, price:49, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_meb_acoustic_prot', name:'Désactivation alerte sonore piéton (AVAS)',
+      description:'Supprimez le son artificiel émis à basse vitesse pour les piétons (zones privées).',
+      techDescription:'Module AVAS (système son piéton). Adaptation désactivation.',
+      category:'performance',
+      compatible:{ models:[], platforms:['MEB'], yearMin:2019, yearMax:2024, requiresEquipment:[] },
+      difficulty:'avance', timeMin:30, price:49, active:true,
+      upsellIds:[]
+    },
+
+    // ════════════════ OPTIONS SUPPLEMENTAIRES MQB/MQB Evo ════════════════
+    {
+      id:'opt_lap_timer', name:'Chronomètre (Lap Timer) dans le cockpit',
+      description:'Activez le chronomètre de performances directement sur votre tableau de bord.',
+      techDescription:'Module 17 — Virtual Cockpit ou MFD. Activation lap timer via Long Coding.',
+      category:'performance',
+      compatible:{ models:[], platforms:['MQB','MQB Evo'], yearMin:2014, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_launch','opt_overboost']
+    },
+    {
+      id:'opt_battery_display', name:'Affichage tension batterie 12V',
+      description:'Suivez la tension de votre batterie en temps réel sur le MFD.',
+      techDescription:'Module 17 — MFD. Activation affichage tension auxiliaire.',
+      category:'multimedia',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MQB-A0','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:10, price:19, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_mirror_tilt_reverse', name:'Rétroviseur côté passager inclinable en marche arrière',
+      description:'Le rétroviseur droit s\'incline automatiquement vers le bas lors des manœuvres de recul.',
+      techDescription:'Module 09 — Long Coding bit inclinaison rétro passager en marche arrière.',
+      category:'confort',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MQB-A0','MLB Evo','PQ35','PQ46'], yearMin:2008, yearMax:2024, requiresEquipment:['Rétroviseurs électriques'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_mirror_fold']
+    },
+    {
+      id:'opt_virtual_cockpit_style', name:'Style d\'affichage Virtual Cockpit personnalisé',
+      description:'Changez la mise en page de votre compteur numérique (classique, sport, infotainment).',
+      techDescription:'Module 17 — Virtual Cockpit. Long coding style d\'affichage et disposition.',
+      category:'multimedia',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2015, yearMax:2024, requiresEquipment:['Virtual Cockpit OEM'] },
+      difficulty:'facile', timeMin:15, price:39, active:true,
+      upsellIds:['opt_lap_timer']
+    },
+    {
+      id:'opt_drl_brake_mode', name:'DRL — extinction à l\'arrêt (frein)',
+      description:'Les feux de jour s\'éteignent automatiquement quand vous appuyez sur la pédale de frein à l\'arrêt.',
+      techDescription:'Module 09 — Long Coding extinction DRL frein/parking.',
+      category:'eclairage',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MQB-A0','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:['DRL LED'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:['opt_drl']
+    },
+    {
+      id:'opt_easy_entry', name:'Easy Entry — recul siège conducteur à l\'ouverture de la porte',
+      description:'Le siège recule automatiquement quand vous ouvrez la porte pour faciliter la sortie.',
+      techDescription:'Module 52 — Siège conducteur. Activation easy-entry via Long Coding.',
+      category:'confort',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2015, yearMax:2024, requiresEquipment:['Siège électrique conducteur'] },
+      difficulty:'facile', timeMin:20, price:39, active:true,
+      upsellIds:['opt_seat_heat']
+    },
+    {
+      id:'opt_hill_start_assist', name:'Aide au démarrage en côte — seuil ajusté',
+      description:'Configurez la sensibilité de l\'aide au démarrage en côte pour un démarrage plus fluide.',
+      techDescription:'Module 03 — ABS/ESP. Adaptation seuil HSA.',
+      category:'assistance',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MQB-A0','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_tyre_pressure_display', name:'Affichage pression des pneus en temps réel',
+      description:'Visualisez la pression de chaque pneu individuellement sur le MFD.',
+      techDescription:'Module 65 — Monitoring pression pneus. Activation affichage détaillé.',
+      category:'multimedia',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MQB-A0','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:['Capteurs TPMS directs OEM'] },
+      difficulty:'facile', timeMin:15, price:29, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_trunk_logo_light', name:'Éclairage coffre via télécommande',
+      description:'Allumez l\'éclairage du coffre depuis la télécommande avant de l\'ouvrir.',
+      techDescription:'Module 09 — Long Coding éclairage coffre télécommande.',
+      category:'eclairage',
+      compatible:{ models:[], platforms:['MQB','MQB Evo','MLB Evo'], yearMin:2012, yearMax:2024, requiresEquipment:[] },
+      difficulty:'facile', timeMin:10, price:19, active:true,
+      upsellIds:[]
+    },
+    {
+      id:'opt_exhaust_sound_sport', name:'Son d\'échappement Sport (OPF bypass simulation)',
+      description:'Optimisez la cartographie du soundaktor pour un son plus présent à froid.',
+      techDescription:'Module 01 ou 08 — Adaptation son moteur / OPF flap.',
+      category:'performance',
+      compatible:{ models:[], platforms:['MQB Evo'], yearMin:2019, yearMax:2024, requiresEquipment:['Moteur TSI/TDI avec OPF'] },
+      difficulty:'moyen', timeMin:25, price:49, active:true,
+      upsellIds:['opt_soundaktor_max']
     }
 
+,
   ]; // end OPTIONS
 
   // ─────────────────────────────────────────────────────
