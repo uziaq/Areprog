@@ -46,6 +46,9 @@
 /dossiers                           /gestion.html                       200
 /clients                            /gestion.html                       200
 
+# ── Formation ECU ────────────────────────────────────────────
+/formation                          /formation.html                     200
+
 # ── Codage VAG ───────────────────────────────────────────────
 /codage-vag                         /codage-vag.html                    200
 /codage-vag-admin                   /codage-vag-admin.html              200
