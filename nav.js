@@ -48,7 +48,6 @@ const NAV_HTML = `
  <li><a href="/reprogrammation-moteur-auxerre">Auxerre & Yonne</a></li>
  </ul>
  </li>
- <li><a href="/formation" data-page="formation">Formation ECU <span class="nav-badge" style="color:#A78BFA;border-color:rgba(167,139,250,.4)">NEW</span></a></li>
  <li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
  <li><a href="/tarifs" data-page="tarifs">Tarifs</a></li>
  <li><a href="/about" data-page="about">À propos</a></li>
@@ -86,7 +85,6 @@ const NAV_HTML = `
  <a href="/odis" class="nav-mobile-sub" data-page="odis">Diagnostic ODIS VAG</a>
  <a href="/codage-vag" class="nav-mobile-sub" data-page="codage-vag">Codage VAG — Options cachées</a>
  <a href="/boutique-vag" class="nav-mobile-sub" data-page="boutique-vag">Boutique Retrofit VAG</a>
- <a href="/formation" class="nav-mobile-sub" data-page="formation">Formation Cartographie ECU</a>
  </div>
  <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
  <a href="/about" data-page="about">À propos</a>
