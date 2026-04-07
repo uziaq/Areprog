@@ -2,6 +2,9 @@
    AREPROG — Boutique VAG CSS v1.0
    ═══════════════════════════════════════════ */
 
+/* Generic hidden utility */
+.hidden { display:none !important; }
+
 /* ── HERO ────────────────────────────────── */
 .boutique-hero {
   padding: calc(var(--nav-h) + 4rem) 5rem 3rem;
