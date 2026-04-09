@@ -48,6 +48,8 @@
 
 # ── Codage VAG ───────────────────────────────────────────────
 /codage-vag                         /codage-vag.html                    200
+/codage-options-vag                 /codage-options-vag.html            200
+/installation-options-vag           /installation-options-vag.html      200
 /codage-vag-admin                   /codage-vag-admin.html              200
 /boutique-vag                       /boutique-vag.html                  200
 
