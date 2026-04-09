@@ -176,14 +176,6 @@
 
 
 
-  <!-- ═══ Formation ECU ═══ -->
-  <url>
-    <loc>https://areprog.fr/formation</loc>
-    <lastmod>2026-04-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
   <!-- ═══ Codage VAG ═══ -->
   <url>
     <loc>https://areprog.fr/codage-vag</loc>
