@@ -907,7 +907,7 @@ select option{background:#1d222d}
   <div class="login-box">
     <div class="login-logo">ARE<span>PROG</span></div>
     <div class="login-sub">Espace professionnel</div>
-    <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="arthur@areprog.fr" autocomplete="email"/></div>
+    <div class="lf"><label>Email</label><input id="l-email" type="email" placeholder="" autocomplete="email"/></div>
     <div class="lf"><label>Mot de passe</label><input id="l-pass" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
     <button class="login-btn" id="login-btn" onclick="if(typeof doLogin==='function')doLogin()">Se connecter →</button>
     <div class="login-err" id="lerr" style="display:none"></div>
@@ -1053,6 +1053,7 @@ select option{background:#1d222d}
           <div class="fr"><label>Motorisation</label><input id="f-vmot" type="text" placeholder="2.0 TSI 220ch"/></div>
           <div class="fr"><label>Année</label><input id="f-van" type="text" placeholder="2019"/></div>
           <div class="fr"><label>Immatriculation</label><input id="f-vim" type="text" placeholder="AB-123-CD"/></div>
+          <div class="fr"><label>Kilométrage</label><input id="f-vkm" type="text" placeholder="45 000 km"/></div>
         </div>
       </div>
 
@@ -2465,7 +2466,7 @@ function resetForm(goToForm) {
   // Reset statut properly
   var s = $('f-statut');
   s.value = 'envoyé';
-  ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-vm','f-vmo','f-vmot','f-van','f-vim','f-nint'].forEach(function(i) { $(i).value = ''; });
+  ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-vm','f-vmo','f-vmot','f-van','f-vim','f-vkm','f-nint'].forEach(function(i) { $(i).value = ''; });
   $('f-tva').value = '0';
   $('f-notes').value = 'Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
   $('form-h').textContent = 'Nouveau devis';
@@ -2608,6 +2609,7 @@ function buildObj() {
     vmot: $('f-vmot').value,
     van: $('f-van').value,
     vim: $('f-vim').value,
+    vkm: $('f-vkm').value,
     lines: JSON.parse(JSON.stringify(lines)),
     gains: currentGains ? JSON.parse(JSON.stringify(currentGains)) : null,
     customGains: ($('f-gains') ? $('f-gains').value.split('\n').map(function(g){return g.trim();}).filter(Boolean) : []),
@@ -2667,6 +2669,7 @@ function loadDocData(doc) {
   $('f-vmot').value  = doc.vmot  || '';
   $('f-van').value   = doc.van   || '';
   $('f-vim').value   = doc.vim   || '';
+  $('f-vkm').value   = doc.vkm   || '';
   $('f-tva').value   = String(doc.tvaRate || 0);
   $('f-notes').value = doc.notes || '';
   $('f-nint').value  = doc.nint  || '';
@@ -2705,6 +2708,7 @@ function loadDoc(docId) {
   $('f-vmot').value = doc.vmot || '';
   $('f-van').value = doc.van || '';
   $('f-vim').value = doc.vim || '';
+  $('f-vkm').value = doc.vkm || '';
   $('f-tva').value = String(doc.tvaRate || 0);
   $('f-notes').value = doc.notes || '';
   $('f-nint').value = doc.nint || '';
@@ -2822,6 +2826,7 @@ function renderDocHTML(doc, tplOverride) {
     + (doc.ce ? '<br>' + escHtml(doc.ce) : '')
     + (vehStr ? '<br><br><strong>Véhicule :</strong> ' + vehStr : '')
     + (doc.vim ? '<br>Immatriculation : <strong>' + escHtml(doc.vim.toUpperCase()) + '</strong>' : '')
+    + (doc.vkm ? '<br>Kilométrage : <strong>' + escHtml(doc.vkm) + '</strong>' : '')
     + '</div></div></div>'
     + noticeHTML
     + '<table class="d-table"><thead><tr>'
