@@ -127,6 +127,10 @@ select option{background:#1d222d}
 .rm-line:hover{border-color:var(--red);color:var(--red)}
 .add-line{width:100%;margin-top:6px;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:7px;color:var(--text-dim);font-size:13px;transition:all .15s}
 .add-line:hover{border-color:var(--blue);color:var(--blue)}
+.line-desc-wrap{margin-top:-2px;margin-bottom:6px}
+.line-desc{width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-top:none;border-radius:0 0 7px 7px;color:var(--text-dim);outline:none;transition:border-color .2s;font-size:12px;box-sizing:border-box}
+.line-desc:focus{border-color:var(--blue);color:var(--text)}
+.line-desc::placeholder{color:var(--text-muted);font-style:italic}
 
 /* TOTAUX */
 .totaux-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px}
@@ -2507,7 +2511,7 @@ function buildSelectOpts(selected) {
 
 function addLine(data) {
   data = data || {};
-  lines.push({ id: Date.now() + Math.random(), label: data.label || '', qte: data.qte || 1, pu: data.pu || 0 });
+  lines.push({ id: Date.now() + Math.random(), label: data.label || '', qte: data.qte || 1, pu: data.pu || 0, desc: data.desc || '' });
   renderLines();
 }
 
@@ -2521,6 +2525,9 @@ function renderLines() {
   var c = $('lines');
   c.innerHTML = '';
   lines.forEach(function(line) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'line-item';
+
     var div = document.createElement('div');
     div.className = 'line-row';
     div.dataset.lid = line.id;
@@ -2537,7 +2544,23 @@ function renderLines() {
       '</label>' +
       '<div class="lt" style="color:' + (isOffert ? 'var(--green)' : '') + '">' + total + '</div>' +
       '<button class="rm-line" onclick="removeLine(' + line.id + ')" title="Supprimer">\xd7</button>';
-    c.appendChild(div);
+
+    var descInput = document.createElement('input');
+    descInput.type = 'text';
+    descInput.className = 'line-desc';
+    descInput.placeholder = 'Description (optionnel)';
+    descInput.value = line.desc || '';
+    (function(id) {
+      descInput.addEventListener('input', function() { lineDesc(this, id); });
+    })(line.id);
+
+    var descWrap = document.createElement('div');
+    descWrap.className = 'line-desc-wrap';
+    descWrap.appendChild(descInput);
+
+    wrapper.appendChild(div);
+    wrapper.appendChild(descWrap);
+    c.appendChild(wrapper);
   });
   calcTotaux();
 }
@@ -2566,6 +2589,13 @@ function lineField(inp, lid, field) {
   var row = inp.closest('.line-row');
   row.querySelector('.lt').textContent = (line.qte * line.pu).toFixed(2) + ' \u20ac';
   calcTotaux();
+}
+
+function lineDesc(inp, lid) {
+  var line = lines.find(function(l) { return l.id === lid; });
+  if (!line) return;
+  line.desc = inp.value;
+  onFormChange();
 }
 
 // ============================================================
@@ -2765,7 +2795,8 @@ function renderDocHTML(doc, tplOverride) {
   var linesHTML = doc.lines.map(function(l) {
     var puStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : (l.pu||0).toFixed(2) + ' €';
     var totStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + ((l.qte||1)*(l.pu||0)).toFixed(2) + ' €</strong>';
-    return '<tr><td>' + escHtml(l.label || '—') + '</td><td>' + l.qte + '</td><td>' + puStr + '</td><td>' + totStr + '</td></tr>';
+    var descRow = l.desc ? '<tr><td colspan="4" style="padding-top:2px;padding-bottom:8px;font-size:12px;color:#888;font-style:italic">' + escHtml(l.desc) + '</td></tr>' : '';
+    return '<tr><td>' + escHtml(l.label || '—') + '</td><td>' + l.qte + '</td><td>' + puStr + '</td><td>' + totStr + '</td></tr>' + descRow;
   }).join('');
 
   var gainsHTML = '';
