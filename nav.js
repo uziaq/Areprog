@@ -55,6 +55,7 @@ const NAV_HTML = `
  <li><a href="/contact" data-page="contact">Contact</a></li>
  </ul>
  <a href="/contact" class="nav-cta">Devis gratuit</a>
+ <button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème"></button>
  <button class="nav-burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navMobile">
  <span></span><span></span><span></span>
  </button>
@@ -206,6 +207,28 @@ document.addEventListener('DOMContentLoaded', () => {
  document.querySelectorAll('.nav-dropdown-menu.open').forEach(m => m.classList.remove('open'));
  }
  }, { passive: true });
+
+ // ── Theme toggle
+ const MOON_SVG = `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+ const SUN_SVG  = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+
+ const themeBtn = document.getElementById('themeToggle');
+
+ const applyTheme = (theme) => {
+   document.documentElement.dataset.theme = theme;
+   localStorage.setItem('theme', theme);
+   if (themeBtn) themeBtn.innerHTML = theme === 'light' ? MOON_SVG : SUN_SVG;
+ };
+
+ const savedTheme = localStorage.getItem('theme') ||
+   (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+ applyTheme(savedTheme);
+
+ if (themeBtn) {
+   themeBtn.addEventListener('click', () => {
+     applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+   });
+ }
 
  // WhatsApp widget : chargé directement via <script src="whatsapp-widget.js"> dans chaque page HTML
 
