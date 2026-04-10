@@ -5,7 +5,7 @@
 
 (function() {
  const WA_NUMBER = '33667924630';
- const WA_MSG = encodeURIComponent('Bonjour AREPROG ! Je souhaite un devis pour la reprogrammation de mon véhicule. ');
+ const WA_MSG = encodeURIComponent('Bonjour AREPROG ! Je souhaite un devis (reprogrammation, codage VAG, diagnostic ODIS…). ');
  const WA_URL = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`;
 
  // CSS
