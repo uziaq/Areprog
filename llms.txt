@@ -1,0 +1,32 @@
+# llms.txt — AREPROG
+# Politique d'accès pour les agents IA et LLM crawlers
+
+User-agent: *
+Allow: /
+
+# Contenu indexable par les IA
+# Site : https://areprog.fr
+# Domaine : Reprogrammation moteur, chip tuning, conversion E85, codage VAG
+# Langue : Français
+# Zone géographique : Pays Basque, Pyrénées-Atlantiques, Yonne (France)
+
+# Pages autorisées à l'indexation IA
+Allow: /stage1
+Allow: /stage2
+Allow: /conversion-e85
+Allow: /desactivation-egr
+Allow: /desactivation-fap
+Allow: /desactivation-adblue
+Allow: /odis
+Allow: /codage-vag
+Allow: /tarifs
+Allow: /faq
+Allow: /guide-reprogrammation-moteur
+
+# Pages privées — accès refusé
+Disallow: /simulateur
+Disallow: /gestion
+Disallow: /confirmation
+Disallow: /crm
+Disallow: /dossiers
+Disallow: /clients

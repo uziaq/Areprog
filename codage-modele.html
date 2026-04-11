@@ -7,7 +7,7 @@
   <title>Codage VAG — AREPROG</title>
   <meta name="description" content="Activation des options cachées sur votre véhicule VAG. Codage VCDS professionnel à domicile."/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" id="canonical-url" href=""/>
+  <link rel="canonical" id="canonical-url" href="https://areprog.fr/codage-vag"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="AREPROG"/>
   <meta property="og:image" content="https://areprog.fr/og-image.webp"/>
@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,300&family=Barlow:wght@300;400;500;600&display=swap"/>
   <link rel="stylesheet" href="/shared.css"/>
   <link rel="stylesheet" href="/codage-vag.css"/>
-  <script type="application/ld+json" id="page-schema">{}</script>
+  <script type="application/ld+json" id="page-schema">{"@context":"https://schema.org","@type":"WebPage","name":"Codage VAG — AREPROG","url":"https://areprog.fr/codage-vag"}</script>
   <style>
     /* ── Breadcrumb ─────────────────────────── */
     .vc-breadcrumb {
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // ── SEO meta ──────────────────────────────────
   const pageTitle = 'Codage ' + model.name + ' (' + model.code + ') — Options cach\u00e9es ' + brand.name + ' | AREPROG';
   const pageDesc  = 'Activez les options cach\u00e9es de votre ' + brand.name + ' ' + model.name + ' (' + model.yearMin + '-' + model.yearMax + '). Codage VCDS / OBDeleven \u00e0 domicile — Confort, \u00e9clairage, multim\u00e9dia, performance. Devis gratuit.';
-  const pageUrl   = 'https://areprog.fr/' + brandSlug + '/' + modelSlug;
+  const pageUrl   = 'https://areprog.fr/codage-vag/' + brandSlug + '/' + modelSlug;
 
   document.title = pageTitle;
   document.querySelector('meta[name="description"]').content = pageDesc;
@@ -337,8 +337,8 @@ document.addEventListener('DOMContentLoaded', function() {
     "provider": { "@type":"LocalBusiness", "name":"AREPROG", "url":"https://areprog.fr" },
     "serviceType": "Codage options cach\u00e9es " + brand.name + " " + model.name,
     "offers": { "@type":"AggregateOffer", "priceCurrency":"EUR",
-      "lowPrice": Math.min(...compatOpts.map(o => o.price)),
-      "highPrice": Math.max(...compatOpts.map(o => o.price)),
+      "lowPrice": compatOpts.length ? Math.min(...compatOpts.map(o => o.price)) : 0,
+      "highPrice": compatOpts.length ? Math.max(...compatOpts.map(o => o.price)) : 0,
       "offerCount": compatOpts.length }
   });
 
