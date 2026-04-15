@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Outil de diagnostic">
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1a1a1f"/><stop offset="1" stop-color="#2a2a33"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <g fill="none" stroke="#e63946" stroke-width="3">
+    <rect x="155" y="90" width="90" height="130" rx="10"/>
+    <rect x="168" y="105" width="64" height="42" fill="#e63946"/>
+    <circle cx="180" cy="170" r="5"/>
+    <circle cx="200" cy="170" r="5"/>
+    <circle cx="220" cy="170" r="5"/>
+    <circle cx="180" cy="190" r="5"/>
+    <circle cx="200" cy="190" r="5"/>
+    <circle cx="220" cy="190" r="5"/>
+  </g>
+  <text x="200" y="246" fill="#e6e6ea" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="18" text-anchor="middle" letter-spacing="2">DIAGNOSTIC VAG</text>
+  <text x="200" y="266" fill="#9aa0a6" font-family="Barlow, sans-serif" font-size="12" text-anchor="middle">AREPROG · Retrofit VAG</text>
+</svg>

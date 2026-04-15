@@ -1,0 +1,267 @@
+/* ═══════════════════════════════════════════
+   AREPROG — Fiche produit VAG
+   ═══════════════════════════════════════════ */
+
+.produit-hero {
+  padding: calc(var(--nav-h) + 2.5rem) 5rem 3rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--bg) 0%, #0a1628 60%, var(--bg) 100%);
+}
+
+.produit-breadcrumb {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  letter-spacing: .02em;
+}
+.produit-breadcrumb a { color: var(--text2); text-decoration: none; }
+.produit-breadcrumb a:hover { color: var(--blue-light); }
+.produit-breadcrumb span { margin: 0 .4rem; color: var(--border2); }
+
+.produit-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* Media */
+.produit-media { position: sticky; top: calc(var(--nav-h) + 1.5rem); }
+.produit-image-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  display: flex; align-items: center; justify-content: center;
+}
+.produit-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.produit-badges {
+  display: flex; flex-wrap: wrap; gap: .5rem;
+  margin-top: 1rem;
+}
+.produit-badge {
+  font-size: .72rem; letter-spacing: .04em;
+  padding: .4rem .8rem; border-radius: 100px;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--text2);
+}
+.produit-badge-oem { color: var(--blue-light); border-color: rgba(90,150,255,.35); }
+.produit-badge-warranty { color: var(--green); border-color: rgba(80,200,120,.35); }
+
+/* Info */
+.produit-info .boutique-card-badge { display: inline-block; margin-bottom: 1rem; }
+.produit-info h1 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  text-transform: uppercase; line-height: 1;
+  letter-spacing: -.01em; color: var(--text);
+  margin: 0 0 1rem;
+}
+
+.produit-rating {
+  display: flex; align-items: center; gap: .6rem;
+  margin-bottom: 1.4rem;
+}
+.produit-stars {
+  color: #f5b301; font-size: 1.1rem; letter-spacing: .12em;
+}
+.produit-rating-count { color: var(--muted); font-size: .82rem; }
+
+.produit-desc {
+  color: var(--text2); font-size: 1.02rem; line-height: 1.75;
+  margin-bottom: 1rem;
+}
+.produit-desc-ext {
+  color: var(--muted); font-size: .92rem; line-height: 1.7;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--border2);
+}
+
+.produit-compat {
+  display: flex; flex-wrap: wrap; gap: .4rem;
+  margin-bottom: 1.8rem;
+}
+
+.produit-price-block {
+  display: flex; align-items: baseline; gap: .8rem;
+  margin-bottom: 1.4rem;
+  padding: 1.2rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+}
+.produit-price {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 2.4rem; color: var(--text);
+  line-height: 1;
+}
+.produit-price-note { color: var(--muted); font-size: .8rem; }
+
+.produit-actions {
+  display: flex; gap: .8rem; flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.produit-cta {
+  flex: 1 1 200px;
+  display: inline-block;
+  padding: 1rem 1.4rem;
+  background: var(--blue);
+  color: #fff;
+  border: 1px solid var(--blue);
+  border-radius: var(--radius);
+  font-family: var(--font-display); font-weight: 700;
+  font-size: .85rem; letter-spacing: .1em; text-transform: uppercase;
+  text-align: center; text-decoration: none; cursor: pointer;
+  transition: filter .2s, transform .2s;
+}
+.produit-cta:hover { filter: brightness(1.1); }
+.produit-cta-alt { background: var(--surface2); color: var(--text2); border-color: var(--border2); }
+
+.produit-bullets {
+  list-style: none; padding: 0; margin: 0;
+  color: var(--text2); font-size: .9rem; line-height: 1.9;
+}
+.produit-bullets li {
+  padding-left: 1.4rem; position: relative;
+}
+.produit-bullets li::before {
+  content: "✓"; color: var(--green);
+  position: absolute; left: 0; top: 0;
+  font-weight: 700;
+}
+
+.produit-notfound {
+  text-align: center; padding: 4rem 1rem; color: var(--text2);
+}
+.produit-notfound h1 {
+  font-family: var(--font-display); font-size: 2.2rem;
+  text-transform: uppercase; color: var(--text);
+  margin-bottom: 1rem;
+}
+
+/* ── REVIEWS ───────────────────────────────── */
+.produit-reviews {
+  padding: 3rem 5rem;
+  border-bottom: 1px solid var(--border);
+}
+.produit-reviews-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+.produit-reviews-head h2 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 1.8rem; text-transform: uppercase;
+  color: var(--text); margin: 0;
+}
+.produit-reviews-summary { color: var(--muted); font-size: .9rem; }
+
+.produit-reviews-list {
+  display: grid; gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.produit-review {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.4rem;
+}
+.produit-review-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: .6rem;
+}
+.produit-review-author { color: var(--text); font-weight: 600; font-size: .95rem; }
+.produit-review-date { color: var(--muted); font-size: .75rem; }
+.produit-review-stars { color: #f5b301; letter-spacing: .1em; margin-bottom: .4rem; font-size: .95rem; }
+.produit-review-comment { color: var(--text2); line-height: 1.7; font-size: .92rem; white-space: pre-wrap; }
+.produit-review-reply {
+  margin-top: .8rem; padding: .8rem 1rem;
+  background: var(--surface2); border-left: 3px solid var(--blue);
+  border-radius: 6px; color: var(--text2); font-size: .88rem; line-height: 1.6;
+}
+.produit-review-reply strong { color: var(--blue-light); }
+
+.produit-reviews-empty {
+  padding: 2rem; text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--border2); border-radius: var(--radius);
+}
+
+.produit-review-form {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.8rem;
+}
+.produit-review-form h3 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.1rem; text-transform: uppercase;
+  color: var(--text); margin: 0 0 1.2rem;
+}
+.produit-review-form label {
+  display: block; margin-bottom: 1rem;
+  color: var(--text2); font-size: .82rem;
+}
+.produit-review-form input,
+.produit-review-form textarea {
+  width: 100%; margin-top: .4rem;
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: .7rem .9rem;
+  color: var(--text); font-family: var(--font-body);
+  font-size: .9rem; box-sizing: border-box; resize: vertical;
+}
+.produit-review-form input:focus,
+.produit-review-form textarea:focus { outline: none; border-color: var(--blue); }
+
+.produit-rate-input {
+  display: inline-flex; margin-top: .4rem;
+}
+.produit-rate-input button {
+  background: none; border: none; cursor: pointer;
+  color: var(--border2); font-size: 1.6rem;
+  padding: 0 .15rem;
+}
+.produit-rate-input button.active { color: #f5b301; }
+
+.produit-review-form-note { color: var(--muted); font-size: .78rem; margin-bottom: 1rem; }
+.produit-review-form-status { margin-top: .8rem; font-size: .85rem; min-height: 1.2em; }
+.produit-review-form-status.ok  { color: var(--green); }
+.produit-review-form-status.err { color: #e63946; }
+
+/* ── RELATED ───────────────────────────────── */
+.produit-related { padding: 3rem 5rem; }
+.produit-related h2 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 1.5rem; text-transform: uppercase;
+  color: var(--text); margin: 0 0 1.5rem;
+}
+.produit-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.produit-related-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  color: var(--text);
+  text-decoration: none;
+  display: block;
+  transition: border-color .2s, transform .2s;
+}
+.produit-related-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+.produit-related-card .n { font-weight: 600; margin-bottom: .4rem; }
+.produit-related-card .p { color: var(--blue-light); font-size: .85rem; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .produit-hero { padding: calc(var(--nav-h) + 2rem) 1.2rem 2rem; }
+  .produit-reviews, .produit-related { padding: 2rem 1.2rem; }
+  .produit-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .produit-media { position: static; }
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Navigation GPS">
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1a1a1f"/><stop offset="1" stop-color="#2a2a33"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <g fill="none" stroke="#e63946" stroke-width="3">
+    <rect x="130" y="95" width="140" height="100" rx="8"/>
+    <path d="M200 115 L215 155 L200 148 L185 155 Z" fill="#e63946"/>
+    <line x1="150" y1="180" x2="250" y2="180"/>
+  </g>
+  <text x="200" y="232" fill="#e6e6ea" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="18" text-anchor="middle" letter-spacing="2">NAVIGATION &amp; GPS</text>
+  <text x="200" y="254" fill="#9aa0a6" font-family="Barlow, sans-serif" font-size="12" text-anchor="middle">AREPROG · Retrofit VAG</text>
+</svg>

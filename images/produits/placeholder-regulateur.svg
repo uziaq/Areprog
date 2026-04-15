@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Régulateur de vitesse">
+  <rect width="400" height="300" fill="#1a1a1f"/>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1a1a1f"/><stop offset="1" stop-color="#2a2a33"/></linearGradient>
+  </defs>
+  <g fill="none" stroke="#e63946" stroke-width="3">
+    <circle cx="200" cy="150" r="60"/>
+    <path d="M200 100 L200 150 L240 170" stroke-linecap="round"/>
+    <circle cx="200" cy="150" r="4" fill="#e63946"/>
+  </g>
+  <text x="200" y="232" fill="#e6e6ea" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="18" text-anchor="middle" letter-spacing="2">RÉGULATEUR DE VITESSE</text>
+  <text x="200" y="254" fill="#9aa0a6" font-family="Barlow, sans-serif" font-size="12" text-anchor="middle">AREPROG · Retrofit VAG</text>
+</svg>
