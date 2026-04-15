@@ -865,6 +865,47 @@ function toggleExt(pid) {
   const el = document.getElementById('ext-' + pid);
   if (el) el.classList.toggle('hidden');
 }
+
+// ── Enrichissement des cartes depuis products.json ───────────
+// Ajoute sur chaque carte : image produit + lien "Voir la fiche"
+const PLACEHOLDER_BY_CATEGORY = {
+  camera:     '/images/produits/placeholder-camera.svg',
+  regulateur: '/images/produits/placeholder-regulateur.svg',
+  navigation: '/images/produits/placeholder-navigation.svg',
+  diagnostic: '/images/produits/placeholder-diagnostic.svg',
+  module:     '/images/produits/placeholder-module.svg',
+};
+(async function enrichBoutiqueCards() {
+  try {
+    const res = await fetch('/products.json', { cache: 'no-cache' });
+    if (!res.ok) return;
+    const products = await res.json();
+    const bySlug = Object.fromEntries(products.map(p => [p.slug, p]));
+    document.querySelectorAll('.boutique-card').forEach(card => {
+      const slug = (card.id || '').replace(/^card-/, '');
+      const p = bySlug[slug];
+      if (!p) return;
+      // Image
+      if (!card.querySelector('.boutique-card-img')) {
+        const img = document.createElement('img');
+        img.className = 'boutique-card-img';
+        img.loading = 'lazy';
+        img.alt = p.name;
+        img.src = p.imageUrl || PLACEHOLDER_BY_CATEGORY[p.category] || PLACEHOLDER_BY_CATEGORY.module;
+        card.insertBefore(img, card.firstChild);
+      }
+      // Lien vers la fiche
+      const actions = card.querySelector('.boutique-card-actions');
+      if (actions && !card.querySelector('.boutique-detail-link')) {
+        const a = document.createElement('a');
+        a.className = 'boutique-detail-link';
+        a.href = '/produit-vag/' + slug;
+        a.textContent = 'Voir la fiche →';
+        actions.parentNode.insertBefore(a, actions);
+      }
+    });
+  } catch(e) { /* no-op */ }
+})();
 function showContactModal(name, price) {
   document.getElementById('modal-product-name').textContent = name + ' — ' + price + ' €';
   document.getElementById('contact-modal').style.display = 'flex';

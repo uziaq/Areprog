@@ -1,0 +1,779 @@
+[
+  {
+    "slug": "cam-golf8",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Golf 8",
+    "desc": "Caméra OEM pour Golf 8 (5H) avec lignes de guidage dynamiques. Montage dans la poignée de coffre originale. Compatible Discover Media / Discover Pro.",
+    "descExt": "Caméra d'origine équipementier. Connexion plug & play sur le faisceau existant. Lignes dynamiques haute précision.",
+    "price": 410,
+    "priceLabel": "410 €",
+    "compat": [
+      "Golf 8 (CD1/5H 2019+)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Golf 8 — AREPROG",
+    "seoDesc": "Caméra OEM pour Golf 8 (5H) avec lignes de guidage dynamiques. Montage dans la poignée de coffre originale. Compatible Discover Media / Discover Pro.",
+    "active": true
+  },
+  {
+    "slug": "cam-mqb",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM MQB — Golf 7 / Tiguan / Polo",
+    "desc": "Caméra d'origine pour tous modèles MQB depuis 04/2015. Lignes de guidage dynamiques. Connexion plug & play sur faisceau d'origine.",
+    "descExt": "Caméra OEM MQB generation. Compatible Discover Media et Discover Pro. Installation aisée.",
+    "price": 315,
+    "priceLabel": "315 €",
+    "compat": [
+      "Golf 7 (5G)",
+      "Tiguan 2 (AD)",
+      "Polo 6 (AW)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM MQB — Golf 7 / Tiguan / Polo — AREPROG",
+    "seoDesc": "Caméra d'origine pour tous modèles MQB depuis 04/2015. Lignes de guidage dynamiques. Connexion plug & play sur faisceau d'origine.",
+    "active": true
+  },
+  {
+    "slug": "cam-dyn",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul dynamique VW — Golf 7 / Passat B8 / Arteon",
+    "desc": "Caméra avec lignes de guidage dynamiques haute précision. Compatible autoradio GPS Discover Media/Pro.",
+    "descExt": "Lignes dynamiques adaptatives selon angle de braquage. Qualité image supérieure.",
+    "price": 462,
+    "priceLabel": "462 €",
+    "compat": [
+      "Golf 7 (5G)",
+      "Passat B8 (3G)",
+      "Arteon (3H)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul dynamique VW — Golf 7 / Passat B8 / Arteon — AREPROG",
+    "seoDesc": "Caméra avec lignes de guidage dynamiques haute précision. Compatible autoradio GPS Discover Media/Pro.",
+    "active": true
+  },
+  {
+    "slug": "cam-a3-8v",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Audi A3 8V",
+    "desc": "Caméra d'origine Audi pour A3 8V. S'intègre dans la poignée de coffre.",
+    "descExt": "Caméra OEM 8V intégration parfaite. Lignes statiques et dynamiques. Plug & play.",
+    "price": 231,
+    "priceLabel": "231 €",
+    "compat": [
+      "Audi A3 8V (2013–2020)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Audi A3 8V — AREPROG",
+    "seoDesc": "Caméra d'origine Audi pour A3 8V. S'intègre dans la poignée de coffre.",
+    "active": true
+  },
+  {
+    "slug": "cam-q3-f3",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Audi Q3 (2e gen F3)",
+    "desc": "Caméra OEM pour Audi Q3 F3 (2018+). Lignes dynamiques, montage original.",
+    "descExt": "Caméra d'origine Audi Q3 F3. Qualité image OEM.",
+    "price": 315,
+    "priceLabel": "315 €",
+    "compat": [
+      "Audi Q3 F3 (2018+)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Audi Q3 (2e gen F3) — AREPROG",
+    "seoDesc": "Caméra OEM pour Audi Q3 F3 (2018+). Lignes dynamiques, montage original.",
+    "active": true
+  },
+  {
+    "slug": "cam-q8",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Audi Q8",
+    "desc": "Caméra haute définition pour Audi Q8. Vision nocturne améliorée, guidelines dynamiques.",
+    "descExt": "Caméra OEM Q8 HQ. Résolution haute définition. Installation poignée de coffre.",
+    "price": 672,
+    "priceLabel": "672 €",
+    "compat": [
+      "Audi Q8 (4M 2018+)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Audi Q8 — AREPROG",
+    "seoDesc": "Caméra haute définition pour Audi Q8. Vision nocturne améliorée, guidelines dynamiques.",
+    "active": true
+  },
+  {
+    "slug": "gra-vw",
+    "category": "regulateur",
+    "badge": "Régulateur",
+    "name": "Régulateur de vitesse VW (GRA) — Golf 7 / Passat / Tiguan",
+    "desc": "Kit régulateur de vitesse OEM pour VW. Comprend la commande au volant, le boîtier et le faisceau.",
+    "descExt": "Kit complet GRA VW MQB. Commande multifonction, boîtier et faisceau OEM. Plug & play.",
+    "price": 210,
+    "priceLabel": "210 €",
+    "compat": [
+      "Golf 7 (5G)",
+      "Passat 8 (3G)",
+      "Tiguan 2 (AD)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Régulateur de vitesse VW (GRA) — Golf 7 / Passat / Tiguan — AREPROG",
+    "seoDesc": "Kit régulateur de vitesse OEM pour VW. Comprend la commande au volant, le boîtier et le faisceau.",
+    "active": true
+  },
+  {
+    "slug": "gra-audi-a1",
+    "category": "regulateur",
+    "badge": "Régulateur",
+    "name": "Régulateur de vitesse Audi — A1 / Q3 / A3 8V",
+    "desc": "Kit complet régulateur Audi. Commande multifonction au volant + boîtier GRA..",
+    "descExt": "Kit GRA Audi complet avec commande au volant, boîtier interface et faisceau.",
+    "price": 336,
+    "priceLabel": "336 €",
+    "compat": [
+      "Audi A1 (8X)",
+      "Audi Q3 (8U)",
+      "Audi A3 8V"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Régulateur de vitesse Audi — A1 / Q3 / A3 8V — AREPROG",
+    "seoDesc": "Kit complet régulateur Audi. Commande multifonction au volant + boîtier GRA..",
+    "active": true
+  },
+  {
+    "slug": "gra-a3-8p",
+    "category": "regulateur",
+    "badge": "Régulateur",
+    "name": "Régulateur de vitesse Audi — A3 8P + Multifonction",
+    "desc": "Kit premium avec commande multifonction + régulateur Audi A3 8P. Idéal trajet autoroute.",
+    "descExt": "Kit GRA A3 8P avec volant multifonction.",
+    "price": 420,
+    "priceLabel": "420 €",
+    "compat": [
+      "Audi A3 8P (2003–2013)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Régulateur de vitesse Audi — A3 8P + Multifonction — AREPROG",
+    "seoDesc": "Kit premium avec commande multifonction + régulateur Audi A3 8P. Idéal trajet autoroute.",
+    "active": true
+  },
+  {
+    "slug": "gps-a3-8v",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "GPS Audi A3 8V MIB2 Facelift Appconnect",
+    "desc": "Système de navigation MIB2 d'origine Audi avec AppConnect (CarPlay/Android Auto). Pour A3 8V Facelift.",
+    "descExt": "Unité MIB2 High A3 8V Facelift. CarPlay/Android Auto filaire. Écran 8 pouces.",
+    "price": 1365,
+    "priceLabel": "1365 €",
+    "compat": [
+      "Audi A3 8V Facelift (2016–2020)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "GPS Audi A3 8V MIB2 Facelift Appconnect — AREPROG",
+    "seoDesc": "Système de navigation MIB2 d'origine Audi avec AppConnect (CarPlay/Android Auto). Pour A3 8V Facelift.",
+    "active": true
+  },
+  {
+    "slug": "combi-tiguan",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "Virtual Cockpit VW Tiguan AD1",
+    "desc": "Tableau de bord numérique OEM pour Tiguan AD1. Affichage haute résolution 10,25 pouces, navigation intégrée.",
+    "descExt": "Virtual Cockpit OEM Tiguan AD1. Écran 10.25\" configurable. Plug & play VCDS.",
+    "price": 1260,
+    "priceLabel": "1260 €",
+    "compat": [
+      "VW Tiguan 2 (AD/BW2 2016+)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Virtual Cockpit VW Tiguan AD1 — AREPROG",
+    "seoDesc": "Tableau de bord numérique OEM pour Tiguan AD1. Affichage haute résolution 10,25 pouces, navigation intégrée.",
+    "active": true
+  },
+  {
+    "slug": "nav-rns510",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "Mise à jour cartographie RNS 510 V19 2024",
+    "desc": "Mise à jour cartographie Europe complète pour RNS 510. Inclut données trafic et radars 2024.",
+    "descExt": "DVD/SD carte cartographie RNS 510 Europe V19 2024. Compatible tous véhicules équipés RNS 510.",
+    "price": 105,
+    "priceLabel": "105 €",
+    "compat": [
+      "Tous véhicules avec RNS 510"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Mise à jour cartographie RNS 510 V19 2024 — AREPROG",
+    "seoDesc": "Mise à jour cartographie Europe complète pour RNS 510. Inclut données trafic et radars 2024.",
+    "active": true
+  },
+  {
+    "slug": "vcds-2503",
+    "category": "diagnostic",
+    "badge": "Diagnostic",
+    "name": "Interface VCDS 25.03 (câble générique + logiciel FR)",
+    "desc": "Câble de diagnostic VCDS version 25.03 avec logiciel en français. Fonctionne sur tous véhicules VAG. Idéal pour entretien et codage DIY.",
+    "descExt": "Câble générique VCDS V2 compatible USB. Logiciel VCDS 25.03 multilingue dont FR.",
+    "price": 126,
+    "priceLabel": "126 €",
+    "compat": [
+      "Tous véhicules VAG"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Interface VCDS 25.03 (câble générique + logiciel FR) — AREPROG",
+    "seoDesc": "Câble de diagnostic VCDS version 25.03 avec logiciel en français. Fonctionne sur tous véhicules VAG. Idéal pour entretien et codage DIY.",
+    "active": true
+  },
+  {
+    "slug": "codage-dist",
+    "category": "diagnostic",
+    "badge": "Diagnostic",
+    "name": "Codage VAG à distance (par option, en ligne)",
+    "desc": "Service de codage d'options à distance. Vous avez le câble VCDS ? Nous vous guidons en temps réel par visio pour activer l'option de votre choix.",
+    "descExt": "Session VCDS guidée à distance. 30 min par option. Assistance complète par visio.",
+    "price": 21,
+    "priceLabel": "21 €",
+    "compat": [
+      "Tous modèles MQB / MLB"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Codage VAG à distance (par option, en ligne) — AREPROG",
+    "seoDesc": "Service de codage d'options à distance. Vous avez le câble VCDS ? Nous vous guidons en temps réel par visio pour activer l'option de votre choix.",
+    "active": true
+  },
+  {
+    "slug": "module-pdc",
+    "category": "module",
+    "badge": "Module",
+    "name": "Module PDC 8K — Activation radars de recul OEM",
+    "desc": "Module d'activation des capteurs PDC d'origine pour véhicules MQB. Compatible Golf 7/8, Tiguan, A3.",
+    "descExt": "Module interface PDC 8K pour activation capteurs OEM non activés. Plug & play.",
+    "price": 126,
+    "priceLabel": "126 €",
+    "compat": [
+      "Golf 7/8",
+      "Tiguan 2",
+      "Audi A3 8V/8Y"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Module PDC 8K — Activation radars de recul OEM — AREPROG",
+    "seoDesc": "Module d'activation des capteurs PDC d'origine pour véhicules MQB. Compatible Golf 7/8, Tiguan, A3.",
+    "active": true
+  },
+  {
+    "slug": "module-dir",
+    "category": "module",
+    "badge": "Module",
+    "name": "Module direction assistée VW (extension fonctions)",
+    "desc": "Module d'extension pour direction assistée VW. Active les fonctions avancées sur modèles équipés.",
+    "descExt": "Module additionnel direction assistée électrique VW.",
+    "price": 210,
+    "priceLabel": "210 €",
+    "compat": [
+      "Golf 7 (5G)",
+      "Tiguan 2 (AD)",
+      "Passat 8"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Module direction assistée VW (extension fonctions) — AREPROG",
+    "seoDesc": "Module d'extension pour direction assistée VW. Active les fonctions avancées sur modèles équipés.",
+    "active": true
+  },
+  {
+    "slug": "cam-golf7-facelift",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Golf 7.5 Facelift",
+    "desc": "Caméra d'origine pour Golf 7 Facelift (2017+). Intégration parfaite dans la poignée de coffre. Lignes de guidage dynamiques.",
+    "descExt": "Caméra OEM Golf 7 Gen 2. Plug & play sur faisceau existant. Compatible Discover Media 2.",
+    "price": 336,
+    "priceLabel": "336 €",
+    "compat": [
+      "Golf 7.5 Facelift (5G 2017+)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Golf 7.5 Facelift — AREPROG",
+    "seoDesc": "Caméra d'origine pour Golf 7 Facelift (2017+). Intégration parfaite dans la poignée de coffre. Lignes de guidage dynamiques.",
+    "active": true
+  },
+  {
+    "slug": "cam-polo6",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Polo 6 / T-Cross / Taigo",
+    "desc": "Caméra d'origine MQB-A0 pour Polo 6, T-Cross et Taigo. Montage dans la poignée ou hayon. Lignes dynamiques.",
+    "descExt": "Caméra OEM MQB-A0. Qualité image d'origine. Compatible avec le système MIB d'origine.",
+    "price": 294,
+    "priceLabel": "294 €",
+    "compat": [
+      "Polo 6 (AW)",
+      "T-Cross (C11)",
+      "Taigo (CS2)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Polo 6 / T-Cross / Taigo — AREPROG",
+    "seoDesc": "Caméra d'origine MQB-A0 pour Polo 6, T-Cross et Taigo. Montage dans la poignée ou hayon. Lignes dynamiques.",
+    "active": true
+  },
+  {
+    "slug": "cam-octavia",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Skoda Octavia 3 / 4",
+    "desc": "Caméra d'origine pour Octavia 3 (5E) et Octavia 4 (NX5). Montage dans le logo de coffre. Lignes dynamiques haute définition.",
+    "descExt": "Caméra OEM Skoda. Intégration parfaite logo coffre. Plug & play.",
+    "price": 273,
+    "priceLabel": "273 €",
+    "compat": [
+      "Skoda Octavia 3 (5E)",
+      "Skoda Octavia 4 (NX5)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Skoda Octavia 3 / 4 — AREPROG",
+    "seoDesc": "Caméra d'origine pour Octavia 3 (5E) et Octavia 4 (NX5). Montage dans le logo de coffre. Lignes dynamiques haute définition.",
+    "active": true
+  },
+  {
+    "slug": "gra-seat-leon",
+    "category": "regulateur",
+    "badge": "Régulateur",
+    "name": "Régulateur de vitesse Seat Leon 5F / Cupra",
+    "desc": "Kit régulateur de vitesse OEM pour Leon 5F et Cupra Leon. Commande multifonction au volant + boîtier GRA. Plug & play.",
+    "descExt": "Kit GRA Leon MQB. Commande au volant multifonction, boîtier et faisceau OEM.",
+    "price": 231,
+    "priceLabel": "231 €",
+    "compat": [
+      "Seat Leon 5F (MQB)",
+      "Cupra Leon"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Régulateur de vitesse Seat Leon 5F / Cupra — AREPROG",
+    "seoDesc": "Kit régulateur de vitesse OEM pour Leon 5F et Cupra Leon. Commande multifonction au volant + boîtier GRA. Plug & play.",
+    "active": true
+  },
+  {
+    "slug": "vc-golf7",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "Virtual Cockpit OEM — Golf 7 / Passat B8 / A3 8V",
+    "desc": "Tableau de bord numérique OEM 10,25\". Remplacement du combiné analogique d'origine. Navigation et médias intégrés.",
+    "descExt": "Virtual Cockpit VW/Audi OEM 10.25\". Plug & play avec connecteur d'origine. Compatibilité VCDS pour activation.",
+    "price": 1050,
+    "priceLabel": "1050 €",
+    "compat": [
+      "Golf 7 (5G)",
+      "Passat B8 (3G)",
+      "Audi A3 8V"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Virtual Cockpit OEM — Golf 7 / Passat B8 / A3 8V — AREPROG",
+    "seoDesc": "Tableau de bord numérique OEM 10,25\". Remplacement du combiné analogique d'origine. Navigation et médias intégrés.",
+    "active": true
+  },
+  {
+    "slug": "discover-media-golf7",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "Discover Media retrofit — Golf 7 / Polo 6",
+    "desc": "Autoradio navigation Discover Media OEM avec écran tactile 8\". CarPlay et Android Auto filaires. Remplacement complet de l'autoradio d'origine.",
+    "descExt": "Discover Media MIB2. Écran tactile 8 pouces. Caméra de recul en option. Compatible Golf 7 et Polo 6.",
+    "price": 840,
+    "priceLabel": "840 €",
+    "compat": [
+      "Golf 7 (5G)",
+      "Polo 6 (AW)",
+      "Tiguan 2 (AD)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Discover Media retrofit — Golf 7 / Polo 6 — AREPROG",
+    "seoDesc": "Autoradio navigation Discover Media OEM avec écran tactile 8\". CarPlay et Android Auto filaires. Remplacement complet de l'autoradio d'origine.",
+    "active": true
+  },
+  {
+    "slug": "module-carplay",
+    "category": "module",
+    "badge": "Module",
+    "name": "Activation CarPlay &amp; Android Auto (logicielle)",
+    "desc": "Débloquez CarPlay et Android Auto filaires sur votre autoradio MIB2 d'origine par activation logicielle — sans remplacement matériel.",
+    "descExt": "Activation AppConnect via mise à jour firmware MIB2. Compatible Discover Media 2+ et Discover Pro.",
+    "price": 157,
+    "priceLabel": "157 €",
+    "compat": [
+      "Tous véhicules avec MIB2 / Discover Media 2+"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Activation CarPlay &amp; Android Auto (logicielle) — AREPROG",
+    "seoDesc": "Débloquez CarPlay et Android Auto filaires sur votre autoradio MIB2 d'origine par activation logicielle — sans remplacement matériel.",
+    "active": true
+  },
+  {
+    "slug": "vcds-hex-v2",
+    "category": "diagnostic",
+    "badge": "Diagnostic",
+    "name": "Interface VCDS HEX-V2 Ross-Tech — Officielle",
+    "desc": "Interface VCDS officielle Ross-Tech HEX-V2. Câble USB illimité (tous VINs). Mises à jour logiciel incluses. La référence pour le diagnostic et codage VAG.",
+    "descExt": "Interface Ross-Tech HEX-V2 officielle. Câble USB haute qualité. Toutes fonctions VCDS complètes et illimitées. Garantie officielle.",
+    "price": 403,
+    "priceLabel": "403 €",
+    "compat": [
+      "Tous véhicules VAG (illimité)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Interface VCDS HEX-V2 Ross-Tech — Officielle — AREPROG",
+    "seoDesc": "Interface VCDS officielle Ross-Tech HEX-V2. Câble USB illimité (tous VINs). Mises à jour logiciel incluses. La référence pour le diagnostic et codage VAG.",
+    "active": true
+  },
+  {
+    "slug": "module-acc",
+    "category": "module",
+    "badge": "Module",
+    "name": "Kit ACC — Régulateur adaptatif retrofit complet",
+    "desc": "Kit retrofit complet pour l'ajout du régulateur de vitesse adaptatif (ACC) avec radar frontal OEM. Inclut radar, supports et faisceau.",
+    "descExt": "Kit ACC OEM complet. Radar frontal, supports de montage, faisceau et module. Installation professionnelle recommandée.",
+    "price": 1260,
+    "priceLabel": "1260 €",
+    "compat": [
+      "Golf 7 (5G MQB)",
+      "Passat B8 (3G)",
+      "Tiguan 2 (AD)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Kit ACC — Régulateur adaptatif retrofit complet — AREPROG",
+    "seoDesc": "Kit retrofit complet pour l'ajout du régulateur de vitesse adaptatif (ACC) avec radar frontal OEM. Inclut radar, supports et faisceau.",
+    "active": true
+  },
+  {
+    "slug": "cam-troc-tign",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM T-Roc / Tiguan 2",
+    "desc": "Caméra OEM pour T-Roc (A11) et Tiguan 2 (AD/BW2). Intégration dans la poignée de hayon d'origine. Lignes dynamiques adaptatives.",
+    "descExt": "Caméra OEM MQB SUV. Plug & play. Compatible Discover Media et Discover Pro.",
+    "price": 336,
+    "priceLabel": "336 €",
+    "compat": [
+      "T-Roc (A11 2017+)",
+      "Tiguan 2 (AD/BW2)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM T-Roc / Tiguan 2 — AREPROG",
+    "seoDesc": "Caméra OEM pour T-Roc (A11) et Tiguan 2 (AD/BW2). Intégration dans la poignée de hayon d'origine. Lignes dynamiques adaptatives.",
+    "active": true
+  },
+  {
+    "slug": "cam-a4b9",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Audi A4 B9 / A5 F5",
+    "desc": "Caméra d'origine Audi pour A4 B9 (8W) et A5 F5. Montage dans l'emblème arrière ou poignée. Lignes dynamiques haute définition.",
+    "descExt": "Caméra OEM MLB Evo. Intégration parfaite. Compatible MMI Navigation Plus.",
+    "price": 378,
+    "priceLabel": "378 €",
+    "compat": [
+      "Audi A4 B9 (8W 2015+)",
+      "Audi A5 F5"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Audi A4 B9 / A5 F5 — AREPROG",
+    "seoDesc": "Caméra d'origine Audi pour A4 B9 (8W) et A5 F5. Montage dans l'emblème arrière ou poignée. Lignes dynamiques haute définition.",
+    "active": true
+  },
+  {
+    "slug": "cam-karoq",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Skoda Karoq / Kodiaq",
+    "desc": "Caméra d'origine pour Karoq (NU7) et Kodiaq (NS7). Intégration dans la poignée de hayon. Lignes de guidage dynamiques.",
+    "descExt": "Caméra OEM Skoda MQB SUV. Plug & play. Compatible Bolero et Columbus.",
+    "price": 294,
+    "priceLabel": "294 €",
+    "compat": [
+      "Skoda Karoq (NU7)",
+      "Skoda Kodiaq (NS7)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Skoda Karoq / Kodiaq — AREPROG",
+    "seoDesc": "Caméra d'origine pour Karoq (NU7) et Kodiaq (NS7). Intégration dans la poignée de hayon. Lignes de guidage dynamiques.",
+    "active": true
+  },
+  {
+    "slug": "cam-ateca",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra de recul OEM Seat Ateca / Tarraco",
+    "desc": "Caméra d'origine pour Ateca (KH) et Tarraco (KN2). Intégration dans la poignée de hayon. Plug & play sur faisceau d'origine.",
+    "descExt": "Caméra OEM Seat MQB. Lignes dynamiques. Compatible Media System Plus et Navigation System.",
+    "price": 294,
+    "priceLabel": "294 €",
+    "compat": [
+      "Seat Ateca (KH)",
+      "Seat Tarraco (KN2)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra de recul OEM Seat Ateca / Tarraco — AREPROG",
+    "seoDesc": "Caméra d'origine pour Ateca (KH) et Tarraco (KN2). Intégration dans la poignée de hayon. Plug & play sur faisceau d'origine.",
+    "active": true
+  },
+  {
+    "slug": "cam-360",
+    "category": "camera",
+    "badge": "Caméra recul",
+    "name": "Caméra 360° — Vue périphérique Area View",
+    "desc": "Système 4 caméras Area View OEM pour une vue périphérique complète à 360°. Idéal pour le stationnement en milieu urbain serré.",
+    "descExt": "4 caméras (avant, arrière, rétroviseurs). Vue synthétique 360°. Lignes de guidage. Compatible MIB2+.",
+    "price": 1575,
+    "priceLabel": "1575 €",
+    "compat": [
+      "Golf 8 (CD1)",
+      "Tiguan 2 (AD)",
+      "Arteon (3H)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Caméra 360° — Vue périphérique Area View — AREPROG",
+    "seoDesc": "Système 4 caméras Area View OEM pour une vue périphérique complète à 360°. Idéal pour le stationnement en milieu urbain serré.",
+    "active": true
+  },
+  {
+    "slug": "gra-golf8",
+    "category": "regulateur",
+    "badge": "Régulateur",
+    "name": "Régulateur de vitesse VW — Golf 8 / Golf 8 GTE",
+    "desc": "Kit régulateur de vitesse OEM pour Golf 8 (CD1). Commande multifonction au volant + boîtier GRA. Plug & play.",
+    "descExt": "Kit GRA Golf 8 MQB Evo. Commande au volant OEM, boîtier et faisceau. Activation VCDS.",
+    "price": 231,
+    "priceLabel": "231 €",
+    "compat": [
+      "Golf 8 (CD1/5H 2019+)",
+      "Golf 8 GTE"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Régulateur de vitesse VW — Golf 8 / Golf 8 GTE — AREPROG",
+    "seoDesc": "Kit régulateur de vitesse OEM pour Golf 8 (CD1). Commande multifonction au volant + boîtier GRA. Plug & play.",
+    "active": true
+  },
+  {
+    "slug": "gra-polo6",
+    "category": "regulateur",
+    "badge": "Régulateur",
+    "name": "Régulateur de vitesse VW — Polo 6 / T-Cross / Taigo",
+    "desc": "Kit GRA OEM pour Polo 6 (AW), T-Cross et Taigo MQB-A0. Commande au volant + boîtier. Plug & play.",
+    "descExt": "Kit GRA MQB-A0. Activation par VCDS. Compatible tous modèles Polo 6 / T-Cross / Taigo.",
+    "price": 210,
+    "priceLabel": "210 €",
+    "compat": [
+      "Polo 6 (AW)",
+      "T-Cross",
+      "Taigo"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Régulateur de vitesse VW — Polo 6 / T-Cross / Taigo — AREPROG",
+    "seoDesc": "Kit GRA OEM pour Polo 6 (AW), T-Cross et Taigo MQB-A0. Commande au volant + boîtier. Plug & play.",
+    "active": true
+  },
+  {
+    "slug": "gra-octavia",
+    "category": "regulateur",
+    "badge": "Régulateur",
+    "name": "Régulateur de vitesse Skoda — Octavia 3 / Kodiaq",
+    "desc": "Kit régulateur de vitesse OEM pour Octavia 3 (5E) et Kodiaq (NS7). Commande multifonction + boîtier GRA. Plug & play.",
+    "descExt": "Kit GRA Skoda MQB. Commande au volant, boîtier et faisceau d'origine.",
+    "price": 210,
+    "priceLabel": "210 €",
+    "compat": [
+      "Skoda Octavia 3 (5E)",
+      "Skoda Kodiaq (NS7)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Régulateur de vitesse Skoda — Octavia 3 / Kodiaq — AREPROG",
+    "seoDesc": "Kit régulateur de vitesse OEM pour Octavia 3 (5E) et Kodiaq (NS7). Commande multifonction + boîtier GRA. Plug & play.",
+    "active": true
+  },
+  {
+    "slug": "dab-plus",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "Module DAB+ — Radio numérique retrofit",
+    "desc": "Ajoutez la radio numérique DAB+ à votre autoradio OEM. Module discret se branche derrière l'autoradio. Antenne fournie.",
+    "descExt": "Module DAB+ OEM compatible MIB/MIB2. Antenne gain élevé. Plug & play sur connecteur MOST ou LVDS selon version.",
+    "price": 294,
+    "priceLabel": "294 €",
+    "compat": [
+      "Tous véhicules MIB / MIB2"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Module DAB+ — Radio numérique retrofit — AREPROG",
+    "seoDesc": "Ajoutez la radio numérique DAB+ à votre autoradio OEM. Module discret se branche derrière l'autoradio. Antenne fournie.",
+    "active": true
+  },
+  {
+    "slug": "vc-a3-8v",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "Virtual Cockpit OEM Audi A3 8V Facelift",
+    "desc": "Tableau de bord numérique OEM pour A3 8V Facelift (2016–2020). Écran 12,3 pouces haute résolution. Remplacement clé en main.",
+    "descExt": "Virtual Cockpit Audi A3 8V Gen 2. Affichage navigation, médias et performances. Plug & play.",
+    "price": 1155,
+    "priceLabel": "1155 €",
+    "compat": [
+      "Audi A3 8V Facelift (2016–2020)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Virtual Cockpit OEM Audi A3 8V Facelift — AREPROG",
+    "seoDesc": "Tableau de bord numérique OEM pour A3 8V Facelift (2016–2020). Écran 12,3 pouces haute résolution. Remplacement clé en main.",
+    "active": true
+  },
+  {
+    "slug": "nav-update-mib2",
+    "category": "navigation",
+    "badge": "Navigation",
+    "name": "Mise à jour cartographie Discover Media / Pro 2024",
+    "desc": "Mise à jour Europe complète pour Discover Media 2+ et Discover Pro MIB2. Carte SD originale, données 2024 avec radars et points d'intérêt.",
+    "descExt": "Carte SD officielle VW/Skoda/Seat. Cartes Europe 46 pays. Mises à jour 2024.",
+    "price": 147,
+    "priceLabel": "147 €",
+    "compat": [
+      "Discover Media 2+",
+      "Discover Pro (MIB2)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Mise à jour cartographie Discover Media / Pro 2024 — AREPROG",
+    "seoDesc": "Mise à jour Europe complète pour Discover Media 2+ et Discover Pro MIB2. Carte SD originale, données 2024 avec radars et points d'intérêt.",
+    "active": true
+  },
+  {
+    "slug": "module-qi",
+    "category": "module",
+    "badge": "Module",
+    "name": "Chargeur sans fil Qi OEM — Golf 8 / Audi A3 8Y",
+    "desc": "Chargeur par induction Qi OEM intégré dans la console centrale. Remplacement discret du vide-poche. Charge rapide 15W.",
+    "descExt": "Chargeur Qi OEM 15W. Intégration parfaite console originale. Compatible tous smartphones Qi. Plug & play.",
+    "price": 252,
+    "priceLabel": "252 €",
+    "compat": [
+      "Golf 8 (CD1)",
+      "Audi A3 8Y",
+      "Leon 4 (KL)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Chargeur sans fil Qi OEM — Golf 8 / Audi A3 8Y — AREPROG",
+    "seoDesc": "Chargeur par induction Qi OEM intégré dans la console centrale. Remplacement discret du vide-poche. Charge rapide 15W.",
+    "active": true
+  },
+  {
+    "slug": "module-lane",
+    "category": "module",
+    "badge": "Module",
+    "name": "Kit Lane Assist retrofit — Aide au maintien de voie",
+    "desc": "Kit complet Lane Assist OEM avec caméra frontale multifonction, module et faisceau. Active l'aide au maintien de voie sur modèles précâblés.",
+    "descExt": "Caméra frontale OEM + module Lane Assist. Inclut Lane Assist, reconnaissance panneaux et Front Assist.",
+    "price": 840,
+    "priceLabel": "840 €",
+    "compat": [
+      "Golf 7 (5G MQB)",
+      "Passat B8",
+      "Tiguan 2 (AD)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Kit Lane Assist retrofit — Aide au maintien de voie — AREPROG",
+    "seoDesc": "Kit complet Lane Assist OEM avec caméra frontale multifonction, module et faisceau. Active l'aide au maintien de voie sur modèles précâblés.",
+    "active": true
+  },
+  {
+    "slug": "module-ahk",
+    "category": "module",
+    "badge": "Module",
+    "name": "Module attelage électrique OEM (AHK)",
+    "desc": "Module d'interface pour attelage électrique OEM. Active les fonctions spécifiques remorque : stabilisation, PDC remorque, gestion feux.",
+    "descExt": "Module AHK OEM. Activation Trailer Assist, PDC remorque et stabilisation. Compatible attelage escamotable OEM.",
+    "price": 336,
+    "priceLabel": "336 €",
+    "compat": [
+      "Golf 7/8",
+      "Tiguan 2",
+      "Passat B8",
+      "Arteon"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Module attelage électrique OEM (AHK) — AREPROG",
+    "seoDesc": "Module d'interface pour attelage électrique OEM. Active les fonctions spécifiques remorque : stabilisation, PDC remorque, gestion feux.",
+    "active": true
+  },
+  {
+    "slug": "module-ambient",
+    "category": "module",
+    "badge": "Module",
+    "name": "Module ambiance multicolore RGBW retrofit",
+    "desc": "Kit éclairage d'ambiance multicolore OEM pour l'habitacle. Remplace le système monochrome d'origine par un système 30 couleurs.",
+    "descExt": "Module ambiance RGBW OEM. 30 couleurs réglables. Zones tableau de bord, portes et console. Plug & play.",
+    "price": 420,
+    "priceLabel": "420 €",
+    "compat": [
+      "Golf 8 (CD1)",
+      "Tiguan 2 (AD)",
+      "Arteon (3H)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Module ambiance multicolore RGBW retrofit — AREPROG",
+    "seoDesc": "Kit éclairage d'ambiance multicolore OEM pour l'habitacle. Remplace le système monochrome d'origine par un système 30 couleurs.",
+    "active": true
+  },
+  {
+    "slug": "module-pdc-avant",
+    "category": "module",
+    "badge": "Module",
+    "name": "Kit PDC avant complet — Radars de stationnement OEM",
+    "desc": "Kit complet pour l'ajout des capteurs PDC avant d'origine. Inclut les 4 capteurs, les faisceaux et le module. Intégration discrète dans le pare-chocs.",
+    "descExt": "4 capteurs PDC OEM avant + module + faisceaux. Couleur assortie au véhicule sur commande. Plug & play avec système existant.",
+    "price": 378,
+    "priceLabel": "378 €",
+    "compat": [
+      "Golf 7/8 (MQB)",
+      "Polo 6",
+      "Audi A3 8V/8Y"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Kit PDC avant complet — Radars de stationnement OEM — AREPROG",
+    "seoDesc": "Kit complet pour l'ajout des capteurs PDC avant d'origine. Inclut les 4 capteurs, les faisceaux et le module. Intégration discrète dans le pare-chocs.",
+    "active": true
+  },
+  {
+    "slug": "module-kessy",
+    "category": "module",
+    "badge": "Module",
+    "name": "Kit KESSY — Accès mains libres retrofit",
+    "desc": "Kit complet d'accès mains libres KESSY OEM. Inclut les poignées de porte avec capteurs, les antennes et le module KESSY. Démarrage bouton poussoir optionnel.",
+    "descExt": "Kit KESSY OEM complet. Poignées avant + arrière avec capteurs. Module KESSY + faisceaux. Bouton Start/Stop inclus.",
+    "price": 630,
+    "priceLabel": "630 €",
+    "compat": [
+      "Golf 7/8 (MQB)",
+      "Tiguan 2",
+      "Passat B8"
+    ],
+    "imageUrl": "",
+    "seoTitle": "Kit KESSY — Accès mains libres retrofit — AREPROG",
+    "seoDesc": "Kit complet d'accès mains libres KESSY OEM. Inclut les poignées de porte avec capteurs, les antennes et le module KESSY. Démarrage bouton poussoir optionne",
+    "active": true
+  },
+  {
+    "slug": "diag-obd",
+    "category": "diagnostic",
+    "badge": "Diagnostic",
+    "name": "OBD2 Interface Bluetooth — Diagnostic VAG",
+    "desc": "Interface OBD2 Bluetooth compatible avec apps Android (OBD Fusion, Torque). Lecture codes défauts, données en temps réel, reset service.",
+    "descExt": "Interface OBD2 BT 4.0. Compatible ELM327 étendu. Fonctionne avec OBD Fusion, Carista et apps compatibles.",
+    "price": 42,
+    "priceLabel": "42 €",
+    "compat": [
+      "Tous véhicules VAG OBD2 (2004+)"
+    ],
+    "imageUrl": "",
+    "seoTitle": "OBD2 Interface Bluetooth — Diagnostic VAG — AREPROG",
+    "seoDesc": "Interface OBD2 Bluetooth compatible avec apps Android (OBD Fusion, Torque). Lecture codes défauts, données en temps réel, reset service.",
+    "active": true
+  }
+]

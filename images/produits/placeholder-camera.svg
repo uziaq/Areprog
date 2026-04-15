@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Caméra de recul OEM">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#1a1a1f"/>
+      <stop offset="1" stop-color="#2a2a33"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g fill="none" stroke="#e63946" stroke-width="3">
+    <rect x="140" y="110" width="120" height="80" rx="10"/>
+    <circle cx="200" cy="150" r="24"/>
+    <circle cx="200" cy="150" r="12" fill="#e63946"/>
+    <rect x="170" y="98" width="60" height="14" rx="3"/>
+  </g>
+  <text x="200" y="230" fill="#e6e6ea" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="18" text-anchor="middle" letter-spacing="2">CAMÉRA DE RECUL OEM</text>
+  <text x="200" y="252" fill="#9aa0a6" font-family="Barlow, sans-serif" font-size="12" text-anchor="middle">AREPROG · Retrofit VAG</text>
+</svg>

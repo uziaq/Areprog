@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fiche produit — AREPROG</title>
+  <meta name="description" content="Fiche produit AREPROG — Accessoires retrofit OEM pour Volkswagen, Audi, Seat et Skoda."/>
+  <link rel="canonical" href="https://areprog.fr/produit-vag"/>
+  <meta name="robots" content="index, follow"/>
+  <meta property="og:type" content="product"/>
+  <meta property="og:locale" content="fr_FR"/>
+  <meta property="og:site_name" content="AREPROG"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.webp"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,300&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="/shared.css"/>
+  <link rel="stylesheet" href="/boutique-vag.css"/>
+  <link rel="stylesheet" href="/produit-vag.css"/>
+  <script id="ld-product" type="application/ld+json"></script>
+</head>
+<body data-page="produit-vag">
+<div id="nav-container"></div>
+<div class="page-wrap">
+
+  <section class="produit-hero" id="produit-hero">
+    <div class="produit-breadcrumb">
+      <a href="/">Accueil</a> <span>›</span>
+      <a href="/boutique-vag">Boutique VAG</a> <span>›</span>
+      <span id="bc-category">Produit</span>
+    </div>
+
+    <div class="produit-layout" id="produit-layout" style="display:none">
+      <div class="produit-media">
+        <div class="produit-image-wrap">
+          <img id="produit-image" alt="" loading="eager"/>
+        </div>
+        <div class="produit-badges">
+          <span class="produit-badge produit-badge-oem">OEM / Origine équipementier</span>
+          <span class="produit-badge produit-badge-ship">Installation à domicile</span>
+          <span class="produit-badge produit-badge-warranty">Garantie 12 mois</span>
+        </div>
+      </div>
+
+      <div class="produit-info">
+        <span class="boutique-card-badge" id="produit-cat-badge">—</span>
+        <h1 id="produit-name">—</h1>
+        <div class="produit-rating" id="produit-rating">
+          <span class="produit-stars" id="produit-stars" aria-label="0 sur 5">☆☆☆☆☆</span>
+          <span class="produit-rating-count" id="produit-rating-count">Aucun avis</span>
+        </div>
+        <p class="produit-desc" id="produit-desc">—</p>
+        <p class="produit-desc-ext" id="produit-desc-ext"></p>
+
+        <div class="produit-compat" id="produit-compat"></div>
+
+        <div class="produit-price-block">
+          <span class="produit-price" id="produit-price">—</span>
+          <span class="produit-price-note">TTC · Installation sur devis</span>
+        </div>
+
+        <div class="produit-actions">
+          <button class="produit-cta" id="produit-cta">Commander ce produit</button>
+          <a class="produit-cta produit-cta-alt" href="/contact">Demande de devis</a>
+        </div>
+
+        <ul class="produit-bullets">
+          <li>Pièce d'origine équipementier (OEM)</li>
+          <li>Plug &amp; play sur faisceau d'origine quand applicable</li>
+          <li>Codage VCDS/ODIS inclus sur demande</li>
+          <li>Intervention atelier ou à domicile (Pays basque, Landes, Béarn)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="produit-notfound" class="produit-notfound" style="display:none">
+      <h1>Produit introuvable</h1>
+      <p>Ce produit n'existe pas ou n'est plus disponible.</p>
+      <a href="/boutique-vag" class="produit-cta">Retour à la boutique</a>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="produit-reviews" id="produit-reviews" style="display:none">
+    <header class="produit-reviews-head">
+      <h2>Avis clients</h2>
+      <div class="produit-reviews-summary" id="produit-reviews-summary">—</div>
+    </header>
+
+    <div class="produit-reviews-list" id="produit-reviews-list">
+      <div class="produit-reviews-empty">Aucun avis pour le moment. Soyez le premier à donner votre retour.</div>
+    </div>
+
+    <form class="produit-review-form" id="produit-review-form">
+      <h3>Laisser un avis</h3>
+      <label>Votre nom
+        <input type="text" id="rv-name" maxlength="60" required/>
+      </label>
+      <label>Note
+        <div class="produit-rate-input" id="rv-stars" data-value="5">
+          <button type="button" data-val="1">★</button>
+          <button type="button" data-val="2">★</button>
+          <button type="button" data-val="3">★</button>
+          <button type="button" data-val="4">★</button>
+          <button type="button" data-val="5">★</button>
+        </div>
+      </label>
+      <label>Votre avis
+        <textarea id="rv-comment" rows="4" maxlength="1200" required></textarea>
+      </label>
+      <div class="produit-review-form-note">Les avis sont modérés avant publication.</div>
+      <button type="submit" class="produit-cta" id="rv-submit">Publier mon avis</button>
+      <div class="produit-review-form-status" id="rv-status"></div>
+    </form>
+  </section>
+
+  <!-- RELATED -->
+  <section class="produit-related" id="produit-related" style="display:none">
+    <h2>Dans la même catégorie</h2>
+    <div class="produit-related-grid" id="produit-related-grid"></div>
+  </section>
+
+</div><!-- .page-wrap -->
+
+<!-- Contact modal (identique à /boutique-vag) -->
+<div id="contact-modal" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;padding:1rem">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)" onclick="closeContactModal()"></div>
+  <div style="position:relative;z-index:1;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:2.5rem;width:100%;max-width:420px;text-align:center">
+    <button onclick="closeContactModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer">×</button>
+    <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;text-transform:uppercase;color:var(--text);margin-bottom:.6rem">Commander</div>
+    <div id="modal-product-name" style="color:var(--blue-light);font-size:.9rem;margin-bottom:1.5rem"></div>
+    <p style="color:var(--text2);font-size:.88rem;line-height:1.7;margin-bottom:1.5rem">
+      Pour commander ce produit ou obtenir un devis avec installation, contactez-nous directement :
+    </p>
+    <a href="tel:+33667924630" style="display:block;background:var(--blue);color:#fff;padding:.9rem;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;margin-bottom:.8rem">
+      📞 06 67 92 46 30
+    </a>
+    <a href="/contact" style="display:block;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:.85rem;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">
+      Formulaire de contact →
+    </a>
+  </div>
+</div>
+
+<div id="footer-container"></div>
+
+<!-- Firebase (même projet que /gestion) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script src="/whatsapp-widget.js"></script>
+<script src="/nav.js"></script>
+<script src="/produit-vag.js"></script>
+</body>
+</html>

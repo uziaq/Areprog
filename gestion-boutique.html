@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestion Boutique — AREPROG</title>
+  <meta name="description" content="Administration catalogue boutique VAG AREPROG — produits, avis, statistiques."/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,300&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="/shared.css"/>
+  <link rel="stylesheet" href="/gestion-boutique.css"/>
+</head>
+<body data-page="gestion-boutique">
+
+<!-- ── LOGIN (identique en apparence à /gestion) ─────────── -->
+<div id="login-screen" class="gb-login">
+  <div class="gb-login-box">
+    <h1>Espace pro · Boutique</h1>
+    <p class="gb-login-sub">Connexion administrateur Firebase</p>
+    <label>Email
+      <input type="email" id="l-email" autocomplete="username"/>
+    </label>
+    <label>Mot de passe
+      <input type="password" id="l-pass" autocomplete="current-password"/>
+    </label>
+    <button id="login-btn" class="gb-btn gb-btn-primary">Se connecter</button>
+    <div id="login-error" class="gb-login-error"></div>
+    <a href="/gestion" class="gb-login-back">← Retour gestion devis/factures</a>
+  </div>
+</div>
+
+<!-- ── APP (masquée tant que non authentifié) ─────────────── -->
+<div id="app" class="gb-app" style="display:none">
+
+  <header class="gb-header">
+    <div class="gb-header-left">
+      <strong>AREPROG · Admin Boutique</strong>
+      <nav class="gb-subnav">
+        <button class="gb-tab active" data-tab="products">Produits</button>
+        <button class="gb-tab" data-tab="reviews">Avis <span class="gb-badge" id="badge-pending">0</span></button>
+        <button class="gb-tab" data-tab="stats">Statistiques</button>
+      </nav>
+    </div>
+    <div class="gb-header-right">
+      <a href="/gestion" class="gb-link">Devis & Factures</a>
+      <a href="/boutique-vag" class="gb-link" target="_blank" rel="noopener">Voir boutique ↗</a>
+      <span id="user-email" class="gb-user"></span>
+      <button id="logout-btn" class="gb-btn gb-btn-ghost">Déconnexion</button>
+    </div>
+  </header>
+
+  <div id="sync-status" class="gb-sync">Initialisation…</div>
+
+  <!-- ── TAB PRODUITS ─────────────────────────────── -->
+  <section class="gb-tab-pane active" data-pane="products">
+    <div class="gb-toolbar">
+      <input type="text" id="p-search" placeholder="Rechercher un produit…" class="gb-input"/>
+      <select id="p-filter-cat" class="gb-input">
+        <option value="">Toutes catégories</option>
+        <option value="camera">Caméra</option>
+        <option value="regulateur">Régulateur</option>
+        <option value="navigation">Navigation</option>
+        <option value="diagnostic">Diagnostic</option>
+        <option value="module">Module</option>
+      </select>
+      <button id="p-new" class="gb-btn gb-btn-primary">+ Nouveau produit</button>
+    </div>
+
+    <div class="gb-table-wrap">
+      <table class="gb-table">
+        <thead>
+          <tr>
+            <th style="width:80px"></th>
+            <th>Nom</th>
+            <th>Catégorie</th>
+            <th style="width:90px">Prix</th>
+            <th style="width:90px">Statut</th>
+            <th style="width:170px">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="p-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── TAB AVIS ─────────────────────────────────── -->
+  <section class="gb-tab-pane" data-pane="reviews">
+    <div class="gb-toolbar">
+      <select id="rv-filter" class="gb-input">
+        <option value="pending">En attente</option>
+        <option value="approved">Approuvés</option>
+        <option value="rejected">Rejetés</option>
+        <option value="all">Tous</option>
+      </select>
+      <input type="text" id="rv-search" placeholder="Rechercher produit ou auteur…" class="gb-input"/>
+    </div>
+    <div id="rv-list" class="gb-reviews-list"></div>
+  </section>
+
+  <!-- ── TAB STATS ────────────────────────────────── -->
+  <section class="gb-tab-pane" data-pane="stats">
+    <div class="gb-stats-cards">
+      <div class="gb-stat"><div class="gb-stat-lbl">Produits actifs</div><div class="gb-stat-val" id="s-active">—</div></div>
+      <div class="gb-stat"><div class="gb-stat-lbl">Avis publiés</div><div class="gb-stat-val" id="s-reviews">—</div></div>
+      <div class="gb-stat"><div class="gb-stat-lbl">Note moyenne globale</div><div class="gb-stat-val" id="s-avg">—</div></div>
+      <div class="gb-stat"><div class="gb-stat-lbl">Total vues</div><div class="gb-stat-val" id="s-views">—</div></div>
+      <div class="gb-stat"><div class="gb-stat-lbl">Clics "Commander"</div><div class="gb-stat-val" id="s-orders">—</div></div>
+    </div>
+
+    <h3 class="gb-h3">Top produits (vues)</h3>
+    <div class="gb-table-wrap">
+      <table class="gb-table">
+        <thead><tr><th>Produit</th><th style="width:90px">Vues</th><th style="width:130px">Clics Commander</th><th style="width:120px">Taux conv.</th></tr></thead>
+        <tbody id="s-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</div><!-- /#app -->
+
+<!-- ── MODAL ÉDITION PRODUIT ─────────────────────────── -->
+<div id="p-modal" class="gb-modal" style="display:none">
+  <div class="gb-modal-bg"></div>
+  <div class="gb-modal-box">
+    <button class="gb-modal-close" id="p-modal-close">×</button>
+    <h2 id="p-modal-title">Éditer le produit</h2>
+    <form id="p-form" class="gb-form">
+      <div class="gb-form-grid">
+        <label>Slug (URL)<input type="text" id="f-slug" required pattern="[a-z0-9-]+"/></label>
+        <label>Catégorie
+          <select id="f-category" required>
+            <option value="camera">Caméra</option>
+            <option value="regulateur">Régulateur</option>
+            <option value="navigation">Navigation</option>
+            <option value="diagnostic">Diagnostic</option>
+            <option value="module">Module</option>
+          </select>
+        </label>
+        <label class="gb-col-2">Nom<input type="text" id="f-name" required/></label>
+        <label>Prix (€)<input type="number" id="f-price" min="0" step="1" required/></label>
+        <label>Badge (libellé court)<input type="text" id="f-badge" placeholder="Caméra recul"/></label>
+        <label class="gb-col-2">Description courte<textarea id="f-desc" rows="3" required></textarea></label>
+        <label class="gb-col-2">Description complète<textarea id="f-descExt" rows="4"></textarea></label>
+        <label class="gb-col-2">Compatibilités (séparées par virgule)<input type="text" id="f-compat" placeholder="Golf 8 (CD1), Tiguan 2"/></label>
+        <label class="gb-col-2">Image du produit
+          <div class="gb-img-row">
+            <img id="f-img-preview" alt="" class="gb-img-prev"/>
+            <input type="file" id="f-img-file" accept="image/*"/>
+            <input type="text" id="f-img-url" placeholder="URL image (ou upload)" style="flex:1"/>
+          </div>
+          <div id="f-img-status" class="gb-form-note"></div>
+        </label>
+        <label class="gb-col-2">SEO title<input type="text" id="f-seoTitle" maxlength="70"/></label>
+        <label class="gb-col-2">SEO description<textarea id="f-seoDesc" rows="2" maxlength="160"></textarea></label>
+        <label class="gb-checkbox"><input type="checkbox" id="f-active" checked/> Actif (visible sur le site)</label>
+      </div>
+      <div class="gb-modal-actions">
+        <button type="button" id="p-delete" class="gb-btn gb-btn-danger">Supprimer</button>
+        <button type="submit" class="gb-btn gb-btn-primary">Enregistrer</button>
+      </div>
+    </form>
+    <div id="p-form-status" class="gb-form-status"></div>
+  </div>
+</div>
+
+<!-- Firebase (même projet areprog-devis que /gestion) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<script src="/gestion-boutique.js"></script>
+</body>
+</html>

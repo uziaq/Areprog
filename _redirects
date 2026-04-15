@@ -53,6 +53,14 @@
 /codage-vag-admin                   /codage-vag-admin.html              200
 /boutique-vag                       /boutique-vag.html                  200
 
+# ── Fiches produits VAG (page dédiée par produit) ───────────
+/produit-vag                        /produit-vag.html                   200
+/produit-vag/:slug                  /produit-vag.html                   200
+
+# ── Admin Boutique (même auth Firebase que /gestion) ────────
+/gestion-boutique                   /gestion-boutique.html              200
+/boutique-vag/admin                 /gestion-boutique.html              200
+
 # ── Pages /codage-vag/marque  (ex: /codage-vag/volkswagen) ───
 /codage-vag/volkswagen              /codage-marque.html                 200
 /codage-vag/audi                    /codage-marque.html                 200
