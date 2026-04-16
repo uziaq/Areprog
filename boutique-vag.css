@@ -11,6 +11,16 @@
   border-bottom: 1px solid var(--border);
   background: linear-gradient(160deg, var(--bg) 0%, #0a1628 60%, var(--bg) 100%);
 }
+
+/* Light mode: hero has a dark navy center — force light text variables inside */
+[data-theme="light"] .boutique-hero {
+  --text:    #eceef1;
+  --text2:   #c8cdd4;
+  --muted:   #a0a8b4;
+  --muted2:  #7c8490;
+  --border2: rgba(255,255,255,.18);
+  --surface:  rgba(255,255,255,.08);
+}
 .boutique-hero h1 {
   font-family: var(--font-display); font-weight: 800;
   font-size: clamp(2.6rem, 6vw, 5rem);

@@ -8,6 +8,17 @@
   background: linear-gradient(160deg, var(--bg) 0%, #0a1628 60%, var(--bg) 100%);
 }
 
+/* Light mode: hero has a dark navy center — force light text variables inside */
+[data-theme="light"] .produit-hero {
+  --text:    #eceef1;
+  --text2:   #c8cdd4;
+  --muted:   #a0a8b4;
+  --muted2:  #7c8490;
+  --border2: rgba(255,255,255,.18);
+  --surface:  rgba(255,255,255,.08);
+  --surface2: rgba(255,255,255,.06);
+}
+
 .produit-breadcrumb {
   font-size: .78rem;
   color: var(--muted);
