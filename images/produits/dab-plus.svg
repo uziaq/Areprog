@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Module DAB+">
+  <defs><linearGradient id="bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1a1a1f"/><stop offset="1" stop-color="#2a2a33"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g fill="none" stroke="#e63946" stroke-width="3">
+    <line x1="200" y1="185" x2="200" y2="90"/>
+    <line x1="184" y1="170" x2="200" y2="185"/>
+    <line x1="216" y1="170" x2="200" y2="185"/>
+    <rect x="180" y="183" width="40" height="12" rx="3"/>
+    <path d="M 172 115 A 32 32 0 0 0 172 165"/>
+    <path d="M 155 102 A 55 55 0 0 0 155 178"/>
+    <path d="M 138 88 A 78 78 0 0 0 138 192" opacity="0.4"/>
+    <path d="M 228 115 A 32 32 0 0 1 228 165"/>
+    <path d="M 245 102 A 55 55 0 0 1 245 178"/>
+    <path d="M 262 88 A 78 78 0 0 1 262 192" opacity="0.4"/>
+    <rect x="180" y="128" width="40" height="22" rx="3" fill="#e63946" fill-opacity="0.2"/>
+  </g>
+  <text x="200" y="144" fill="#e63946" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="14" text-anchor="middle" letter-spacing="1">DAB+</text>
+  <text x="200" y="232" fill="#e6e6ea" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="16" text-anchor="middle" letter-spacing="2">MODULE DAB+ RADIO NUMÉRIQUE</text>
+  <text x="200" y="254" fill="#9aa0a6" font-family="Barlow, sans-serif" font-size="12" text-anchor="middle">AREPROG · Retrofit VAG</text>
+</svg>
