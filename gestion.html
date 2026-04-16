@@ -32,7 +32,7 @@
   --fm:'JetBrains Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;min-height:100vh;overflow-y:scroll}
 input,select,textarea,button{font-family:var(--fb);font-size:14px}
 button{cursor:pointer}
 select option{background:#1d222d}
@@ -3701,37 +3701,37 @@ function renderCalendar() {
   var y = calDate.getFullYear(), m = calDate.getMonth();
   $('cal-month-label').textContent = MONTHS[m] + ' ' + y;
 
-  // Premier lundi avant le 1er du mois
   var first = new Date(y, m, 1);
   var startDow = (first.getDay() + 6) % 7; // lundi=0
   var start = new Date(first); start.setDate(1 - startDow);
 
   var rdvs = loadRdvs();
-  var grid = $('cal-grid');
-  grid.innerHTML = DOW.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
   var today = new Date(); today.setHours(0,0,0,0);
+
+  var html = DOW.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
 
   for (var i = 0; i < 42; i++) {
     var d = new Date(start); d.setDate(start.getDate() + i);
+    var dStr = toDateStr(d);
     var isToday = d.getTime() === today.getTime();
     var isSel = d.toDateString() === calSelected.toDateString();
     var isOther = d.getMonth() !== m;
-    var dStr = toDateStr(d);
-
     var dayRdvs = rdvs.filter(function(r){ return r.date === dStr; });
-
     var cls = 'cal-cell' + (isToday?' today':'') + (isSel?' selected':'') + (isOther?' other-month':'') + (dayRdvs.length?' has-event':'');
     var evHTML = dayRdvs.slice(0,3).map(function(r){
       return '<div class="cal-event '+r.type+'" onclick="event.stopPropagation();openRdvModal(\''+r.id+'\',null)" title="'+escHtml(r.title)+'">'+escHtml(r.heure?r.heure+' ':'')+escHtml(r.title)+'</div>';
     }).join('');
     if (dayRdvs.length > 3) evHTML += '<div class="cal-more">+' + (dayRdvs.length-3) + '</div>';
-
-    var cell = document.createElement('div');
-    cell.className = cls;
-    cell.innerHTML = '<div class="cal-day-num">'+d.getDate()+'</div>' + evHTML;
-    cell.addEventListener('click', (function(dd){ return function(){ calSelected = new Date(dd); renderCalendar(); renderSideEvents(calSelected); }; })(d));
-    grid.appendChild(cell);
+    html += '<div class="'+cls+'" onclick="calCellClick(\''+dStr+'\')"><div class="cal-day-num">'+d.getDate()+'</div>'+evHTML+'</div>';
   }
+
+  $('cal-grid').innerHTML = html;
+}
+
+function calCellClick(dStr) {
+  calSelected = new Date(dStr + 'T00:00:00');
+  renderCalendar();
+  renderSideEvents(calSelected);
 }
 
 function renderSideEvents(d) {
