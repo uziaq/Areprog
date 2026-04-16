@@ -11,7 +11,7 @@
     "compat": [
       "Golf 8 (CD1/5H 2019+)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-golf8.svg",
     "seoTitle": "Caméra de recul OEM Golf 8 — AREPROG",
     "seoDesc": "Caméra OEM pour Golf 8 (5H) avec lignes de guidage dynamiques. Montage dans la poignée de coffre originale. Compatible Discover Media / Discover Pro.",
     "active": true
@@ -30,7 +30,7 @@
       "Tiguan 2 (AD)",
       "Polo 6 (AW)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-mqb.svg",
     "seoTitle": "Caméra de recul OEM MQB — Golf 7 / Tiguan / Polo — AREPROG",
     "seoDesc": "Caméra d'origine pour tous modèles MQB depuis 04/2015. Lignes de guidage dynamiques. Connexion plug & play sur faisceau d'origine.",
     "active": true
@@ -49,7 +49,7 @@
       "Passat B8 (3G)",
       "Arteon (3H)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-dyn.svg",
     "seoTitle": "Caméra de recul dynamique VW — Golf 7 / Passat B8 / Arteon — AREPROG",
     "seoDesc": "Caméra avec lignes de guidage dynamiques haute précision. Compatible autoradio GPS Discover Media/Pro.",
     "active": true
@@ -66,7 +66,7 @@
     "compat": [
       "Audi A3 8V (2013–2020)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-a3-8v.svg",
     "seoTitle": "Caméra de recul OEM Audi A3 8V — AREPROG",
     "seoDesc": "Caméra d'origine Audi pour A3 8V. S'intègre dans la poignée de coffre.",
     "active": true
@@ -83,7 +83,7 @@
     "compat": [
       "Audi Q3 F3 (2018+)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-q3-f3.svg",
     "seoTitle": "Caméra de recul OEM Audi Q3 (2e gen F3) — AREPROG",
     "seoDesc": "Caméra OEM pour Audi Q3 F3 (2018+). Lignes dynamiques, montage original.",
     "active": true
@@ -100,7 +100,7 @@
     "compat": [
       "Audi Q8 (4M 2018+)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-q8.svg",
     "seoTitle": "Caméra de recul OEM Audi Q8 — AREPROG",
     "seoDesc": "Caméra haute définition pour Audi Q8. Vision nocturne améliorée, guidelines dynamiques.",
     "active": true
@@ -119,7 +119,7 @@
       "Passat 8 (3G)",
       "Tiguan 2 (AD)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gra-vw.svg",
     "seoTitle": "Régulateur de vitesse VW (GRA) — Golf 7 / Passat / Tiguan — AREPROG",
     "seoDesc": "Kit régulateur de vitesse OEM pour VW. Comprend la commande au volant, le boîtier et le faisceau.",
     "active": true
@@ -138,7 +138,7 @@
       "Audi Q3 (8U)",
       "Audi A3 8V"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gra-audi-a1.svg",
     "seoTitle": "Régulateur de vitesse Audi — A1 / Q3 / A3 8V — AREPROG",
     "seoDesc": "Kit complet régulateur Audi. Commande multifonction au volant + boîtier GRA..",
     "active": true
@@ -155,7 +155,7 @@
     "compat": [
       "Audi A3 8P (2003–2013)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gra-a3-8p.svg",
     "seoTitle": "Régulateur de vitesse Audi — A3 8P + Multifonction — AREPROG",
     "seoDesc": "Kit premium avec commande multifonction + régulateur Audi A3 8P. Idéal trajet autoroute.",
     "active": true
@@ -172,7 +172,7 @@
     "compat": [
       "Audi A3 8V Facelift (2016–2020)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gps-a3-8v.svg",
     "seoTitle": "GPS Audi A3 8V MIB2 Facelift Appconnect — AREPROG",
     "seoDesc": "Système de navigation MIB2 d'origine Audi avec AppConnect (CarPlay/Android Auto). Pour A3 8V Facelift.",
     "active": true
@@ -189,7 +189,7 @@
     "compat": [
       "VW Tiguan 2 (AD/BW2 2016+)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/combi-tiguan.svg",
     "seoTitle": "Virtual Cockpit VW Tiguan AD1 — AREPROG",
     "seoDesc": "Tableau de bord numérique OEM pour Tiguan AD1. Affichage haute résolution 10,25 pouces, navigation intégrée.",
     "active": true
@@ -206,7 +206,7 @@
     "compat": [
       "Tous véhicules avec RNS 510"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/nav-rns510.svg",
     "seoTitle": "Mise à jour cartographie RNS 510 V19 2024 — AREPROG",
     "seoDesc": "Mise à jour cartographie Europe complète pour RNS 510. Inclut données trafic et radars 2024.",
     "active": true
@@ -223,7 +223,7 @@
     "compat": [
       "Tous véhicules VAG"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/vcds-2503.svg",
     "seoTitle": "Interface VCDS 25.03 (câble générique + logiciel FR) — AREPROG",
     "seoDesc": "Câble de diagnostic VCDS version 25.03 avec logiciel en français. Fonctionne sur tous véhicules VAG. Idéal pour entretien et codage DIY.",
     "active": true
@@ -240,7 +240,7 @@
     "compat": [
       "Tous modèles MQB / MLB"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/codage-dist.svg",
     "seoTitle": "Codage VAG à distance (par option, en ligne) — AREPROG",
     "seoDesc": "Service de codage d'options à distance. Vous avez le câble VCDS ? Nous vous guidons en temps réel par visio pour activer l'option de votre choix.",
     "active": true
@@ -259,7 +259,7 @@
       "Tiguan 2",
       "Audi A3 8V/8Y"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-pdc.svg",
     "seoTitle": "Module PDC 8K — Activation radars de recul OEM — AREPROG",
     "seoDesc": "Module d'activation des capteurs PDC d'origine pour véhicules MQB. Compatible Golf 7/8, Tiguan, A3.",
     "active": true
@@ -278,7 +278,7 @@
       "Tiguan 2 (AD)",
       "Passat 8"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-dir.svg",
     "seoTitle": "Module direction assistée VW (extension fonctions) — AREPROG",
     "seoDesc": "Module d'extension pour direction assistée VW. Active les fonctions avancées sur modèles équipés.",
     "active": true
@@ -295,7 +295,7 @@
     "compat": [
       "Golf 7.5 Facelift (5G 2017+)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-golf7-facelift.svg",
     "seoTitle": "Caméra de recul OEM Golf 7.5 Facelift — AREPROG",
     "seoDesc": "Caméra d'origine pour Golf 7 Facelift (2017+). Intégration parfaite dans la poignée de coffre. Lignes de guidage dynamiques.",
     "active": true
@@ -314,7 +314,7 @@
       "T-Cross (C11)",
       "Taigo (CS2)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-polo6.svg",
     "seoTitle": "Caméra de recul OEM Polo 6 / T-Cross / Taigo — AREPROG",
     "seoDesc": "Caméra d'origine MQB-A0 pour Polo 6, T-Cross et Taigo. Montage dans la poignée ou hayon. Lignes dynamiques.",
     "active": true
@@ -332,7 +332,7 @@
       "Skoda Octavia 3 (5E)",
       "Skoda Octavia 4 (NX5)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-octavia.svg",
     "seoTitle": "Caméra de recul OEM Skoda Octavia 3 / 4 — AREPROG",
     "seoDesc": "Caméra d'origine pour Octavia 3 (5E) et Octavia 4 (NX5). Montage dans le logo de coffre. Lignes dynamiques haute définition.",
     "active": true
@@ -350,7 +350,7 @@
       "Seat Leon 5F (MQB)",
       "Cupra Leon"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gra-seat-leon.svg",
     "seoTitle": "Régulateur de vitesse Seat Leon 5F / Cupra — AREPROG",
     "seoDesc": "Kit régulateur de vitesse OEM pour Leon 5F et Cupra Leon. Commande multifonction au volant + boîtier GRA. Plug & play.",
     "active": true
@@ -369,7 +369,7 @@
       "Passat B8 (3G)",
       "Audi A3 8V"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/vc-golf7.svg",
     "seoTitle": "Virtual Cockpit OEM — Golf 7 / Passat B8 / A3 8V — AREPROG",
     "seoDesc": "Tableau de bord numérique OEM 10,25\". Remplacement du combiné analogique d'origine. Navigation et médias intégrés.",
     "active": true
@@ -388,7 +388,7 @@
       "Polo 6 (AW)",
       "Tiguan 2 (AD)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/discover-media-golf7.svg",
     "seoTitle": "Discover Media retrofit — Golf 7 / Polo 6 — AREPROG",
     "seoDesc": "Autoradio navigation Discover Media OEM avec écran tactile 8\". CarPlay et Android Auto filaires. Remplacement complet de l'autoradio d'origine.",
     "active": true
@@ -405,7 +405,7 @@
     "compat": [
       "Tous véhicules avec MIB2 / Discover Media 2+"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-carplay.svg",
     "seoTitle": "Activation CarPlay &amp; Android Auto (logicielle) — AREPROG",
     "seoDesc": "Débloquez CarPlay et Android Auto filaires sur votre autoradio MIB2 d'origine par activation logicielle — sans remplacement matériel.",
     "active": true
@@ -422,7 +422,7 @@
     "compat": [
       "Tous véhicules VAG (illimité)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/vcds-hex-v2.svg",
     "seoTitle": "Interface VCDS HEX-V2 Ross-Tech — Officielle — AREPROG",
     "seoDesc": "Interface VCDS officielle Ross-Tech HEX-V2. Câble USB illimité (tous VINs). Mises à jour logiciel incluses. La référence pour le diagnostic et codage VAG.",
     "active": true
@@ -441,7 +441,7 @@
       "Passat B8 (3G)",
       "Tiguan 2 (AD)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-acc.svg",
     "seoTitle": "Kit ACC — Régulateur adaptatif retrofit complet — AREPROG",
     "seoDesc": "Kit retrofit complet pour l'ajout du régulateur de vitesse adaptatif (ACC) avec radar frontal OEM. Inclut radar, supports et faisceau.",
     "active": true
@@ -459,7 +459,7 @@
       "T-Roc (A11 2017+)",
       "Tiguan 2 (AD/BW2)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-troc-tign.svg",
     "seoTitle": "Caméra de recul OEM T-Roc / Tiguan 2 — AREPROG",
     "seoDesc": "Caméra OEM pour T-Roc (A11) et Tiguan 2 (AD/BW2). Intégration dans la poignée de hayon d'origine. Lignes dynamiques adaptatives.",
     "active": true
@@ -477,7 +477,7 @@
       "Audi A4 B9 (8W 2015+)",
       "Audi A5 F5"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-a4b9.svg",
     "seoTitle": "Caméra de recul OEM Audi A4 B9 / A5 F5 — AREPROG",
     "seoDesc": "Caméra d'origine Audi pour A4 B9 (8W) et A5 F5. Montage dans l'emblème arrière ou poignée. Lignes dynamiques haute définition.",
     "active": true
@@ -495,7 +495,7 @@
       "Skoda Karoq (NU7)",
       "Skoda Kodiaq (NS7)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-karoq.svg",
     "seoTitle": "Caméra de recul OEM Skoda Karoq / Kodiaq — AREPROG",
     "seoDesc": "Caméra d'origine pour Karoq (NU7) et Kodiaq (NS7). Intégration dans la poignée de hayon. Lignes de guidage dynamiques.",
     "active": true
@@ -513,7 +513,7 @@
       "Seat Ateca (KH)",
       "Seat Tarraco (KN2)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-ateca.svg",
     "seoTitle": "Caméra de recul OEM Seat Ateca / Tarraco — AREPROG",
     "seoDesc": "Caméra d'origine pour Ateca (KH) et Tarraco (KN2). Intégration dans la poignée de hayon. Plug & play sur faisceau d'origine.",
     "active": true
@@ -532,7 +532,7 @@
       "Tiguan 2 (AD)",
       "Arteon (3H)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/cam-360.svg",
     "seoTitle": "Caméra 360° — Vue périphérique Area View — AREPROG",
     "seoDesc": "Système 4 caméras Area View OEM pour une vue périphérique complète à 360°. Idéal pour le stationnement en milieu urbain serré.",
     "active": true
@@ -550,7 +550,7 @@
       "Golf 8 (CD1/5H 2019+)",
       "Golf 8 GTE"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gra-golf8.svg",
     "seoTitle": "Régulateur de vitesse VW — Golf 8 / Golf 8 GTE — AREPROG",
     "seoDesc": "Kit régulateur de vitesse OEM pour Golf 8 (CD1). Commande multifonction au volant + boîtier GRA. Plug & play.",
     "active": true
@@ -569,7 +569,7 @@
       "T-Cross",
       "Taigo"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gra-polo6.svg",
     "seoTitle": "Régulateur de vitesse VW — Polo 6 / T-Cross / Taigo — AREPROG",
     "seoDesc": "Kit GRA OEM pour Polo 6 (AW), T-Cross et Taigo MQB-A0. Commande au volant + boîtier. Plug & play.",
     "active": true
@@ -587,7 +587,7 @@
       "Skoda Octavia 3 (5E)",
       "Skoda Kodiaq (NS7)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/gra-octavia.svg",
     "seoTitle": "Régulateur de vitesse Skoda — Octavia 3 / Kodiaq — AREPROG",
     "seoDesc": "Kit régulateur de vitesse OEM pour Octavia 3 (5E) et Kodiaq (NS7). Commande multifonction + boîtier GRA. Plug & play.",
     "active": true
@@ -604,7 +604,7 @@
     "compat": [
       "Tous véhicules MIB / MIB2"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/dab-plus.svg",
     "seoTitle": "Module DAB+ — Radio numérique retrofit — AREPROG",
     "seoDesc": "Ajoutez la radio numérique DAB+ à votre autoradio OEM. Module discret se branche derrière l'autoradio. Antenne fournie.",
     "active": true
@@ -621,7 +621,7 @@
     "compat": [
       "Audi A3 8V Facelift (2016–2020)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/vc-a3-8v.svg",
     "seoTitle": "Virtual Cockpit OEM Audi A3 8V Facelift — AREPROG",
     "seoDesc": "Tableau de bord numérique OEM pour A3 8V Facelift (2016–2020). Écran 12,3 pouces haute résolution. Remplacement clé en main.",
     "active": true
@@ -639,7 +639,7 @@
       "Discover Media 2+",
       "Discover Pro (MIB2)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/nav-update-mib2.svg",
     "seoTitle": "Mise à jour cartographie Discover Media / Pro 2024 — AREPROG",
     "seoDesc": "Mise à jour Europe complète pour Discover Media 2+ et Discover Pro MIB2. Carte SD originale, données 2024 avec radars et points d'intérêt.",
     "active": true
@@ -658,7 +658,7 @@
       "Audi A3 8Y",
       "Leon 4 (KL)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-qi.svg",
     "seoTitle": "Chargeur sans fil Qi OEM — Golf 8 / Audi A3 8Y — AREPROG",
     "seoDesc": "Chargeur par induction Qi OEM intégré dans la console centrale. Remplacement discret du vide-poche. Charge rapide 15W.",
     "active": true
@@ -677,7 +677,7 @@
       "Passat B8",
       "Tiguan 2 (AD)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-lane.svg",
     "seoTitle": "Kit Lane Assist retrofit — Aide au maintien de voie — AREPROG",
     "seoDesc": "Kit complet Lane Assist OEM avec caméra frontale multifonction, module et faisceau. Active l'aide au maintien de voie sur modèles précâblés.",
     "active": true
@@ -697,7 +697,7 @@
       "Passat B8",
       "Arteon"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-ahk.svg",
     "seoTitle": "Module attelage électrique OEM (AHK) — AREPROG",
     "seoDesc": "Module d'interface pour attelage électrique OEM. Active les fonctions spécifiques remorque : stabilisation, PDC remorque, gestion feux.",
     "active": true
@@ -716,7 +716,7 @@
       "Tiguan 2 (AD)",
       "Arteon (3H)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-ambient.svg",
     "seoTitle": "Module ambiance multicolore RGBW retrofit — AREPROG",
     "seoDesc": "Kit éclairage d'ambiance multicolore OEM pour l'habitacle. Remplace le système monochrome d'origine par un système 30 couleurs.",
     "active": true
@@ -735,7 +735,7 @@
       "Polo 6",
       "Audi A3 8V/8Y"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-pdc-avant.svg",
     "seoTitle": "Kit PDC avant complet — Radars de stationnement OEM — AREPROG",
     "seoDesc": "Kit complet pour l'ajout des capteurs PDC avant d'origine. Inclut les 4 capteurs, les faisceaux et le module. Intégration discrète dans le pare-chocs.",
     "active": true
@@ -754,7 +754,7 @@
       "Tiguan 2",
       "Passat B8"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/module-kessy.svg",
     "seoTitle": "Kit KESSY — Accès mains libres retrofit — AREPROG",
     "seoDesc": "Kit complet d'accès mains libres KESSY OEM. Inclut les poignées de porte avec capteurs, les antennes et le module KESSY. Démarrage bouton poussoir optionne",
     "active": true
@@ -771,7 +771,7 @@
     "compat": [
       "Tous véhicules VAG OBD2 (2004+)"
     ],
-    "imageUrl": "",
+    "imageUrl": "/images/produits/diag-obd.svg",
     "seoTitle": "OBD2 Interface Bluetooth — Diagnostic VAG — AREPROG",
     "seoDesc": "Interface OBD2 Bluetooth compatible avec apps Android (OBD Fusion, Torque). Lecture codes défauts, données en temps réel, reset service.",
     "active": true
