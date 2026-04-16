@@ -117,7 +117,7 @@ select option{background:#1d222d}
 
 /* LIGNES */
 .lines-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px}
-.lines-head{display:grid;grid-template-columns:2.8fr 0.7fr 1fr 1fr 36px;gap:10px;margin-bottom:10px;padding:0 2px}
+.lines-head{display:grid;grid-template-columns:2.8fr 0.7fr 1fr 0.5fr 1fr 36px;gap:10px;margin-bottom:10px;padding:0 2px}
 .lines-head span{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
 .line-row{display:grid;grid-template-columns:2.8fr 0.7fr 1fr 0.5fr 1fr 36px;gap:10px;margin-bottom:8px;align-items:center}
 .line-row select,.line-row input{width:100%;padding:9px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);outline:none;transition:border-color .2s}
@@ -1136,8 +1136,7 @@ select option{background:#1d222d}
               <button class="cal-nav-btn" onclick="calNext()">›</button>
             </div>
           </div>
-          <div class="cal-grid" id="cal-dows"></div>
-          <div class="cal-grid" id="cal-cells"></div>
+          <div class="cal-grid" id="cal-grid"></div>
         </div>
         <!-- Sidebar -->
         <div class="agenda-side">
@@ -3702,17 +3701,14 @@ function renderCalendar() {
   var y = calDate.getFullYear(), m = calDate.getMonth();
   $('cal-month-label').textContent = MONTHS[m] + ' ' + y;
 
-  var dows = $('cal-dows');
-  dows.innerHTML = DOW.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
-
   // Premier lundi avant le 1er du mois
   var first = new Date(y, m, 1);
   var startDow = (first.getDay() + 6) % 7; // lundi=0
   var start = new Date(first); start.setDate(1 - startDow);
 
   var rdvs = loadRdvs();
-  var cells = $('cal-cells');
-  cells.innerHTML = '';
+  var grid = $('cal-grid');
+  grid.innerHTML = DOW.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
   var today = new Date(); today.setHours(0,0,0,0);
 
   for (var i = 0; i < 42; i++) {
@@ -3734,7 +3730,7 @@ function renderCalendar() {
     cell.className = cls;
     cell.innerHTML = '<div class="cal-day-num">'+d.getDate()+'</div>' + evHTML;
     cell.addEventListener('click', (function(dd){ return function(){ calSelected = new Date(dd); renderCalendar(); renderSideEvents(calSelected); }; })(d));
-    cells.appendChild(cell);
+    grid.appendChild(cell);
   }
 }
 
