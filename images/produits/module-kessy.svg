@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Kit KESSY mains libres">
+  <defs><linearGradient id="bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1a1a1f"/><stop offset="1" stop-color="#2a2a33"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g fill="none" stroke="#e63946" stroke-width="3">
+    <path d="M 90 138 C 90 122 112 112 158 112 C 204 112 226 122 226 138 L 226 166 C 226 180 204 190 158 190 C 112 190 90 180 90 166 Z"/>
+    <path d="M 108 148 C 105 142 118 133 158 133 C 198 133 211 142 208 148 L 208 156 C 211 162 198 169 158 169 C 118 169 105 162 108 156 Z" fill="#e63946" fill-opacity="0.12"/>
+    <circle cx="158" cy="152" r="6" fill="#e63946" fill-opacity="0.85"/>
+    <circle cx="136" cy="150" r="4" fill="#e63946" fill-opacity="0.45"/>
+    <circle cx="180" cy="150" r="4" fill="#e63946" fill-opacity="0.45"/>
+    <rect x="278" y="118" width="48" height="70" rx="9"/>
+    <circle cx="302" cy="144" r="13" fill="#e63946" fill-opacity="0.25"/>
+    <circle cx="302" cy="144" r="6" fill="#e63946" fill-opacity="0.6"/>
+    <rect x="290" y="170" width="10" height="8" rx="2" fill="#e63946" fill-opacity="0.3"/>
+    <rect x="303" y="170" width="10" height="8" rx="2" fill="#e63946" fill-opacity="0.3"/>
+    <path d="M 262 137 A 17 17 0 0 0 262 160"/>
+    <path d="M 248 128 A 30 30 0 0 0 248 170"/>
+    <path d="M 234 118 A 44 44 0 0 0 234 180" opacity="0.45"/>
+  </g>
+  <rect x="140" y="210" width="120" height="19" rx="9" fill="#e63946" fill-opacity="0.12" stroke="#e63946" stroke-width="1"/>
+  <text x="200" y="223" fill="#e63946" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="11" text-anchor="middle" letter-spacing="1">ACCÈS MAINS LIBRES</text>
+  <text x="200" y="249" fill="#e6e6ea" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="16" text-anchor="middle" letter-spacing="2">KIT KESSY OEM</text>
+  <text x="200" y="270" fill="#9aa0a6" font-family="Barlow, sans-serif" font-size="12" text-anchor="middle">AREPROG · Retrofit VAG</text>
+</svg>

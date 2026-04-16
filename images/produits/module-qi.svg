@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Chargeur sans fil Qi OEM">
+  <defs><linearGradient id="bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1a1a1f"/><stop offset="1" stop-color="#2a2a33"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g fill="none" stroke="#e63946" stroke-width="3">
+    <rect x="120" y="175" width="160" height="35" rx="18"/>
+    <rect x="172" y="80" width="56" height="85" rx="8"/>
+    <rect x="178" y="88" width="44" height="70" rx="4"/>
+    <rect x="188" y="112" width="24" height="10" rx="2" fill="#e63946" fill-opacity="0.75"/>
+    <rect x="186" y="108" width="28" height="18" rx="2" stroke-width="2"/>
+    <rect x="214" y="113" width="4" height="8" rx="1" fill="#e63946"/>
+    <path d="M 176 160 A 24 24 0 0 1 224 160" opacity="0.5"/>
+    <path d="M 162 155 A 42 42 0 0 1 238 155" opacity="0.6"/>
+    <path d="M 148 148 A 60 60 0 0 1 252 148" opacity="0.7"/>
+    <line x1="200" y1="165" x2="200" y2="173" stroke-width="2.5" opacity="0.7"/>
+    <circle cx="120" cy="193" r="4" fill="#e63946" opacity="0.6"/>
+  </g>
+  <text x="200" y="142" fill="#e63946" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="10" text-anchor="middle" letter-spacing="1">15W</text>
+  <rect x="144" y="223" width="112" height="19" rx="9" fill="#e63946" fill-opacity="0.12" stroke="#e63946" stroke-width="1"/>
+  <text x="200" y="236" fill="#e63946" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="11" text-anchor="middle" letter-spacing="1">QI · CHARGE RAPIDE</text>
+  <text x="200" y="261" fill="#e6e6ea" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" text-anchor="middle" letter-spacing="2">CHARGEUR SANS FIL OEM</text>
+  <text x="200" y="281" fill="#9aa0a6" font-family="Barlow, sans-serif" font-size="12" text-anchor="middle">AREPROG · Retrofit VAG</text>
+</svg>
