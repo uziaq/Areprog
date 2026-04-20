@@ -152,3 +152,38 @@ github.com/votre-username/areprog/
 
 **products.js publié mais la boutique n'est pas mise à jour**
 → Videz le cache du navigateur (Ctrl+Shift+R) ou attendez 1-2 minutes.
+
+---
+
+## Rappels RDV automatiques (Netlify Scheduled Function)
+
+La fonction `netlify/function/rdv-rappels/rdv-rappels.js` envoie les rappels
+d'agenda toutes les 5 minutes, **même navigateur fermé**. Elle lit Firestore
+et utilise l'API REST EmailJS.
+
+### Variables d'environnement à créer dans Netlify
+
+Netlify dashboard → Site settings → Environment variables → Add a variable :
+
+1. **`FIREBASE_SERVICE_ACCOUNT`**
+   - Firebase Console → ⚙ Paramètres du projet → Comptes de service
+   - Cliquer « Générer une nouvelle clé privée » → télécharge un JSON
+   - Coller **tout le contenu JSON** comme valeur
+
+2. **`EMAILJS_PRIVATE_KEY`**
+   - EmailJS dashboard → Account → General → **Private Key**
+   - La copier telle quelle comme valeur
+
+### Vérification du champ « To Email » du template
+
+Template `template_mlbev47` dans EmailJS dashboard → champ **To Email** doit
+contenir `{{to_email}}`. Sinon l'envoi réussit silencieusement mais n'arrive
+jamais. C'est le piège classique.
+
+### Tester la fonction
+
+Après déploiement :
+```
+netlify functions:invoke rdv-rappels
+```
+Ou Netlify dashboard → Functions → rdv-rappels → Logs.

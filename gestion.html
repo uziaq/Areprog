@@ -968,6 +968,7 @@ select option{background:#1d222d}
     <div class="sync-dot" id="sync-dot"></div>
     <span id="sync-status">Connexion Firebase…</span>
     <span style="margin-left:auto;color:var(--text-muted);font-size:10px" id="sync-last"></span>
+    <span style="color:var(--text-muted);font-size:10px;margin-left:8px" id="rappel-heartbeat" title="Dernière vérification des rappels RDV"></span>
   </div>
 
   <div class="main">
@@ -4250,13 +4251,27 @@ function saveRdv() {
   var rdvDate = $('rdv-date').value;
   if (!rdvDate) { alert('La date est obligatoire.'); return; }
 
+  var rdvs = loadRdvs();
+  var existing = editingRdvId ? rdvs.find(function(r){ return r.id === editingRdvId; }) : null;
+  var rappels = getRappels();
+
+  // Préserver rappelsSent existants, mais élaguer aux minutes toujours présentes dans rappels
+  var prevSent = (existing && existing.rappelsSent) ? existing.rappelsSent : [];
+  var rappelsSent = prevSent.filter(function(m){ return rappels.indexOf(m) >= 0; });
+
+  var heure = $('rdv-heure').value;
+  // fireISO : timestamp UTC absolu utilisé par le cron serveur (TZ-safe)
+  var fireISO = heure ? new Date(rdvDate+'T'+heure).toISOString() : null;
+
   var rdv = {
     id:       editingRdvId || String(Date.now()),
     title:    title,
     type:     $('rdv-type').value,
     date:     rdvDate,
-    heure:    $('rdv-heure').value,
-    rappels:  getRappels(),
+    heure:    heure,
+    rappels:  rappels,
+    rappelsSent: rappelsSent,
+    fireISO:  fireISO,
     clientId: $('rdv-client').value ? parseInt($('rdv-client').value) : null,
     vehIdx:   $('rdv-vehicule') && $('rdv-vehicule').value !== '' ? parseInt($('rdv-vehicule').value) : null,
     docId:    $('rdv-doc').value ? parseInt($('rdv-doc').value) : null,
@@ -4265,8 +4280,9 @@ function saveRdv() {
     notes:    $('rdv-notes').value,
   };
 
-  var rdvs = loadRdvs();
   if (editingRdvId) {
+    // Annuler les timers existants pour ce rdv avant de reprogrammer
+    cancelRdvTimers(editingRdvId);
     var i = rdvs.findIndex(function(r){ return r.id === editingRdvId; });
     if (i >= 0) rdvs[i] = rdv; else rdvs.push(rdv);
   } else {
@@ -4274,8 +4290,9 @@ function saveRdv() {
   }
   saveRdvs(rdvs);
 
-  // Programmer le rappel
+  // Programmer le rappel (timers live) + rattrapage immédiat si besoin
   scheduleRdvNotif(rdv);
+  runRappelCheck();
 
   closeRdvModal();
   renderCalendar();
@@ -4284,6 +4301,7 @@ function saveRdv() {
 
 function deleteRdv(rdvId) {
   if (!confirm('Supprimer ce rendez-vous ?')) return;
+  cancelRdvTimers(rdvId);
   saveRdvs(loadRdvs().filter(function(r){ return r.id !== rdvId; }));
   renderCalendar();
   renderSideEvents(calSelected);
@@ -4304,6 +4322,13 @@ var EJS_TPL_DOC       = 'template_l6jwa72';  // Envoi devis/factures
 var EJS_FROM_EMAIL    = 'arthur@areprog.fr';
 var notifTimer        = null;
 var _currentDocForEmail = null; // doc en cours d'affichage dans le modal
+
+// État rappels RDV (timers live + boucle de rattrapage)
+var _rdvTimers          = {};   // { rdvId: [timeoutId, ...] }
+var _rappelLoopInterval = null; // setInterval id pour runRappelCheck
+var _rappelInFlight     = {};   // "rdvId|minutes" → true (dédup intra-onglet)
+var STALE_RAPPEL_MS     = 7 * 24 * 3600000; // rappels ratés depuis > 7j : on marque sans envoyer
+var RAPPEL_LOOP_MS      = 60000; // boucle de rattrapage toutes les 60s
 
 // Init EmailJS — robuste, attend que le SDK soit chargé
 var _ejsReady = false;
@@ -4381,14 +4406,21 @@ function setRappels(arr) {
 // ── Envoi email rappel RDV ────────────────────────────────────
 function sendReminderEmail(rdv, minutes) {
   if (!_ejsReady) initEmailJS();
-  if (!_ejsReady) return;
+  if (!_ejsReady || typeof emailjs === 'undefined') {
+    showNotifBanner('⚠️', 'EmailJS non prêt', 'Rappel "'+(rdv.title||'')+'" sera retenté.');
+    return Promise.reject(new Error('EmailJS non initialisé'));
+  }
+  var key = rdv.id + '|' + minutes;
+  if (_rappelInFlight[key]) return Promise.resolve();
+  _rappelInFlight[key] = true;
+
   var cl = rdv.clientId ? loadClients().find(function(c){ return c.id===rdv.clientId; }) : null;
   var vehs = cl && cl.vehs && cl.vehs.length ? cl.vehs : (cl&&cl.vm?[{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||''}]:[]);
   var selV = (rdv.vehIdx!=null && vehs[rdv.vehIdx]) ? vehs[rdv.vehIdx] : vehs[0];
   var vehLabel = selV ? [selV.vm,selV.vmo,selV.vmot,selV.van?'('+selV.van+')':''].filter(Boolean).join(' ') : '';
   var opt = RAPPEL_OPTIONS.find(function(o){ return parseInt(o.v)===minutes; });
-  if (typeof emailjs === 'undefined') return;
-  emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
+
+  return emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
     to_email:    EJS_FROM_EMAIL,
     rdv_title:   rdv.title||'',
     rdv_date:    rdv.date ? fmtDate(rdv.date) : '',
@@ -4398,34 +4430,123 @@ function sendReminderEmail(rdv, minutes) {
     rdv_vehicule: vehLabel||'Non précisé',
     rdv_notes:   rdv.notes||'',
     rappel_label: opt ? opt.l : minutes+' min avant',
-  }).catch(function(e){ console.error('EmailJS rappel:', e); });
+  }).then(function(){
+    markRappelSent(rdv.id, minutes);
+    showNotifBanner('📧', 'Rappel envoyé', rdv.title||'');
+    delete _rappelInFlight[key];
+  }).catch(function(e){
+    console.error('EmailJS rappel:', e);
+    var msg = (e && (e.text || e.message)) || 'Erreur inconnue';
+    showNotifBanner('⚠️', 'Erreur EmailJS rappel', msg);
+    delete _rappelInFlight[key];
+    throw e;
+  });
+}
+
+// Marque un rappel comme envoyé dans la liste des rdvs (persisté Firebase + localStorage)
+function markRappelSent(rdvId, minutes) {
+  var rdvs = loadRdvs();
+  var i = rdvs.findIndex(function(r){ return r.id === rdvId; });
+  if (i < 0) return;
+  rdvs[i].rappelsSent = rdvs[i].rappelsSent || [];
+  if (rdvs[i].rappelsSent.indexOf(minutes) < 0) {
+    rdvs[i].rappelsSent.push(minutes);
+    saveRdvs(rdvs);
+  }
+}
+
+function cancelRdvTimers(rdvId) {
+  var ids = _rdvTimers[rdvId];
+  if (!ids) return;
+  ids.forEach(function(id){ clearTimeout(id); });
+  delete _rdvTimers[rdvId];
+}
+
+function cancelAllRdvTimers() {
+  Object.keys(_rdvTimers).forEach(cancelRdvTimers);
 }
 
 function scheduleRdvNotif(rdv) {
+  cancelRdvTimers(rdv.id);
   var rappels = rdv.rappels && rdv.rappels.length ? rdv.rappels
     : (rdv.rappel && rdv.rappel>0 ? [rdv.rappel] : []);
   if (!rdv.heure || !rappels.length) return;
+  var sent = rdv.rappelsSent || [];
   var rdvDT = new Date(rdv.date+'T'+rdv.heure);
   rappels.forEach(function(minutes) {
+    if (sent.indexOf(minutes) >= 0) return;
     var delay = rdvDT.getTime() - minutes*60000 - Date.now();
+    // delay < 0 → la boucle runRappelCheck s'en charge ; > 30j → trop loin
     if (delay < 0 || delay > 30*24*3600000) return;
-    setTimeout(function() {
+    var tid = setTimeout(function() {
       sendReminderEmail(rdv, minutes);
-      showNotifBanner('📧', 'Email rappel envoyé', rdv.title);
     }, delay);
+    (_rdvTimers[rdv.id] = _rdvTimers[rdv.id] || []).push(tid);
   });
+}
+
+// Boucle de rattrapage : envoie tous les rappels dont l'heure est passée et non encore marqués sent
+function runRappelCheck() {
+  updateRappelIndicator();
+  if (!_ejsReady) initEmailJS();
+  if (!_ejsReady || typeof emailjs === 'undefined') return;
+  var now = Date.now();
+  var rdvs = loadRdvs();
+  var dirty = false;
+  rdvs.forEach(function(rdv) {
+    var rappels = rdv.rappels && rdv.rappels.length ? rdv.rappels
+      : (rdv.rappel && rdv.rappel>0 ? [rdv.rappel] : []);
+    if (!rdv.heure || !rappels.length) return;
+    var fireBase = new Date(rdv.date+'T'+rdv.heure).getTime();
+    if (isNaN(fireBase)) return;
+    rdv.rappelsSent = rdv.rappelsSent || [];
+    rappels.forEach(function(m) {
+      if (rdv.rappelsSent.indexOf(m) >= 0) return;
+      var fire = fireBase - m*60000;
+      if (fire > now) return; // futur — géré par scheduleRdvNotif
+      if (now - fire > STALE_RAPPEL_MS) {
+        // trop vieux : on marque sans envoyer pour éviter un flood
+        rdv.rappelsSent.push(m);
+        dirty = true;
+        return;
+      }
+      sendReminderEmail(rdv, m);
+    });
+  });
+  if (dirty) saveRdvs(rdvs);
+}
+
+function updateRappelIndicator() {
+  var el = document.getElementById('rappel-heartbeat');
+  if (!el) return;
+  var d = new Date();
+  var hh = String(d.getHours()).padStart(2,'0');
+  var mm = String(d.getMinutes()).padStart(2,'0');
+  el.textContent = '⏱ Rappels : ' + hh + ':' + mm;
 }
 
 function maybeShowInstallHint() {} // supprimé
 
 function checkTodayNotifs() {
+  // 1. Rattrapage immédiat des rappels ratés (navigateur fermé, etc.)
+  runRappelCheck();
+  // 2. Timers live pour les rappels à venir dans cette session
   loadRdvs().forEach(function(r){ scheduleRdvNotif(r); });
-  // Alertes factures impayées
+  // 3. Démarrer la boucle de rattrapage périodique
+  if (!_rappelLoopInterval) {
+    _rappelLoopInterval = setInterval(runRappelCheck, RAPPEL_LOOP_MS);
+  }
+
+  // Alertes factures impayées — dédup journalier (évite un envoi à chaque reload)
   if (typeof emailjs === 'undefined') return;
+  var todayKey = new Date().toISOString().slice(0,10);
+  if (localStorage.getItem('ar_last_facture_alert_day') === todayKey) return;
   var now = new Date(); now.setHours(0,0,0,0);
+  var sent = false;
   loadDocs().filter(function(d){ return d.type==='facture'&&d.statut!=='payé'&&d.statut!=='annulé'; }).forEach(function(d) {
     var days = Math.floor((now - new Date(d.date))/86400000);
     if (days===7||days===14||days===30) {
+      sent = true;
       setTimeout(function(){
         emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
           to_email: EJS_FROM_EMAIL,
@@ -4440,6 +4561,7 @@ function checkTodayNotifs() {
       }, 5000);
     }
   });
+  if (sent) localStorage.setItem('ar_last_facture_alert_day', todayKey);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -5197,6 +5319,11 @@ function startRdvsRealtimeSync() {
         renderCalendar();
         renderSideEvents(calSelected);
       }
+      // Reprogrammer les rappels : annuler tous les timers et relancer
+      // (les rdvs peuvent avoir été modifiés depuis un autre appareil)
+      cancelAllRdvTimers();
+      doc.data().rdvs.forEach(function(r){ scheduleRdvNotif(r); });
+      runRappelCheck();
     }
   }, function(err) {
     console.warn('RDV realtime sync error:', err);

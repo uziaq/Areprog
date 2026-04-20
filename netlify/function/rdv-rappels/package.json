@@ -1,0 +1,11 @@
+{
+  "name": "rdv-rappels",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Netlify Scheduled Function — envoi automatique des rappels RDV via EmailJS",
+  "main": "rdv-rappels.js",
+  "dependencies": {
+    "@netlify/functions": "^2.8.0",
+    "firebase-admin": "^12.0.0"
+  }
+}
