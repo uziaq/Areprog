@@ -1,0 +1,9 @@
+{
+  "name": "areprog",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@netlify/functions": "^2.8.0",
+    "firebase-admin": "^12.0.0"
+  }
+}
