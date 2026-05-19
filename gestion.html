@@ -228,6 +228,51 @@ select option{background:#1d222d}
 .d-notes p{font-size:12px;color:#555;line-height:1.65}
 .d-footer{border-top:1px solid #e5e7eb;padding-top:14px;font-size:10px;color:#aaa;text-align:center;line-height:1.7}
 
+/* DOC IMPRIMABLE — Ordre de Réparation */
+.d-or-warn{background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#78350f;line-height:1.6}
+.d-or-warn strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#92400e;margin-bottom:6px}
+.d-or-block{background:#f8f9fb;border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.d-or-block-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#444;font-weight:800;margin-bottom:8px;border-bottom:1px solid #e5e7eb;padding-bottom:6px}
+.d-or-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-size:12px;color:#444}
+.d-or-grid2 strong{color:#111;font-weight:600}
+.d-or-text{font-size:12px;color:#333;line-height:1.65;white-space:pre-wrap}
+.d-or-clauses{font-size:11px;color:#444;line-height:1.7}
+.d-or-clauses li{margin-bottom:5px}
+.d-or-checks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.d-or-check{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid #d1d5db;border-radius:14px;padding:3px 10px;font-size:11px;color:#374151}
+.d-or-check::before{content:"✓";color:#16a34a;font-weight:800}
+.d-or-sign{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;border-top:2px solid #e5e7eb;padding-top:18px}
+.d-or-sign-box{border:1px dashed #9ca3af;border-radius:8px;padding:14px;min-height:90px;font-size:12px}
+.d-or-sign-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;font-weight:700;margin-bottom:6px}
+.d-or-sign-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#111;letter-spacing:1px}
+.d-or-sign-meta{font-size:11px;color:#6b7280;margin-top:4px}
+.d-or-empty{color:#9ca3af;font-style:italic;font-size:11px}
+
+/* Facture — Mentions légales étoffées + bloc paiement/garantie */
+.d-fac-legal{background:#fafbfc;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:11px;color:#444;line-height:1.7}
+.d-fac-legal strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#444;font-weight:700;margin-bottom:6px}
+.d-fac-pay{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.d-fac-pay-card{background:#f8f9fb;border-radius:8px;padding:12px 14px;font-size:12px;color:#444;line-height:1.6}
+.d-fac-pay-card strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#666;font-weight:700;margin-bottom:6px}
+.d-fac-iban{font-family:'JetBrains Mono',monospace;font-size:12px;color:#111;background:#fff;border:1px solid #e5e7eb;border-radius:4px;padding:4px 8px;display:inline-block;margin-top:4px}
+.d-line-ref{font-size:10px;color:#9ca3af;font-family:'JetBrains Mono',monospace;display:block;margin-top:2px}
+.d-line-tag{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#fff;background:#9ca3af;border-radius:3px;padding:1px 5px;margin-right:5px;font-weight:600;vertical-align:1px}
+.d-line-tag.mo{background:#3b82f6}
+.d-line-tag.piece{background:#8b5cf6}
+.d-line-tag.fluide{background:#10b981}
+
+/* FORM — Section OR */
+.or-checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:6px}
+.or-checkbox{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:border-color .15s}
+.or-checkbox:hover{border-color:var(--blue)}
+.or-checkbox input{width:16px;height:16px;accent-color:var(--blue);cursor:pointer;margin-top:1px;flex-shrink:0}
+.or-checkbox-lbl{font-size:13px;color:var(--text);line-height:1.3}
+.or-checkbox-hint{display:block;font-size:11px;color:var(--text-muted);margin-top:2px}
+.or-warn-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:#fbbf24;line-height:1.5}
+.or-warn-box strong{color:#f59e0b}
+.or-state-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:768px){.or-checkbox-grid,.or-state-grid{grid-template-columns:1fr}}
+
 /* EMPTY */
 .empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
 .empty-icon{font-size:36px;margin-bottom:12px}
@@ -965,6 +1010,7 @@ select option{background:#1d222d}
       <button class="nb on" onclick="showTab('dash')">Dashboard</button>
       <button class="nb" onclick="newDoc()">+ Nouveau</button>
       <button class="nb" onclick="showTab('liste')">Documents</button>
+      <button class="nb" onclick="showTab('or')">📋 OR</button>
       <button class="nb" onclick="showTab('carnet')">👥 Clients</button>
       <button class="nb" onclick="showTab('template')">🎨 Template</button>
       <button class="nb" onclick="showTab('services')">⚙️ Services</button>
@@ -998,12 +1044,15 @@ select option{background:#1d222d}
       <div class="stats-row" id="stats"></div>
 
       <!-- Actions rapides -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px" id="quick-actions">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px" id="quick-actions">
         <button class="btn-p" onclick="newDoc()" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
           <span style="font-size:20px">📄</span>Nouveau devis
         </button>
         <button class="btn-s" onclick="newDoc();$('f-type').value='facture';onTypeChange()" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
           <span style="font-size:20px">🧾</span>Nouvelle facture
+        </button>
+        <button class="btn-s" onclick="newOR()" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
+          <span style="font-size:20px">📋</span>Nouvel OR
         </button>
         <button class="btn-s" onclick="showTab('agenda');setTimeout(function(){openRdvModal(null)},100)" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
           <span style="font-size:20px">📅</span>Nouveau RDV
@@ -1163,6 +1212,219 @@ select option{background:#1d222d}
           <div id="gains-badge-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
         </div>
       </div>
+    </div>
+
+    <!-- ORDRES DE RÉPARATION — LISTE -->
+    <div class="tc" id="t-or">
+      <div class="sh">
+        <div class="sh-title">📋 Ordres de Réparation</div>
+        <div class="sh-actions">
+          <button class="btn-p" onclick="newOR()">+ Nouvel OR</button>
+        </div>
+      </div>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px;line-height:1.6">
+        L'Ordre de Réparation est ton bouclier juridique. Il prouve ce que le client a demandé, ce que tu as accepté de faire, l'état du véhicule avant intervention, et le montant estimé. Fais-le toujours <strong>signer avant intervention</strong>.
+      </p>
+      <div class="carnet-search">
+        <input id="or-search" type="text" placeholder="Rechercher client, immatriculation, n° OR..." oninput="renderORList()"/>
+      </div>
+      <div id="or-list-body"></div>
+    </div>
+
+    <!-- ORDRE DE RÉPARATION — FORMULAIRE -->
+    <div class="tc" id="t-or-form">
+      <div class="sh">
+        <div class="sh-title" id="or-form-h">Nouvel Ordre de Réparation</div>
+        <div class="sh-actions">
+          <button class="btn-s" onclick="openCarnetModalForOR()">👥 Carnet clients</button>
+          <button class="btn-s" onclick="resetORForm(false)">↺ Réinitialiser</button>
+          <button class="btn-s" onclick="openORPreview()">👁 Aperçu</button>
+          <button class="btn-p" onclick="printOR()">🖨 Imprimer / PDF</button>
+          <button class="btn-g" onclick="saveOR()">💾 Enregistrer</button>
+        </div>
+      </div>
+
+      <div class="or-warn-box" style="margin-bottom:16px">
+        <strong>⚠ Rappel juridique</strong> — Ne jamais écrire « véhicule en parfait état » ou « RAS ». Note les défauts existants. Fais signer le client <strong>avant</strong> intervention. Distingue toujours « ce que le client affirme » de « ce que tu constates ».
+      </div>
+
+      <div class="fg3">
+        <!-- BLOC IDENTIFICATION OR -->
+        <div class="card">
+          <div class="card-title">Document</div>
+          <div class="fr"><label>Numéro OR</label><input id="or-num" type="text" placeholder="OR-2026-001"/></div>
+          <div class="fr"><label>Date d'entrée véhicule</label><input id="or-date-entree" type="datetime-local"/></div>
+          <div class="fr"><label>Restitution prévue</label><input id="or-date-sortie" type="datetime-local"/></div>
+          <div class="fr"><label>Statut</label>
+            <select id="or-statut">
+              <option value="brouillon">Brouillon</option>
+              <option value="signé">Signé client</option>
+              <option value="en cours">En cours</option>
+              <option value="terminé">Terminé</option>
+              <option value="facturé">Facturé</option>
+              <option value="refusé">Refusé</option>
+            </select>
+          </div>
+        </div>
+        <!-- CLIENT -->
+        <div class="card">
+          <div class="card-title">Client</div>
+          <div class="fr"><label>Nom / Société</label><input id="or-cnom" type="text" placeholder="Prénom NOM"/></div>
+          <div class="fr"><label>Adresse</label><input id="or-cadr" type="text" placeholder="10 rue des Lilas"/></div>
+          <div class="fr"><label>Ville + Code postal</label><input id="or-cville" type="text" placeholder="64100 Bayonne"/></div>
+          <div class="fr"><label>Téléphone</label><input id="or-ctel" type="text" placeholder="06 XX XX XX XX"/></div>
+          <div class="fr"><label>Email</label><input id="or-cemail" type="email" placeholder="client@email.fr"/></div>
+        </div>
+        <!-- VÉHICULE -->
+        <div class="card">
+          <div class="card-title">Véhicule</div>
+          <div class="fr"><label>Marque</label><input id="or-vm" type="text" placeholder="Volkswagen"/></div>
+          <div class="fr"><label>Modèle</label><input id="or-vmo" type="text" placeholder="Golf 7 GTI"/></div>
+          <div class="fr"><label>Motorisation</label><input id="or-vmot" type="text" placeholder="2.0 TSI 220ch"/></div>
+          <div class="fr"><label>Énergie</label>
+            <select id="or-venergie">
+              <option value="">—</option>
+              <option value="Essence">Essence</option>
+              <option value="E85">E85 / Flexfuel</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Hybride">Hybride</option>
+              <option value="Hybride rechargeable">Hybride rechargeable</option>
+              <option value="Électrique">Électrique</option>
+              <option value="GPL">GPL</option>
+            </select>
+          </div>
+          <div class="fr"><label>Année</label><input id="or-van" type="text" placeholder="2019"/></div>
+          <div class="fr"><label>1ère mise en circulation</label><input id="or-vmec" type="date"/></div>
+          <div class="fr"><label>Immatriculation</label><input id="or-vim" type="text" placeholder="AB-123-CD" style="text-transform:uppercase"/></div>
+          <div class="fr"><label>VIN / Châssis</label><input id="or-vvin" type="text" placeholder="WVWZZZ1KZ7W123456" style="text-transform:uppercase;font-family:var(--fm);font-size:13px"/></div>
+          <div class="fr"><label>Kilométrage à l'entrée</label><input id="or-vkm" type="text" placeholder="145 320 km"/></div>
+        </div>
+      </div>
+
+      <!-- TYPE D'INTERVENTION -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Type d'intervention (active les clauses correspondantes)</div>
+        <div class="or-checkbox-grid">
+          <label class="or-checkbox"><input type="checkbox" id="or-t-meca" onchange="onORTypeChange()"/>
+            <span class="or-checkbox-lbl">🔧 Mécanique générale<span class="or-checkbox-hint">Diag, remplacement pièces, entretien</span></span>
+          </label>
+          <label class="or-checkbox"><input type="checkbox" id="or-t-diag" onchange="onORTypeChange()"/>
+            <span class="or-checkbox-lbl">🩺 Diagnostic électronique<span class="or-checkbox-hint">OBD/ODIS, lecture/effacement défauts, essais routiers</span></span>
+          </label>
+          <label class="or-checkbox"><input type="checkbox" id="or-t-reprog" onchange="onORTypeChange()"/>
+            <span class="or-checkbox-lbl">⚡ Reprogrammation / Codage<span class="or-checkbox-hint">Modification logicielle ECU/TCU, sauvegarde fichier origine</span></span>
+          </label>
+          <label class="or-checkbox"><input type="checkbox" id="or-t-ethanol" onchange="onORTypeChange()"/>
+            <span class="or-checkbox-lbl">🌽 Conversion éthanol (E85)<span class="or-checkbox-hint">Carto bioéthanol, décharge usage carburant</span></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- DEMANDE CLIENT -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Demande du client (mots du client)</div>
+        <div class="fr">
+          <label>Décris ce que le client signale / demande (à la première personne du client)</label>
+          <textarea id="or-demande" rows="3" placeholder="Ex : Le client signale une perte de puissance avec voyant moteur allumé. Il demande un diagnostic et le remplacement de la pompe à eau si défectueuse."></textarea>
+        </div>
+      </div>
+
+      <!-- CONSTATS PROFESSIONNELS -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Constats du professionnel (ce que TU as observé)</div>
+        <div class="fr">
+          <label>Distinction obligatoire : sépare ce que tu constates de ce que le client affirme</label>
+          <textarea id="or-constats" rows="3" placeholder="Ex : Constat AREPROG — Présence de défauts P0299 et P2563. Niveau LDR sous le minimum. Traces d'huile au turbo."></textarea>
+        </div>
+      </div>
+
+      <!-- ÉTAT VÉHICULE AVANT TRAVAUX -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">⚠ État du véhicule à l'entrée (CRUCIAL — éviter litiges)</div>
+        <p style="color:var(--text-dim);font-size:12px;margin-bottom:10px">Note tout défaut existant avant intervention. <strong style="color:var(--orange)">N'écris JAMAIS « parfait état » ou « RAS »</strong>.</p>
+        <div class="or-state-grid">
+          <div class="fr"><label>Défauts carrosserie</label><textarea id="or-et-carrosserie" rows="2" placeholder="Rayures aile avant droite, impact pare-brise, jante AR gauche..."></textarea></div>
+          <div class="fr"><label>Voyants présents au TDB</label><textarea id="or-et-voyants" rows="2" placeholder="MIL allumé, voyant DPF, ESP, ABS..."></textarea></div>
+          <div class="fr"><label>Niveaux fluides</label><textarea id="or-et-niveaux" rows="2" placeholder="Huile au minimum, LDR en-dessous du repère min..."></textarea></div>
+          <div class="fr"><label>État pneus</label><textarea id="or-et-pneus" rows="2" placeholder="AV : 4mm — AR : 3mm — Marque/dimension..."></textarea></div>
+          <div class="fr"><label>Modifications / antériorités</label><textarea id="or-et-modifs" rows="2" placeholder="Véhicule déjà reprogrammé, FAP/EGR modifiés, accidenté, moteur démonté..."></textarea></div>
+          <div class="fr"><label>Autres observations</label><textarea id="or-et-autres" rows="2" placeholder="Défauts électroniques antérieurs, bruits suspects, fumée..."></textarea></div>
+        </div>
+      </div>
+
+      <!-- TRAVAUX AUTORISÉS -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Travaux autorisés par le client</div>
+        <div class="or-checkbox-grid">
+          <label class="or-checkbox"><input type="checkbox" id="or-w-diag"/><span class="or-checkbox-lbl">Diagnostic uniquement</span></label>
+          <label class="or-checkbox"><input type="checkbox" id="or-w-piece"/><span class="or-checkbox-lbl">Remplacement de pièces</span></label>
+          <label class="or-checkbox"><input type="checkbox" id="or-w-reprog"/><span class="or-checkbox-lbl">Reprogrammation logicielle</span></label>
+          <label class="or-checkbox"><input type="checkbox" id="or-w-codage"/><span class="or-checkbox-lbl">Codage / paramétrage</span></label>
+          <label class="or-checkbox"><input type="checkbox" id="or-w-essai"/><span class="or-checkbox-lbl">Essai routier</span></label>
+          <label class="or-checkbox"><input type="checkbox" id="or-w-maj"/><span class="or-checkbox-lbl">Mise à jour calculateur</span></label>
+          <label class="or-checkbox"><input type="checkbox" id="or-w-purge"/><span class="or-checkbox-lbl">Purge / vidange circuit</span></label>
+          <label class="or-checkbox"><input type="checkbox" id="or-w-banc"/><span class="or-checkbox-lbl">Banc de puissance</span></label>
+        </div>
+        <div class="fr" style="margin-top:10px">
+          <label>Travaux additionnels autorisés (texte libre)</label>
+          <textarea id="or-w-other" rows="2" placeholder="Ex : Vidange moteur + filtres + remplacement courroie de distribution si déposée."></textarea>
+        </div>
+      </div>
+
+      <!-- ESTIMATION FINANCIÈRE -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Estimation financière</div>
+        <div class="fg3">
+          <div class="fr"><label>Main d'œuvre estimée (€ HT)</label><input id="or-est-mo" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcOREstimation()"/></div>
+          <div class="fr"><label>Pièces estimées (€ HT)</label><input id="or-est-pieces" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcOREstimation()"/></div>
+          <div class="fr"><label>Forfait / autres (€ HT)</label><input id="or-est-forfait" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcOREstimation()"/></div>
+        </div>
+        <div class="fg3" style="margin-top:8px">
+          <div class="fr"><label>Taux horaire MO (€ HT/h)</label><input id="or-est-th" type="number" min="0" step="0.01" placeholder="60.00"/></div>
+          <div class="fr"><label>TVA (%)</label>
+            <select id="or-est-tva" onchange="calcOREstimation()">
+              <option value="0">0 % (non assujetti)</option>
+              <option value="20">20 %</option>
+            </select>
+          </div>
+          <div class="fr"><label>Seuil dépassement sans accord (%)</label><input id="or-est-seuil" type="number" min="0" max="100" step="1" value="10"/></div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:12px 16px;margin-top:12px">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-dim);padding:4px 0">
+            <span>Total HT estimé</span><span id="or-tot-ht" style="font-family:var(--fm);color:var(--text)">0,00 €</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-dim);padding:4px 0">
+            <span>TVA</span><span id="or-tot-tva" style="font-family:var(--fm);color:var(--text)">0,00 €</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:6px 0;border-top:1px solid var(--border);margin-top:4px">
+            <span>TOTAL TTC ESTIMÉ</span><span id="or-tot-ttc" style="font-family:var(--fm);color:var(--blue)">0,00 €</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RÉSERVES & MENTIONS -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Réserves & mentions particulières</div>
+        <div class="fr">
+          <label>Réserves (ex : antériorités, refus diag complet, état douteux...)</label>
+          <textarea id="or-reserves" rows="3" placeholder="Ex : Véhicule arrivé avec surchauffe moteur — Présence de défauts antérieurs non liés à l'intervention — Le client refuse le diagnostic complet."></textarea>
+        </div>
+      </div>
+
+      <!-- SIGNATURE -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Signature client (avant intervention)</div>
+        <p style="color:var(--text-dim);font-size:12px;margin-bottom:10px">Le client confirme : avoir pris connaissance de l'état du véhicule, autoriser les travaux listés ci-dessus, et accepter l'estimation financière avec le seuil de dépassement indiqué.</p>
+        <div class="fg3">
+          <div class="fr"><label>Nom complet (manuscrit du client)</label><input id="or-sig-nom" type="text" placeholder="Prénom NOM"/></div>
+          <div class="fr"><label>Initiales</label><input id="or-sig-init" type="text" placeholder="P.N." maxlength="10" style="text-transform:uppercase"/></div>
+          <div class="fr"><label>Mention manuscrite + date</label><input id="or-sig-date" type="date"/></div>
+        </div>
+        <div class="fr" style="margin-top:8px">
+          <label><input type="checkbox" id="or-sig-accord" style="width:16px;height:16px;accent-color:var(--blue);margin-right:6px"/>Le client confirme avoir lu, compris et accepté les termes de cet Ordre de Réparation (équivalent signature électronique).</label>
+        </div>
+      </div>
+
     </div>
 
     <!-- AGENDA -->
@@ -1384,6 +1646,29 @@ select option{background:#1d222d}
             <div class="fr"><label>Site web</label><input id="tpl-web" type="text" placeholder="areprog.fr"/></div>
             <div class="fr"><label>Adresse (optionnel)</label><input id="tpl-adresse" type="text" placeholder=""/></div>
             <div class="fr"><label>Mentions légales (SIRET, TVA...)</label><textarea id="tpl-legal" rows="2" placeholder="SIRET : 000 000 000 00000 · TVA non applicable"></textarea></div>
+          </div>
+          <!-- Mentions légales étendues -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Mentions légales étendues (factures)</div>
+            <p style="color:var(--text-dim);font-size:12px;margin-bottom:10px">Affichées en bas des factures pour conformité Code de commerce.</p>
+            <div class="fr"><label>Forme juridique</label><input id="tpl-forme" type="text" placeholder="EI / EURL / SASU / SARL..."/></div>
+            <div class="fr"><label>RCS (ville + numéro)</label><input id="tpl-rcs" type="text" placeholder="RCS Bayonne 000 000 000"/></div>
+            <div class="fr"><label>Code APE / NAF</label><input id="tpl-ape" type="text" placeholder="4520A"/></div>
+            <div class="fr"><label>Capital social (€)</label><input id="tpl-capital" type="text" placeholder="1 000 €"/></div>
+            <div class="fr"><label>N° TVA intracom.</label><input id="tpl-tvaintra" type="text" placeholder="FR00000000000"/></div>
+            <div class="fr"><label>Médiateur de la consommation</label><input id="tpl-mediateur" type="text" placeholder="Ex : CM2C — www.cm2c.net"/></div>
+            <div class="fr"><label>Assurance pro RC (si applicable)</label><input id="tpl-rc" type="text" placeholder="Ex : MAAF Pro — Contrat n° XXX"/></div>
+          </div>
+          <!-- Paiement & garantie -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Paiement & garantie (factures)</div>
+            <div class="fr"><label>IBAN (pour virement)</label><input id="tpl-iban" type="text" placeholder="FR76 0000 0000 0000 0000 0000 000" style="font-family:var(--fm);font-size:12px"/></div>
+            <div class="fr"><label>BIC</label><input id="tpl-bic" type="text" placeholder="BNPAFRPP"/></div>
+            <div class="fr"><label>Modes de paiement acceptés</label><input id="tpl-modes" type="text" placeholder="CB · Virement · Espèces · Chèque · PayPal"/></div>
+            <div class="fr"><label>Garantie pièces</label><input id="tpl-garp" type="text" placeholder="2 ans pièces — défauts constructeur"/></div>
+            <div class="fr"><label>Garantie main d'œuvre</label><input id="tpl-garmo" type="text" placeholder="6 mois sur la main d'œuvre"/></div>
+            <div class="fr"><label>Exclusions de garantie</label><textarea id="tpl-garex" rows="2" placeholder="Hors usure normale, usage compétition, mauvais entretien, modifications post-intervention."></textarea></div>
+            <div class="fr"><label>Pénalités de retard</label><input id="tpl-penal" type="text" placeholder="Taux BCE + 10 points · Indemnité forfaitaire 40 € (art. L441-10 C. com.)"/></div>
           </div>
           <!-- Pied de page -->
           <div class="card" style="margin-bottom:16px">
@@ -2532,9 +2817,42 @@ function plusDays(n) {
   return d.toISOString().split('T')[0];
 }
 function genNum(prefix) {
+  // Numérotation chronologique stricte : on cherche le PLUS GRAND numéro
+  // existant pour préfixe + année courante et on incrémente. Empêche les
+  // trous accidentels (cf. obligations Code de commerce pour les factures).
   const y = new Date().getFullYear();
-  const cnt = loadDocs().filter(d => d.num && d.num.startsWith(prefix + '-' + y)).length;
-  return prefix + '-' + y + '-' + String(cnt + 1).padStart(3, '0');
+  const pref = prefix + '-' + y + '-';
+  const re = new RegExp('^' + prefix + '-' + y + '-(\\d+)$');
+  var maxN = 0;
+  loadDocs().forEach(function(d){
+    if (!d.num) return;
+    var m = re.exec(d.num);
+    if (m) { var n = parseInt(m[1],10); if (n > maxN) maxN = n; }
+  });
+  return pref + String(maxN + 1).padStart(3, '0');
+}
+
+// Détection des trous dans la séquence de numérotation (factures)
+// Retourne { gaps: [...], duplicates: [...], total: N }
+function auditFactureSequence() {
+  var y = new Date().getFullYear();
+  var re = new RegExp('^FAC-' + y + '-(\\d+)$');
+  var nums = [];
+  loadDocs().forEach(function(d){
+    if (d.type !== 'facture' || !d.num) return;
+    var m = re.exec(d.num); if (m) nums.push(parseInt(m[1],10));
+  });
+  nums.sort(function(a,b){return a-b;});
+  var gaps = [], duplicates = [], seen = {};
+  for (var i=0;i<nums.length;i++){
+    if (seen[nums[i]]) duplicates.push(nums[i]); else seen[nums[i]] = true;
+  }
+  if (nums.length) {
+    for (var n=1; n<=nums[nums.length-1]; n++){
+      if (!seen[n]) gaps.push(n);
+    }
+  }
+  return { gaps: gaps, duplicates: duplicates, total: nums.length, year: y };
 }
 
 // ============================================================
@@ -2720,8 +3038,19 @@ function initLineAutocomplete(inputEl, lid) {
 
 function addLine(data) {
   data = data || {};
-  lines.push({ id: Date.now() + Math.random(), label: data.label || '', qte: data.qte || 1, pu: data.pu || 0, desc: data.desc || '', remise: data.remise || 0, remiseType: data.remiseType === 'eur' ? 'eur' : 'pct' });
+  lines.push({ id: Date.now() + Math.random(), label: data.label || '', qte: data.qte || 1, pu: data.pu || 0, desc: data.desc || '', remise: data.remise || 0, remiseType: data.remiseType === 'eur' ? 'eur' : 'pct', ref: data.ref || '', type: data.type || '' });
   renderLines();
+}
+
+// Modifier la référence pièce d'une ligne
+function lineRef(inp, lid) {
+  var line = lines.find(function(l){ return l.id === lid; });
+  if (line) { line.ref = inp.value; onFormChange(); }
+}
+// Modifier le type (MO / Pièce / Fluide) d'une ligne
+function lineType(sel, lid) {
+  var line = lines.find(function(l){ return l.id === lid; });
+  if (line) { line.type = sel.value; onFormChange(); }
 }
 
 function removeLine(lid) {
@@ -2776,8 +3105,22 @@ function renderLines() {
     descWrap.className = 'line-desc-wrap';
     descWrap.appendChild(descInput);
 
+    // Référence pièce + type (MO/Pièce/Fluide) — désignation détaillée
+    var refWrap = document.createElement('div');
+    refWrap.className = 'line-desc-wrap';
+    refWrap.style.cssText = 'display:flex;gap:6px;margin-top:4px';
+    refWrap.innerHTML =
+      '<select onchange="lineType(this,' + line.id + ')" style="flex:0 0 110px;padding:6px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px">'
+      + '<option value=""' + (!line.type ? ' selected' : '') + '>— Type —</option>'
+      + '<option value="mo"' + (line.type==='mo' ? ' selected' : '') + '>Main d\'œuvre</option>'
+      + '<option value="piece"' + (line.type==='piece' ? ' selected' : '') + '>Pièce</option>'
+      + '<option value="fluide"' + (line.type==='fluide' ? ' selected' : '') + '>Fluide / Conso.</option>'
+      + '</select>'
+      + '<input type="text" placeholder="Référence pièce (optionnel)" value="' + (line.ref||'').replace(/"/g,'&quot;') + '" oninput="lineRef(this,' + line.id + ')" style="flex:1;padding:6px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-family:var(--fm)"/>';
+
     wrapper.appendChild(div);
     wrapper.appendChild(descWrap);
+    wrapper.appendChild(refWrap);
     c.appendChild(wrapper);
   });
   calcTotaux();
@@ -3203,8 +3546,26 @@ function loadDoc(docId) {
 }
 
 function deleteDoc(docId) {
+  var docs = loadDocs();
+  var doc = docs.find(function(d){ return d.id === docId; });
+  if (!doc) return;
+  // VERROU ANTI-TROU : une facture émise ne peut pas être supprimée — elle
+  // doit être annulée pour préserver la chronologie obligatoire (Code de
+  // commerce, art. L441-9 et BOI-TVA-DECLA-30-20-20).
+  if (doc.type === 'facture' && doc.statut !== 'annulé') {
+    if (confirm('⚠ Une facture émise NE PEUT PAS être supprimée (obligation légale de chronologie continue).\n\nVoulez-vous l\'ANNULER à la place ?\nLe document sera marqué « Annulé » et conservé dans la séquence.')) {
+      doc.statut = 'annulé';
+      doc.annuleAt = Date.now();
+      var i = docs.findIndex(function(d){ return d.id === docId; });
+      docs[i] = doc;
+      saveDocs(docs);
+      renderDash();
+      renderListe();
+    }
+    return;
+  }
   if (!confirm('Supprimer définitivement ce document ?')) return;
-  saveDocs(loadDocs().filter(function(d) { return d.id !== docId; }));
+  saveDocs(docs.filter(function(d) { return d.id !== docId; }));
   deleteDocFirebase(docId);
   renderDash();
   renderListe();
@@ -3251,8 +3612,14 @@ function renderDocHTML(doc, tplOverride) {
     else if (l.remiseType === 'eur') remStr = '− ' + rVal.toFixed(2) + ' €';
     else remStr = '− ' + (Math.round(rVal * 100) / 100).toString().replace('.', ',') + ' %';
     var totStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + lineNetHT(l).toFixed(2) + ' €</strong>';
+    // Tag de catégorie (MO/Pièce/Fluide) + référence pièce
+    var tagHTML = '';
+    if (l.type === 'mo')       tagHTML = '<span class="d-line-tag mo">MO</span>';
+    else if (l.type === 'piece')  tagHTML = '<span class="d-line-tag piece">Pièce</span>';
+    else if (l.type === 'fluide') tagHTML = '<span class="d-line-tag fluide">Fluide</span>';
+    var refHTML = l.ref ? '<span class="d-line-ref">Réf : ' + escHtml(l.ref) + '</span>' : '';
     var descRow = l.desc ? '<tr><td colspan="5" style="padding-top:2px;padding-bottom:8px;font-size:12px;color:#888;font-style:italic">' + escHtml(l.desc) + '</td></tr>' : '';
-    return '<tr><td>' + escHtml(l.label || '—') + '</td><td>' + (l.qte != null ? l.qte : 1) + '</td><td>' + puStr + '</td><td>' + remStr + '</td><td>' + totStr + '</td></tr>' + descRow;
+    return '<tr><td>' + tagHTML + escHtml(l.label || '—') + refHTML + '</td><td>' + (l.qte != null ? l.qte : 1) + '</td><td>' + puStr + '</td><td>' + remStr + '</td><td>' + totStr + '</td></tr>' + descRow;
   }).join('');
 
   var gainsHTML = '';
@@ -3333,7 +3700,51 @@ function renderDocHTML(doc, tplOverride) {
     + '</div></div>'
     + gainsHTML
     + (doc.notes ? '<div class="d-notes"><strong>Conditions & mentions</strong><p>' + escHtml(doc.notes).replace(/\n/g,'<br>') + '</p></div>' : '')
+    + buildFacturePayHTML(doc, tpl)
+    + buildFactureLegalHTML(doc, tpl)
     + (tpl.showFooter !== false ? '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
+}
+
+// Bloc paiement + garantie (factures uniquement)
+function buildFacturePayHTML(doc, tpl) {
+  if (doc.type !== 'facture') return '';
+  var hasPay = (tpl.modes || tpl.iban || tpl.bic);
+  var hasGar = (tpl.garp || tpl.garmo || tpl.garex);
+  var hasPenal = !!tpl.penal;
+  if (!hasPay && !hasGar && !hasPenal) return '';
+  var payCard = hasPay
+    ? '<div class="d-fac-pay-card"><strong>💳 Paiement</strong>'
+      + (tpl.modes ? '<div>Modes acceptés : ' + escHtml(tpl.modes) + '</div>' : '')
+      + (tpl.iban ? '<div style="margin-top:4px">IBAN : <span class="d-fac-iban">' + escHtml(tpl.iban) + '</span></div>' : '')
+      + (tpl.bic ? '<div>BIC : <strong>' + escHtml(tpl.bic) + '</strong></div>' : '')
+      + (hasPenal ? '<div style="margin-top:6px;font-size:10px;color:#888">' + escHtml(tpl.penal) + '</div>' : '')
+      + '</div>'
+    : '';
+  var garCard = hasGar
+    ? '<div class="d-fac-pay-card"><strong>🛡 Garantie</strong>'
+      + (tpl.garp ? '<div><strong>Pièces :</strong> ' + escHtml(tpl.garp) + '</div>' : '')
+      + (tpl.garmo ? '<div><strong>Main d\'œuvre :</strong> ' + escHtml(tpl.garmo) + '</div>' : '')
+      + (tpl.garex ? '<div style="margin-top:6px;font-size:10px;color:#888"><em>Exclusions :</em> ' + escHtml(tpl.garex) + '</div>' : '')
+      + '</div>'
+    : '';
+  return '<div class="d-fac-pay">' + payCard + garCard + '</div>';
+}
+
+// Bloc mentions légales étendues (factures uniquement, si tpl.showLegal)
+function buildFactureLegalHTML(doc, tpl) {
+  if (doc.type !== 'facture' || tpl.showLegal === false) return '';
+  var lines = [];
+  if (tpl.forme || tpl.capital) lines.push([tpl.forme, tpl.capital ? 'au capital de ' + tpl.capital : ''].filter(Boolean).join(' '));
+  if (tpl.rcs) lines.push(tpl.rcs);
+  if (tpl.ape) lines.push('APE : ' + tpl.ape);
+  if (tpl.tvaintra) lines.push('TVA intracom. : ' + tpl.tvaintra);
+  if (tpl.rc) lines.push('Assurance RC pro : ' + tpl.rc);
+  if (tpl.mediateur) lines.push('Médiateur consommation : ' + tpl.mediateur);
+  lines = lines.filter(Boolean);
+  if (!lines.length) return '';
+  return '<div class="d-fac-legal"><strong>Mentions légales</strong>'
+    + lines.map(function(l){ return '<div>' + escHtml(l) + '</div>'; }).join('')
+    + '</div>';
 }
 
 // Construit le nom de fichier PDF : AREPROG_TYPE_NUMERO_CLIENT
@@ -4030,6 +4441,14 @@ var TPL_DEFAULT = {
   color:'#1E90FF', titleColor:'#111111', logoStyle:'split',
   showGains:true, showVeh:true, showFooter:true, showLegal:true,
   colTotal:'Total HT', validite:30,
+  // Mentions légales étendues
+  forme:'', rcs:'', ape:'', capital:'', tvaintra:'', mediateur:'', rc:'',
+  // Paiement & garantie
+  iban:'', bic:'', modes:'CB · Virement · Espèces · Chèque',
+  garp:'2 ans pièces — défauts constructeur',
+  garmo:'6 mois sur la main d\'œuvre',
+  garex:'Hors usure normale, usage compétition, mauvais entretien, modifications post-intervention.',
+  penal:'Taux BCE + 10 points · Indemnité forfaitaire 40 € (art. L441-10 C. com.) · Pas d\'escompte pour paiement anticipé.',
 };
 
 function loadTemplate() {
@@ -4072,6 +4491,17 @@ function readTplForm() {
     showFooter:ck('tpl-show-footer',true), showLegal:ck('tpl-show-legal',true),
     colTotal:v('tpl-col-total','Total HT'),
     validite:parseInt(v('tpl-validite','30'))||30,
+    // Mentions étendues
+    forme:v('tpl-forme',''), rcs:v('tpl-rcs',''), ape:v('tpl-ape',''),
+    capital:v('tpl-capital',''), tvaintra:v('tpl-tvaintra',''),
+    mediateur:v('tpl-mediateur',''), rc:v('tpl-rc',''),
+    // Paiement & garantie
+    iban:v('tpl-iban',''), bic:v('tpl-bic',''),
+    modes:v('tpl-modes',TPL_DEFAULT.modes),
+    garp:v('tpl-garp',TPL_DEFAULT.garp),
+    garmo:v('tpl-garmo',TPL_DEFAULT.garmo),
+    garex:v('tpl-garex',TPL_DEFAULT.garex),
+    penal:v('tpl-penal',TPL_DEFAULT.penal),
   };
 }
 function fillTplForm(tpl) {
@@ -4084,6 +4514,14 @@ function fillTplForm(tpl) {
     ['tpl2-nom',tpl.nom],['tpl2-activite',tpl.activite],['tpl2-zones',tpl.zones],
     ['tpl2-tel',tpl.tel],['tpl2-web',tpl.web],['tpl2-legal',tpl.legal],
     ['tpl2-footer',tpl.footer],['tpl2-color-hex',tpl.color],['tpl2-color-pick',tpl.color],
+    // Mentions étendues
+    ['tpl-forme',tpl.forme],['tpl-rcs',tpl.rcs],['tpl-ape',tpl.ape],
+    ['tpl-capital',tpl.capital],['tpl-tvaintra',tpl.tvaintra],
+    ['tpl-mediateur',tpl.mediateur],['tpl-rc',tpl.rc],
+    // Paiement & garantie
+    ['tpl-iban',tpl.iban],['tpl-bic',tpl.bic],['tpl-modes',tpl.modes],
+    ['tpl-garp',tpl.garp],['tpl-garmo',tpl.garmo],['tpl-garex',tpl.garex],
+    ['tpl-penal',tpl.penal],
   ];
   fields.forEach(function(f){ var el=$(f[0]); if(el) el.value=f[1]||''; });
   var ls=$('tpl-logo-style'); if(ls) ls.value=tpl.logoStyle||'split';
@@ -5296,10 +5734,15 @@ function exportCSV() {
 //  TABS (complet)
 // ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services','agenda','stats','search'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search'][i]===t); });
+  ['dash','form','liste','or','or-form','carnet','template','services','agenda','stats','search'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  // Navigation : seuls les onglets visibles dans la barre nav sont surlignés
+  // (or-form n'a pas de bouton dédié — il est ouvert via newOR/loadOR).
+  var navTabs = ['dash','form','liste','or','carnet','template','services','agenda','stats','search'];
+  var navIdx = navTabs.indexOf(t === 'or-form' ? 'or' : t);
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on', i === navIdx); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
+  if(t==='or')       renderORList();
   if(t==='carnet')   renderCarnet();
   if(t==='template') { fillTplForm(loadTemplate()); livePreview(); }
   if(t==='services') renderCatEditor();
@@ -5651,6 +6094,619 @@ function loadFrais(frais) {
   });
   calcFrais();
 }
+
+// ══════════════════════════════════════════════════════════════
+//  ORDRES DE RÉPARATION (OR)
+// ══════════════════════════════════════════════════════════════
+var OR_KEY = 'ar_ors';
+var editORId = null;
+
+// ── Storage ──────────────────────────────────────────────────
+function loadORs() {
+  try { return JSON.parse(localStorage.getItem(OR_KEY) || '[]'); } catch(e) { return []; }
+}
+function saveORs(arr) {
+  localStorage.setItem(OR_KEY, JSON.stringify(arr));
+  if (db && syncOk) {
+    arr.forEach(function(o) {
+      db.collection('ors').doc(String(o.id)).set(o)
+        .catch(function(e){ console.warn('Firebase save OR:', e); });
+    });
+  }
+}
+function deleteORFirebase(orId) {
+  if (db && syncOk) {
+    db.collection('ors').doc(String(orId)).delete()
+      .catch(function(e){ console.warn('Firebase delete OR:', e); });
+  }
+}
+
+// Numérotation OR (séparée des devis/factures pour ne pas perturber la séquence)
+function genORNum() {
+  var y = new Date().getFullYear();
+  var re = new RegExp('^OR-' + y + '-(\\d+)$');
+  var maxN = 0;
+  loadORs().forEach(function(o){
+    if (!o.num) return;
+    var m = re.exec(o.num);
+    if (m) { var n = parseInt(m[1],10); if (n > maxN) maxN = n; }
+  });
+  return 'OR-' + y + '-' + String(maxN + 1).padStart(3, '0');
+}
+
+// Format datetime-local
+function toDtLocal(d) {
+  d = d || new Date();
+  if (typeof d === 'string') d = new Date(d);
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate())
+    + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+
+// ── Form OR ──────────────────────────────────────────────────
+function newOR() { resetORForm(true); }
+
+function resetORForm(goToForm) {
+  editORId = null;
+  $('or-num').value = genORNum();
+  $('or-date-entree').value = toDtLocal(new Date());
+  $('or-date-sortie').value = '';
+  $('or-statut').value = 'brouillon';
+  // Client + véhicule
+  ['or-cnom','or-cadr','or-cville','or-ctel','or-cemail',
+   'or-vm','or-vmo','or-vmot','or-van','or-vmec','or-vim','or-vvin','or-vkm',
+   'or-demande','or-constats',
+   'or-et-carrosserie','or-et-voyants','or-et-niveaux','or-et-pneus','or-et-modifs','or-et-autres',
+   'or-w-other','or-reserves',
+   'or-sig-nom','or-sig-init'
+  ].forEach(function(i){ var el = $(i); if (el) el.value = ''; });
+  if ($('or-venergie')) $('or-venergie').value = '';
+  // Types d'intervention
+  ['or-t-meca','or-t-diag','or-t-reprog','or-t-ethanol'].forEach(function(i){ var el = $(i); if (el) el.checked = false; });
+  // Travaux autorisés
+  ['or-w-diag','or-w-piece','or-w-reprog','or-w-codage','or-w-essai','or-w-maj','or-w-purge','or-w-banc'].forEach(function(i){ var el = $(i); if (el) el.checked = false; });
+  // Estimation
+  ['or-est-mo','or-est-pieces','or-est-forfait'].forEach(function(i){ var el = $(i); if (el) el.value = ''; });
+  if ($('or-est-th')) $('or-est-th').value = '60';
+  if ($('or-est-tva')) $('or-est-tva').value = '0';
+  if ($('or-est-seuil')) $('or-est-seuil').value = '10';
+  // Signature
+  if ($('or-sig-date')) $('or-sig-date').value = new Date().toISOString().split('T')[0];
+  if ($('or-sig-accord')) $('or-sig-accord').checked = false;
+  $('or-form-h').textContent = 'Nouvel Ordre de Réparation';
+  calcOREstimation();
+  if (goToForm) showTab('or-form');
+}
+
+function onORTypeChange() {
+  // Hook pour future logique conditionnelle. Les clauses sont déjà affichées
+  // dynamiquement dans le rendu d'aperçu en fonction des types cochés.
+}
+
+function calcOREstimation() {
+  var mo = parseFloat($('or-est-mo') && $('or-est-mo').value) || 0;
+  var pi = parseFloat($('or-est-pieces') && $('or-est-pieces').value) || 0;
+  var fo = parseFloat($('or-est-forfait') && $('or-est-forfait').value) || 0;
+  var ht = mo + pi + fo;
+  var tvaRate = parseFloat(($('or-est-tva') && $('or-est-tva').value) || 0) / 100;
+  var tva = ht * tvaRate;
+  var ttc = ht + tva;
+  if ($('or-tot-ht'))  $('or-tot-ht').textContent  = ht.toFixed(2).replace('.', ',') + ' €';
+  if ($('or-tot-tva')) $('or-tot-tva').textContent = tva.toFixed(2).replace('.', ',') + ' €';
+  if ($('or-tot-ttc')) $('or-tot-ttc').textContent = ttc.toFixed(2).replace('.', ',') + ' €';
+}
+
+function buildORObj() {
+  var mo = parseFloat($('or-est-mo').value) || 0;
+  var pi = parseFloat($('or-est-pieces').value) || 0;
+  var fo = parseFloat($('or-est-forfait').value) || 0;
+  var ht = mo + pi + fo;
+  var tvaRate = parseFloat($('or-est-tva').value) || 0;
+  var tva = ht * tvaRate / 100;
+  return {
+    id: editORId || Date.now(),
+    num: $('or-num').value,
+    dateEntree: $('or-date-entree').value,
+    dateSortie: $('or-date-sortie').value,
+    statut: $('or-statut').value,
+    // Client
+    cn: $('or-cnom').value, ca: $('or-cadr').value, cv: $('or-cville').value,
+    ct: $('or-ctel').value, ce: $('or-cemail').value,
+    // Véhicule
+    vm: $('or-vm').value, vmo: $('or-vmo').value, vmot: $('or-vmot').value,
+    venergie: $('or-venergie').value, van: $('or-van').value, vmec: $('or-vmec').value,
+    vim: $('or-vim').value, vvin: $('or-vvin').value, vkm: $('or-vkm').value,
+    // Types
+    typeMeca: $('or-t-meca').checked, typeDiag: $('or-t-diag').checked,
+    typeReprog: $('or-t-reprog').checked, typeEthanol: $('or-t-ethanol').checked,
+    // Demande / constats
+    demande: $('or-demande').value,
+    constats: $('or-constats').value,
+    // État véhicule
+    etat: {
+      carrosserie: $('or-et-carrosserie').value,
+      voyants:     $('or-et-voyants').value,
+      niveaux:     $('or-et-niveaux').value,
+      pneus:       $('or-et-pneus').value,
+      modifs:      $('or-et-modifs').value,
+      autres:      $('or-et-autres').value,
+    },
+    // Travaux autorisés
+    travaux: {
+      diag:   $('or-w-diag').checked,
+      piece:  $('or-w-piece').checked,
+      reprog: $('or-w-reprog').checked,
+      codage: $('or-w-codage').checked,
+      essai:  $('or-w-essai').checked,
+      maj:    $('or-w-maj').checked,
+      purge:  $('or-w-purge').checked,
+      banc:   $('or-w-banc').checked,
+      autres: $('or-w-other').value,
+    },
+    // Estimation
+    estimation: {
+      mo: mo, pieces: pi, forfait: fo,
+      tauxHoraire: parseFloat($('or-est-th').value) || 0,
+      tvaRate: tvaRate, ht: ht, tva: tva, ttc: ht + tva,
+      seuilDepassement: parseInt($('or-est-seuil').value) || 10,
+    },
+    // Réserves
+    reserves: $('or-reserves').value,
+    // Signature
+    signature: {
+      nom:    $('or-sig-nom').value,
+      init:   $('or-sig-init').value,
+      date:   $('or-sig-date').value,
+      accord: $('or-sig-accord').checked,
+    },
+    createdAt: editORId ? undefined : Date.now(),
+    updatedAt: Date.now(),
+  };
+}
+
+function saveOR() {
+  var o = buildORObj();
+  if (!o.cn) { alert('Renseigne le nom du client avant d\'enregistrer.'); return; }
+  if (!o.vim && !o.vvin) {
+    if (!confirm('Aucune immatriculation ni VIN renseigné. Continuer quand même ?')) return;
+  }
+  var arr = loadORs();
+  if (editORId) {
+    var i = arr.findIndex(function(d){ return d.id === editORId; });
+    if (i >= 0) { o.createdAt = arr[i].createdAt; arr[i] = o; } else arr.unshift(o);
+  } else {
+    arr.unshift(o);
+  }
+  editORId = o.id;
+  saveORs(arr);
+  alert('Ordre de Réparation enregistré ✓');
+  renderORList();
+}
+
+function loadOR(orId) {
+  var o = loadORs().find(function(d){ return d.id === orId; });
+  if (!o) return;
+  editORId = o.id;
+  $('or-num').value = o.num || '';
+  $('or-date-entree').value = o.dateEntree || '';
+  $('or-date-sortie').value = o.dateSortie || '';
+  $('or-statut').value = o.statut || 'brouillon';
+  $('or-cnom').value = o.cn || ''; $('or-cadr').value = o.ca || '';
+  $('or-cville').value = o.cv || ''; $('or-ctel').value = o.ct || '';
+  $('or-cemail').value = o.ce || '';
+  $('or-vm').value = o.vm || ''; $('or-vmo').value = o.vmo || '';
+  $('or-vmot').value = o.vmot || ''; $('or-venergie').value = o.venergie || '';
+  $('or-van').value = o.van || ''; $('or-vmec').value = o.vmec || '';
+  $('or-vim').value = o.vim || ''; $('or-vvin').value = o.vvin || '';
+  $('or-vkm').value = o.vkm || '';
+  $('or-t-meca').checked    = !!o.typeMeca;
+  $('or-t-diag').checked    = !!o.typeDiag;
+  $('or-t-reprog').checked  = !!o.typeReprog;
+  $('or-t-ethanol').checked = !!o.typeEthanol;
+  $('or-demande').value  = o.demande  || '';
+  $('or-constats').value = o.constats || '';
+  var et = o.etat || {};
+  $('or-et-carrosserie').value = et.carrosserie || '';
+  $('or-et-voyants').value     = et.voyants     || '';
+  $('or-et-niveaux').value     = et.niveaux     || '';
+  $('or-et-pneus').value       = et.pneus       || '';
+  $('or-et-modifs').value      = et.modifs      || '';
+  $('or-et-autres').value      = et.autres      || '';
+  var tr = o.travaux || {};
+  $('or-w-diag').checked   = !!tr.diag;
+  $('or-w-piece').checked  = !!tr.piece;
+  $('or-w-reprog').checked = !!tr.reprog;
+  $('or-w-codage').checked = !!tr.codage;
+  $('or-w-essai').checked  = !!tr.essai;
+  $('or-w-maj').checked    = !!tr.maj;
+  $('or-w-purge').checked  = !!tr.purge;
+  $('or-w-banc').checked   = !!tr.banc;
+  $('or-w-other').value    = tr.autres || '';
+  var es = o.estimation || {};
+  $('or-est-mo').value      = es.mo      || '';
+  $('or-est-pieces').value  = es.pieces  || '';
+  $('or-est-forfait').value = es.forfait || '';
+  $('or-est-th').value      = es.tauxHoraire || 60;
+  $('or-est-tva').value     = String(es.tvaRate || 0);
+  $('or-est-seuil').value   = es.seuilDepassement || 10;
+  $('or-reserves').value = o.reserves || '';
+  var sig = o.signature || {};
+  $('or-sig-nom').value  = sig.nom  || '';
+  $('or-sig-init').value = sig.init || '';
+  $('or-sig-date').value = sig.date || '';
+  $('or-sig-accord').checked = !!sig.accord;
+  $('or-form-h').textContent = 'Modifier l\'Ordre de Réparation';
+  calcOREstimation();
+  showTab('or-form');
+}
+
+function deleteOR(orId) {
+  if (!confirm('Supprimer définitivement cet OR ?')) return;
+  saveORs(loadORs().filter(function(d){ return d.id !== orId; }));
+  deleteORFirebase(orId);
+  renderORList();
+}
+
+// ── Liste OR ─────────────────────────────────────────────────
+function renderORList() {
+  var q = ($('or-search') ? $('or-search').value : '').toLowerCase();
+  var arr = loadORs().filter(function(o){
+    if (!q) return true;
+    return (o.cn + ' ' + o.vim + ' ' + o.vvin + ' ' + o.num + ' ' + o.vm + ' ' + o.vmo).toLowerCase().indexOf(q) !== -1;
+  });
+  var body = $('or-list-body');
+  if (!body) return;
+  if (!arr.length) {
+    body.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div>Aucun ordre de réparation. Clique "Nouvel OR" pour commencer.</div></div>';
+    return;
+  }
+  var rows = arr.map(function(o){
+    var statutColor = ({
+      'brouillon':'#9ca3af','signé':'#3b82f6','en cours':'#f59e0b',
+      'terminé':'#10b981','facturé':'#8b5cf6','refusé':'#ef4444'
+    })[o.statut] || '#9ca3af';
+    var veh = [o.vm, o.vmo].filter(Boolean).join(' ');
+    var dateE = o.dateEntree ? new Date(o.dateEntree).toLocaleDateString('fr-FR') : '—';
+    var ttc = (o.estimation && o.estimation.ttc) ? o.estimation.ttc.toFixed(2) + ' €' : '—';
+    var typesArr = [];
+    if (o.typeMeca) typesArr.push('🔧');
+    if (o.typeDiag) typesArr.push('🩺');
+    if (o.typeReprog) typesArr.push('⚡');
+    if (o.typeEthanol) typesArr.push('🌽');
+    return '<tr>'
+      + '<td><span class="doc-num">' + escHtml(o.num || '—') + '</span></td>'
+      + '<td>' + dateE + '</td>'
+      + '<td><strong>' + escHtml(o.cn || '—') + '</strong>'
+        + (veh ? '<br><span style="color:var(--text-dim);font-size:11px">' + escHtml(veh) + '</span>' : '')
+        + (o.vim ? '<br><span style="font-family:var(--fm);font-size:11px;color:var(--text-muted)">' + escHtml(o.vim.toUpperCase()) + '</span>' : '')
+      + '</td>'
+      + '<td style="font-size:16px">' + typesArr.join(' ') + '</td>'
+      + '<td style="font-family:var(--fm);color:var(--blue)">' + ttc + '</td>'
+      + '<td><span class="badge" style="background:' + statutColor + '22;color:' + statutColor + '">' + escHtml(o.statut || '—') + '</span></td>'
+      + '<td><div class="act-cell">'
+        + '<button class="btn-s btn-sm" onclick="previewOR(' + o.id + ')">👁 Aperçu</button>'
+        + '<button class="btn-s btn-sm" onclick="loadOR(' + o.id + ')">✏️ Modifier</button>'
+        + '<button class="btn-s btn-sm" onclick="convertORToFacture(' + o.id + ')" title="Créer une facture à partir de cet OR">→ Facture</button>'
+        + '<button class="btn-d btn-sm" onclick="deleteOR(' + o.id + ')">🗑</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+  body.innerHTML = '<table class="dt"><thead><tr>'
+    + '<th>N° OR</th><th>Entrée</th><th>Client / Véhicule</th><th>Type</th>'
+    + '<th>Estimé TTC</th><th>Statut</th><th></th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+// Conversion OR → Facture (pré-remplit le formulaire devis/facture)
+function convertORToFacture(orId) {
+  var o = loadORs().find(function(d){ return d.id === orId; });
+  if (!o) return;
+  if (!confirm('Créer une facture à partir de cet OR ?\nLes données client/véhicule et l\'estimation seront copiées dans le formulaire.')) return;
+  resetForm(false);
+  $('f-type').value = 'facture';
+  $('f-num').value = genNum('FAC');
+  $('f-cnom').value = o.cn || ''; $('f-cadr').value = o.ca || '';
+  $('f-cville').value = o.cv || ''; $('f-ctel').value = o.ct || '';
+  $('f-cemail').value = o.ce || '';
+  $('f-vm').value = o.vm || ''; $('f-vmo').value = o.vmo || '';
+  $('f-vmot').value = o.vmot || ''; $('f-van').value = o.van || '';
+  $('f-vim').value = o.vim || ''; $('f-vkm').value = o.vkm || '';
+  // Lignes pré-remplies à partir de l'estimation
+  lines = [];
+  var es = o.estimation || {};
+  if (es.mo > 0)      lines.push({ id: Date.now()+Math.random(), label: 'Main d\'œuvre', qte: 1, pu: es.mo, type: 'mo', ref: '', remise: 0, remiseType: 'pct', desc: '' });
+  if (es.pieces > 0)  lines.push({ id: Date.now()+Math.random()+1, label: 'Pièces', qte: 1, pu: es.pieces, type: 'piece', ref: '', remise: 0, remiseType: 'pct', desc: '' });
+  if (es.forfait > 0) lines.push({ id: Date.now()+Math.random()+2, label: 'Forfait / autres', qte: 1, pu: es.forfait, type: '', ref: '', remise: 0, remiseType: 'pct', desc: '' });
+  if (!lines.length) lines.push({ id: Date.now()+Math.random(), label: '', qte: 1, pu: 0, type: '', ref: '', remise: 0, remiseType: 'pct', desc: '' });
+  $('f-tva').value = String(es.tvaRate || 0);
+  // Référence à l'OR dans les notes internes
+  $('f-nint').value = 'Issue de l\'OR ' + o.num + ' (entrée le ' + (o.dateEntree ? new Date(o.dateEntree).toLocaleDateString('fr-FR') : '—') + ')';
+  onTypeChange();
+  renderLines();
+  calcTotaux();
+  showTab('form');
+  // Marquer l'OR comme "facturé"
+  o.statut = 'facturé';
+  var ors = loadORs();
+  var i = ors.findIndex(function(d){ return d.id === orId; });
+  if (i >= 0) { ors[i] = o; saveORs(ors); }
+}
+
+// ── Rendu HTML imprimable ────────────────────────────────────
+function renderORHTML(o, tplOverride) {
+  var tpl = tplOverride || loadTemplate();
+  var accentColor = sanitizeCssColor(tpl.color || '#1E90FF');
+  var vehStr = [escHtml(o.vm||''), escHtml(o.vmo||''), escHtml(o.vmot||''), o.van ? '(' + escHtml(o.van) + ')' : ''].filter(Boolean).join(' ');
+
+  // Types cochés
+  var types = [];
+  if (o.typeMeca)    types.push('Mécanique');
+  if (o.typeDiag)    types.push('Diagnostic');
+  if (o.typeReprog)  types.push('Reprogrammation / Codage');
+  if (o.typeEthanol) types.push('Conversion éthanol');
+  var typeBadges = types.length
+    ? '<div class="d-or-checks">' + types.map(function(t){ return '<span class="d-or-check">' + escHtml(t) + '</span>'; }).join('') + '</div>'
+    : '<span class="d-or-empty">Aucun type spécifié</span>';
+
+  // Travaux autorisés
+  var trLabels = { diag:'Diagnostic', piece:'Remplacement pièces', reprog:'Reprogrammation', codage:'Codage / paramétrage', essai:'Essai routier', maj:'MAJ calculateur', purge:'Purge / vidange', banc:'Banc de puissance' };
+  var tr = o.travaux || {};
+  var trItems = Object.keys(trLabels).filter(function(k){ return tr[k]; }).map(function(k){ return trLabels[k]; });
+  var trHTML = trItems.length
+    ? '<div class="d-or-checks">' + trItems.map(function(t){ return '<span class="d-or-check">' + escHtml(t) + '</span>'; }).join('') + '</div>'
+    : '<span class="d-or-empty">Aucun travail explicitement coché</span>';
+  if (tr.autres) trHTML += '<div class="d-or-text" style="margin-top:8px"><strong>Autres :</strong> ' + escHtml(tr.autres) + '</div>';
+
+  // État véhicule
+  var et = o.etat || {};
+  var etLines = [
+    ['Carrosserie', et.carrosserie],
+    ['Voyants TDB', et.voyants],
+    ['Niveaux fluides', et.niveaux],
+    ['Pneus', et.pneus],
+    ['Modifications / antériorités', et.modifs],
+    ['Autres observations', et.autres],
+  ].filter(function(x){ return x[1] && x[1].trim(); });
+  var etHTML = etLines.length
+    ? '<div class="d-or-grid2">' + etLines.map(function(x){ return '<div><strong>' + escHtml(x[0]) + '</strong><br>' + escHtml(x[1]).replace(/\n/g,'<br>') + '</div>'; }).join('') + '</div>'
+    : '<span class="d-or-empty">Aucun défaut noté à l\'entrée.</span>';
+
+  // Clauses conditionnelles
+  var clauses = [];
+  clauses.push('Le client autorise les essais routiers et opérations de diagnostic nécessaires à la bonne réalisation de la prestation.');
+  if (o.typeReprog) {
+    clauses.push('Le client reconnaît que le véhicule présente un état mécanique compatible avec l\'intervention demandée. Sauvegarde du fichier d\'origine effectuée systématiquement. La reprogrammation est 100% réversible sur fichier d\'origine.');
+    clauses.push('Le client a été informé que toute modification logicielle du calculateur peut influer sur la couverture garantie constructeur et sur l\'assurance du véhicule. Usage compétition signalé si applicable.');
+  }
+  if (o.typeEthanol) {
+    clauses.push('Le client a été informé du fonctionnement bioéthanol E85 : carburation enrichie, démarrage à froid possiblement plus long en hiver, sensibilité accrue aux pièces d\'usure du circuit carburant.');
+  }
+  if (o.typeDiag) {
+    clauses.push('Le diagnostic ne préjuge pas de l\'origine définitive de la panne ; un diagnostic complémentaire mécanique peut être nécessaire.');
+  }
+  var seuil = (o.estimation && o.estimation.seuilDepassement) || 10;
+  clauses.push('Aucun dépassement de l\'estimation supérieur à ' + seuil + ' % ne sera effectué sans accord préalable du client.');
+  clauses.push('Sauf disposition contraire, les pièces remplacées restent à disposition du client pendant 7 jours après restitution, puis sont recyclées.');
+
+  // Estimation
+  var es = o.estimation || {};
+  var estHTML = '<table style="width:100%;border-collapse:collapse;font-size:12px">'
+    + '<tr><td style="padding:5px 0;color:#555">Main d\'œuvre (estimée)</td><td style="text-align:right;font-family:\'JetBrains Mono\',monospace">' + (es.mo||0).toFixed(2) + ' €</td></tr>'
+    + '<tr><td style="padding:5px 0;color:#555">Pièces (estimées)</td><td style="text-align:right;font-family:\'JetBrains Mono\',monospace">' + (es.pieces||0).toFixed(2) + ' €</td></tr>'
+    + '<tr><td style="padding:5px 0;color:#555">Forfait / autres</td><td style="text-align:right;font-family:\'JetBrains Mono\',monospace">' + (es.forfait||0).toFixed(2) + ' €</td></tr>'
+    + '<tr style="border-top:1px solid #e5e7eb"><td style="padding:7px 0;color:#333">Total HT estimé</td><td style="text-align:right;font-family:\'JetBrains Mono\',monospace">' + (es.ht||0).toFixed(2) + ' €</td></tr>'
+    + '<tr><td style="padding:5px 0;color:#555">TVA (' + (es.tvaRate||0) + ' %)</td><td style="text-align:right;font-family:\'JetBrains Mono\',monospace">' + (es.tva||0).toFixed(2) + ' €</td></tr>'
+    + '<tr style="border-top:2px solid ' + accentColor + '"><td style="padding:8px 0;font-weight:700;color:' + accentColor + '">TOTAL TTC ESTIMÉ</td><td style="text-align:right;font-family:\'JetBrains Mono\',monospace;font-weight:700;font-size:15px;color:' + accentColor + '">' + (es.ttc||0).toFixed(2) + ' €</td></tr>'
+    + (es.tauxHoraire ? '<tr><td colspan="2" style="padding-top:8px;font-size:10px;color:#888">Taux horaire MO : ' + es.tauxHoraire.toFixed(2) + ' € HT/h</td></tr>' : '')
+    + '</table>';
+
+  // Signature
+  var sig = o.signature || {};
+  var sigDateStr = sig.date ? fmtDate(sig.date) : '—';
+  var clientSigBox = (sig.nom || sig.init || sig.accord)
+    ? '<div class="d-or-sign-name">' + escHtml(sig.nom || '—') + '</div>'
+      + (sig.init ? '<div style="font-family:var(--fm);font-size:13px;color:#444;margin-top:2px">Initiales : <strong>' + escHtml(sig.init) + '</strong></div>' : '')
+      + '<div class="d-or-sign-meta">Bon pour accord — le ' + sigDateStr + '</div>'
+      + (sig.accord ? '<div class="d-or-sign-meta" style="color:#16a34a;font-weight:600;margin-top:4px">✓ Accord électronique confirmé</div>' : '<div class="d-or-sign-meta" style="color:#ef4444">⚠ Accord électronique NON confirmé</div>')
+    : '<div class="d-or-empty">Signature client en attente</div>';
+
+  // Header
+  var html = '<div class="d-header" style="border-bottom:2px solid ' + accentColor + '22">'
+    + '<div><div class="d-brand">' + buildLogoHTML(tpl) + '</div>'
+    + '<div class="d-brand-info">' + escHtml(tpl.activite||'')
+    + (tpl.zones ? '<br>' + escHtml(tpl.zones) : '')
+    + (tpl.tel ? '<br>' + escHtml(tpl.tel) : '')
+    + (tpl.email ? ' &nbsp;·&nbsp; ' + escHtml(tpl.email) : '')
+    + '</div></div>'
+    + '<div class="d-right">'
+    + '<div class="d-type">ORDRE DE RÉPARATION</div>'
+    + '<div class="d-num">' + escHtml(o.num || '—') + '</div>'
+    + (o.dateEntree ? '<div class="d-date">Entrée : ' + new Date(o.dateEntree).toLocaleString('fr-FR') + '</div>' : '')
+    + (o.dateSortie ? '<div class="d-date">Restitution prévue : ' + new Date(o.dateSortie).toLocaleString('fr-FR') + '</div>' : '')
+    + '</div></div>';
+
+  // Parties
+  html += '<div class="d-parties">'
+    + '<div class="d-party"><div class="d-party-label">Prestataire</div><div class="d-party-name">' + escHtml(tpl.nom||'AREPROG') + '</div>'
+    + '<div class="d-party-info">' + escHtml(tpl.activite||'')
+    + (tpl.adresse ? '<br>' + escHtml(tpl.adresse) : '')
+    + (tpl.tel ? '<br>' + escHtml(tpl.tel) : '')
+    + (tpl.email ? '<br>' + escHtml(tpl.email) : '')
+    + (tpl.legal ? '<br><small style="color:#aaa">' + escHtml(tpl.legal) + '</small>' : '')
+    + '</div></div>'
+    + '<div class="d-party"><div class="d-party-label">Client</div><div class="d-party-name">' + escHtml(o.cn || '—') + '</div>'
+    + '<div class="d-party-info">'
+    + (o.ca ? escHtml(o.ca) + '<br>' : '') + escHtml(o.cv || '')
+    + (o.ct ? '<br>' + escHtml(o.ct) : '')
+    + (o.ce ? '<br>' + escHtml(o.ce) : '')
+    + '</div></div></div>';
+
+  // Avertissement légal
+  html += '<div class="d-or-warn"><strong>⚠ Document juridique</strong>'
+    + 'Cet Ordre de Réparation atteste : 1) la demande du client, 2) l\'état du véhicule à l\'entrée, 3) les travaux explicitement autorisés, '
+    + '4) l\'estimation financière acceptée. Toute intervention au-delà du périmètre signé fera l\'objet d\'un nouvel accord. '
+    + 'Signature client obligatoire <strong>avant</strong> intervention.</div>';
+
+  // Bloc véhicule détaillé
+  html += '<div class="d-or-block"><div class="d-or-block-title">🚗 Identification du véhicule</div>'
+    + '<div class="d-or-grid2">'
+    + '<div><strong>Marque / Modèle</strong><br>' + (vehStr || '—') + '</div>'
+    + '<div><strong>Immatriculation</strong><br>' + (o.vim ? escHtml(o.vim.toUpperCase()) : '—') + '</div>'
+    + '<div><strong>VIN / Châssis</strong><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px">' + (o.vvin ? escHtml(o.vvin.toUpperCase()) : '—') + '</span></div>'
+    + '<div><strong>Énergie</strong><br>' + (escHtml(o.venergie) || '—') + '</div>'
+    + '<div><strong>Année</strong><br>' + (escHtml(o.van) || '—') + '</div>'
+    + '<div><strong>1ère mise en circulation</strong><br>' + (o.vmec ? fmtDate(o.vmec) : '—') + '</div>'
+    + '<div><strong>Kilométrage à l\'entrée</strong><br><strong style="color:' + accentColor + '">' + (escHtml(o.vkm) || '—') + '</strong></div>'
+    + '</div></div>';
+
+  // Type d'intervention
+  html += '<div class="d-or-block"><div class="d-or-block-title">🔧 Type d\'intervention</div>' + typeBadges + '</div>';
+
+  // Demande client
+  html += '<div class="d-or-block"><div class="d-or-block-title">🗣 Demande du client (mots du client)</div>'
+    + '<div class="d-or-text">' + (escHtml(o.demande) || '<span class="d-or-empty">Aucune demande renseignée.</span>') + '</div></div>';
+
+  // Constats pro
+  if (o.constats) {
+    html += '<div class="d-or-block" style="background:#eff6ff;border-left:3px solid ' + accentColor + '"><div class="d-or-block-title">🔍 Constats du professionnel</div>'
+      + '<div class="d-or-text">' + escHtml(o.constats) + '</div></div>';
+  }
+
+  // État véhicule
+  html += '<div class="d-or-block" style="background:#fef3c7"><div class="d-or-block-title">⚠ État du véhicule à l\'entrée</div>'
+    + etHTML + '</div>';
+
+  // Travaux autorisés
+  html += '<div class="d-or-block"><div class="d-or-block-title">✓ Travaux autorisés par le client</div>' + trHTML + '</div>';
+
+  // Estimation
+  html += '<div class="d-or-block"><div class="d-or-block-title">💶 Estimation financière</div>' + estHTML + '</div>';
+
+  // Clauses
+  html += '<div class="d-or-block"><div class="d-or-block-title">📜 Clauses & autorisations</div>'
+    + '<ol class="d-or-clauses">' + clauses.map(function(c){ return '<li>' + escHtml(c) + '</li>'; }).join('') + '</ol></div>';
+
+  // Réserves
+  if (o.reserves) {
+    html += '<div class="d-or-block" style="background:#fef2f2;border-left:3px solid #ef4444"><div class="d-or-block-title" style="color:#991b1b">⚠ Réserves particulières</div>'
+      + '<div class="d-or-text">' + escHtml(o.reserves) + '</div></div>';
+  }
+
+  // Signatures
+  html += '<div class="d-or-sign">'
+    + '<div class="d-or-sign-box"><div class="d-or-sign-lbl">Signature client</div>' + clientSigBox + '</div>'
+    + '<div class="d-or-sign-box"><div class="d-or-sign-lbl">Signature prestataire</div>'
+    + '<div class="d-or-sign-name">' + escHtml(tpl.nom||'AREPROG') + '</div>'
+    + '<div class="d-or-sign-meta">Émis le ' + (o.dateEntree ? new Date(o.dateEntree).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR')) + '</div>'
+    + '</div></div>';
+
+  // Footer
+  if (tpl.showFooter !== false) {
+    html += '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>';
+  }
+  return html;
+}
+
+// Aperçu / impression OR
+function buildORPdfTitle(o) {
+  var num = (o.num || '').replace(/[^a-zA-Z0-9_-]/g, '-');
+  var nom = (o.cn || 'Client').replace(/[^a-zA-Z0-9 _-]/g, '').trim().replace(/\s+/g, '-');
+  return 'AREPROG_OR_' + num + '_' + nom;
+}
+
+function openORPreview() {
+  var o = buildORObj();
+  $('preview').innerHTML = renderORHTML(o);
+  $('modal').classList.add('open');
+  $('modal').dataset.printTitle = buildORPdfTitle(o);
+  // Cacher le bouton "envoyer par email" pour l'OR (pas adapté)
+  var be = $('send-email-btn'); if (be) be.style.display = 'none';
+}
+
+function previewOR(orId) {
+  var o = loadORs().find(function(d){ return d.id === orId; });
+  if (!o) return;
+  $('preview').innerHTML = renderORHTML(o);
+  $('modal').classList.add('open');
+  $('modal').dataset.printTitle = buildORPdfTitle(o);
+  var be = $('send-email-btn'); if (be) be.style.display = 'none';
+}
+
+function printOR() {
+  var o = buildORObj();
+  $('preview').innerHTML = renderORHTML(o);
+  $('modal').classList.add('open');
+  $('modal').dataset.printTitle = buildORPdfTitle(o);
+  setTimeout(function(){
+    document.title = buildORPdfTitle(o);
+    window.print();
+    setTimeout(restoreTitle, 2000);
+  }, 250);
+}
+
+// Hook : restaurer le bouton email quand on ferme la modale
+(function() {
+  var origClose = window.closeModal;
+  window.closeModal = function() {
+    var be = $('send-email-btn'); if (be) be.style.display = '';
+    if (origClose) origClose();
+  };
+})();
+
+// Sélecteur client pour l'OR depuis le carnet
+var _orCarnetTarget = false;
+function openCarnetModalForOR() {
+  _orCarnetTarget = true;
+  openCarnetModal();
+}
+
+// Patch de selectClient : si on est en mode OR, on remplit les champs OR
+(function() {
+  var origSelectClient = window.selectClient;
+  window.selectClient = function(clientId) {
+    if (_orCarnetTarget) {
+      _orCarnetTarget = false;
+      var cl = loadClients().find(function(c){ return c.id === clientId; });
+      if (!cl) { closeCarnetModal(); return; }
+      $('or-cnom').value = cl.nom || '';
+      $('or-cadr').value = cl.adr || '';
+      $('or-cville').value = cl.ville || '';
+      $('or-ctel').value = cl.tel || '';
+      $('or-cemail').value = cl.email || '';
+      // Premier véhicule
+      var v = (cl.vehs && cl.vehs[0]) || { vm: cl.vm, vmo: cl.vmo, vmot: cl.vmot, van: cl.van, vim: cl.vim };
+      if (v) {
+        $('or-vm').value = v.vm || '';
+        $('or-vmo').value = v.vmo || '';
+        $('or-vmot').value = v.vmot || '';
+        $('or-van').value = v.van || '';
+        $('or-vim').value = v.vim || '';
+      }
+      closeCarnetModal();
+      return;
+    }
+    if (origSelectClient) origSelectClient(clientId);
+  };
+})();
+
+// Sync OR depuis Firebase au démarrage
+function syncORsFromFirebase() {
+  if (!db) return;
+  db.collection('ors').get()
+    .then(function(snap) {
+      if (!snap.empty) {
+        var arr = [];
+        snap.forEach(function(d){ arr.push(d.data()); });
+        arr.sort(function(a,b){ return (b.id||0)-(a.id||0); });
+        localStorage.setItem(OR_KEY, JSON.stringify(arr));
+        if ($('t-or') && $('t-or').classList.contains('on')) renderORList();
+      }
+    })
+    .catch(function(e){ console.warn('Firebase OR sync:', e); });
+}
+
+// Démarrage sync OR (déclenché après init Firebase)
+setTimeout(syncORsFromFirebase, 2000);
 
 // ══════════════════════════════════════════════════════════════
 //  START — Netlify Identity gère l'auth
