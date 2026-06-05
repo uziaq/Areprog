@@ -144,7 +144,7 @@ const FOOTER_HTML = `
  </div>
  </div>
  <div class="footer-bottom">
- <span>© ${new Date().getFullYear()} AREPROG — Reprogrammation moteur à domicile</span>
+ <span>© ${new Date().getFullYear()} AREPROG — Reprogrammation moteur en atelier &amp; à domicile</span>
  <div class="footer-bottom-links">
  <a href="/mentions-legales">Mentions légales</a>
    <a href="/politique-confidentialite">Confidentialité</a>
