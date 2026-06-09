@@ -84,22 +84,28 @@ function buildTemplateParams(rdv, minutes) {
 const handler = async () => {
   initFirebase();
   const db = admin.firestore();
-  const snap = await db.collection('rdvs').doc('all').get();
-  if (!snap.exists) return { statusCode: 200, body: 'no rdvs doc' };
+  const snapshot = await db.collection('rdvs').get();
+  const rdvDocs = [];
+  snapshot.forEach(doc => {
+    if (doc.id === 'all') return; // ignorer l'ancien document monolithique
+    const data = doc.data();
+    if (data && data.id) rdvDocs.push({ ref: doc.ref, rdv: data });
+  });
+  if (!rdvDocs.length) return { statusCode: 200, body: 'no rdvs' };
 
-  const rdvs = (snap.data() && snap.data().rdvs) || [];
   const now = Date.now();
-  let dirty = false;
   let sent = 0;
   let errors = 0;
+  const updates = [];
 
-  for (const rdv of rdvs) {
+  for (const { ref, rdv } of rdvDocs) {
     const rappels = (rdv.rappels && rdv.rappels.length) ? rdv.rappels
       : (rdv.rappel && rdv.rappel > 0 ? [rdv.rappel] : []);
     if (!rappels.length) continue;
     const fireBase = computeFireBase(rdv);
     if (fireBase === null) continue;
     rdv.rappelsSent = rdv.rappelsSent || [];
+    let dirty = false;
 
     for (const m of rappels) {
       if (rdv.rappelsSent.includes(m)) continue;
@@ -121,11 +127,11 @@ const handler = async () => {
         // On ne marque pas : retry au prochain cron
       }
     }
+
+    if (dirty) updates.push(ref.set(rdv));
   }
 
-  if (dirty) {
-    await db.collection('rdvs').doc('all').set({ rdvs }, { merge: true });
-  }
+  await Promise.all(updates);
 
   return {
     statusCode: 200,
