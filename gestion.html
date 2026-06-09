@@ -418,9 +418,9 @@ select option{background:#1d222d}
   border-bottom:1px solid var(--border);
 }
 .cal-cell{
-  min-height:80px;border-right:1px solid rgba(255,255,255,.04);
+  min-height:80px;min-width:0;border-right:1px solid rgba(255,255,255,.04);
   border-bottom:1px solid rgba(255,255,255,.04);padding:6px;
-  cursor:pointer;transition:background .1s;position:relative;
+  cursor:pointer;transition:background .1s;position:relative;overflow:hidden;
 }
 .cal-cell:hover{background:rgba(255,255,255,.03)}
 .cal-cell.today{background:rgba(30,144,255,.06)}
