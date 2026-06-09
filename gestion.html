@@ -175,6 +175,7 @@ select option{background:#1d222d}
 .b-paye{background:rgba(34,197,94,.15);color:var(--green)}
 .b-annule{background:rgba(239,68,68,.1);color:var(--red)}
 .b-acompte{background:rgba(168,85,247,.15);color:#a855f7}
+.b-ordre{background:rgba(234,88,12,.15);color:#ea580c}
 .doc-num{font-family:var(--fm);font-size:12px;color:var(--text-dim)}
 .act-cell{display:flex;gap:6px;justify-content:flex-end}
 
@@ -1072,6 +1073,7 @@ select option{background:#1d222d}
             <select id="f-type" onchange="onTypeChange();onFormChange()">
               <option value="devis">Devis</option>
               <option value="facture">Facture</option>
+              <option value="ordre">Ordre de réparation</option>
             </select>
           </div>
           <div class="fr"><label>Numéro</label><input id="f-num" type="text"/></div>
@@ -1092,6 +1094,17 @@ select option{background:#1d222d}
             </div>
           </div>
           <input type="hidden" id="f-declare" value="true"/>
+        </div>
+        <!-- Champs spécifiques Ordre de Réparation -->
+        <div class="card" id="odr-fields" style="display:none">
+          <div class="card-title">🔧 Ordre de réparation</div>
+          <div class="fr"><label>Motif d'entrée</label><textarea id="f-motif" rows="3" style="resize:vertical;font-family:inherit;font-size:13px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 12px;width:100%;box-sizing:border-box" placeholder="Problème signalé par le client…"></textarea></div>
+          <div class="fr"><label>Délai d'immobilisation estimé</label><input id="f-delai" type="text" placeholder="ex : 2 jours, vendredi 14h…"/></div>
+          <div class="fr" style="align-items:center;gap:10px">
+            <label style="flex:0 0 auto">Accord client obtenu</label>
+            <input type="checkbox" id="f-sigclient" style="width:18px;height:18px;cursor:pointer"/>
+            <span style="font-size:12px;color:var(--text-muted)">Signature / autorisation avant travaux (obligatoire)</span>
+          </div>
         </div>
         <div class="card">
           <div class="card-title">Client</div>
@@ -1469,6 +1482,7 @@ select option{background:#1d222d}
         <button class="filter-chip active" id="fchip-all" onclick="setListeFilter('',this)">Tous <span class="filter-count" id="fcount-all"></span></button>
         <button class="filter-chip" id="fchip-devis" onclick="setListeFilter('devis',this)">📄 Devis <span class="filter-count" id="fcount-devis"></span></button>
         <button class="filter-chip" id="fchip-facture" onclick="setListeFilter('facture',this)">🧾 Factures <span class="filter-count" id="fcount-facture"></span></button>
+        <button class="filter-chip" id="fchip-ordre" onclick="setListeFilter('ordre',this)">🔧 OdR <span class="filter-count" id="fcount-ordre"></span></button>
         <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
         <button class="filter-chip" id="fchip-envoye" onclick="setStatutFilter('envoyé',this)">📤 Envoyés</button>
         <button class="filter-chip" id="fchip-accepte" onclick="setStatutFilter('accepté',this)">👍 Acceptés</button>
@@ -2614,8 +2628,15 @@ function newDoc() { resetForm(true); }
 
 function onTypeChange() {
   var t = $('f-type').value;
-  $('form-h').textContent = t === 'devis' ? (editId ? 'Modifier le devis' : 'Nouveau devis') : (editId ? 'Modifier la facture' : 'Nouvelle facture');
-  if (!editId) $('f-num').value = genNum(t === 'devis' ? 'DEV' : 'FAC');
+  var labels = { devis: ['Modifier le devis', 'Nouveau devis'], facture: ['Modifier la facture', 'Nouvelle facture'], ordre: ['Modifier l\'ordre de réparation', 'Nouvel ordre de réparation'] };
+  var l = labels[t] || labels['devis'];
+  $('form-h').textContent = editId ? l[0] : l[1];
+  if (!editId) $('f-num').value = genNum(t === 'devis' ? 'DEV' : t === 'ordre' ? 'ODR' : 'FAC');
+  var odrFields = document.getElementById('odr-fields');
+  if (odrFields) odrFields.style.display = t === 'ordre' ? '' : 'none';
+  var echLabel = document.querySelector('label[for="f-ech"]') || (function(){ var el = $('f-ech'); return el ? el.previousElementSibling : null; })();
+  var echRow = $('f-ech') ? $('f-ech').closest ? $('f-ech').closest('.fr') : null : null;
+  if (echRow) { var lbl = echRow.querySelector('label'); if (lbl) lbl.textContent = t === 'ordre' ? 'Date prévue de restitution' : (t === 'devis' ? 'Validité / Échéance' : 'Validité / Échéance'); }
 }
 
 // ============================================================
@@ -3102,6 +3123,9 @@ function buildObj() {
     notes: $('f-notes').value,
     nint: $('f-nint').value,
     acompte: currentAcompte ? JSON.parse(JSON.stringify(currentAcompte)) : null,
+    motif: $('f-motif') ? $('f-motif').value : '',
+    delai: $('f-delai') ? $('f-delai').value : '',
+    sigclient: $('f-sigclient') ? $('f-sigclient').checked : false,
   };
 }
 
@@ -3161,6 +3185,9 @@ function loadDocData(doc) {
   }
   setDeclaration(doc.declare !== false);
   loadFrais(doc.frais || null);
+  if ($('f-motif')) $('f-motif').value = doc.motif || '';
+  if ($('f-delai')) $('f-delai').value = doc.delai || '';
+  if ($('f-sigclient')) $('f-sigclient').checked = doc.sigclient || false;
   onTypeChange();
   applyRemiseGlobaleFromDoc(doc);
   renderLines();
@@ -3213,7 +3240,10 @@ function loadDoc(docId) {
   }
   applyRemiseGlobaleFromDoc(doc);
   renderLines();
-  $('form-h').textContent = doc.type === 'devis' ? 'Modifier le devis' : 'Modifier la facture';
+  if ($('f-motif')) $('f-motif').value = doc.motif || '';
+  if ($('f-delai')) $('f-delai').value = doc.delai || '';
+  if ($('f-sigclient')) $('f-sigclient').checked = doc.sigclient || false;
+  onTypeChange();
   showTab('form');
 }
 
@@ -3242,6 +3272,7 @@ function renderDocHTML(doc, tplOverride) {
   var ttc = ht + tva;
   var hasRemise = remiseLignes > 0.005 || rgEur > 0.005;
   var isDevis = doc.type === 'devis';
+  var isOrdre = doc.type === 'ordre';
   var gains = getGains(doc.lines);
   var vehStr = [escHtml(doc.vm||''), escHtml(doc.vmo||''), escHtml(doc.vmot||''), doc.van ? '(' + escHtml(doc.van) + ')' : ''].filter(Boolean).join(' ');
 
@@ -3253,9 +3284,11 @@ function renderDocHTML(doc, tplOverride) {
     : '';
   var noticeHTML = doc.statut === 'payé'
     ? '<div class="d-notice paye">✓ FACTURE RÉGLÉE — Paiement reçu</div>'
-    : (isDevis
-      ? '<div class="d-notice devis">⏳ Ce devis est valable ' + (tpl.validite||30) + ' jours à compter du ' + fmtDate(doc.date) + (doc.acompte && doc.acompte.recu ? '' : ' — Paiement après intervention.') + '</div>'
-      : '<div class="d-notice facture">📄 Facture émise le ' + fmtDate(doc.date) + ' — Règlement à réception.</div>')
+    : (isOrdre
+      ? '<div class="d-notice" style="background:rgba(234,88,12,.1);border-left:3px solid #ea580c;color:#ea580c;font-size:12px">🔧 Ordre de réparation établi conformément au Décret n°78-993 du 4 octobre 1978 et au Code de la consommation (art. R224-22). Travaux autorisés par le client. Kilométrage enregistré à l\'entrée du véhicule.</div>'
+      : (isDevis
+        ? '<div class="d-notice devis">⏳ Ce devis est valable ' + (tpl.validite||30) + ' jours à compter du ' + fmtDate(doc.date) + (doc.acompte && doc.acompte.recu ? '' : ' — Paiement après intervention.') + '</div>'
+        : '<div class="d-notice facture">📄 Facture émise le ' + fmtDate(doc.date) + ' — Règlement à réception.</div>'))
     + acompteNotice;
 
   var linesHTML = doc.lines.map(function(l) {
@@ -3306,10 +3339,10 @@ function renderDocHTML(doc, tplOverride) {
     + (tpl.web ? ' &nbsp;·&nbsp; ' + escHtml(tpl.web) : '')
     + '</div></div>'
     + '<div class="d-right">'
-    + '<div class="d-type">' + (isDevis ? 'DEVIS' : 'FACTURE') + '</div>'
+    + '<div class="d-type">' + (isOrdre ? 'ORDRE DE RÉPARATION' : isDevis ? 'DEVIS' : 'FACTURE') + '</div>'
     + '<div class="d-num">' + (doc.num || '—') + '</div>'
     + '<div class="d-date">Émis le ' + fmtDate(doc.date) + '</div>'
-    + (doc.ech ? '<div class="d-date">' + (isDevis ? 'Valable jusqu\'au' : 'Échéance') + ' ' + fmtDate(doc.ech) + '</div>' : '')
+    + (doc.ech ? '<div class="d-date">' + (isOrdre ? 'Restitution prévue le' : isDevis ? 'Valable jusqu\'au' : 'Échéance') + ' ' + fmtDate(doc.ech) + '</div>' : '')
     + '</div></div>'
     + '<div class="d-parties">'
     + '<div class="d-party"><div class="d-party-label">Prestataire</div><div class="d-party-name">' + escHtml(tpl.nom||'AREPROG') + '</div>'
@@ -3331,6 +3364,8 @@ function renderDocHTML(doc, tplOverride) {
     + (doc.vkm ? '<br>Kilométrage : <strong>' + escHtml(doc.vkm) + '</strong>' : '')
     + '</div></div></div>'
     + noticeHTML
+    + (isOrdre && doc.motif ? '<div style="margin:14px 0;padding:12px 16px;background:#f9fafb;border-left:3px solid #ea580c;border-radius:4px"><strong style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#ea580c">Motif d\'entrée</strong><p style="margin:6px 0 0;color:#333;font-size:13px">' + escHtml(doc.motif).replace(/\n/g,'<br>') + '</p></div>' : '')
+    + (isOrdre && doc.delai ? '<div style="margin:8px 0 14px;font-size:13px;color:#555">⏱ <strong>Délai d\'immobilisation estimé :</strong> ' + escHtml(doc.delai) + '</div>' : '')
     + '<table class="d-table"><thead><tr>'
     + '<th style="width:42%">Désignation</th>'
     + '<th style="width:8%;text-align:right">Qté</th>'
@@ -3348,12 +3383,18 @@ function renderDocHTML(doc, tplOverride) {
     + '</div></div>'
     + gainsHTML
     + (doc.notes ? '<div class="d-notes"><strong>Conditions & mentions</strong><p>' + escHtml(doc.notes).replace(/\n/g,'<br>') + '</p></div>' : '')
+    + (isOrdre ? '<div style="margin-top:28px;display:flex;gap:40px;border-top:1px solid #e5e7eb;padding-top:20px">'
+      + '<div style="flex:1"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:12px">Signature du client</div>'
+      + (doc.sigclient ? '<div style="font-size:12px;color:#16a34a;font-weight:600">✓ Accord client enregistré</div>' : '<div style="border-bottom:1px solid #ccc;height:40px;margin-bottom:6px"></div><div style="font-size:11px;color:#888">Lu et approuvé — Date : ___________</div>')
+      + '</div>'
+      + '<div style="flex:1"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:12px">Signature du technicien</div><div style="border-bottom:1px solid #ccc;height:40px"></div></div>'
+      + '</div>' : '')
     + (tpl.showFooter !== false ? '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
 }
 
 // Construit le nom de fichier PDF : AREPROG_TYPE_NUMERO_CLIENT
 function buildPdfTitle(doc) {
-  var type = (doc.type === 'devis' ? 'Devis' : 'Facture');
+  var type = (doc.type === 'devis' ? 'Devis' : doc.type === 'ordre' ? 'OrdreReparation' : 'Facture');
   var num  = (doc.num || '').replace(/[^a-zA-Z0-9_-]/g, '-');
   var nom  = (doc.cn || 'Client').replace(/[^a-zA-Z0-9 _-]/g, '').trim().replace(/\s+/g, '-');
   return 'AREPROG_' + type + '_' + num + '_' + nom;
@@ -3414,12 +3455,14 @@ function renderDash() {
   var docs = loadDocs();
   var devis = docs.filter(function(d){ return d.type === 'devis'; }).length;
   var factures = docs.filter(function(d){ return d.type === 'facture'; }).length;
+  var ordres = docs.filter(function(d){ return d.type === 'ordre'; }).length;
   var caEnc = docs.filter(function(d){ return d.type === 'facture' && d.statut === 'payé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
   var caAtt = docs.filter(function(d){ return d.type === 'facture' && d.statut !== 'payé' && d.statut !== 'annulé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
 
   $('stats').innerHTML =
     '<div class="sc"><div class="sc-label">Devis créés</div><div class="sc-val blue">'+devis+'</div><div class="sc-sub">Total</div></div>' +
     '<div class="sc"><div class="sc-label">Factures</div><div class="sc-val">'+factures+'</div><div class="sc-sub">Émises</div></div>' +
+    '<div class="sc"><div class="sc-label">OdR en cours</div><div class="sc-val" style="color:#ea580c">'+ordres+'</div><div class="sc-sub">Ordres de réparation</div></div>' +
     '<div class="sc"><div class="sc-label">CA encaissé</div><div class="sc-val green">'+fmt(caEnc)+'</div><div class="sc-sub">Factures payées</div></div>' +
     '<div class="sc"><div class="sc-label">En attente</div><div class="sc-val orange">'+fmt(caAtt)+'</div><div class="sc-sub">À encaisser</div></div>';
 
@@ -3461,7 +3504,7 @@ function renderListe() {
 
 function buildTable(docs, withDelete) {
   var rows = docs.map(function(d) {
-    var typeBadge = d.type === 'devis' ? '<span class="badge b-devis">Devis</span>' : '<span class="badge b-facture">Facture</span>';
+    var typeBadge = d.type === 'devis' ? '<span class="badge b-devis">Devis</span>' : d.type === 'ordre' ? '<span class="badge b-ordre">OdR</span>' : '<span class="badge b-facture">Facture</span>';
     var statBadge = d.statut === 'payé' ? '<span class="badge b-paye">Payé ✓</span>'
       : d.statut === 'annulé' ? '<span class="badge b-annule">Annulé</span>'
       : '<span style="color:var(--text-dim);font-size:12px">'+d.statut+'</span>';
@@ -5480,6 +5523,7 @@ function updateListeFilterCounts() {
     ['fcount-all',    function(){ return true; }],
     ['fcount-devis',  function(d){ return d.type==='devis'; }],
     ['fcount-facture',function(d){ return d.type==='facture'; }],
+    ['fcount-ordre',  function(d){ return d.type==='ordre'; }],
   ].forEach(function(pair) {
     var el = $(pair[0]);
     if (el) el.textContent = cnt(pair[1]);
