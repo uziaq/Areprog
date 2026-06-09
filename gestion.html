@@ -4140,8 +4140,26 @@ function loadRdvs() {
 function saveRdvs(arr) {
   localStorage.setItem(RDV_KEY, JSON.stringify(arr));
   if (db && syncOk) {
-    db.collection('rdvs').doc('all').set({ rdvs: arr })
-      .catch(function(e){ console.warn('Firebase rdvs:', e); });
+    // Sauvegarde chaque RDV dans son propre document pour éviter l'écrasement global
+    var batch = db.batch();
+    arr.forEach(function(rdv) {
+      batch.set(db.collection('rdvs').doc(String(rdv.id)), rdv);
+    });
+    batch.commit().catch(function(e){ console.warn('Firebase rdvs batch:', e); });
+  }
+}
+
+function saveOneRdv(rdv) {
+  if (db && syncOk) {
+    db.collection('rdvs').doc(String(rdv.id)).set(rdv)
+      .catch(function(e){ console.warn('Firebase rdv save:', e); });
+  }
+}
+
+function deleteOneRdvFirebase(rdvId) {
+  if (db && syncOk) {
+    db.collection('rdvs').doc(String(rdvId)).delete()
+      .catch(function(e){ console.warn('Firebase rdv delete:', e); });
   }
 }
 
@@ -4426,7 +4444,8 @@ function saveRdv() {
   } else {
     rdvs.push(rdv);
   }
-  saveRdvs(rdvs);
+  localStorage.setItem(RDV_KEY, JSON.stringify(rdvs));
+  saveOneRdv(rdv);
 
   // Programmer le rappel (timers live) + rattrapage immédiat si besoin
   scheduleRdvNotif(rdv);
@@ -4440,7 +4459,9 @@ function saveRdv() {
 function deleteRdv(rdvId) {
   if (!confirm('Supprimer ce rendez-vous ?')) return;
   cancelRdvTimers(rdvId);
-  saveRdvs(loadRdvs().filter(function(r){ return r.id !== rdvId; }));
+  var remaining = loadRdvs().filter(function(r){ return r.id !== rdvId; });
+  localStorage.setItem(RDV_KEY, JSON.stringify(remaining));
+  deleteOneRdvFirebase(rdvId);
   renderCalendar();
   renderSideEvents(calSelected);
 }
@@ -4937,10 +4958,17 @@ function toDateStr(d) {
 // ── Sync Firebase rdvs ───────────────────────────────────────
 function syncRdvsFromFirebase() {
   if (!db) return;
-  db.collection('rdvs').doc('all').get()
-    .then(function(doc) {
-      if (doc.exists && doc.data().rdvs) {
-        localStorage.setItem(RDV_KEY, JSON.stringify(doc.data().rdvs));
+  db.collection('rdvs').get()
+    .then(function(snapshot) {
+      var rdvs = [];
+      snapshot.forEach(function(doc) {
+        var data = doc.data();
+        // Ignorer l'ancien document monolithique 'all'
+        if (doc.id === 'all') return;
+        if (data && data.id) rdvs.push(data);
+      });
+      if (rdvs.length > 0) {
+        localStorage.setItem(RDV_KEY, JSON.stringify(rdvs));
       }
     }).catch(function(){});
 }
@@ -5448,21 +5476,24 @@ function updateListeFilterCounts() {
 // ══════════════════════════════════════════════════════════════
 function startRdvsRealtimeSync() {
   if (!db || !syncOk) return;
-  // Remplacer le one-shot get par un listener temps réel
-  db.collection('rdvs').doc('all').onSnapshot(function(doc) {
-    if (doc.exists && doc.data().rdvs) {
-      localStorage.setItem(RDV_KEY, JSON.stringify(doc.data().rdvs));
-      // Rafraîchir l'agenda si ouvert
-      if ($('t-agenda') && $('t-agenda').classList.contains('on')) {
-        renderCalendar();
-        renderSideEvents(calSelected);
-      }
-      // Reprogrammer les rappels : annuler tous les timers et relancer
-      // (les rdvs peuvent avoir été modifiés depuis un autre appareil)
-      cancelAllRdvTimers();
-      doc.data().rdvs.forEach(function(r){ scheduleRdvNotif(r); });
-      runRappelCheck();
+  db.collection('rdvs').onSnapshot(function(snapshot) {
+    var rdvs = [];
+    snapshot.forEach(function(doc) {
+      var data = doc.data();
+      // Ignorer l'ancien document monolithique 'all'
+      if (doc.id === 'all') return;
+      if (data && data.id) rdvs.push(data);
+    });
+    localStorage.setItem(RDV_KEY, JSON.stringify(rdvs));
+    // Rafraîchir l'agenda si ouvert
+    if ($('t-agenda') && $('t-agenda').classList.contains('on')) {
+      renderCalendar();
+      renderSideEvents(calSelected);
     }
+    // Reprogrammer les rappels
+    cancelAllRdvTimers();
+    rdvs.forEach(function(r){ scheduleRdvNotif(r); });
+    runRappelCheck();
   }, function(err) {
     console.warn('RDV realtime sync error:', err);
   });
