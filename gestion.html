@@ -987,7 +987,6 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
-      <button class="nb" onclick="location.href='/gestion-boutique'" title="Administration boutique VAG">🛒 Boutique</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -2513,17 +2512,6 @@ function reloadCat() {
   CAT = loadCat();
 }
 
-var SHOP_PRODUCTS = null;
-function loadShopProducts(cb) {
-  if (SHOP_PRODUCTS !== null) { if (cb) cb(SHOP_PRODUCTS); return; }
-  fetch('/products.json')
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      SHOP_PRODUCTS = (data || []).filter(function(p){ return p.active !== false; });
-      if (cb) cb(SHOP_PRODUCTS);
-    })
-    .catch(function(){ SHOP_PRODUCTS = []; if (cb) cb([]); });
-}
 
 // Gains automatiques par mot-clé
 // getGains — récupère les gains directement depuis le catalogue dynamique
@@ -2577,7 +2565,6 @@ var lines = [];
 var editId = null;
 
 function initApp() {
-  loadShopProducts();
   resetForm(false);
   fillTplForm(loadTemplate());
   renderDash();
@@ -2655,13 +2642,6 @@ function buildSuggestions(query) {
       }
     });
   });
-  var shop = SHOP_PRODUCTS || [];
-  shop.forEach(function(p) {
-    if (p.name && p.name.toLowerCase().indexOf(q) !== -1 && !seen[p.name]) {
-      seen[p.name] = true;
-      results.push({ label: p.name, price: p.price || 0, group: 'Boutique' });
-    }
-  });
   return results.slice(0, 20);
 }
 
@@ -2734,12 +2714,7 @@ function initLineAutocomplete(inputEl, lid) {
     var line = lines.find(function(l) { return l.id === lid; });
     if (line) line.label = inputEl.value;
     if (inputEl.value.length >= 1) {
-      if (SHOP_PRODUCTS === null) {
-        loadShopProducts(function() { showDrop(buildSuggestions(inputEl.value)); });
-        showDrop(buildSuggestions(inputEl.value));
-      } else {
-        showDrop(buildSuggestions(inputEl.value));
-      }
+      showDrop(buildSuggestions(inputEl.value));
     } else {
       hideDrop();
     }
