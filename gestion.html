@@ -4511,6 +4511,7 @@ function deleteRdvFromModal() {
 var EJS_SERVICE       = 'service_ipazk28';
 var EJS_TPL_RAPPEL    = 'Rappel AREPROG';  // Rappels agenda
 var EJS_TPL_DOC       = 'DEVIS';  // Envoi devis/factures
+var EJS_PUBLIC_KEY    = '5Lk7jHaGZ9YzEfM51';
 var EJS_FROM_EMAIL    = 'arthur@areprog.fr';
 var notifTimer        = null;
 var _currentDocForEmail = null; // doc en cours d'affichage dans le modal
@@ -4622,7 +4623,7 @@ function sendReminderEmail(rdv, minutes) {
     rdv_vehicule: vehLabel||'Non précisé',
     rdv_notes:   rdv.notes||'',
     rappel_label: opt ? opt.l : minutes+' min avant',
-  }).then(function(){
+  }, { publicKey: EJS_PUBLIC_KEY }).then(function(){
     markRappelSent(rdv.id, minutes);
     showNotifBanner('📧', 'Rappel envoyé', rdv.title||'');
     delete _rappelInFlight[key];
@@ -4749,7 +4750,7 @@ function checkTodayNotifs() {
           rdv_vehicule: [d.vm,d.vmo].filter(Boolean).join(' '),
           rdv_notes: 'Montant : '+fmt(d.ttc||0)+' · Ref : '+(d.num||''),
           rappel_label: 'Alerte automatique',
-        }).catch(function(){});
+        }, { publicKey: EJS_PUBLIC_KEY }).catch(function(){});
       }, 5000);
     }
   });
@@ -4816,7 +4817,7 @@ async function confirmSendEmail() {
       message:     message,
       pdf_base64:  pdfB64,
       pdf_name:    buildPdfTitle(doc) + '.pdf',
-    });
+    }, { publicKey: EJS_PUBLIC_KEY });
 
     showSendStatus('success', 'Email envoyé à '+toEmail+' ✓');
     btn.textContent = '✓ Envoyé !';
