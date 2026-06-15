@@ -10,7 +10,7 @@ const admin = require('firebase-admin');
 
 const EJS_SERVICE    = 'service_ipazk28';
 const EJS_TPL_RAPPEL = 'Rappel AREPROG';
-const EJS_PUBLIC_KEY = '3xdOxKiXtMqhlc7ei';
+const EJS_PUBLIC_KEY = '5Lk7jHaGZ9YzEfM51';
 const EJS_FROM_EMAIL = 'arthur@areprog.fr';
 const STALE_RAPPEL_MS = 7 * 24 * 3600000;
 
