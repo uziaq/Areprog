@@ -97,16 +97,6 @@
     .faq-a p { color: var(--muted); line-height: 1.75; font-size: .9rem; }
     .faq-a strong { color: var(--text2); font-weight: 500; }
 
-    /* BOUTIQUE CTA */
-    .sv-boutique { padding: 4rem 5rem; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .sv-boutique-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
-    .sv-boutique-left h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; text-transform: uppercase; margin-bottom: .4rem; }
-    .sv-boutique-left h3 em { font-style: italic; font-weight: 300; color: var(--accent-light); }
-    .sv-boutique-left p { font-size: .88rem; color: var(--muted); }
-    .sv-boutique-price { text-align: right; }
-    .sv-boutique-from { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
-    .sv-boutique-amount { font-family: var(--font-display); font-weight: 800; font-size: 3rem; color: var(--text); line-height: 1; letter-spacing: -.02em; }
-    .sv-boutique-amount sup { font-size: 1.2rem; font-weight: 700; vertical-align: top; margin-top: .6rem; display: inline-block; }
 
     /* CTA */
     .sv-cta { text-align: center; padding: 7rem 5rem; position: relative; overflow: hidden; }
@@ -130,12 +120,10 @@
       .sv-intro-grid,.compat-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     }
     @media (max-width:900px) {
-      .sv-hero,.sv-intro,.sv-benefits,.sv-process,.sv-compat,.sv-faq,.sv-boutique,.sv-cta,.geo-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
+      .sv-hero,.sv-intro,.sv-benefits,.sv-process,.sv-compat,.sv-faq,.sv-cta,.geo-bar { padding-left: 1.4rem; padding-right: 1.4rem; }
       .benefits-grid { grid-template-columns: 1fr 1fr; }
       .process-steps { grid-template-columns: 1fr 1fr; }
       .process-steps::before { display: none; }
-      .sv-boutique-inner { flex-direction: column; align-items: flex-start; }
-      .sv-boutique-price { text-align: left; }
     }
     @media (max-width:500px) {
       .benefits-grid { grid-template-columns: 1fr; }
