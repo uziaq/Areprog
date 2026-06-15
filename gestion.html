@@ -2174,7 +2174,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   loadScript('https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js', function() {
     try {
-      emailjs.init({ publicKey: '3xdOxKiXtMqhlc7ei' });
+      emailjs.init({ publicKey: '5Lk7jHaGZ9YzEfM51' });
       _ejsReady = true;
       console.log('EmailJS initialisé ✓');
     } catch(e) { console.warn('EmailJS init failed:', e); }
@@ -4528,7 +4528,7 @@ function initEmailJS() {
   if (_ejsReady) return; // déjà initialisé
   if (typeof emailjs === 'undefined') return; // SDK pas encore chargé
   try {
-    emailjs.init({ publicKey: '3xdOxKiXtMqhlc7ei' });
+    emailjs.init({ publicKey: '5Lk7jHaGZ9YzEfM51' });
     _ejsReady = true;
     console.log('EmailJS initialisé ✓');
   } catch(e) {
