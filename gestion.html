@@ -4596,13 +4596,24 @@ function setRappels(arr) {
   arr.forEach(function(v) { addRappelRow(String(v)); });
 }
 
+// ── Envoi email via API REST EmailJS (sans SDK) ──────────────
+function ejsSend(templateId, params) {
+  return fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      service_id:      EJS_SERVICE,
+      template_id:     templateId,
+      user_id:         EJS_PUBLIC_KEY,
+      template_params: params,
+    }),
+  }).then(function(res) {
+    if (!res.ok) return res.text().then(function(t){ throw { status: res.status, text: t }; });
+  });
+}
+
 // ── Envoi email rappel RDV ────────────────────────────────────
 function sendReminderEmail(rdv, minutes) {
-  if (!_ejsReady) initEmailJS();
-  if (!_ejsReady || typeof emailjs === 'undefined') {
-    showNotifBanner('⚠️', 'EmailJS non prêt', 'Rappel "'+(rdv.title||'')+'" sera retenté.');
-    return Promise.reject(new Error('EmailJS non initialisé'));
-  }
   var key = rdv.id + '|' + minutes;
   if (_rappelInFlight[key]) return Promise.resolve();
   _rappelInFlight[key] = true;
@@ -4613,7 +4624,7 @@ function sendReminderEmail(rdv, minutes) {
   var vehLabel = selV ? [selV.vm,selV.vmo,selV.vmot,selV.van?'('+selV.van+')':''].filter(Boolean).join(' ') : '';
   var opt = RAPPEL_OPTIONS.find(function(o){ return parseInt(o.v)===minutes; });
 
-  return emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
+  return ejsSend(EJS_TPL_RAPPEL, {
     to_email:    EJS_FROM_EMAIL,
     rdv_title:   rdv.title||'',
     rdv_date:    rdv.date ? fmtDate(rdv.date) : '',
@@ -4741,7 +4752,7 @@ function checkTodayNotifs() {
     if (days===7||days===14||days===30) {
       sent = true;
       setTimeout(function(){
-        emailjs.send(EJS_SERVICE, EJS_TPL_RAPPEL, {
+        ejsSend(EJS_TPL_RAPPEL, {
           to_email: EJS_FROM_EMAIL,
           rdv_title: 'Facture impayée — '+(d.cn||''),
           rdv_date: fmtDate(d.date),
@@ -4805,7 +4816,7 @@ async function confirmSendEmail() {
     var message = $('send-message').value;
     var type = doc.type === 'facture' ? 'Facture' : 'Devis';
 
-    await emailjs.send(EJS_SERVICE, EJS_TPL_DOC, {
+    await ejsSend(EJS_TPL_DOC, {
       to_email:    toEmail,
       from_name:   tpl.nom || 'AREPROG',
       from_email:  EJS_FROM_EMAIL,
