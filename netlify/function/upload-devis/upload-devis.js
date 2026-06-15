@@ -33,16 +33,19 @@ exports.handler = async function(event) {
     var bucket = admin.storage().bucket();
     var file   = bucket.file('devis-partages/' + docId + '/' + filename);
 
-    await file.save(buffer, { metadata: { contentType: 'application/pdf' } });
+    await file.save(buffer, {
+      metadata: { contentType: 'application/pdf' },
+      public: true,
+      resumable: false,
+    });
 
-    var expires = new Date();
-    expires.setFullYear(expires.getFullYear() + 2);
-    var result = await file.getSignedUrl({ action: 'read', expires: expires });
+    var encodedPath = file.name.split('/').map(encodeURIComponent).join('/');
+    var url = 'https://storage.googleapis.com/' + BUCKET + '/' + encodedPath;
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ url: result[0] }),
+      body: JSON.stringify({ url: url }),
     };
   } catch(e) {
     console.error('upload-devis error:', e);
