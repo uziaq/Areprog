@@ -28,7 +28,6 @@ const NAV_HTML = `
  <li><a href="/vidange-boite-automatique">Vidange Boîte Auto <span class="nav-badge" style="color:var(--accent);border-color:rgba(139,92,246,.4)">NEW</span></a></li>
  <li class="dropdown-divider"></li>
  <li><a href="/codage-vag">Codage VAG <span class="nav-badge" style="color:var(--green);border-color:rgba(52,211,153,.4)">NEW</span></a></li>
- <li><a href="/boutique-vag">Boutique Retrofit <span class="nav-badge" style="color:var(--amber);border-color:rgba(245,158,11,.4)">NEW</span></a></li>
  </ul>
  </li>
  <li class="nav-dropdown">
@@ -89,7 +88,6 @@ const NAV_HTML = `
  <a href="/odis" class="nav-mobile-sub" data-page="odis">Diagnostic ODIS VAG</a>
  <a href="/vidange-boite-automatique" class="nav-mobile-sub" data-page="vidange-boite-automatique">Vidange Boîte Automatique</a>
  <a href="/codage-vag" class="nav-mobile-sub" data-page="codage-vag">Codage VAG — Options cachées</a>
- <a href="/boutique-vag" class="nav-mobile-sub" data-page="boutique-vag">Boutique Retrofit VAG</a>
  </div>
  <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
  <a href="/about" data-page="about">À propos</a>
