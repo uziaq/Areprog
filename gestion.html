@@ -4634,7 +4634,7 @@ function sendReminderEmail(rdv, minutes) {
     rdv_vehicule: vehLabel||'Non précisé',
     rdv_notes:   rdv.notes||'',
     rappel_label: opt ? opt.l : minutes+' min avant',
-  }, { publicKey: EJS_PUBLIC_KEY }).then(function(){
+  }).then(function(){
     markRappelSent(rdv.id, minutes);
     showNotifBanner('📧', 'Rappel envoyé', rdv.title||'');
     delete _rappelInFlight[key];
@@ -4761,7 +4761,7 @@ function checkTodayNotifs() {
           rdv_vehicule: [d.vm,d.vmo].filter(Boolean).join(' '),
           rdv_notes: 'Montant : '+fmt(d.ttc||0)+' · Ref : '+(d.num||''),
           rappel_label: 'Alerte automatique',
-        }, { publicKey: EJS_PUBLIC_KEY }).catch(function(){});
+        }).catch(function(){});
       }, 5000);
     }
   });
@@ -4828,7 +4828,7 @@ async function confirmSendEmail() {
       message:     message,
       pdf_base64:  pdfB64,
       pdf_name:    buildPdfTitle(doc) + '.pdf',
-    }, { publicKey: EJS_PUBLIC_KEY });
+    });
 
     showSendStatus('success', 'Email envoyé à '+toEmail+' ✓');
     btn.textContent = '✓ Envoyé !';
