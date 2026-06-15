@@ -17,6 +17,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -2233,6 +2234,7 @@ function initFirebase() {
     // Firebase est déjà initialisé dans DOMContentLoaded avant onAuthStateChanged
     // On s'assure juste que db est disponible
     if (!db) db = firebase.firestore();
+    if (!window._storage) window._storage = firebase.storage();
     // Test de connexion Firestore
     db.collection('docs').limit(1).get()
       .then(function() { setSyncStatus(true, 'Firebase connecté'); })
@@ -4795,23 +4797,28 @@ async function confirmSendEmail() {
     showSendStatus('error', 'Email invalide.');
     return;
   }
-  // Tenter une dernière init si pas encore prêt
-  if (!_ejsReady) initEmailJS();
-  if (!_ejsReady) {
-    showSendStatus('error', 'Service email non disponible. Rechargez la page et réessayez.');
-    return;
-  }
 
   var btn = $('send-email-confirm-btn');
   btn.disabled = true;
   btn.textContent = 'Génération PDF…';
 
   try {
-    // Générer le PDF depuis le contenu affiché dans le modal
     var pdfB64 = await generatePdfBase64();
-    btn.textContent = 'Envoi en cours…';
+    btn.textContent = 'Upload PDF…';
+
+    // Convertir base64 → Blob et uploader sur Firebase Storage
+    var byteChars = atob(pdfB64);
+    var byteArr = new Uint8Array(byteChars.length);
+    for (var i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+    var pdfBlob = new Blob([byteArr], { type: 'application/pdf' });
 
     var doc = _currentDocForEmail || {};
+    var filename = buildPdfTitle(doc) + '.pdf';
+    var storageRef = firebase.storage().ref('devis-partages/' + (doc.id || Date.now()) + '/' + filename);
+    await storageRef.put(pdfBlob, { contentType: 'application/pdf' });
+    var pdfUrl = await storageRef.getDownloadURL();
+
+    btn.textContent = 'Envoi en cours…';
     var tpl = loadTemplate();
     var message = $('send-message').value;
     var type = doc.type === 'facture' ? 'Facture' : 'Devis';
@@ -4826,8 +4833,7 @@ async function confirmSendEmail() {
       client_nom:  doc.cn || '',
       montant_ttc: fmt(doc.ttc || 0),
       message:     message,
-      pdf_base64:  pdfB64,
-      pdf_name:    buildPdfTitle(doc) + '.pdf',
+      devis_url:   pdfUrl,
     });
 
     showSendStatus('success', 'Email envoyé à '+toEmail+' ✓');
