@@ -162,6 +162,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
+  <url>
+    <loc>https://areprog.fr/simulateur</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
 
   <url>
     <loc>https://areprog.fr/about</loc>
@@ -172,7 +178,6 @@
 
   <!-- ── Exclus intentionnellement ───────────────────────
        boutique     → supprimée
-       simulateur   → noindex (robots.txt Disallow)
        confirmation → noindex (robots.txt Disallow)
        produit      → noindex
        404          → noindex

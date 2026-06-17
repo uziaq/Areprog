@@ -13,8 +13,6 @@ Disallow: /confirmation.html
 Disallow: /crm
 Disallow: /dossiers
 Disallow: /clients
-Disallow: /simulateur
-Disallow: /simulateur.html
 
 # Sitemap
 Sitemap: https://areprog.fr/sitemap.xml
