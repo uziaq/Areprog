@@ -988,6 +988,7 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
+      <button class="nb" onclick="showTab('sms')">📱 SMS</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -1468,6 +1469,67 @@ select option{background:#1d222d}
               <div id="tpl-mini-preview" style="background:#fff;border-radius:6px;padding:20px;font-size:10px;transform-origin:top left"></div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SMS -->
+    <div class="tc" id="t-sms">
+      <div class="sh">
+        <div class="sh-title">📱 Gestion SMS</div>
+      </div>
+
+      <!-- Paramètres -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Paramètres SMS</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+            <input type="checkbox" id="sms-cfg-confirmation" style="width:16px;height:16px;cursor:pointer">
+            <span><strong>Confirmation de RDV</strong> — SMS envoyé immédiatement à la création d'un RDV</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+            <input type="checkbox" id="sms-cfg-rappel" style="width:16px;height:16px;cursor:pointer">
+            <span><strong>Rappels de RDV</strong> — SMS envoyé en même temps que l'email de rappel</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+            <input type="checkbox" id="sms-cfg-avis" style="width:16px;height:16px;cursor:pointer">
+            <span><strong>Demande d'avis Google</strong> — SMS envoyé automatiquement 24h après le RDV</span>
+          </label>
+          <div class="fr" style="margin-top:4px">
+            <label>Lien Google Review</label>
+            <input type="url" id="sms-cfg-google-url" placeholder="https://g.page/r/XXXXXXX/review" style="font-size:12px">
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-g" onclick="saveSmsConfig()">💾 Enregistrer les paramètres</button>
+        </div>
+      </div>
+
+      <!-- Test SMS -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Envoyer un SMS de test</div>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+          <div class="fr" style="flex:1;min-width:160px">
+            <label>Numéro de téléphone</label>
+            <input type="tel" id="sms-test-tel" placeholder="06 XX XX XX XX">
+          </div>
+          <div class="fr" style="flex:2;min-width:200px">
+            <label>Message</label>
+            <input type="text" id="sms-test-msg" placeholder="Test SMS AREPROG" value="Test SMS AREPROG — si vous recevez ce message, le système fonctionne !">
+          </div>
+          <button class="btn-s" onclick="sendTestSms()" style="margin-bottom:1px">📤 Envoyer</button>
+        </div>
+        <div id="sms-test-result" style="margin-top:8px;font-size:12px"></div>
+      </div>
+
+      <!-- Historique -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Historique des SMS</span>
+          <button class="btn-s" style="font-size:11px" onclick="loadSmsLog()">↺ Actualiser</button>
+        </div>
+        <div id="sms-log-table">
+          <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Chargement…</div>
         </div>
       </div>
     </div>
@@ -4454,21 +4516,26 @@ function saveRdv() {
   // fireISO : timestamp UTC absolu utilisé par le cron serveur (TZ-safe)
   var fireISO = heure ? new Date(rdvDate+'T'+heure).toISOString() : null;
 
-  var rdv = {
-    id:       editingRdvId || String(Date.now()),
-    title:    title,
-    type:     $('rdv-type').value,
-    date:     rdvDate,
-    heure:    heure,
-    rappels:  rappels,
-    rappelsSent: rappelsSent,
-    fireISO:  fireISO,
-    clientId: $('rdv-client').value ? parseInt($('rdv-client').value) : null,
-    vehIdx:   $('rdv-vehicule') && $('rdv-vehicule').value !== '' ? parseInt($('rdv-vehicule').value) : null,
-    docId:    $('rdv-doc').value ? parseInt($('rdv-doc').value) : null,
+  var rdvClientId = $('rdv-client').value ? parseInt($('rdv-client').value) : null;
+  var rdvClient = rdvClientId ? loadClients().find(function(c){ return c.id === rdvClientId; }) : null;
 
-    lieu:     $('rdv-lieu').value,
-    notes:    $('rdv-notes').value,
+  var rdv = {
+    id:        editingRdvId || String(Date.now()),
+    title:     title,
+    type:      $('rdv-type').value,
+    date:      rdvDate,
+    heure:     heure,
+    rappels:   rappels,
+    rappelsSent: rappelsSent,
+    fireISO:   fireISO,
+    clientId:  rdvClientId,
+    clientNom: rdvClient ? rdvClient.nom : '',
+    clientTel: rdvClient ? (rdvClient.tel || '') : '',
+    vehIdx:    $('rdv-vehicule') && $('rdv-vehicule').value !== '' ? parseInt($('rdv-vehicule').value) : null,
+    docId:     $('rdv-doc').value ? parseInt($('rdv-doc').value) : null,
+
+    lieu:      $('rdv-lieu').value,
+    notes:     $('rdv-notes').value,
   };
 
   if (editingRdvId) {
@@ -4485,6 +4552,11 @@ function saveRdv() {
   // Programmer le rappel (timers live) + rattrapage immédiat si besoin
   scheduleRdvNotif(rdv);
   runRappelCheck();
+
+  // SMS confirmation (si nouveau RDV ou si le client a changé)
+  if (!editingRdvId && rdv.clientTel) {
+    envoyerSmsConfirmation(rdv);
+  }
 
   closeRdvModal();
   renderCalendar();
@@ -5374,8 +5446,8 @@ function exportCSV() {
 //  TABS (complet)
 // ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services','agenda','stats','search'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search'][i]===t); });
+  ['dash','form','liste','carnet','template','services','agenda','stats','search','sms'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search','sms'][i]===t); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
@@ -5384,6 +5456,7 @@ function showTab(t) {
   if(t==='agenda')   renderAgenda();
   if(t==='stats')    renderStats();
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
+  if(t==='sms')      initSmsTab();
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -5738,6 +5811,165 @@ function loadFrais(frais) {
 //  START — Netlify Identity gère l'auth
 // ============================================================
 // L'initialisation est gérée par netlifyIdentity.on('init') ci-dessus
+
+// ══════════════════════════════════════════════════════════════
+//  SMS — Confirmation, Config, Historique
+// ══════════════════════════════════════════════════════════════
+
+var _smsConfig = null;
+
+function formatDateFr(iso) {
+  if (!iso) return '';
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function loadSmsConfig() {
+  if (!db) return Promise.resolve({});
+  return db.collection('config').doc('sms').get()
+    .then(function(doc) {
+      _smsConfig = doc.exists ? doc.data() : {};
+      return _smsConfig;
+    })
+    .catch(function() { return {}; });
+}
+
+function saveSmsConfig() {
+  var cfg = {
+    confirmation:      $('sms-cfg-confirmation').checked,
+    rappel:            $('sms-cfg-rappel').checked,
+    avis_google:       $('sms-cfg-avis').checked,
+    google_review_url: ($('sms-cfg-google-url').value || '').trim(),
+  };
+  if (!db) { alert('Firebase non connecté'); return; }
+  db.collection('config').doc('sms').set(cfg)
+    .then(function() {
+      _smsConfig = cfg;
+      var btn = document.querySelector('[onclick="saveSmsConfig()"]');
+      if (btn) { btn.textContent = '✓ Enregistré'; setTimeout(function(){ btn.textContent = '💾 Enregistrer les paramètres'; }, 2000); }
+    })
+    .catch(function(e) { alert('Erreur : ' + e.message); });
+}
+
+function initSmsTab() {
+  loadSmsConfig().then(function(cfg) {
+    $('sms-cfg-confirmation').checked = cfg.confirmation !== false;
+    $('sms-cfg-rappel').checked       = cfg.rappel !== false;
+    $('sms-cfg-avis').checked         = cfg.avis_google !== false;
+    $('sms-cfg-google-url').value     = cfg.google_review_url || '';
+  });
+  loadSmsLog();
+}
+
+function loadSmsLog() {
+  var el = $('sms-log-table');
+  if (!el) return;
+  if (!db) { el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Firebase non connecté</div>'; return; }
+  el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Chargement…</div>';
+  db.collection('sms_log').orderBy('timestamp', 'desc').limit(100).get()
+    .then(function(snap) {
+      if (snap.empty) {
+        el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Aucun SMS envoyé pour l\'instant.</div>';
+        return;
+      }
+      var typeLabel = { confirmation: '✅ Confirmation', rappel: '🔔 Rappel', avis_google: '⭐ Avis Google', test: '🧪 Test', manuel: '✉️ Manuel' };
+      var rows = '';
+      snap.forEach(function(doc) {
+        var d = doc.data();
+        var ts = d.timestamp ? d.timestamp.toDate().toLocaleString('fr-FR') : '—';
+        var type = typeLabel[d.type] || d.type || '—';
+        var statut = d.statut === 'envoyé'
+          ? '<span style="color:var(--green)">✓ Envoyé</span>'
+          : '<span style="color:#ef4444">✗ Erreur</span>';
+        rows += '<tr>'
+          + '<td style="font-size:11px;color:var(--text-muted);white-space:nowrap">' + ts + '</td>'
+          + '<td>' + type + '</td>'
+          + '<td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (d.clientNom || '—') + '</td>'
+          + '<td style="font-family:monospace;font-size:11px">' + (d.to || '—') + '</td>'
+          + '<td>' + statut + (d.erreur ? '<br><span style="font-size:10px;color:#ef4444">' + d.erreur + '</span>' : '') + '</td>'
+          + '</tr>';
+      });
+      el.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:12px">'
+        + '<thead><tr style="text-align:left;color:var(--text-dim);font-size:11px;border-bottom:1px solid var(--border)">'
+        + '<th style="padding:6px 8px">Date</th><th style="padding:6px 8px">Type</th>'
+        + '<th style="padding:6px 8px">Client</th><th style="padding:6px 8px">Numéro</th>'
+        + '<th style="padding:6px 8px">Statut</th></tr></thead>'
+        + '<tbody>' + rows + '</tbody></table>';
+    })
+    .catch(function(e) {
+      el.innerHTML = '<div style="color:#ef4444;font-size:13px;padding:16px">Erreur : ' + e.message + '</div>';
+    });
+}
+
+function sendTestSms() {
+  var tel = ($('sms-test-tel').value || '').trim();
+  var msg = ($('sms-test-msg').value || '').trim();
+  var res = $('sms-test-result');
+  if (!tel || !msg) { if (res) res.textContent = 'Numéro et message requis.'; return; }
+  if (res) res.innerHTML = '<span style="color:var(--text-muted)">Envoi en cours…</span>';
+  fetch('/.netlify/functions/sms-send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ to: tel, message: msg, type: 'test', clientNom: 'Test' }),
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(j) {
+      if (j.ok) {
+        if (res) res.innerHTML = '<span style="color:var(--green)">✓ SMS envoyé (SID : ' + j.sid + ')</span>';
+        loadSmsLog();
+      } else {
+        if (res) res.innerHTML = '<span style="color:#ef4444">✗ Erreur : ' + (j.error || 'inconnue') + '</span>';
+      }
+    })
+    .catch(function(e) {
+      if (res) res.innerHTML = '<span style="color:#ef4444">✗ ' + e.message + '</span>';
+    });
+}
+
+function envoyerSmsConfirmation(rdv) {
+  // Vérifier la config avant d'envoyer
+  var cfg = _smsConfig || {};
+  if (cfg.confirmation === false) return;
+  var msg = 'AREPROG — Votre RDV est confirmé :\n'
+    + (rdv.title || '') + '\n'
+    + 'Le ' + (rdv.date || '') + (rdv.heure ? ' à ' + rdv.heure : '') + '\n'
+    + (rdv.lieu ? 'Lieu : ' + rdv.lieu + '\n' : '')
+    + 'Questions : 06 67 92 46 30';
+  fetch('/.netlify/functions/sms-send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      to: rdv.clientTel,
+      message: msg,
+      type: 'confirmation',
+      clientNom: rdv.clientNom || '',
+      rdvId: rdv.id,
+    }),
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(j) {
+      if (j.ok) {
+        // Marquer le RDV comme ayant reçu la confirmation
+        var rdvs = loadRdvs();
+        var idx = rdvs.findIndex(function(r) { return r.id === rdv.id; });
+        if (idx >= 0) {
+          rdvs[idx].confirmationSmsSent = true;
+          localStorage.setItem(RDV_KEY, JSON.stringify(rdvs));
+          saveOneRdv(rdvs[idx]);
+        }
+      }
+    })
+    .catch(function(e) { console.warn('SMS confirmation échoué:', e.message); });
+}
+
+function renvoyerSmsConfirmation(rdvId) {
+  var rdv = loadRdvs().find(function(r) { return r.id === rdvId; });
+  if (!rdv) return;
+  if (!rdv.clientTel) { alert('Ce RDV n\'a pas de numéro de téléphone client.'); return; }
+  envoyerSmsConfirmation(rdv);
+  alert('SMS de confirmation renvoyé.');
+}
 </script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
