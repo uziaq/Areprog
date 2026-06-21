@@ -25,7 +25,8 @@ const NAV_HTML = `
  <li><a href="/odis">Diagnostic ODIS <span class="nav-badge">VAG</span></a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Entretien</li>
- <li><a href="/vidange-boite-automatique">Vidange Boîte Auto <span class="nav-badge" style="color:var(--accent);border-color:rgba(139,92,246,.4)">NEW</span></a></li>
+ <li><a href="/vidange-boite-automatique">Vidange Boîte Auto</a></li>
+ <li><a href="/reprogrammation-boite-vitesse">Reprog Boîte (TCU) <span class="nav-badge" style="color:#FCD34D;border-color:rgba(245,158,11,.4)">NEW</span></a></li>
  <li class="dropdown-divider"></li>
  <li><a href="/codage-vag">Codage VAG <span class="nav-badge" style="color:var(--green);border-color:rgba(52,211,153,.4)">NEW</span></a></li>
  </ul>
@@ -87,6 +88,7 @@ const NAV_HTML = `
  <a href="/desactivation-adblue" class="nav-mobile-sub" data-page="desactivation-adblue">Désactivation AdBlue</a>
  <a href="/odis" class="nav-mobile-sub" data-page="odis">Diagnostic ODIS VAG</a>
  <a href="/vidange-boite-automatique" class="nav-mobile-sub" data-page="vidange-boite-automatique">Vidange Boîte Automatique</a>
+ <a href="/reprogrammation-boite-vitesse" class="nav-mobile-sub" data-page="reprogrammation-boite-vitesse">Reprogrammation Boîte (TCU)</a>
  <a href="/codage-vag" class="nav-mobile-sub" data-page="codage-vag">Codage VAG — Options cachées</a>
  </div>
  <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
@@ -116,6 +118,7 @@ const FOOTER_HTML = `
  <a href="/desactivation-adblue">Désactivation AdBlue</a>
  <a href="/odis">Diagnostic ODIS VAG</a>
  <a href="/vidange-boite-automatique">Vidange Boîte Automatique</a>
+ <a href="/reprogrammation-boite-vitesse">Reprogrammation Boîte (TCU)</a>
  <a href="/codage-vag">Codage VAG</a>
  </div>
  <div class="footer-col">
