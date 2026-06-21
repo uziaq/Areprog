@@ -4,9 +4,6 @@
 [functions]
   directory = "netlify/function"
 
-[edge_functions]
-  directory = "netlify/edge-functions"
-
 [[edge_functions]]
   function = "seo-meta"
   path = "/codage-vag/*"
