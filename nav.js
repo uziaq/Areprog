@@ -39,15 +39,6 @@ const NAV_HTML = `
  <li><a href="/reprogrammation-moteur-anglet">Anglet</a></li>
  <li><a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a></li>
  <li><a href="/reprogrammation-moteur-hendaye">Hendaye</a></li>
- <li class="dropdown-divider"></li>
- <li class="dropdown-group-label">Pyrénées-Atlantiques</li>
- <li><a href="/reprogrammation-moteur-pau">Pau</a></li>
- <li class="dropdown-divider"></li>
- <li class="dropdown-group-label">Landes</li>
- <li><a href="/reprogrammation-moteur-dax">Dax & Landes</a></li>
- <li class="dropdown-divider"></li>
- <li class="dropdown-group-label">Yonne</li>
- <li><a href="/reprogrammation-moteur-auxerre">Auxerre & Yonne</a></li>
  </ul>
  </li>
  <li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
@@ -65,15 +56,12 @@ const NAV_HTML = `
 <div class="nav-mobile" id="navMobile">
  <a href="/" data-page="index">Accueil</a>
  <div class="nav-mobile-group">
- <div class="nav-mobile-group-label">Zones d'intervention</div>
+ <div class="nav-mobile-group-label">Zones desservies</div>
  <a href="/reprogrammation-moteur-bayonne" class="nav-mobile-sub">Bayonne</a>
  <a href="/reprogrammation-moteur-biarritz" class="nav-mobile-sub">Biarritz</a>
  <a href="/reprogrammation-moteur-anglet" class="nav-mobile-sub">Anglet</a>
  <a href="/reprogrammation-moteur-saint-jean-de-luz" class="nav-mobile-sub">Saint-Jean-de-Luz</a>
  <a href="/reprogrammation-moteur-hendaye" class="nav-mobile-sub">Hendaye</a>
- <a href="/reprogrammation-moteur-pau" class="nav-mobile-sub">Pau</a>
- <a href="/reprogrammation-moteur-dax" class="nav-mobile-sub">Dax & Landes</a>
- <a href="/reprogrammation-moteur-auxerre" class="nav-mobile-sub">Auxerre & Yonne</a>
  </div>
  <div class="nav-mobile-group">
  <div class="nav-mobile-group-label">Services</div>
@@ -125,9 +113,6 @@ const FOOTER_HTML = `
  <a href="/reprogrammation-moteur-anglet">Anglet</a>
  <a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a>
  <a href="/reprogrammation-moteur-hendaye">Hendaye</a>
- <a href="/reprogrammation-moteur-pau">Pau & Pyrénées-Atlantiques</a>
- <a href="/reprogrammation-moteur-dax">Dax & Landes</a>
- <a href="/reprogrammation-moteur-auxerre">Auxerre & Yonne</a>
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Navigation</div>
