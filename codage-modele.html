@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ── SEO meta ──────────────────────────────────
   const pageTitle = 'Codage ' + model.name + ' (' + model.code + ') — Options cach\u00e9es ' + brand.name + ' | AREPROG';
-  const pageDesc  = 'Activez les options cach\u00e9es de votre ' + brand.name + ' ' + model.name + ' (' + model.yearMin + '-' + model.yearMax + '). Codage VCDS / OBDeleven \u00e0 domicile — Confort, \u00e9clairage, multim\u00e9dia, performance. Devis gratuit.';
+  const pageDesc  = 'Activez les options cach\u00e9es de votre ' + brand.name + ' ' + model.name + ' (' + model.yearMin + '-' + model.yearMax + '). Codage VCDS / OBDeleven en atelier \u00e0 Biarritz — Confort, \u00e9clairage, multim\u00e9dia, performance. Devis gratuit.';
   const pageUrl   = 'https://areprog.fr/codage-vag/' + brandSlug + '/' + modelSlug;
 
   document.title = pageTitle;
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('hero-sub').innerHTML = 
     'Activez les options cach\u00e9es de votre <strong>' + brand.name + ' ' + model.name + 
     ' (' + model.code + ')</strong> &mdash; ' + model.yearMin + '\u2013' + model.yearMax + 
-    '. Intervention \u00e0 domicile avec VCDS ou OBDeleven.';
+    '. Intervention en atelier \u00e0 Biarritz avec VCDS ou OBDeleven.';
 
   var stats = document.getElementById('hero-stats');
   var optCount = compatOpts.length;
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('seo-h2').textContent = 'Options cach\u00e9es ' + brand.name + ' ' + model.name;
   document.getElementById('seo-intro').textContent = 
     'Votre ' + brand.name + ' ' + model.name + ' (' + model.platform + ', ' + model.yearMin + '\u2013' + model.yearMax + 
-    ') est \u00e9quip\u00e9 de nombreuses fonctions d\u00e9sactiv\u00e9es en usine. Notre technicien intervient \u00e0 domicile avec une interface VCDS ou OBDeleven pour activer ' + optCount + ' options disponibles sur votre mod\u00e8le.';
+    ') est \u00e9quip\u00e9 de nombreuses fonctions d\u00e9sactiv\u00e9es en usine. Notre technicien intervient en atelier \u00e0 Biarritz avec une interface VCDS ou OBDeleven pour activer ' + optCount + ' options disponibles sur votre mod\u00e8le.';
 
   var list = document.getElementById('seo-options-list');
   list.innerHTML = compatOpts.slice(0, 18).map(function(o) {
