@@ -102,7 +102,7 @@ const FOOTER_HTML = `
  <div class="footer-top">
  <div class="footer-brand">
  <a href="/" class="footer-logo">ARE<span>PROG</span></a>
- <p>Votre moteur mérite mieux.<br>On vient chez vous, avec le bon matériel.</p>
+ <p>Votre moteur mérite mieux.<br>Venez à notre atelier, avec le bon matériel.</p>
  <a href="tel:+33667924630" class="footer-tel"> 06 67 92 46 30</a>
  </div>
  <div class="footer-col">
@@ -142,7 +142,7 @@ const FOOTER_HTML = `
  </div>
  </div>
  <div class="footer-bottom">
- <span>© ${new Date().getFullYear()} AREPROG — Reprogrammation moteur à domicile</span>
+ <span>© ${new Date().getFullYear()} AREPROG — Reprogrammation moteur en atelier</span>
  <div class="footer-bottom-links">
  <a href="/mentions-legales">Mentions légales</a>
    <a href="/politique-confidentialite">Confidentialité</a>

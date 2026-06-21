@@ -1174,7 +1174,7 @@ select option{background:#1d222d}
         <div class="card">
           <div class="card-title">Notes & conditions</div>
           <div class="fr"><label>Mentions imprimées sur le document</label>
-            <textarea id="f-notes" rows="3" oninput="onFormChange()">Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.</textarea>
+            <textarea id="f-notes" rows="3" oninput="onFormChange()">Prestation réalisée en atelier. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.</textarea>
           </div>
           <div class="fr"><label>Notes internes (non imprimées)</label>
             <textarea id="f-nint" rows="2" placeholder="Mémo interne..."></textarea>
@@ -1406,7 +1406,7 @@ select option{background:#1d222d}
           <div class="card" style="margin-bottom:16px">
             <div class="card-title">Votre entreprise</div>
             <div class="fr"><label>Nom affiché (en-tête)</label><input id="tpl-nom" type="text" placeholder="AREPROG"/></div>
-            <div class="fr"><label>Activité (sous le nom)</label><input id="tpl-activite" type="text" placeholder="Reprogrammation moteur à domicile"/></div>
+            <div class="fr"><label>Activité (sous le nom)</label><input id="tpl-activite" type="text" placeholder="Reprogrammation moteur en atelier"/></div>
             <div class="fr"><label>Zones d'intervention</label><input id="tpl-zones" type="text" placeholder="Pays Basque (64) · Landes (40) · Yonne (89)"/></div>
             <div class="fr"><label>Téléphone</label><input id="tpl-tel" type="text" placeholder="06 67 92 46 30"/></div>
             <div class="fr"><label>Email</label><input id="tpl-email" type="text" placeholder="contact@areprog.fr"/></div>
@@ -1417,7 +1417,7 @@ select option{background:#1d222d}
           <!-- Pied de page -->
           <div class="card" style="margin-bottom:16px">
             <div class="card-title">Pied de page</div>
-            <div class="fr"><label>Texte du pied de page</label><textarea id="tpl-footer" rows="3" placeholder="AREPROG — Reprogrammation moteur à domicile..."></textarea></div>
+            <div class="fr"><label>Texte du pied de page</label><textarea id="tpl-footer" rows="3" placeholder="AREPROG — Reprogrammation moteur en atelier..."></textarea></div>
           </div>
         </div>
         <div>
@@ -2662,7 +2662,7 @@ function resetForm(goToForm) {
   ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-vm','f-vmo','f-vmot','f-van','f-vim','f-vkm','f-nint'].forEach(function(i) { $(i).value = ''; });
   $('f-tva').value = '0';
   applyRemiseGlobaleFromDoc(null);
-  $('f-notes').value = 'Prestation réalisée à domicile. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
+  $('f-notes').value = 'Prestation réalisée en atelier. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
   $('form-h').textContent = 'Nouveau devis';
   currentGains = null;
   currentAcompte = null;
@@ -4118,11 +4118,11 @@ function buildLogoHTML(tpl) {
 // ============================================================
 var TPL_KEY = 'ar_template';
 var TPL_DEFAULT = {
-  nom:'AREPROG', activite:'Reprogrammation moteur à domicile',
+  nom:'AREPROG', activite:'Reprogrammation moteur en atelier',
   zones:'Pays Basque (64) · Landes (40) · Yonne (89)',
   tel:'06 67 92 46 30', email:'contact@areprog.fr', web:'areprog.fr',
   adresse:'', legal:'',
-  footer:'AREPROG — Reprogrammation moteur à domicile · Pays Basque (64) · Landes (40) · Yonne (89)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
+  footer:'AREPROG — Reprogrammation moteur en atelier · Pays Basque (64) · Landes (40) · Yonne (89)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
   color:'#1E90FF', titleColor:'#111111', logoStyle:'split',
   showGains:true, showVeh:true, showFooter:true, showLegal:true,
   colTotal:'Total HT', validite:30,
@@ -4210,7 +4210,7 @@ function livePreview() {
       {label:'Diagnostic ODIS VAG',qte:1,pu:0,offert:true},
     ],
     tvaRate:0,ht:660,tva:0,ttc:660,
-    notes:'Prestation réalisée à domicile. Garantie 2 ans. 100% réversible.',
+    notes:'Prestation réalisée en atelier. Garantie 2 ans. 100% réversible.',
     gains:{ch:220,chOrig:180,nm:380,nmOrig:320},
   };
   var html = renderDocHTML(sampleDoc, tpl);
