@@ -24,16 +24,80 @@
   <meta name="twitter:title" content="À propos — AREPROG | Reprogrammation moteur en atelier"/>
   <meta name="twitter:description" content="Spécialiste reprogrammation moteur en atelier. +500 véhicules, 3 zones d'intervention, matériel professionnel ODIS, WinOLS, datalogger."/>
   <meta name="twitter:image" content="https://areprog.fr/og-image.webp"/>
+  <!-- TODO: à compléter par le client — ajouter "streetAddress" (adresse exacte de l'atelier de Biarritz) dans le PostalAddress ci-dessous -->
   <script type="application/ld+json">
  {
    "@context": "https://schema.org",
-   "@type": "Organization",
+   "@type": "AutoRepair",
    "name": "AREPROG",
    "url": "https://areprog.fr",
    "telephone": "+33667924630",
-   "description": "Spécialiste de la reprogrammation moteur en atelier dans les Pyrénées-Atlantiques, le Pays Basque et l'Yonne. +500 véhicules reprogrammés.",
-   "areaServed": ["Pyrénées-Atlantiques", "Pays Basque", "Yonne"],
-   "knowsAbout": ["Reprogrammation moteur", "Stage 1", "Stage 2", "Conversion E85", "Désactivation EGR", "Désactivation FAP", "Désactivation AdBlue", "Diagnostic ODIS VAG"]
+   "description": "Spécialiste de la reprogrammation moteur en atelier à Biarritz, pour les Pyrénées-Atlantiques, le Pays Basque et l'Yonne. +500 véhicules reprogrammés.",
+   "priceRange": "€€",
+   "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Biarritz",
+     "postalCode": "64200",
+     "addressRegion": "Pyrénées-Atlantiques",
+     "addressCountry": "FR"
+   },
+   "geo": {
+     "@type": "GeoCoordinates",
+     "latitude": 43.4832,
+     "longitude": -1.5586
+   },
+   "areaServed": [
+     {
+       "@type": "State",
+       "name": "Pyrénées-Atlantiques"
+     },
+     {
+       "@type": "State",
+       "name": "Yonne"
+     },
+     {
+       "@type": "City",
+       "name": "Biarritz"
+     },
+     {
+       "@type": "City",
+       "name": "Bayonne"
+     }
+   ],
+   "openingHoursSpecification": {
+     "@type": "OpeningHoursSpecification",
+     "dayOfWeek": [
+       "Monday",
+       "Tuesday",
+       "Wednesday",
+       "Thursday",
+       "Friday",
+       "Saturday"
+     ],
+     "opens": "08:00",
+     "closes": "19:00"
+   },
+   "image": "https://areprog.fr/og-image.webp",
+   "sameAs": [
+     "https://maps.app.goo.gl/XymJPM5Tgh8eRSM36"
+   ],
+   "aggregateRating": {
+     "@type": "AggregateRating",
+     "ratingValue": 5,
+     "reviewCount": 12,
+     "bestRating": 5,
+     "worstRating": 1
+   },
+   "knowsAbout": [
+     "Reprogrammation moteur",
+     "Stage 1",
+     "Stage 2",
+     "Conversion E85",
+     "Désactivation EGR",
+     "Désactivation FAP",
+     "Désactivation AdBlue",
+     "Diagnostic ODIS VAG"
+   ]
  }
  </script>
    <link rel="preconnect" href="https://fonts.googleapis.com"/>
