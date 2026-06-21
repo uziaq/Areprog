@@ -24,12 +24,6 @@
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-pau</loc>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
     <loc>https://areprog.fr/reprogrammation-moteur-biarritz</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
@@ -43,18 +37,6 @@
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation-moteur-saint-jean-de-luz</loc>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-dax</loc>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-auxerre</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
