@@ -156,12 +156,12 @@ export default async function handler(request, context) {
 
     canonical = `https://areprog.fr/codage-vag/${brandSlug}/${modelSlug}`;
     title     = `Codage ${brand.name} ${model.name} (${model.yearMin}–${model.yearMax}) — Options cachées | AREPROG`;
-    desc      = `Activez les options cachées de votre ${brand.name} ${model.name} (${model.yearMin}–${model.yearMax}). Régulateur de vitesse, caméra de recul, éclairage ambiant et plus — codage VCDS à domicile, Pays Basque & 64. Devis gratuit.`;
+    desc      = `Activez les options cachées de votre ${brand.name} ${model.name} (${model.yearMin}–${model.yearMax}). Régulateur de vitesse, caméra de recul, éclairage ambiant et plus — codage VCDS en atelier à Biarritz, Pays Basque. Devis gratuit.`;
   } else {
     const modelCount = MODELS.filter(m => m.brandSlug === brandSlug).length;
     canonical = `https://areprog.fr/codage-vag/${brandSlug}`;
     title     = `Codage ${brand.name} — Options cachées VAG | AREPROG`;
-    desc      = `Activez les options cachées de votre ${brand.name}. ${modelCount} modèles supportés, codage VCDS professionnel à domicile — Pays Basque, 64, Yonne. Devis gratuit sous 24h.`;
+    desc      = `Activez les options cachées de votre ${brand.name}. ${modelCount} modèles supportés, codage VCDS professionnel en atelier à Biarritz — Pays Basque. Devis gratuit sous 24h.`;
   }
 
   const t = esc(title);
