@@ -4930,15 +4930,35 @@ function showSendStatus(type, msg) {
 
 async function generatePdfBase64() {
   // Utiliser jsPDF + html2canvas pour capturer le document
-  var el = $('preview');
-  if (!el) throw new Error('Aperçu non disponible');
+  var original = $('preview');
+  if (!original) throw new Error('Aperçu non disponible');
 
-  var canvas = await html2canvas(el, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: '#ffffff',
-    logging: false,
-  });
+  // Le #preview affiché à l'écran suit .modal-inner{max-width:100%}, donc sur
+  // mobile / fenêtre étroite il est rétréci (colonnes tassées, texte coupé).
+  // On clone le contenu dans un conteneur hors-écran à largeur fixe "desktop"
+  // pour que le PDF soit toujours généré avec la mise en page complète.
+  var clone = original.cloneNode(true);
+  clone.removeAttribute('id');
+  clone.style.width = '780px';
+  clone.style.maxWidth = 'none';
+  clone.style.padding = '44px 52px';
+
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;top:0;left:-99999px;width:780px;background:#fff';
+  wrap.appendChild(clone);
+  document.body.appendChild(wrap);
+
+  var canvas;
+  try {
+    canvas = await html2canvas(clone, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+    });
+  } finally {
+    document.body.removeChild(wrap);
+  }
 
   var { jsPDF } = window.jspdf;
   var pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
