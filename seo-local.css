@@ -27,6 +27,20 @@
  background-size: 60px 60px;
  mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, black, transparent);
  }
+ /* ── Thème clair ───────────────────────
+    Le voile du héros et la trame étaient figés en sombre : sur fond clair,
+    le bas du héros virait au noir alors que le texte y restait sombre. */
+ [data-theme="light"] .seo-hero-bg {
+ background:
+ radial-gradient(ellipse 55% 60% at 75% 40%, rgba(13,91,175,.08), transparent),
+ linear-gradient(to bottom, transparent 40%, rgba(244,245,247,.92) 100%);
+ }
+ [data-theme="light"] .seo-hero-grid {
+ background-image:
+ linear-gradient(rgba(120,128,140,.18) 1px, transparent 1px),
+ linear-gradient(90deg, rgba(120,128,140,.18) 1px, transparent 1px);
+ }
+
  .seo-breadcrumb {
  font-family: 'Barlow Condensed', sans-serif;
  font-size: .68rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;

@@ -6031,4 +6031,12 @@ function renvoyerSmsConfirmation(rdvId) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
     .then(function(reg) {
-    
+      console.info('Service Worker enregistré :', reg.scope);
+    })
+    .catch(function(err) {
+      console.warn('Service Worker non enregistré :', err && err.message);
+    });
+}
+</script>
+</body>
+</html>
