@@ -4,6 +4,7 @@
  ═══════════════════════════════════════════ */
 
 const NAV_HTML = `
+<a href="#contenu" class="skip-link">Aller au contenu</a>
 <nav>
  <a href="/" class="nav-logo">ARE<span>PROG</span></a>
  <ul class="nav-links">
@@ -154,6 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
  const footerContainer = document.getElementById('footer-container');
  if (footerContainer) footerContainer.innerHTML = FOOTER_HTML;
 
+ // ── Cible du lien d'évitement : premier bloc de contenu de la page
+ if (!document.getElementById('contenu')) {
+ const main = document.querySelector('main, .page-wrap, header.hero, .contact-hero');
+ if (main) {
+ main.id = 'contenu';
+ main.setAttribute('tabindex', '-1');
+ }
+ }
+
  // ── Active page highlight
  const page = document.body.dataset.page;
  document.querySelectorAll('[data-page]').forEach(el => {
@@ -175,28 +185,53 @@ document.addEventListener('DOMContentLoaded', () => {
  }
 
  // ── Dropdown menus (Services + Zones)
- document.querySelectorAll('.nav-dropdown-toggle').forEach(toggle => {
+ document.querySelectorAll('.nav-dropdown-toggle').forEach((toggle, i) => {
  const menu = toggle.closest('.nav-dropdown').querySelector('.nav-dropdown-menu');
  if (!menu) return;
+
+ // Le lecteur d'écran doit annoncer qu'il s'agit d'un sous-menu, et son état.
+ const menuId = menu.id || ('nav-dropdown-menu-' + i);
+ menu.id = menuId;
+ toggle.setAttribute('role', 'button');
+ toggle.setAttribute('aria-haspopup', 'true');
+ toggle.setAttribute('aria-controls', menuId);
+ toggle.setAttribute('aria-expanded', 'false');
+
+ const setOpen = (open) => {
+ menu.classList.toggle('open', open);
+ toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+ };
+
  toggle.addEventListener('click', (e) => {
  e.preventDefault();
+ const willOpen = !menu.classList.contains('open');
+ closeAllDropdowns();
+ setOpen(willOpen);
+ });
+
+ // Échap referme et rend le focus au déclencheur.
+ toggle.closest('.nav-dropdown').addEventListener('keydown', (e) => {
+ if (e.key === 'Escape' && menu.classList.contains('open')) {
+ setOpen(false);
+ toggle.focus();
+ }
+ });
+ });
+
+ function closeAllDropdowns() {
  document.querySelectorAll('.nav-dropdown-menu.open').forEach(m => {
- if (m !== menu) m.classList.remove('open');
+ m.classList.remove('open');
+ const t = m.closest('.nav-dropdown')?.querySelector('.nav-dropdown-toggle');
+ if (t) t.setAttribute('aria-expanded', 'false');
  });
- menu.classList.toggle('open');
- });
- });
+ }
  // Fermer les dropdowns au clic en dehors (capture:true pour iOS Safari)
  document.addEventListener('click', (e) => {
- if (!e.target.closest('.nav-dropdown')) {
- document.querySelectorAll('.nav-dropdown-menu.open').forEach(m => m.classList.remove('open'));
- }
+ if (!e.target.closest('.nav-dropdown')) closeAllDropdowns();
  }, { capture: true });
  // Fermer également au touch (mobile sans délai 300ms)
  document.addEventListener('touchstart', (e) => {
- if (!e.target.closest('.nav-dropdown')) {
- document.querySelectorAll('.nav-dropdown-menu.open').forEach(m => m.classList.remove('open'));
- }
+ if (!e.target.closest('.nav-dropdown')) closeAllDropdowns();
  }, { passive: true });
 
  // ── Theme toggle
