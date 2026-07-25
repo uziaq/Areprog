@@ -946,6 +946,109 @@ select option{background:#1d222d}
   .main{padding:8px}
 }
 
+/* ══════════════════════════════════════════════════════
+   PARC AUTO — achat / revente de véhicules
+   ══════════════════════════════════════════════════════ */
+.parc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.veh-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;cursor:pointer;transition:border-color .15s,transform .15s;
+  display:flex;flex-direction:column;
+}
+.veh-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.veh-cover{
+  height:150px;background:var(--bg3);background-size:cover;background-position:center;
+  display:flex;align-items:center;justify-content:center;font-size:38px;color:var(--text-muted);
+  position:relative;flex-shrink:0;
+}
+.veh-cover .vst{position:absolute;top:8px;right:8px}
+.veh-cover-count{
+  position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);
+  border-radius:20px;padding:2px 8px;font-size:10px;color:#fff;font-weight:600;
+}
+.veh-card-body{padding:14px;display:flex;flex-direction:column;flex:1}
+.veh-title{font-family:var(--fh);font-size:19px;font-weight:700;line-height:1.15}
+.veh-sub{font-size:11px;color:var(--text-dim);margin-top:3px;font-family:var(--fm)}
+.veh-lines{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.veh-line{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--text-dim)}
+.veh-line b{font-family:var(--fm);color:var(--text);font-weight:600;font-size:12.5px}
+.veh-marge{
+  margin-top:auto;padding-top:11px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.veh-marge-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted)}
+.veh-marge-val{font-family:var(--fh);font-size:21px;font-weight:700}
+.vst{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;
+}
+.vst-en_stock{background:rgba(30,144,255,.16);color:var(--blue)}
+.vst-en_reparation{background:rgba(245,158,11,.16);color:var(--orange)}
+.vst-a_vendre{background:rgba(34,197,94,.14);color:var(--green)}
+.vst-vendu{background:rgba(122,128,153,.18);color:var(--text-dim)}
+
+/* Fiche véhicule (modal) */
+.veh-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:315;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.veh-modal.open{display:flex}
+.veh-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:760px;max-width:100%;padding:24px;margin:20px 0}
+.veh-box-title{font-family:var(--fh);font-size:20px;font-weight:700}
+.veh-sec{margin-top:20px;border-top:1px solid var(--border);padding-top:16px}
+.veh-sec-title{
+  font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);
+  font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;
+}
+.veh-fg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.veh-fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.exp-row{display:grid;grid-template-columns:130px 1fr 100px 130px 30px;gap:6px;align-items:center;margin-bottom:6px}
+.exp-row input,.exp-row select{
+  width:100%;padding:8px 9px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:7px;color:var(--text);outline:none;font-size:12.5px;
+}
+.exp-row input[type=number]{font-family:var(--fm);text-align:right}
+.exp-del{
+  width:28px;height:32px;background:transparent;border:1px solid var(--border);border-radius:6px;
+  color:var(--text-dim);font-size:15px;flex-shrink:0;
+}
+.exp-del:hover{border-color:var(--red);color:var(--red)}
+.exp-total{
+  display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 12px;
+  background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text-dim);
+}
+.exp-total b{font-family:var(--fm);font-size:14px;color:var(--orange)}
+.veh-recap{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:16px}
+.veh-recap-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;font-size:13px;color:var(--text-dim)}
+.veh-recap-row b{font-family:var(--fm);color:var(--text)}
+.veh-recap-row.big{border-top:1px solid var(--border);margin-top:6px;padding-top:11px;font-size:14px;color:var(--text)}
+.veh-recap-row.big b{font-family:var(--fh);font-size:22px;font-weight:700}
+.veh-media{display:flex;flex-wrap:wrap;gap:8px}
+.veh-thumb{
+  position:relative;width:96px;height:72px;border-radius:8px;overflow:hidden;
+  border:1px solid var(--border);background:var(--bg3) center/cover no-repeat;
+}
+.veh-thumb.cover{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+.veh-thumb-acts{position:absolute;inset:auto 0 0 0;display:flex;background:rgba(0,0,0,.7)}
+.veh-thumb-acts button{flex:1;background:none;border:none;color:#fff;font-size:11px;padding:3px 0}
+.veh-thumb-acts button:hover{background:rgba(255,255,255,.15)}
+.veh-doc{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:12.5px;
+}
+.veh-doc a{color:var(--blue);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.veh-upload{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--bg3);
+  border:1px dashed var(--border);border-radius:8px;color:var(--text-dim);font-size:12px;cursor:pointer;
+}
+.veh-upload:hover{border-color:var(--blue);color:var(--blue)}
+.parc-empty{text-align:center;padding:50px 20px;color:var(--text-muted);font-size:13px}
+
+@media (max-width:760px){
+  .veh-fg,.veh-fg2{grid-template-columns:1fr 1fr}
+  .exp-row{grid-template-columns:1fr 1fr;gap:5px}
+  .exp-row .exp-del{width:100%}
+  .parc-grid{grid-template-columns:1fr}
+  .veh-box{padding:18px 14px}
+}
+
 @media print{
   @page{margin:0}
   body,html{background:#fff!important}
@@ -989,6 +1092,7 @@ select option{background:#1d222d}
       <button class="nb" onclick="showTab('template')">🎨 Template</button>
       <button class="nb" onclick="showTab('services')">⚙️ Services</button>
       <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
+      <button class="nb" onclick="showTab('parc')">🚗 Parc auto</button>
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
       <button class="nb" onclick="showTab('sms')">📱 SMS</button>
@@ -1559,6 +1663,33 @@ select option{background:#1d222d}
         <input type="hidden" id="flt-statut" value=""/>
       </div>
       <div id="liste-body"></div>
+    </div>
+
+    <!-- PARC AUTO — ACHAT / REVENTE -->
+    <div class="tc" id="t-parc">
+      <div class="sh">
+        <div class="sh-title">Parc véhicules — achat / revente</div>
+        <div class="sh-actions" style="display:flex;gap:8px">
+          <button class="btn-s" onclick="exportParcCSV()">⬇ Export CSV</button>
+          <button class="btn-p" onclick="openVehModal(null)">+ Ajouter un véhicule</button>
+        </div>
+      </div>
+
+      <div class="stats-row" id="parc-kpis"></div>
+
+      <div class="filter-bar">
+        <button class="filter-chip active" id="vchip-" onclick="setParcFilter('',this)">Tous <span class="filter-count" id="vcount-"></span></button>
+        <button class="filter-chip" id="vchip-en_stock" onclick="setParcFilter('en_stock',this)">📦 En stock <span class="filter-count" id="vcount-en_stock"></span></button>
+        <button class="filter-chip" id="vchip-en_reparation" onclick="setParcFilter('en_reparation',this)">🔧 En réparation <span class="filter-count" id="vcount-en_reparation"></span></button>
+        <button class="filter-chip" id="vchip-a_vendre" onclick="setParcFilter('a_vendre',this)">🏷️ À vendre <span class="filter-count" id="vcount-a_vendre"></span></button>
+        <button class="filter-chip" id="vchip-vendu" onclick="setParcFilter('vendu',this)">✅ Vendus <span class="filter-count" id="vcount-vendu"></span></button>
+      </div>
+
+      <div class="carnet-search">
+        <input id="parc-search" type="text" placeholder="Rechercher une marque, un modèle, une immat, un VIN…" oninput="renderParc()"/>
+      </div>
+
+      <div class="parc-grid" id="parc-grid"></div>
     </div>
 
   </div>
@@ -2161,6 +2292,116 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
+<!-- MODAL FICHE VÉHICULE (achat / revente) -->
+<div class="veh-modal" id="veh-modal" onclick="if(event.target===this)closeVehModal()">
+  <div class="veh-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <div class="veh-box-title" id="veh-modal-title">Nouveau véhicule</div>
+      <button class="btn-s" onclick="closeVehModal()">✕</button>
+    </div>
+
+    <!-- Identité -->
+    <div class="veh-sec" style="border-top:none;padding-top:14px">
+      <div class="veh-sec-title">🚗 Identité</div>
+      <div class="veh-fg">
+        <div class="fr"><label>Marque *</label><input id="v-brand" type="text" placeholder="FIAT" style="text-transform:uppercase"/></div>
+        <div class="fr"><label>Modèle *</label><input id="v-model" type="text" placeholder="500" style="text-transform:uppercase"/></div>
+        <div class="fr"><label>Année</label><input id="v-year" type="number" min="1950" max="2100" step="1" placeholder="2013"/></div>
+      </div>
+      <div class="veh-fg">
+        <div class="fr"><label>Immatriculation</label><input id="v-plate" type="text" placeholder="AA-123-BB" style="text-transform:uppercase"/></div>
+        <div class="fr"><label>VIN</label><input id="v-vin" type="text" placeholder="ZFA312..." style="text-transform:uppercase"/></div>
+        <div class="fr"><label>Kilométrage</label><input id="v-mileage" type="number" min="0" step="1" placeholder="119000"/></div>
+      </div>
+    </div>
+
+    <!-- Achat / Vente -->
+    <div class="veh-sec">
+      <div class="veh-sec-title">💰 Achat &amp; revente</div>
+      <div class="veh-fg">
+        <div class="fr"><label>Statut</label>
+          <select id="v-status" onchange="onVehStatusChange()">
+            <option value="en_stock">📦 En stock</option>
+            <option value="en_reparation">🔧 En réparation</option>
+            <option value="a_vendre">🏷️ À vendre</option>
+            <option value="vendu">✅ Vendu</option>
+          </select>
+        </div>
+        <div class="fr"><label>Date d'achat</label><input id="v-purchase-date" type="date"/></div>
+        <div class="fr"><label>Prix d'achat (€)</label><input id="v-purchase-price" type="number" min="0" step="0.01" placeholder="0" oninput="refreshVehRecap()"/></div>
+      </div>
+      <div class="veh-fg2">
+        <div class="fr"><label>Date de vente</label><input id="v-sale-date" type="date" oninput="refreshVehRecap()"/></div>
+        <div class="fr"><label>Prix de vente (€)</label><input id="v-sale-price" type="number" min="0" step="0.01" placeholder="—" oninput="refreshVehRecap()"/></div>
+      </div>
+    </div>
+
+    <!-- Frais -->
+    <div class="veh-sec">
+      <div class="veh-sec-title">
+        <span>🧾 Frais engagés</span>
+        <button class="btn-s btn-sm" onclick="addExpRow()">+ Ajouter un frais</button>
+      </div>
+      <div id="veh-exp-list"></div>
+      <div class="exp-total"><span>Total des frais</span><b id="veh-exp-total">0,00 €</b></div>
+    </div>
+
+    <!-- Photos -->
+    <div class="veh-sec">
+      <div class="veh-sec-title"><span>📷 Photos</span><span id="veh-photo-status" style="font-weight:400;text-transform:none;letter-spacing:0"></span></div>
+      <div class="veh-media" id="veh-photo-list" style="margin-bottom:10px"></div>
+      <label class="veh-upload">
+        + Ajouter des photos
+        <input type="file" id="v-photo-input" accept="image/*" multiple style="display:none" onchange="uploadVehPhotos(this)"/>
+      </label>
+    </div>
+
+    <!-- Documents -->
+    <div class="veh-sec">
+      <div class="veh-sec-title"><span>📄 Documents</span><span id="veh-doc-status" style="font-weight:400;text-transform:none;letter-spacing:0"></span></div>
+      <div id="veh-doc-list" style="margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select id="v-doc-type" style="padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px">
+          <option value="carte_grise">Carte grise</option>
+          <option value="ct">Contrôle technique</option>
+          <option value="facture_achat">Facture d'achat</option>
+          <option value="facture_vente">Facture de vente</option>
+          <option value="cession">Certificat de cession</option>
+          <option value="autre" selected>Autre</option>
+        </select>
+        <label class="veh-upload">
+          + Ajouter un document
+          <input type="file" id="v-doc-input" accept="application/pdf,image/*" multiple style="display:none" onchange="uploadVehDocs(this)"/>
+        </label>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="veh-sec">
+      <div class="veh-sec-title">📝 Notes</div>
+      <textarea id="v-notes" rows="3" placeholder="Historique, points à surveiller, négociation…" style="resize:vertical;font-family:inherit;font-size:13px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 12px;width:100%;outline:none"></textarea>
+    </div>
+
+    <!-- Récap -->
+    <div class="veh-recap">
+      <div class="veh-recap-row"><span>Prix d'achat</span><b id="vr-achat">0,00 €</b></div>
+      <div class="veh-recap-row"><span>Total frais</span><b id="vr-frais" style="color:var(--orange)">0,00 €</b></div>
+      <div class="veh-recap-row"><span>Prix de revient</span><b id="vr-revient">0,00 €</b></div>
+      <div class="veh-recap-row"><span>Prix de vente</span><b id="vr-vente">—</b></div>
+      <div class="veh-recap-row big"><span id="vr-marge-lbl">Marge nette</span><b id="vr-marge">—</b></div>
+      <div class="veh-recap-row" style="padding-top:0"><span>Rentabilité</span><b id="vr-marge-pct">—</b></div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;gap:8px;margin-top:20px;flex-wrap:wrap">
+      <button class="btn-s" id="veh-delete-btn" onclick="deleteVehicule()" style="color:var(--red);border-color:rgba(239,68,68,.4)">🗑 Supprimer</button>
+      <div style="display:flex;gap:8px;margin-left:auto">
+        <button class="btn-s" onclick="closeVehModal()">Annuler</button>
+        <button class="btn-p" onclick="saveVehFromModal()">✓ Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL APERÇU -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-wrap">
@@ -2636,7 +2877,12 @@ function initApp() {
     syncFromFirebase(function() {
       startRealtimeSync();
       syncRdvsFromFirebase();
-      setTimeout(startRdvsRealtimeSync, 1000);
+      syncVehiculesFromFirebase();
+      setTimeout(function() {
+        startRdvsRealtimeSync();
+        startVehiculesRealtimeSync();
+        seedVehiculesOnce();
+      }, 1000);
     });
   }, 500);
   // Vérifier rappels agenda
@@ -5235,6 +5481,18 @@ function globalSearch(q) {
         action: 'showClientHistory(' + cl.id + ')' });
     }
   });
+  // Recherche dans le parc véhicules (achat / revente)
+  loadVehicules().forEach(function(v) {
+    var haystack = [v.brand,v.model,v.plate,v.vin,v.year,v.notes].join(' ').toLowerCase();
+    (v.expenses||[]).forEach(function(e){ haystack += ' ' + (e.label||'').toLowerCase(); });
+    if (haystack.includes(q)) {
+      var marge = vehMarge(v);
+      results.push({ type:'vehicule', icon:'🚗',
+        title: vehLabel(v) + (v.plate ? ' — ' + String(v.plate).toUpperCase() : ''),
+        sub: [(VEH_ST[v.status]||VEH_ST.en_stock).l, 'revient ' + fmt(vehRevient(v)), marge !== null ? 'marge ' + fmt(marge) : null].filter(Boolean).join(' · '),
+        action: 'showTab(\'parc\');openVehModal(\'' + String(v.id).replace(/'/g, '') + '\')' });
+    }
+  });
   // Recherche dans les RDVs
   loadRdvs().forEach(function(r) {
     var haystack = [r.title,r.lieu,r.notes].join(' ').toLowerCase();
@@ -5470,14 +5728,15 @@ function exportCSV() {
 //  TABS (complet)
 // ============================================================
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services','agenda','stats','search','sms'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','stats','search','sms'][i]===t); });
+  ['dash','form','liste','carnet','template','services','agenda','parc','stats','search','sms'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','parc','stats','search','sms'][i]===t); });
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
   if(t==='template') { fillTplForm(loadTemplate()); livePreview(); }
   if(t==='services') renderCatEditor();
   if(t==='agenda')   renderAgenda();
+  if(t==='parc')     renderParc();
   if(t==='stats')    renderStats();
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
   if(t==='sms')      initSmsTab();
@@ -5993,6 +6252,638 @@ function renvoyerSmsConfirmation(rdvId) {
   if (!rdv.clientTel) { alert('Ce RDV n\'a pas de numéro de téléphone client.'); return; }
   envoyerSmsConfirmation(rdv);
   alert('SMS de confirmation renvoyé.');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PARC AUTO — achat / revente de véhicules
+//  Stockage : localStorage 'ar_vehicules' + Firestore 'vehicules'
+//  Modèle : { id, brand, model, year, plate, vin, mileage, status,
+//             purchase_date, purchase_price, sale_date, sale_price,
+//             notes, expenses[], photos[], documents[], created_at }
+// ══════════════════════════════════════════════════════════════
+var VEH_KEY = 'ar_vehicules';
+
+var VEH_ST = {
+  en_stock:      { l: 'En stock',      i: '📦' },
+  en_reparation: { l: 'En réparation', i: '🔧' },
+  a_vendre:      { l: 'À vendre',      i: '🏷️' },
+  vendu:         { l: 'Vendu',         i: '✅' },
+};
+
+var EXP_CATS = {
+  achat:       'Achat',
+  reparation:  'Réparation',
+  piece:       'Pièce',
+  carte_grise: 'Carte grise',
+  ct:          'Contrôle technique',
+  transport:   'Transport / livraison',
+  carburant:   'Carburant',
+  esthetique:  'Esthétique / nettoyage',
+  assurance:   'Assurance',
+  annonce:     'Annonce / publicité',
+  autre:       'Autre',
+};
+
+var DOC_TYPES = {
+  carte_grise:   'Carte grise',
+  ct:            'Contrôle technique',
+  facture_achat: "Facture d'achat",
+  facture_vente: 'Facture de vente',
+  cession:       'Certificat de cession',
+  autre:         'Autre',
+};
+
+var parcFilter    = '';
+var vehModalId    = null;   // id du véhicule ouvert (existant ou futur)
+var vehIsNew      = true;
+var vehPhotos     = [];
+var vehDocs       = [];
+var vehExpSeq     = 0;
+
+// ── Persistance ──────────────────────────────────────────────
+function loadVehicules() {
+  try { return JSON.parse(localStorage.getItem(VEH_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function storeVehicules(arr) {
+  localStorage.setItem(VEH_KEY, JSON.stringify(arr));
+}
+
+function persistVehicule(v) {
+  var arr = loadVehicules();
+  var i = arr.findIndex(function(x){ return String(x.id) === String(v.id); });
+  if (i >= 0) arr[i] = v; else arr.push(v);
+  storeVehicules(arr);
+  if (db && syncOk) {
+    db.collection('vehicules').doc(String(v.id)).set(v)
+      .catch(function(e){ console.warn('Firebase save véhicule:', e); });
+  }
+  return arr;
+}
+
+function syncVehiculesFromFirebase() {
+  if (!db) return;
+  db.collection('vehicules').get()
+    .then(function(snap) {
+      var arr = [];
+      snap.forEach(function(d){ var v = d.data(); if (v && v.id != null) arr.push(v); });
+      storeVehicules(arr);
+      if ($('t-parc') && $('t-parc').classList.contains('on')) renderParc();
+    })
+    .catch(function(e){ console.warn('Sync véhicules:', e); });
+}
+
+function startVehiculesRealtimeSync() {
+  if (!db || !syncOk) return;
+  db.collection('vehicules').onSnapshot(function(snap) {
+    var arr = [];
+    snap.forEach(function(d){ var v = d.data(); if (v && v.id != null) arr.push(v); });
+    storeVehicules(arr);
+    if ($('t-parc') && $('t-parc').classList.contains('on') && !$('veh-modal').classList.contains('open')) renderParc();
+  }, function(e){ console.warn('Realtime véhicules:', e); });
+}
+
+// ── Calculs ──────────────────────────────────────────────────
+function vehFrais(v) {
+  return (v.expenses || []).reduce(function(s, e){ return s + (parseFloat(e.amount) || 0); }, 0);
+}
+function vehRevient(v) {
+  return (parseFloat(v.purchase_price) || 0) + vehFrais(v);
+}
+function vehMarge(v) {
+  if (v.sale_price === null || v.sale_price === undefined || v.sale_price === '') return null;
+  return (parseFloat(v.sale_price) || 0) - vehRevient(v);
+}
+function vehLabel(v) {
+  return [v.brand, v.model].map(function(s){ return (s||'').trim(); }).filter(Boolean).join(' ') || 'Véhicule';
+}
+function vehCover(v) {
+  var ph = v.photos || [];
+  var c = ph.find(function(p){ return p.cover; }) || ph[0];
+  return c ? c.url : '';
+}
+
+// ── Rendu du parc ────────────────────────────────────────────
+function setParcFilter(f, btn) {
+  parcFilter = f;
+  document.querySelectorAll('#t-parc .filter-chip').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderParc();
+}
+
+function renderParc() {
+  var all = loadVehicules();
+  var grid = $('parc-grid');
+  if (!grid) return;
+
+  // Compteurs par statut
+  $('vcount-').textContent = all.length;
+  Object.keys(VEH_ST).forEach(function(s) {
+    var el = $('vcount-' + s);
+    if (el) el.textContent = all.filter(function(v){ return (v.status||'en_stock') === s; }).length;
+  });
+
+  // KPIs
+  var enParc = all.filter(function(v){ return (v.status||'en_stock') !== 'vendu'; });
+  var vendus = all.filter(function(v){ return (v.status||'en_stock') === 'vendu' || vehMarge(v) !== null; });
+  var immo   = enParc.reduce(function(s,v){ return s + vehRevient(v); }, 0);
+  var ca     = vendus.reduce(function(s,v){ return s + (parseFloat(v.sale_price) || 0); }, 0);
+  var marge  = vendus.reduce(function(s,v){ return s + (vehMarge(v) || 0); }, 0);
+  var invest = vendus.reduce(function(s,v){ return s + vehRevient(v); }, 0);
+  var rentab = invest > 0 ? (marge / invest * 100) : 0;
+
+  $('parc-kpis').innerHTML =
+      kpiCard('Véhicules en parc', String(enParc.length), enParc.length + ' / ' + all.length + ' au total', '')
+    + kpiCard('Capital immobilisé', fmt(immo), 'Achat + frais des véhicules non vendus', 'orange')
+    + kpiCard('CA revente', fmt(ca), vendus.length + ' véhicule' + (vendus.length > 1 ? 's' : '') + ' vendu' + (vendus.length > 1 ? 's' : ''), 'blue')
+    + kpiCard('Marge réalisée', fmt(marge), rentab ? 'Rentabilité ' + rentab.toFixed(1).replace('.', ',') + ' %' : '—', marge >= 0 ? 'green' : 'orange');
+
+  // Liste filtrée
+  var q = ($('parc-search') && $('parc-search').value || '').toLowerCase().trim();
+  var list = all.filter(function(v) {
+    if (parcFilter && (v.status||'en_stock') !== parcFilter) return false;
+    if (!q) return true;
+    return [v.brand, v.model, v.plate, v.vin, v.notes, v.year].join(' ').toLowerCase().indexOf(q) !== -1;
+  });
+  list.sort(function(a, b) {
+    var av = (a.status||'') === 'vendu', bv = (b.status||'') === 'vendu';
+    if (av !== bv) return av ? 1 : -1;
+    return String(b.purchase_date || b.created_at || '').localeCompare(String(a.purchase_date || a.created_at || ''));
+  });
+
+  if (!list.length) {
+    grid.innerHTML = '<div class="parc-empty">'
+      + (all.length ? 'Aucun véhicule ne correspond à ce filtre.' : '🚗 Aucun véhicule pour l\'instant.<br/>Clique sur « + Ajouter un véhicule » pour démarrer ton suivi achat / revente.')
+      + '</div>';
+    return;
+  }
+  grid.innerHTML = list.map(vehCard).join('');
+}
+
+function kpiCard(label, val, sub, color) {
+  return '<div class="sc">'
+    + '<div class="sc-label">' + escHtml(label) + '</div>'
+    + '<div class="sc-val ' + (color||'') + '">' + escHtml(val) + '</div>'
+    + '<div class="sc-sub">' + escHtml(sub||'') + '</div>'
+    + '</div>';
+}
+
+function vehCard(v) {
+  var st     = VEH_ST[v.status] || VEH_ST.en_stock;
+  var cover  = vehCover(v);
+  var marge  = vehMarge(v);
+  var nPhoto = (v.photos || []).length;
+  var sub    = [v.year, v.plate ? String(v.plate).toUpperCase() : '', v.mileage ? Number(v.mileage).toLocaleString('fr-FR') + ' km' : '']
+                 .filter(Boolean).join(' · ');
+
+  return '<div class="veh-card" onclick="openVehModal(\'' + escHtml(String(v.id)).replace(/'/g, '&#39;') + '\')">'
+    + '<div class="veh-cover"' + (cover ? ' style="background-image:url(\'' + escHtml(cover) + '\')"' : '') + '>'
+      + (cover ? '' : '🚗')
+      + '<span class="vst vst-' + (v.status || 'en_stock') + '">' + st.i + ' ' + escHtml(st.l) + '</span>'
+      + (nPhoto > 1 ? '<span class="veh-cover-count">📷 ' + nPhoto + '</span>' : '')
+    + '</div>'
+    + '<div class="veh-card-body">'
+      + '<div class="veh-title">' + escHtml(vehLabel(v)) + '</div>'
+      + '<div class="veh-sub">' + escHtml(sub || '—') + '</div>'
+      + '<div class="veh-lines">'
+        + '<div class="veh-line"><span>Achat' + (v.purchase_date ? ' · ' + fmtDate(v.purchase_date) : '') + '</span><b>' + fmt(parseFloat(v.purchase_price) || 0) + '</b></div>'
+        + '<div class="veh-line"><span>Frais (' + (v.expenses || []).length + ')</span><b style="color:var(--orange)">' + fmt(vehFrais(v)) + '</b></div>'
+        + '<div class="veh-line"><span>Prix de revient</span><b>' + fmt(vehRevient(v)) + '</b></div>'
+        + (marge !== null ? '<div class="veh-line"><span>Vente' + (v.sale_date ? ' · ' + fmtDate(v.sale_date) : '') + '</span><b>' + fmt(parseFloat(v.sale_price) || 0) + '</b></div>' : '')
+      + '</div>'
+      + '<div class="veh-marge">'
+        + '<span class="veh-marge-lbl">' + (marge !== null ? 'Marge nette' : 'À revendre à partir de') + '</span>'
+        + '<span class="veh-marge-val" style="color:' + (marge === null ? 'var(--text)' : (marge >= 0 ? 'var(--green)' : 'var(--red)')) + '">'
+          + (marge !== null ? (marge >= 0 ? '+' : '') + fmt(marge) : fmt(vehRevient(v)))
+        + '</span>'
+      + '</div>'
+    + '</div>'
+    + '</div>';
+}
+
+// ── Fiche véhicule ───────────────────────────────────────────
+function openVehModal(id) {
+  var v = id ? loadVehicules().find(function(x){ return String(x.id) === String(id); }) : null;
+  vehIsNew   = !v;
+  vehModalId = v ? v.id : String(Date.now());
+  v = v || {};
+
+  $('veh-modal-title').textContent = vehIsNew ? 'Nouveau véhicule' : '🚗 ' + vehLabel(v);
+  $('veh-delete-btn').style.display = vehIsNew ? 'none' : '';
+
+  $('v-brand').value          = v.brand || '';
+  $('v-model').value          = v.model || '';
+  $('v-year').value           = v.year || '';
+  $('v-plate').value          = v.plate || '';
+  $('v-vin').value            = v.vin || '';
+  $('v-mileage').value        = v.mileage || '';
+  $('v-status').value         = v.status || 'en_stock';
+  $('v-purchase-date').value  = v.purchase_date || (vehIsNew ? today() : '');
+  $('v-purchase-price').value = v.purchase_price != null ? v.purchase_price : '';
+  $('v-sale-date').value      = v.sale_date || '';
+  $('v-sale-price').value     = v.sale_price != null ? v.sale_price : '';
+  $('v-notes').value          = v.notes || '';
+
+  vehPhotos = (v.photos || []).slice();
+  vehDocs   = (v.documents || []).slice();
+  $('veh-photo-status').textContent = '';
+  $('veh-doc-status').textContent   = '';
+
+  $('veh-exp-list').innerHTML = '';
+  vehExpSeq = 0;
+  (v.expenses || []).forEach(function(e){ addExpRow(e); });
+
+  renderVehPhotos();
+  renderVehDocs();
+  refreshVehRecap();
+  $('veh-modal').classList.add('open');
+}
+
+function closeVehModal() {
+  $('veh-modal').classList.remove('open');
+}
+
+function onVehStatusChange() {
+  if ($('v-status').value === 'vendu' && !$('v-sale-date').value) $('v-sale-date').value = today();
+  refreshVehRecap();
+}
+
+// ── Frais ────────────────────────────────────────────────────
+function addExpRow(e) {
+  e = e || {};
+  var id = 'exp' + (++vehExpSeq);
+  var div = document.createElement('div');
+  div.className = 'exp-row';
+  div.id = id;
+  var opts = Object.keys(EXP_CATS).map(function(k) {
+    return '<option value="' + k + '"' + ((e.category || 'reparation') === k ? ' selected' : '') + '>' + escHtml(EXP_CATS[k]) + '</option>';
+  }).join('');
+  div.innerHTML =
+      '<select class="exp-cat">' + opts + '</select>'
+    + '<input class="exp-label" type="text" placeholder="Désignation (ex : kit distribution)" value="' + escHtml(e.label || '') + '"/>'
+    + '<input class="exp-amount" type="number" min="0" step="0.01" placeholder="0,00" value="' + (e.amount != null ? e.amount : '') + '" oninput="refreshVehRecap()"/>'
+    + '<input class="exp-date" type="date" value="' + escHtml(e.date || e.expense_date || '') + '"/>'
+    + '<button class="exp-del" onclick="removeExpRow(\'' + id + '\')" title="Supprimer">×</button>';
+  $('veh-exp-list').appendChild(div);
+  refreshVehRecap();
+}
+
+function removeExpRow(id) {
+  var el = $(id);
+  if (el) el.remove();
+  refreshVehRecap();
+}
+
+function collectExpenses() {
+  var out = [];
+  document.querySelectorAll('#veh-exp-list .exp-row').forEach(function(row) {
+    var label  = row.querySelector('.exp-label').value.trim();
+    var amount = parseFloat(row.querySelector('.exp-amount').value) || 0;
+    if (!label && !amount) return;
+    out.push({
+      category: row.querySelector('.exp-cat').value,
+      label:    label,
+      amount:   amount,
+      date:     row.querySelector('.exp-date').value || '',
+    });
+  });
+  return out;
+}
+
+// ── Récapitulatif live ───────────────────────────────────────
+function refreshVehRecap() {
+  var achat = parseFloat($('v-purchase-price').value) || 0;
+  var frais = collectExpenses().reduce(function(s, e){ return s + e.amount; }, 0);
+  var rev   = achat + frais;
+  var vRaw  = $('v-sale-price').value;
+  var vente = vRaw === '' ? null : (parseFloat(vRaw) || 0);
+
+  $('veh-exp-total').textContent = fmt(frais);
+  $('vr-achat').textContent   = fmt(achat);
+  $('vr-frais').textContent   = fmt(frais);
+  $('vr-revient').textContent = fmt(rev);
+  $('vr-vente').textContent   = vente === null ? '—' : fmt(vente);
+
+  var mEl = $('vr-marge'), pEl = $('vr-marge-pct');
+  if (vente === null) {
+    $('vr-marge-lbl').textContent = 'Marge nette';
+    mEl.textContent = '—';
+    mEl.style.color = 'var(--text-dim)';
+    pEl.textContent = 'Renseigne un prix de vente';
+    pEl.style.color = 'var(--text-dim)';
+  } else {
+    var marge = vente - rev;
+    var pct   = rev > 0 ? (marge / rev * 100) : 0;
+    $('vr-marge-lbl').textContent = marge >= 0 ? 'Marge nette' : 'Perte';
+    mEl.textContent = (marge >= 0 ? '+' : '') + fmt(marge);
+    mEl.style.color = marge >= 0 ? 'var(--green)' : 'var(--red)';
+    pEl.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(1).replace('.', ',') + ' %';
+    pEl.style.color = marge >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+}
+
+// ── Enregistrement / suppression ─────────────────────────────
+function saveVehFromModal() {
+  var brand = $('v-brand').value.trim();
+  var model = $('v-model').value.trim();
+  if (!brand || !model) { alert('Marque et modèle sont obligatoires.'); return; }
+
+  var existing = loadVehicules().find(function(x){ return String(x.id) === String(vehModalId); });
+  var saleRaw  = $('v-sale-price').value;
+  var status   = $('v-status').value;
+  if (saleRaw !== '' && $('v-sale-date').value === '') $('v-sale-date').value = today();
+
+  var v = {
+    id:             vehModalId,
+    brand:          brand,
+    model:          model,
+    year:           $('v-year').value ? parseInt($('v-year').value, 10) : null,
+    plate:          $('v-plate').value.trim().toUpperCase(),
+    vin:            $('v-vin').value.trim().toUpperCase(),
+    mileage:        $('v-mileage').value ? parseInt($('v-mileage').value, 10) : null,
+    status:         status,
+    purchase_date:  $('v-purchase-date').value || '',
+    purchase_price: parseFloat($('v-purchase-price').value) || 0,
+    sale_date:      $('v-sale-date').value || '',
+    sale_price:     saleRaw === '' ? null : (parseFloat(saleRaw) || 0),
+    notes:          $('v-notes').value.trim(),
+    expenses:       collectExpenses(),
+    photos:         vehPhotos,
+    documents:      vehDocs,
+    created_at:     (existing && existing.created_at) || new Date().toISOString(),
+  };
+
+  persistVehicule(v);
+  closeVehModal();
+  renderParc();
+
+  var marge = vehMarge(v);
+  showNotifBanner('🚗', vehIsNew ? 'Véhicule ajouté' : 'Véhicule mis à jour',
+    vehLabel(v) + ' — prix de revient ' + fmt(vehRevient(v)) + (marge !== null ? ' · marge ' + fmt(marge) : ''));
+}
+
+function deleteVehicule() {
+  var v = loadVehicules().find(function(x){ return String(x.id) === String(vehModalId); });
+  if (!v) { closeVehModal(); return; }
+  if (!confirm('Supprimer définitivement ' + vehLabel(v) + ' ainsi que ses frais, photos et documents ?')) return;
+
+  storeVehicules(loadVehicules().filter(function(x){ return String(x.id) !== String(vehModalId); }));
+  if (db && syncOk) {
+    db.collection('vehicules').doc(String(vehModalId)).delete()
+      .catch(function(e){ console.warn('Firebase delete véhicule:', e); });
+  }
+  closeVehModal();
+  renderParc();
+}
+
+// ── Photos & documents (Firebase Storage via Netlify) ────────
+function fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var r = new FileReader();
+    r.onload  = function(){ resolve(String(r.result).split(',')[1]); };
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+// Redimensionne une image côté client (max 1600px, JPEG q0.82)
+function resizeImage(file, maxDim) {
+  return new Promise(function(resolve) {
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function() {
+      var scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+      var w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+      var cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      var dataUrl = cv.toDataURL('image/jpeg', 0.82);
+      resolve({ base64: dataUrl.split(',')[1], contentType: 'image/jpeg' });
+    };
+    img.onerror = function() { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
+function uploadVehFile(payload) {
+  return fetch('/.netlify/functions/upload-vehicule', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload),
+  }).then(function(r) {
+    return r.json().catch(function(){ return {}; }).then(function(j) {
+      if (!r.ok) throw new Error(j.error || 'Upload échoué (' + r.status + ')');
+      return j;
+    });
+  });
+}
+
+async function uploadVehPhotos(input) {
+  var files = Array.prototype.slice.call(input.files || []);
+  input.value = '';
+  if (!files.length) return;
+  var status = $('veh-photo-status');
+
+  for (var i = 0; i < files.length; i++) {
+    status.textContent = 'Envoi ' + (i + 1) + '/' + files.length + '…';
+    status.style.color = 'var(--text-dim)';
+    try {
+      var img = await resizeImage(files[i], 1600);
+      var b64 = img ? img.base64 : await fileToBase64(files[i]);
+      var ct  = img ? img.contentType : (files[i].type || 'image/jpeg');
+      var res = await uploadVehFile({
+        fileBase64: b64, contentType: ct, kind: 'photo',
+        vehiculeId: String(vehModalId), filename: files[i].name || 'photo.jpg',
+      });
+      vehPhotos.push({ url: res.url, path: res.path, name: files[i].name || 'photo.jpg', cover: vehPhotos.length === 0 });
+      renderVehPhotos();
+    } catch(e) {
+      status.textContent = '✗ ' + e.message;
+      status.style.color = 'var(--red)';
+      return;
+    }
+  }
+  status.textContent = '✓ ' + files.length + ' photo' + (files.length > 1 ? 's' : '') + ' ajoutée' + (files.length > 1 ? 's' : '') + ' — pense à enregistrer';
+  status.style.color = 'var(--green)';
+}
+
+async function uploadVehDocs(input) {
+  var files = Array.prototype.slice.call(input.files || []);
+  input.value = '';
+  if (!files.length) return;
+  var status = $('veh-doc-status');
+  var type   = $('v-doc-type').value;
+
+  for (var i = 0; i < files.length; i++) {
+    status.textContent = 'Envoi ' + (i + 1) + '/' + files.length + '…';
+    status.style.color = 'var(--text-dim)';
+    if (files[i].size > 8 * 1024 * 1024) {
+      status.textContent = '✗ ' + files[i].name + ' dépasse 8 Mo';
+      status.style.color = 'var(--red)';
+      return;
+    }
+    try {
+      var res = await uploadVehFile({
+        fileBase64: await fileToBase64(files[i]),
+        contentType: files[i].type || 'application/pdf',
+        kind: 'document',
+        vehiculeId: String(vehModalId),
+        filename: files[i].name || 'document.pdf',
+      });
+      vehDocs.push({ url: res.url, path: res.path, name: files[i].name || 'document.pdf', type: type });
+      renderVehDocs();
+    } catch(e) {
+      status.textContent = '✗ ' + e.message;
+      status.style.color = 'var(--red)';
+      return;
+    }
+  }
+  status.textContent = '✓ ' + files.length + ' document' + (files.length > 1 ? 's' : '') + ' ajouté' + (files.length > 1 ? 's' : '') + ' — pense à enregistrer';
+  status.style.color = 'var(--green)';
+}
+
+function renderVehPhotos() {
+  var el = $('veh-photo-list');
+  if (!vehPhotos.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:12px">Aucune photo.</div>';
+    return;
+  }
+  el.innerHTML = vehPhotos.map(function(p, i) {
+    return '<div class="veh-thumb' + (p.cover ? ' cover' : '') + '" style="background-image:url(\'' + escHtml(p.url) + '\')">'
+      + '<div class="veh-thumb-acts">'
+        + '<button onclick="setVehCover(' + i + ')" title="Photo principale">' + (p.cover ? '★' : '☆') + '</button>'
+        + '<button onclick="openVehPhoto(' + i + ')" title="Ouvrir">⤢</button>'
+        + '<button onclick="removeVehPhoto(' + i + ')" title="Retirer">🗑</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function openVehPhoto(i) {
+  if (vehPhotos[i]) window.open(vehPhotos[i].url, '_blank', 'noopener');
+}
+
+function setVehCover(i) {
+  vehPhotos.forEach(function(p, j){ p.cover = (i === j); });
+  renderVehPhotos();
+}
+
+function removeVehPhoto(i) {
+  var wasCover = vehPhotos[i] && vehPhotos[i].cover;
+  vehPhotos.splice(i, 1);
+  if (wasCover && vehPhotos.length) vehPhotos[0].cover = true;
+  renderVehPhotos();
+}
+
+function renderVehDocs() {
+  var el = $('veh-doc-list');
+  if (!vehDocs.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:12px">Aucun document.</div>';
+    return;
+  }
+  el.innerHTML = vehDocs.map(function(d, i) {
+    return '<div class="veh-doc">'
+      + '<span>' + (String(d.name||'').toLowerCase().endsWith('.pdf') ? '📄' : '🖼️') + '</span>'
+      + '<a href="' + escHtml(d.url) + '" target="_blank" rel="noopener">' + escHtml(d.name || 'document') + '</a>'
+      + '<span style="color:var(--text-muted);font-size:11px">' + escHtml(DOC_TYPES[d.type] || 'Autre') + '</span>'
+      + '<button class="exp-del" onclick="removeVehDoc(' + i + ')" title="Retirer">×</button>'
+      + '</div>';
+  }).join('');
+}
+
+function removeVehDoc(i) {
+  vehDocs.splice(i, 1);
+  renderVehDocs();
+}
+
+// ── Export CSV ───────────────────────────────────────────────
+function exportParcCSV() {
+  var vehs = loadVehicules();
+  if (!vehs.length) { alert('Aucun véhicule à exporter.'); return; }
+
+  var rows = [['Marque','Modèle','Année','Immat','VIN','Km','Statut','Date achat','Prix achat','Total frais','Prix de revient','Date vente','Prix vente','Marge','Marge %','Détail frais','Notes']];
+  vehs.forEach(function(v) {
+    var frais = vehFrais(v), rev = vehRevient(v), marge = vehMarge(v);
+    rows.push([
+      v.brand||'', v.model||'', v.year||'', v.plate||'', v.vin||'', v.mileage||'',
+      (VEH_ST[v.status] || VEH_ST.en_stock).l,
+      v.purchase_date||'', (parseFloat(v.purchase_price)||0).toFixed(2),
+      frais.toFixed(2), rev.toFixed(2),
+      v.sale_date||'', v.sale_price != null ? (parseFloat(v.sale_price)||0).toFixed(2) : '',
+      marge !== null ? marge.toFixed(2) : '',
+      marge !== null && rev > 0 ? (marge / rev * 100).toFixed(1) : '',
+      (v.expenses||[]).map(function(e){ return (EXP_CATS[e.category]||e.category) + ' : ' + (e.label||'') + ' = ' + (parseFloat(e.amount)||0).toFixed(2) + ' €'; }).join(' | '),
+      v.notes||'',
+    ]);
+  });
+
+  var csv = rows.map(function(r) {
+    return r.map(function(c){ return '"' + String(c).replace(/"/g, '""') + '"'; }).join(';');
+  }).join('\n');
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'AREPROG_parc_auto_' + today() + '.csv';
+  a.click();
+  showNotifBanner('⬇', 'Export CSV', vehs.length + ' véhicule' + (vehs.length > 1 ? 's' : '') + ' exporté' + (vehs.length > 1 ? 's' : ''));
+}
+
+// ── Reprise des données de vehicules.db (import unique) ──────
+var VEH_SEED = [
+  { id: 'seed-1', brand: 'FIAT', model: '500', year: 2013, plate: 'CX-084-LM', vin: 'ZFA3120000J037384',
+    mileage: 119000, status: 'en_reparation', purchase_date: '2026-07-06', purchase_price: 350,
+    sale_date: '', sale_price: null, notes: '', created_at: '2026-07-06T14:33:54.000Z',
+    photos: [], documents: [],
+    expenses: [
+      { category: 'reparation',  label: 'Moteur occasion',              amount: 339,    date: '2026-07-06' },
+      { category: 'reparation',  label: 'Bougies',                      amount: 36.96,  date: '2026-07-06' },
+      { category: 'reparation',  label: 'Kit distribution + pompe à eau', amount: 45.24, date: '2026-07-06' },
+      { category: 'reparation',  label: 'Essuie-glaces',                amount: 21.19,  date: '2026-07-06' },
+      { category: 'reparation',  label: 'Filtres',                      amount: 30.88,  date: '2026-07-06' },
+      { category: 'reparation',  label: 'Courroie accessoire',          amount: 12.36,  date: '2026-07-06' },
+      { category: 'carte_grise', label: 'Carte grise',                  amount: 129.76, date: '2026-07-06' },
+      { category: 'reparation',  label: 'Biellette de direction',       amount: 35.60,  date: '2026-07-06' },
+      { category: 'reparation',  label: 'Amortisseur + coupelles',      amount: 134.16, date: '2026-07-07' },
+      { category: 'transport',   label: 'Livraison',                    amount: 12,     date: '2026-07-07' },
+      { category: 'reparation',  label: 'Pneus x4',                     amount: 164.02, date: '2026-07-07' },
+      { category: 'assurance',   label: 'Assurance',                    amount: 58.47,  date: '2026-07-07' },
+    ] },
+  { id: 'seed-2', brand: 'SEAT', model: 'IBIZA', year: null, plate: '', vin: '',
+    mileage: null, status: 'en_stock', purchase_date: '', purchase_price: 500,
+    sale_date: '', sale_price: null, notes: '', created_at: '2026-07-08T22:31:56.000Z',
+    photos: [], documents: [],
+    expenses: [
+      { category: 'reparation', label: 'Ligne d\'échappement', amount: 200, date: '2026-07-17' },
+      { category: 'reparation', label: 'Autoradio',            amount: 60,  date: '2026-07-17' },
+    ] },
+];
+
+// Importe les véhicules de l'ancienne base SQLite une seule fois.
+// Le drapeau vit dans Firestore (config/vehicules_seed) pour éviter
+// tout doublon si plusieurs appareils se connectent.
+function seedVehiculesOnce() {
+  if (!db || !syncOk) return;
+  if (localStorage.getItem('ar_veh_seeded') === '1') return;
+
+  db.collection('config').doc('vehicules_seed').get()
+    .then(function(doc) {
+      if (doc.exists) { localStorage.setItem('ar_veh_seeded', '1'); return null; }
+      return db.collection('vehicules').limit(1).get().then(function(snap) {
+        if (!snap.empty) {
+          localStorage.setItem('ar_veh_seeded', '1');
+          return db.collection('config').doc('vehicules_seed').set({ done: true, at: new Date().toISOString(), imported: 0 });
+        }
+        var batch = db.batch();
+        VEH_SEED.forEach(function(v){ batch.set(db.collection('vehicules').doc(String(v.id)), v); });
+        batch.set(db.collection('config').doc('vehicules_seed'), { done: true, at: new Date().toISOString(), imported: VEH_SEED.length });
+        return batch.commit().then(function() {
+          localStorage.setItem('ar_veh_seeded', '1');
+          storeVehicules(VEH_SEED.slice());
+          if ($('t-parc') && $('t-parc').classList.contains('on')) renderParc();
+        });
+      });
+    })
+    .catch(function(e){ console.warn('Seed véhicules:', e); });
 }
 </script>
 <script>

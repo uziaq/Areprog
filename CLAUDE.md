@@ -27,6 +27,7 @@ Functions with their own subdirectory (have `package.json`):
 - `netlify/function/rdv-rappels/` — scheduled every 5 min: email + SMS appointment reminders via EmailJS + Twilio
 - `netlify/function/sms-send/` — Twilio SMS endpoint
 - `netlify/function/upload-devis/` — PDF upload to Firebase Storage
+- `netlify/function/upload-vehicule/` — photo/document upload for the vehicle stock module (Firebase Storage, `vehicules/<id>/…`)
 
 Functions at the root of `netlify/function/`:
 - `claude-proxy.js` — proxies requests to Anthropic API (CORS workaround)
@@ -44,7 +45,7 @@ Structured as an IIFE (`VCApp = (() => { ... })()`). State managed in a single `
 
 ### Firebase
 
-Firebase config is hardcoded in `codage-vag.js` (public, gated by Firebase security rules). Server-side admin access uses `FIREBASE_SERVICE_ACCOUNT` env var in Netlify functions. Collections: `rdvs`, `config`, `sms_log`.
+Firebase config is hardcoded in `codage-vag.js` (public, gated by Firebase security rules). Server-side admin access uses `FIREBASE_SERVICE_ACCOUNT` env var in Netlify functions. Collections: `rdvs`, `config`, `sms_log`, `docs`, `clients`, `vehicules`.
 
 ## CSS Conventions
 
@@ -71,7 +72,7 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 
 | Variable | Used by |
 |---|---|
-| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-devis |
+| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-devis, upload-vehicule |
 | `EMAILJS_PRIVATE_KEY` | rdv-rappels |
 | `TWILIO_ACCOUNT_SID` | rdv-rappels, sms-send |
 | `TWILIO_AUTH_TOKEN` | rdv-rappels, sms-send |
@@ -84,4 +85,5 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 - Page-specific JS is either inline `<script>` in the HTML file or a dedicated `.js` file loaded at the bottom of `<body>`.
 - Schema.org JSON-LD, Open Graph, and Twitter Card meta tags are included in every page `<head>` for SEO.
 - The `gestion.html` admin page manages appointments (RDVs) and requires Firebase Authentication.
+- The "Parc auto" tab in `gestion.html` tracks vehicle buy/resell: each vehicle carries its expenses, photos and documents inline, mirrored in `localStorage.ar_vehicules` and the Firestore `vehicules` collection (same offline-first + `onSnapshot` pattern as `docs`/`clients`/`rdvs`). Cost price = purchase price + expenses; margin = sale price − cost price.
 - SMS configuration (phone number, message templates) is stored in Firestore at `config/sms` rather than hardcoded.
