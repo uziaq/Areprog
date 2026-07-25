@@ -3336,7 +3336,8 @@ function renderDocHTML(doc, tplOverride) {
     if (l.offert || rVal <= 0) remStr = '<span style="color:#bbb">—</span>';
     else if (l.remiseType === 'eur') remStr = '− ' + rVal.toFixed(2) + ' €';
     else remStr = '− ' + (Math.round(rVal * 100) / 100).toString().replace('.', ',') + ' %';
-    var totStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + lineNetHT(l).toFixed(2) + ' €</strong>';
+    var lineTotal = lineNetHT(l) * (tpl.colTotal === 'Total TTC' ? (1 + tvaRate) : 1);
+    var totStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + lineTotal.toFixed(2) + ' €</strong>';
     var descRow = l.desc ? '<tr><td colspan="5" style="padding-top:2px;padding-bottom:8px;font-size:12px;color:#888;font-style:italic">' + escHtml(l.desc) + '</td></tr>' : '';
     return '<tr><td>' + escHtml(l.label || '—') + '</td><td>' + (l.qte != null ? l.qte : 1) + '</td><td>' + puStr + '</td><td>' + remStr + '</td><td>' + totStr + '</td></tr>' + descRow;
   }).join('');
