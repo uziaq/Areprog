@@ -803,19 +803,9 @@
             <div class="sim-loading-text">Chargement du simulateur…</div>
           </div>
 
-          <!--
-            ════════════════════════════════════════════════════════
-            IFRAME PRINCIPAL — Remplacez src="" par votre URL
-            ════════════════════════════════════════════════════════
-            Exemple avec un outil externe :
-              src="https://votre-outil-simulateur.com/embed"
-            Exemple avec une page locale :
-              src="/simulateur-moteur.html"
-            Paramètres utiles :
-              allow="fullscreen" — si l'outil a un mode plein écran
-              loading="lazy"     — chargement différé (recommandé)
-            ════════════════════════════════════════════════════════
-          -->
+          <!-- src est renseigné au chargement depuis /.netlify/functions/olsx-token,
+               qui porte le token OLSX côté serveur. -->
+
           <iframe id="sim-iframe"
             src="about:blank"
             title="Simulateur de gains reprogrammation moteur AREPROG" loading="lazy" allow="fullscreen" allowfullscreen
