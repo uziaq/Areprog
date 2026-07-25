@@ -12,12 +12,28 @@ const admin = require('firebase-admin');
 
 const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 
+// Longueur max d'un SMS accepté (4 segments GSM).
+const MAX_MESSAGE_LEN = 612;
+
 function initFirebase() {
   if (admin.apps.length) return;
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT non configurée');
   const creds = typeof raw === 'string' ? JSON.parse(raw) : raw;
   admin.initializeApp({ credential: admin.credential.cert(creds) });
+}
+
+// Le CORS ne protège que les navigateurs : l'accès est gouverné par ce jeton.
+async function requireAuth(event) {
+  const header = event.headers.authorization || event.headers.Authorization || '';
+  const match = /^Bearer\s+(.+)$/i.exec(header.trim());
+  if (!match) return null;
+  try {
+    return await admin.auth().verifyIdToken(match[1]);
+  } catch (e) {
+    console.warn('sms-send: jeton refusé —', e.code || e.message);
+    return null;
+  }
 }
 
 function formatPhone(tel) {
@@ -74,7 +90,7 @@ exports.handler = async (event) => {
   const origin = event.headers.origin || event.headers.Origin || '';
   const corsHeaders = {
     'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
 
@@ -83,6 +99,17 @@ exports.handler = async (event) => {
   }
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
+  }
+  // Une requête de navigateur qui annonce une origine étrangère est rejetée.
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    return { statusCode: 403, headers: corsHeaders, body: 'Origine non autorisée' };
+  }
+
+  initFirebase();
+
+  const caller = await requireAuth(event);
+  if (!caller) {
+    return { statusCode: 401, headers: corsHeaders, body: 'Authentification requise' };
   }
 
   let payload;
@@ -96,13 +123,15 @@ exports.handler = async (event) => {
   if (!to || !message) {
     return { statusCode: 400, headers: corsHeaders, body: 'Champs "to" et "message" requis' };
   }
+  if (typeof message !== 'string' || message.length > MAX_MESSAGE_LEN) {
+    return { statusCode: 400, headers: corsHeaders, body: 'Message trop long' };
+  }
 
   const phone = formatPhone(to);
-  if (!phone) {
+  if (!phone || !/^\+[1-9]\d{7,14}$/.test(phone)) {
     return { statusCode: 400, headers: corsHeaders, body: 'Numéro de téléphone invalide' };
   }
 
-  initFirebase();
   const db = admin.firestore();
 
   // Vérifier la config SMS (activation par type)
@@ -128,6 +157,7 @@ exports.handler = async (event) => {
     statut: 'envoyé',
     twilio_sid: null,
     erreur: null,
+    envoyePar: caller.email || caller.uid,
   };
 
   try {
@@ -144,10 +174,11 @@ exports.handler = async (event) => {
     logEntry.erreur = e.message;
     await logSms(db, logEntry);
     console.error('sms-send error:', e.message);
+    // Le détail reste dans les logs Netlify et sms_log : il n'est pas renvoyé au client.
     return {
       statusCode: 500,
       headers: corsHeaders,
-      body: JSON.stringify({ ok: false, error: e.message }),
+      body: JSON.stringify({ ok: false, error: "L'envoi a échoué. Consulte le journal SMS." }),
     };
   }
 };

@@ -33,7 +33,7 @@ const VCApp = (() => {
   function initFirebase() {
     try {
       if (window.firebase) {
-        if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
       }
     } catch(e) {
@@ -42,6 +42,11 @@ const VCApp = (() => {
   }
 
   // ── Utilitaires ────────────────────────────
+  function escHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
   function qs(id)  { return document.getElementById(id); }
   function fmt(n)  { return n.toFixed(0) + ' €'; }
 
@@ -346,8 +351,10 @@ const VCApp = (() => {
           alert('Erreur lors de l\'envoi. Veuillez nous contacter par téléphone.');
         });
     } else {
-      console.log('Order (offline):', order);
-      setTimeout(doConfirm, 800);
+      // Sans Firebase la demande n'est enregistrée nulle part : afficher une
+      // confirmation ferait perdre le prospect en lui faisant croire l'inverse.
+      if (btn) { btn.disabled = false; btn.textContent = 'Envoyer ma demande'; }
+      alert('Envoi impossible pour le moment. Contactez-nous au 06 67 92 46 30.');
     }
   }
 
@@ -400,7 +407,7 @@ const VCApp = (() => {
 
     if (!opts.length) {
       const emptyMsg = state.searchQuery
-        ? `<strong>Aucun r\u00e9sultat pour "\u00ab\u00a0${state.searchQuery}\u00a0\u00bb"</strong><p>Essayez un autre terme ou une autre cat\u00e9gorie.</p>`
+        ? `<strong>Aucun r\u00e9sultat pour "\u00ab\u00a0${escHtml(state.searchQuery)}\u00a0\u00bb"</strong><p>Essayez un autre terme ou une autre cat\u00e9gorie.</p>`
         : `<strong>Aucune option dans cette cat\u00e9gorie</strong><p>Essayez une autre cat\u00e9gorie ou contactez-nous pour un codage sur mesure.</p>`;
       grid.innerHTML = `<div class="vc-options-empty"><div style="font-size:2rem;margin-bottom:.8rem">\u2699\uFE0F</div>${emptyMsg}</div>`;
       renderCategoryBar();
