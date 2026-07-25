@@ -1,7 +1,9 @@
 // AREPROG — Service Worker v2
 // Cache hors-ligne + notifications push en arrière-plan
 
-var CACHE_NAME = 'areprog-v2';
+// Incrémenter à chaque changement de stratégie : l'activation purge les
+// anciens caches, y compris les réponses erronées qu'ils contenaient.
+var CACHE_NAME = 'areprog-v3';
 var OFFLINE_URLS = [
   '/gestion',
   '/gestion.html',
@@ -71,22 +73,35 @@ self.addEventListener('fetch', function(e) {
           return response;
         })
         .catch(function() {
-          return caches.match('/gestion.html') || caches.match('/gestion');
+          // caches.match() renvoie toujours une Promise : un `||` ne
+          // basculerait jamais sur la seconde clé.
+          return caches.match('/gestion.html').then(function(hit) {
+            return hit || caches.match('/gestion');
+          });
         })
     );
     return;
   }
 
-  // Pour les assets statiques : Cache First
+  // Images et polices : on sert le cache immédiatement, puis on rafraîchit en
+  // arrière-plan — sans quoi une image remplacée reste périmée indéfiniment,
+  // le nom de fichier ne portant pas d'empreinte.
   if (url.pathname.match(/\.(png|jpg|webp|ico|woff2?)$/)) {
     e.respondWith(
       caches.match(e.request).then(function(cached) {
-        return cached || fetch(e.request).then(function(response) {
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(e.request, response.clone());
-          });
+        var network = fetch(e.request).then(function(response) {
+          // Ne jamais mémoriser une 404 ou une 502 passagère.
+          if (response && response.ok) {
+            var clone = response.clone();
+            caches.open(CACHE_NAME).then(function(cache) {
+              cache.put(e.request, clone);
+            });
+          }
           return response;
+        }).catch(function() {
+          return cached;
         });
+        return cached || network;
       })
     );
   }
@@ -121,6 +136,10 @@ self.addEventListener('notificationclick', function(e) {
 });
 
 // Messages depuis la page (rappels programmés)
+// Attention : un Service Worker est arrêté après quelques dizaines de secondes
+// d'inactivité, donc seuls les rappels très proches partent réellement. Les
+// rappels fiables sont envoyés par la fonction planifiée rdv-rappels
+// (e-mail + SMS) ; ceci n'est qu'un complément opportuniste.
 self.addEventListener('message', function(e) {
   if (e.data && e.data.type === 'SCHEDULE_NOTIF') {
     var rdv = e.data.rdv;
@@ -128,8 +147,8 @@ self.addEventListener('message', function(e) {
     setTimeout(function() {
       self.registration.showNotification('📅 Rappel AREPROG', {
         body: rdv.heure + ' — ' + rdv.title + (rdv.lieu ? '\n📍 ' + rdv.lieu : ''),
-        icon: '/favicon512.png',
-        badge: '/favicon32x32.png',
+        icon: '/favicon-512.png',
+        badge: '/favicon-32x32.png',
         tag: 'areprog-rdv-' + rdv.id,
       });
     }, delay);

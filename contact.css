@@ -69,17 +69,30 @@
 
 /* Prestations */
 .prestation-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: .6rem; }
-.prestation-check { display: flex; flex-direction: column; gap: .5rem; padding: .9rem; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: border-color .2s, background .2s; }
+.prestation-check { position: relative; display: flex; flex-direction: column; gap: .5rem; padding: .9rem; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: border-color .2s, background .2s; }
 .prestation-check:hover { border-color: var(--blue); }
-.prestation-check input { display: none; }
-.prestation-check.checked { border-color: var(--blue); background: var(--blue-dim); }
+/* La case reste dans le flux de tabulation : display:none la retirerait du
+   clavier et de l'arbre d'accessibilité. */
+.prestation-check input {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: 0; padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.prestation-check:focus-within { border-color: var(--blue); outline: 2px solid var(--blue); outline-offset: 2px; }
+.prestation-check.checked,
+.prestation-check:has(input:checked) { border-color: var(--blue); background: var(--blue-dim); }
 .prestation-check-box { width: 1rem; height: 1rem; border: 1px solid var(--border2); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: .6rem; color: transparent; transition: all .15s; }
-.prestation-check.checked .prestation-check-box { background: var(--blue); border-color: var(--blue); color: #fff; }
+.prestation-check.checked .prestation-check-box,
+.prestation-check:has(input:checked) .prestation-check-box { background: var(--blue); border-color: var(--blue); color: #fff; }
 .prestation-check-content { display: flex; flex-direction: column; gap: .15rem; }
 .prestation-check-label { font-size: .78rem; font-weight: 500; color: var(--text2); line-height: 1.2; transition: color .2s; }
-.prestation-check.checked .prestation-check-label { color: var(--text); }
+.prestation-check.checked .prestation-check-label,
+.prestation-check:has(input:checked) .prestation-check-label { color: var(--text); }
 .prestation-check-sub { font-size: .68rem; color: var(--muted2); line-height: 1.2; }
-.prestation-check.checked .prestation-check-sub { color: var(--blue-light); }
+.prestation-check.checked .prestation-check-sub,
+.prestation-check:has(input:checked) .prestation-check-sub { color: var(--blue-light); }
 
 /* RGPD */
 .form-rgpd { font-size: .75rem; color: var(--muted2); line-height: 1.6; padding: .9rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin: .5rem 0 1.4rem; }
