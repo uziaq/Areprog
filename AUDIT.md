@@ -2,6 +2,21 @@
 
 **Date : 25 juillet 2026** — Périmètre : 37 pages HTML, 17 CSS, 6 JS, 5 fonctions Netlify, 1 edge function, Firebase (Auth / Firestore / Storage), configuration Netlify (`_headers`, `_redirects`, `netlify.toml`), `sitemap.xml`, `robots.txt`.
 
+> ## ⚙️ État des corrections
+>
+> La majorité des points ci-dessous **ont été corrigés** sur la branche
+> `claude/site-audit-complet-rih5j5` (voir l'historique Git pour le détail).
+> Ce document reste le constat d'origine, il n'a pas été réécrit après coup.
+>
+> **Trois actions restent à faire par le propriétaire — elles ne peuvent pas
+> l'être depuis le code :**
+>
+> 1. **Vérifier et durcir les règles Firestore/Storage** dans la console Firebase (point S3).
+> 2. **Désactiver l'inscription publique** dans Firebase Auth, ou restreindre à l'UID admin (point S4).
+> 3. **Révoquer le token OLSX** exposé et le placer dans la variable d'environnement
+>    Netlify `OLSX_TOKEN` — le code le lit désormais depuis là (point S5).
+>    Sans cette variable, le simulateur OLSX affiche un message d'indisponibilité.
+
 ---
 
 ## Note globale
