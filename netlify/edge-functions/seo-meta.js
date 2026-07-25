@@ -126,7 +126,11 @@ const MODELS = [
 ];
 
 function esc(str) {
-  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 export default async function handler(request, context) {
@@ -152,7 +156,10 @@ export default async function handler(request, context) {
 
   if (modelSlug) {
     const model = MODELS.find(m => m.brandSlug === brandSlug && m.slug === modelSlug);
-    if (!model) return new Response(html, { status: response.status, headers: response.headers });
+    // Le rewrite Netlify sert codage-modele.html en 200 pour n'importe quel
+    // slug : sans ce 404, l'espace d'URLs est infini et Google indexe autant
+    // de pages identiques.
+    if (!model) return notFound(html, response);
 
     canonical = `https://areprog.fr/codage-vag/${brandSlug}/${modelSlug}`;
     title     = `Codage ${brand.name} ${model.name} (${model.yearMin}–${model.yearMax}) — Options cachées | AREPROG`;
@@ -176,5 +183,26 @@ export default async function handler(request, context) {
     .replace(/<meta[^>]*id="og-description"[^>]*>/,  `<meta id="og-description" property="og:description" content="${d}"/>`)
     .replace(/<meta[^>]*id="og-url"[^>]*>/,          `<meta id="og-url" property="og:url" content="${c}"/>`);
 
-  return new Response(html, { status: response.status, headers: response.headers });
+  return new Response(html, { status: response.status, headers: cloneHeaders(response) });
+}
+
+// Le corps est réécrit : recopier content-length (et l'encodage d'origine)
+// provoquerait une réponse tronquée.
+function cloneHeaders(response, extra) {
+  const headers = new Headers(response.headers);
+  headers.delete('content-length');
+  headers.delete('content-encoding');
+  if (extra) for (const [k, v] of Object.entries(extra)) headers.set(k, v);
+  return headers;
+}
+
+function notFound(html, response) {
+  const body = html.replace(
+    /<meta\s+name="robots"[^>]*>/,
+    '<meta name="robots" content="noindex, follow"/>'
+  );
+  return new Response(body, {
+    status: 404,
+    headers: cloneHeaders(response, { 'X-Robots-Tag': 'noindex' }),
+  });
 }
