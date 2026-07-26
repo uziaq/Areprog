@@ -32,9 +32,11 @@
 /reprogrammation-moteur-anglet           /reprogrammation-moteur-anglet.html           200
 /reprogrammation-moteur-hendaye          /reprogrammation-moteur-hendaye.html          200
 /reprogrammation-moteur-saint-jean-de-luz /reprogrammation-moteur-saint-jean-de-luz.html 200
-/reprogrammation-moteur-pau              /reprogrammation-moteur                       301
-/reprogrammation-moteur-dax              /reprogrammation-moteur                       301
-/reprogrammation-moteur-auxerre          /reprogrammation-moteur                       301
+# Pages retirées : la cible /reprogrammation-moteur n'a jamais existé, ces trois
+# redirections aboutissaient donc en 404.
+/reprogrammation-moteur-pau              /chip-tuning-pays-basque                      301
+/reprogrammation-moteur-dax              /chip-tuning-pays-basque                      301
+/reprogrammation-moteur-auxerre          /chip-tuning-pays-basque                      301
 
 # Espace pro — Devis & Factures (existant)
 /gestion                            /gestion.html                       200
@@ -50,16 +52,9 @@
 /codage-vag                         /codage-vag.html                    200
 /codage-options-vag                 /codage-options-vag.html            200
 /installation-options-vag           /installation-options-vag.html      200
-/codage-vag-admin                   /codage-vag-admin.html              200
-/boutique-vag                       /boutique-vag.html                  200
 
-# ── Fiches produits VAG (page dédiée par produit) ───────────
-/produit-vag                        /produit-vag.html                   200
-/produit-vag/:slug                  /produit-vag.html                   200
-
-# ── Admin Boutique (même auth Firebase que /gestion) ────────
-/gestion-boutique                   /gestion-boutique.html              200
-/boutique-vag/admin                 /gestion-boutique.html              200
+# Les routes /boutique-vag, /produit-vag et /gestion-boutique visaient des
+# fichiers qui n'existent pas : elles renvoyaient 404 et sont retirées.
 
 # ── Pages /codage-vag/marque  (ex: /codage-vag/volkswagen) ───
 /codage-vag/volkswagen              /codage-marque.html                 200

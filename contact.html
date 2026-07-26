@@ -15,7 +15,7 @@
   <meta property="og:description" content="Devis gratuit en 2 minutes. Reprogrammation moteur en atelier, Pays Basque, Pyrénées-Atlantiques, Yonne. Réponse sous 24h."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://areprog.fr/contact"/>
-  <meta property="og:image" content="https://areprog.fr/og-image.webp"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
   <meta property="og:locale" content="fr_FR"/>
@@ -23,7 +23,7 @@
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="Devis gratuit reprogrammation moteur — AREPROG"/>
   <meta name="twitter:description" content="Devis gratuit en 2 minutes. Reprogrammation moteur en atelier. Réponse sous 24h."/>
-  <meta name="twitter:image" content="https://areprog.fr/og-image.webp"/>
+  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"ContactPage","name":"Devis reprogrammation moteur — AREPROG","url":"https://areprog.fr/contact","description":"Demandez un devis gratuit pour la reprogrammation moteur de votre véhicule. Réponse sous 24h.","mainEntity":{"@type":"LocalBusiness","name":"AREPROG","telephone":"+33667924630","url":"https://areprog.fr","contactPoint":{"@type":"ContactPoint","telephone":"+33667924630","contactType":"customer service","availableLanguage":"French","hoursAvailable":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"08:00","closes":"19:00"}},"areaServed":[{"@type":"City","name":"Bayonne"},{"@type":"City","name":"Biarritz"},{"@type":"City","name":"Anglet"},{"@type":"City","name":"Saint-Jean-de-Luz"},{"@type":"City","name":"Pau"},{"@type":"City","name":"Dax"},{"@type":"City","name":"Auxerre"}]}}
   </script>
@@ -80,8 +80,8 @@
             <div class="contact-how-step">
               <div class="contact-how-num">3</div>
               <div>
-                <div class="contact-how-step-title">RDV à votre adresse</div>
-                <div class="contact-how-step-sub">On vient avec tout le matériel</div>
+                <div class="contact-how-step-title">RDV à l'atelier</div>
+                <div class="contact-how-step-sub">Biarritz — vous repartez le jour même</div>
               </div>
             </div>
           </div>
@@ -119,7 +119,7 @@
           </div>
         </div>
 
-        <div id="form-wrap">
+        <form id="form-wrap" novalidate>
 
           <!-- ÉTAPE 1 — Coordonnées -->
           <div class="form-section-header">
@@ -130,8 +130,8 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="f-prenom">Prénom <span class="required">*</span></label>
-              <input type="text" class="form-input" id="f-prenom" placeholder="Votre prénom" autocomplete="given-name"/>
-              <div class="form-error-msg" id="err-prenom">Champ requis</div>
+              <input type="text" class="form-input" id="f-prenom" required aria-describedby="err-prenom" placeholder="Votre prénom" autocomplete="given-name"/>
+              <div class="form-error-msg" id="err-prenom" role="alert" aria-live="polite">Champ requis</div>
             </div>
             <div class="form-group">
               <label class="form-label" for="f-nom">Nom</label>
@@ -142,8 +142,8 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="f-tel">Téléphone <span class="required">*</span></label>
-              <input type="tel" class="form-input" id="f-tel" placeholder="06 XX XX XX XX" autocomplete="tel"/>
-              <div class="form-error-msg" id="err-tel">Champ requis</div>
+              <input type="tel" class="form-input" id="f-tel" required aria-describedby="err-tel" placeholder="06 XX XX XX XX" autocomplete="tel"/>
+              <div class="form-error-msg" id="err-tel" role="alert" aria-live="polite">Champ requis</div>
             </div>
             <div class="form-group">
               <label class="form-label" for="f-email">Email</label>
@@ -154,7 +154,7 @@
           <div class="form-group">
             <label class="form-label" for="f-zone">Zone d'intervention <span class="required">*</span></label>
             <div class="select-wrap">
-              <select class="form-select" id="f-zone">
+              <select class="form-select" id="f-zone" required aria-describedby="err-zone">
                 <option value="">— Choisir votre secteur —</option>
                 <option value="Pays Basque (Bayonne, Biarritz, Anglet, Saint-Jean-de-Luz…)">Pays Basque — Bayonne, Biarritz, Anglet, Saint-Jean-de-Luz…</option>
                 <option value="Pyrénées-Atlantiques (Pau, Orthez, Mourenx…)">Pyrénées-Atlantiques — Pau, Orthez, Mourenx…</option>
@@ -163,7 +163,7 @@
                 <option value="Autre zone">Autre zone — me contacter pour vérifier</option>
               </select>
             </div>
-            <div class="form-error-msg" id="err-zone">Champ requis</div>
+            <div class="form-error-msg" id="err-zone" role="alert" aria-live="polite">Champ requis</div>
           </div>
 
           <!-- ÉTAPE 2 — Véhicule -->
@@ -175,13 +175,13 @@
           <div class="form-row form-row-3">
             <div class="form-group">
               <label class="form-label" for="f-marque">Marque <span class="required">*</span></label>
-              <input type="text" class="form-input" id="f-marque" placeholder="VW, BMW, Audi…"/>
-              <div class="form-error-msg" id="err-marque">Champ requis</div>
+              <input type="text" class="form-input" id="f-marque" required aria-describedby="err-marque" placeholder="VW, BMW, Audi…"/>
+              <div class="form-error-msg" id="err-marque" role="alert" aria-live="polite">Champ requis</div>
             </div>
             <div class="form-group">
               <label class="form-label" for="f-modele">Modèle <span class="required">*</span></label>
-              <input type="text" class="form-input" id="f-modele" placeholder="Golf, Série 3…"/>
-              <div class="form-error-msg" id="err-modele">Champ requis</div>
+              <input type="text" class="form-input" id="f-modele" required aria-describedby="err-modele" placeholder="Golf, Série 3…"/>
+              <div class="form-error-msg" id="err-modele" role="alert" aria-live="polite">Champ requis</div>
             </div>
             <div class="form-group">
               <label class="form-label" for="f-annee">Année</label>
@@ -212,70 +212,70 @@
           </div>
 
           <div class="prestation-grid">
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Stage 1">
-              <input type="checkbox"/>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Stage 1"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Stage 1</span>
                 <span class="prestation-check-sub">Reprogrammation sur-mesure</span>
               </div>
-            </div>
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Stage 2">
-              <input type="checkbox"/>
+            </label>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Stage 2"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Stage 2</span>
                 <span class="prestation-check-sub">Haute performance sur-mesure</span>
               </div>
-            </div>
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Conversion E85 bioéthanol (−40% carburant)">
-              <input type="checkbox"/>
+            </label>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Conversion E85 bioéthanol (−40% carburant)"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Conversion E85</span>
                 <span class="prestation-check-sub">−40% carburant</span>
               </div>
-            </div>
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Optimisation consommation (−15%)">
-              <input type="checkbox"/>
+            </label>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Optimisation consommation (−15%)"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Optim. conso</span>
                 <span class="prestation-check-sub">−15% à la pompe</span>
               </div>
-            </div>
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Désactivation EGR">
-              <input type="checkbox"/>
+            </label>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Désactivation EGR"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Désactivation EGR</span>
                 <span class="prestation-check-sub">Admission protégée</span>
               </div>
-            </div>
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Désactivation FAP">
-              <input type="checkbox"/>
+            </label>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Désactivation FAP"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Désactivation FAP</span>
                 <span class="prestation-check-sub">Fin des pannes FAP</span>
               </div>
-            </div>
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Désactivation AdBlue">
-              <input type="checkbox"/>
+            </label>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Désactivation AdBlue"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Désactivation AdBlue</span>
                 <span class="prestation-check-sub">Éviter le blocage</span>
               </div>
-            </div>
-            <div class="prestation-check" onclick="toggleCheck(this)" data-value="Diagnostic ODIS VAG officiel">
-              <input type="checkbox"/>
+            </label>
+            <label class="prestation-check">
+              <input type="checkbox" name="prestation" value="Diagnostic ODIS VAG officiel"/>
               <div class="prestation-check-box">✓</div>
               <div class="prestation-check-content">
                 <span class="prestation-check-label">Diagnostic ODIS</span>
                 <span class="prestation-check-sub">VW · Audi · Seat · Skoda</span>
               </div>
-            </div>
+            </label>
           </div>
 
           <div class="form-group" style="margin-top:1.2rem">
@@ -288,7 +288,7 @@
           </div>
 
           <div class="form-actions">
-            <button class="btn-submit" id="btn-send" onclick="sendWhatsApp()">
+            <button type="submit" class="btn-submit" id="btn-send">
               <span id="btn-text">Envoyer ma demande de devis →</span>
             </button>
             <div class="form-submit-reassurance">
@@ -303,7 +303,7 @@
               💬 Écrire directement sur WhatsApp
             </a>
           </div>
-        </div>
+        </form>
 
         <!-- SUCCESS ========================================= -->
         <div class="form-success" id="form-success">
@@ -371,16 +371,7 @@
             <a href="/reprogrammation-moteur-bayonne" class="zone-pill">
               <span class="zone-pill-num">64</span><span>Pays Basque</span>
             </a>
-            <a href="/reprogrammation-moteur-pau" class="zone-pill">
-              <span class="zone-pill-num">64</span><span>Pyrénées-Atlantiques</span>
-            </a>
-            <a href="/reprogrammation-moteur-dax" class="zone-pill">
-              <span class="zone-pill-num">40</span><span>Landes — Dax</span>
-            </a>
-            <a href="/reprogrammation-moteur-auxerre" class="zone-pill">
-              <span class="zone-pill-num">89</span><span>Yonne — Auxerre</span>
-            </a>
-          </div>
+            </div>
         </div>
 
         <div class="sidebar-block">
@@ -435,7 +426,13 @@
     });
     document.getElementById('f-zone')?.addEventListener('change', updateProgress);
 
-    function toggleCheck(el) { el.classList.toggle('checked'); }
+    // La classe .checked porte le style ; l'état réel vit sur la case à cocher,
+    // ce qui garde la sélection accessible au clavier et aux lecteurs d'écran.
+    document.querySelectorAll('.prestation-check input[type="checkbox"]').forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        cb.closest('.prestation-check').classList.toggle('checked', cb.checked);
+      });
+    });
 
     function sendWhatsApp() {
       const required = [
@@ -452,16 +449,21 @@
         const errEl = document.getElementById(err);
         if (!el || !el.value.trim()) {
           el?.classList.add('error');
+          el?.setAttribute('aria-invalid', 'true');
           errEl?.classList.add('visible');
           valid = false;
           if (!firstInvalid) firstInvalid = el;
         } else {
           el.classList.remove('error');
+          el.removeAttribute('aria-invalid');
           errEl?.classList.remove('visible');
         }
       });
       if (!valid) {
+        // Déplacer le focus, pas seulement la vue : sinon un utilisateur au
+        // clavier ou en lecture d'écran ne sait pas quel champ pose problème.
         firstInvalid?.scrollIntoView({behavior:'smooth', block:'center'});
+        firstInvalid?.focus({preventScroll:true});
         return;
       }
 
@@ -478,8 +480,8 @@
       const immat = (v('f-immat')).toUpperCase();
       const message = v('f-message');
 
-      const prestations = [...document.querySelectorAll('.prestation-check.checked')]
-        .map(el => el.dataset.value).join(', ');
+      const prestations = [...document.querySelectorAll('.prestation-check input:checked')]
+        .map(el => el.value).join(', ');
 
       let msg = `Bonjour AREPROG !\n\n`;
       msg += `*${prestations ? 'Demande de devis' : 'Prise de contact'}*\n`;
@@ -507,12 +509,19 @@
       }, 400);
     }
 
-    ['f-prenom','f-tel','f-marque','f-modele'].forEach(id => {
+    ['f-prenom','f-tel','f-zone','f-marque','f-modele'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', function() {
         this.classList.remove('error');
+        this.removeAttribute('aria-invalid');
         const key = id.replace('f-','');
         document.getElementById('err-' + key)?.classList.remove('visible');
       });
+    });
+
+    // La soumission passe par le formulaire : la touche Entrée fonctionne.
+    document.getElementById('form-wrap')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      sendWhatsApp();
     });
   </script>
 </body>

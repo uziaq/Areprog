@@ -1,39 +1,44 @@
 # ============================================================
-#  AREPROG — Netlify _headers  (version corrigée)
+#  AREPROG — Netlify _headers
 # ============================================================
 
-# ── Sécurité globale ────────────────────────────────────────
+# ── Sécurité globale + CSP du site public ───────────────────
+#    Un seul bloc /* : deux blocs séparés se fusionnaient de façon fragile.
+#    X-XSS-Protection est volontairement absent (obsolète, déconseillé).
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
-  X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
-# ── CSP globale (site principal) ────────────────────────────
-/*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; frame-src 'none'; object-src 'none'
-
-# ── CSP pour /simulateur (OLSX iframe) ──────────────────────
+# ── CSP pour le simulateur (iframe OLSX) ────────────────────
+#    Netlify applique les headers sur l'URL demandée, pas sur l'URL réécrite :
+#    /simulateur.html doit donc porter la même règle que /simulateur.
 /simulateur
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; frame-src https://identity.netlify.com https://api.olsx.eu; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; frame-src https://api.olsx.eu; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
 
-# ── CSP pour /gestion, /gestion.html, /devis, /pro ──────────
-#    Couvre : Firebase, Firestore, OLSX, EmailJS, jsPDF, CDN
-#    Netlify applique les headers sur l'URL de requête, pas l'URL réécrite
-#    → /devis et /pro (rewrites 200 vers gestion.html) ont besoin de leurs propres règles
+/simulateur.html
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com; frame-src https://api.olsx.eu; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+
+# ── Back-office : /gestion et ses alias de rewrite ──────────
+#    Couvre Firebase, Firestore, OLSX, EmailJS, jsPDF et les CDN.
 /gestion
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; object-src 'none'; worker-src 'self' blob:
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:
+  X-Robots-Tag: noindex, nofollow
 
 /gestion.html
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; object-src 'none'; worker-src 'self' blob:
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:
+  X-Robots-Tag: noindex, nofollow
 
 /devis
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; object-src 'none'; worker-src 'self' blob:
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:
+  X-Robots-Tag: noindex, nofollow
 
 /pro
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; object-src 'none'; worker-src 'self' blob:
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.olsx.eu https://*.googleapis.com https://*.gstatic.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://api.olsx.eu https://*.netlify.com https://*.netlify.app https://*.googleapis.com https://*.firebaseio.com https://*.firestore.googleapis.com https://*.gstatic.com https://www.gstatic.com https://firebasestorage.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://api.emailjs.com; frame-src https://api.olsx.eu; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:
+  X-Robots-Tag: noindex, nofollow
 
 # ── Cache statique ───────────────────────────────────────────
 /*.webp
@@ -51,23 +56,23 @@
 /*.js
   Cache-Control: public, max-age=86400
 
-# ── Pas d'indexation sur les pages privées ──────────────────
-/gestion.html
+# Le service worker doit pouvoir être remplacé sans attendre 24 h.
+/sw.js
+  Cache-Control: no-cache
+
+# ── Pas d'indexation sur les pages privées et utilitaires ───
+/codage-vag-admin
   X-Robots-Tag: noindex, nofollow
 
-/gestion
-  X-Robots-Tag: noindex, nofollow
-
-/boutique.html
-  X-Robots-Tag: noindex, nofollow
-
-/produit.html
+/codage-vag-admin.html
   X-Robots-Tag: noindex, nofollow
 
 /confirmation.html
   X-Robots-Tag: noindex, nofollow
 
-# -- Pas d'indexation sur les pages CRM (privees) --
+/sitemap-visuel.html
+  X-Robots-Tag: noindex, follow
+
 /crm
   X-Robots-Tag: noindex, nofollow
 
@@ -75,4 +80,14 @@
   X-Robots-Tag: noindex, nofollow
 
 /clients
+  X-Robots-Tag: noindex, nofollow
+
+# ── Fichiers de configuration servis par la racine du dépôt ──
+/package.json
+  X-Robots-Tag: noindex, nofollow
+
+/package-lock.json
+  X-Robots-Tag: noindex, nofollow
+
+/*.md
   X-Robots-Tag: noindex, nofollow

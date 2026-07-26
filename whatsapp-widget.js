@@ -100,8 +100,9 @@
  /* Don't show on contact page (already has WA button) */
  body[data-page="contact"] #wa-widget { display: none; }
 
- @media (max-width: 600px) {
- #wa-widget { bottom: 1.2rem; right: 1.2rem; }
+ @media (max-width: 768px) {
+ /* Laisser la barre d'appel fixe (48px + marge) libre en bas d'écran. */
+ #wa-widget { bottom: 4.2rem; right: 1.2rem; }
  #wa-bubble { display: none !important; }
  }
  `;
@@ -112,7 +113,7 @@
  widget.id = 'wa-widget';
  widget.innerHTML = `
  <div id="wa-bubble">
- <button id="wa-close" aria-label="Fermer"></button>
+ <button id="wa-close" type="button" aria-label="Fermer">×</button>
  <strong>Besoin d'un devis rapide ?</strong><br>
  On vous répond sur WhatsApp en quelques minutes.
  </div>
@@ -139,14 +140,6 @@
  e.preventDefault();
  bubble.classList.remove('visible');
  sessionStorage.setItem('wa-dismissed', '1');
- });
-
- // Toggle bubble on button click (mobile)
- waBtn.addEventListener('click', (e) => {
- if (window.innerWidth < 600) {
- // On mobile, just open WA directly
- return;
- }
  });
 
 })();
