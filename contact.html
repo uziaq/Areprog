@@ -37,6 +37,9 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css"/>
   <link rel="stylesheet" href="contact.css"/>
+  <!-- Mesure d'audience Umami — sans cookie, sans donnee personnelle.
+       Remplacer UMAMI_WEBSITE_ID par l'identifiant fourni par cloud.umami.is. -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="UMAMI_WEBSITE_ID"></script>
 </head>
 <body data-page="contact">
   <div id="nav-container"></div>
@@ -283,8 +286,15 @@
             <textarea class="form-textarea" id="f-message" placeholder="État du véhicule, modifications existantes, questions…"></textarea>
           </div>
 
+          <!-- Champ leurre anti-robots : invisible et hors du flux de tabulation.
+               Un humain ne le voit pas, un robot le remplit et la demande est ignorée. -->
+          <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+            <label for="f-website">Ne pas remplir</label>
+            <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off"/>
+          </div>
+
           <div class="form-rgpd">
-            🔒 Vos données sont utilisées uniquement pour répondre à votre demande et ne sont jamais transmises à des tiers. <a href="/politique-confidentialite">Politique de confidentialité</a>
+            🔒 Vos données servent uniquement à traiter votre demande. Elles sont enregistrées dans notre outil de gestion et ne sont jamais revendues. <a href="/politique-confidentialite">Politique de confidentialité</a>
           </div>
 
           <div class="form-actions">
@@ -309,7 +319,9 @@
         <div class="form-success" id="form-success">
           <div class="form-success-check">✓</div>
           <div class="form-success-title">Demande <em>envoyée !</em></div>
-          <p>WhatsApp s'ouvre avec votre message pré-rempli.<br>Envoyez-le — on vous répond sous 24h.</p>
+          <!-- Texte remplacé par sendWhatsApp() selon le résultat réel de
+               l'enregistrement : ne jamais affirmer ce qui n'a pas eu lieu. -->
+          <p id="form-success-state" role="status" aria-live="polite">WhatsApp s'ouvre avec votre message pré-rempli.<br>Envoyez-le — on vous répond sous 24h.</p>
           <div class="form-success-steps">
             <div class="form-success-step done">✓ Demande transmise</div>
             <div class="form-success-step active">⏳ Analyse de votre véhicule en cours</div>
@@ -501,12 +513,57 @@
       if (message) msg += `\n\n💬 *Précisions*\n${message}`;
       msg += `\n\nMerci !`;
 
-      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+      // 1. WhatsApp d'abord : c'est le seul appel qui doit impérativement rester
+      //    dans le tick synchrone du clic, sinon le bloqueur de popup l'annule.
+      const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+      const waWin = window.open(waUrl, '_blank');
+
+      // 2. Enregistrement de la demande, sans bloquer.
+      const enregistrement = fetch('/.netlify/functions/lead-capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'contact',
+          name: `${prenom}${nom ? ' ' + nom : ''}`.trim(),
+          phone: tel,
+          email: email,
+          city: zone,
+          message: message,
+          vehicle: { brand: marque, model: modele, year: annee, engine: moteur, km: km, plate: immat },
+          prestations: [...document.querySelectorAll('.prestation-check input:checked')].map(el => el.value),
+          website: document.getElementById('f-website')?.value || '',
+          page: location.pathname,
+        }),
+      }).then(r => r.ok);
 
       setTimeout(() => {
         document.getElementById('form-wrap').style.display = 'none';
         document.getElementById('form-success').classList.add('visible');
       }, 400);
+
+      // 3. Le message final dit la vérité : on n'annonce l'enregistrement que
+      //    s'il a réellement eu lieu, et on signale une popup bloquée.
+      let repondu = false;
+      const etat = (html) => {
+        const el = document.getElementById('form-success-state');
+        if (el) el.innerHTML = html;
+      };
+      const secours = waWin
+        ? ''
+        : `<br><a href="${waUrl}" target="_blank" rel="noopener">Ouvrir WhatsApp manuellement</a> — votre navigateur a bloqué la fenêtre.`;
+
+      // Sur connexion lente, ne pas laisser le visiteur devant un écran figé.
+      const garde = setTimeout(() => {
+        if (!repondu) etat("Votre demande part…<br>Si WhatsApp ne s'est pas ouvert, appelez-nous au <a href=\"tel:+33667924630\">06 67 92 46 30</a>." + secours);
+      }, 6000);
+
+      enregistrement.catch(() => false).then(ok => {
+        repondu = true;
+        clearTimeout(garde);
+        etat(ok
+          ? "Votre demande est bien enregistrée — on vous répond sous 24h." + secours
+          : "WhatsApp s'ouvre avec votre message : <strong>envoyez-le, c'est lui qui compte</strong>.<br>Nous n'avons pas pu enregistrer la demande sur le site. En cas de doute, appelez-nous au <a href=\"tel:+33667924630\">06 67 92 46 30</a>." + secours);
+      });
     }
 
     ['f-prenom','f-tel','f-zone','f-marque','f-modele'].forEach(id => {

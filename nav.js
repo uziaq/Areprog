@@ -259,3 +259,35 @@ document.addEventListener('DOMContentLoaded', () => {
  // WhatsApp widget : chargé directement via <script src="whatsapp-widget.js"> dans chaque page HTML
 
 });
+
+/* ══════════════════════════════════════
+   BARRE D'APPEL MOBILE — masquage au défilement
+   Pose ou retire `callbar-hidden` sur <html>. Ce contrat est lu par
+   shared.css (transform de .mobile-call-bar) et par whatsapp-widget.js
+   (position du bouton flottant). Isolé dans son propre listener : une
+   erreur ici ne doit pas emporter la nav ni le pied de page.
+══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  if (!document.querySelector('.mobile-call-bar')) return; // absente de 12 pages
+
+  const root = document.documentElement;
+  const SEUIL = 8;        // absorbe le micro-défilement et le rebond iOS
+  const ZONE_HAUTE = 80;  // toujours visible en haut de page
+  const ZONE_BASSE = 60;  // et en bas, où le pied de page réserve déjà la place
+  let dernierY = window.scrollY;
+  let enAttente = false;
+
+  window.addEventListener('scroll', () => {
+    if (enAttente) return;
+    enAttente = true;
+    requestAnimationFrame(() => {
+      const y = Math.max(0, window.scrollY); // iOS renvoie des valeurs négatives
+      const enBas = (y + window.innerHeight) >= (document.body.scrollHeight - ZONE_BASSE);
+      if (Math.abs(y - dernierY) > SEUIL) {
+        root.classList.toggle('callbar-hidden', y > ZONE_HAUTE && y > dernierY && !enBas);
+        dernierY = y;
+      }
+      enAttente = false;
+    });
+  }, { passive: true });
+});

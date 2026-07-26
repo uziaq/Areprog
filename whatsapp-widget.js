@@ -101,8 +101,11 @@
  body[data-page="contact"] #wa-widget { display: none; }
 
  @media (max-width: 768px) {
- /* Laisser la barre d'appel fixe (48px + marge) libre en bas d'écran. */
- #wa-widget { bottom: 4.2rem; right: 1.2rem; }
+ /* Laisser la barre d'appel fixe libre en bas d'écran… */
+ #wa-widget { bottom: 4.2rem; right: 1.2rem; transition: bottom .25s ease; }
+ /* …et récupérer la place dès qu'elle se masque au défilement.
+    La classe est posée sur <html> par nav.js. */
+ html.callbar-hidden #wa-widget { bottom: 1.2rem; }
  #wa-bubble { display: none !important; }
  }
  `;

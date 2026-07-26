@@ -620,9 +620,17 @@ footer { display: block; border-top: 1px solid var(--border); }
     text-transform: uppercase;
     box-shadow: 0 -4px 24px rgba(52,211,153,.25);
     border-top: 1px solid rgba(52,211,153,.3);
-    transition: background .15s;
+    /* La transition étend celle du :active, elle ne la remplace pas. */
+    transition: background .15s, transform .25s ease;
+    will-change: transform;
   }
   .mobile-call-bar:active { background: #6EE7B7; }
+
+  /* Masquée au défilement vers le bas : la classe est posée sur <html> par
+     nav.js. 110% et non 100% pour que l'ombre portée sorte aussi de l'écran. */
+  html.callbar-hidden .mobile-call-bar { transform: translateY(110%); }
+  /* Un utilisateur au clavier qui l'atteint doit la voir revenir. */
+  .mobile-call-bar:focus { transform: translateY(0); }
   .mobile-call-bar-sub {
     font-size: .65rem;
     font-weight: 400;

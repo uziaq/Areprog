@@ -87,6 +87,9 @@
   <meta name="twitter:title" content="Politique de confidentialité — AREPROG"/>
   <meta name="twitter:description" content="Politique de confidentialité AREPROG — traitement des données personnelles, droits RGPD, cookies. Reprogrammation moteur en atelier."/>
   <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
+  <!-- Mesure d'audience Umami — sans cookie, sans donnee personnelle.
+       Remplacer UMAMI_WEBSITE_ID par l'identifiant fourni par cloud.umami.is. -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="UMAMI_WEBSITE_ID"></script>
 </head>
 <body data-page="mentions">
   <div id="nav-container"></div>
@@ -103,7 +106,7 @@
         <strong>AREPROG</strong> — Reprogrammation moteur en atelier<br>
         Téléphone : <a href="tel:+33667924630">06 67 92 46 30</a><br>
         Email : <a href="mailto:contact@areprog.fr">contact@areprog.fr</a><br>
-        Zones d'intervention : Pyrénées-Atlantiques (64), Pays Basque, Yonne (89)
+        Zones d'intervention : Pyrénées-Atlantiques (64), Pays Basque
       </p>
 
       <h2>Données collectées</h2>
@@ -118,17 +121,24 @@
           <tr><td>Email</td><td>Envoi du devis et suivi</td><td>Consentement</td></tr>
           <tr><td>Informations véhicule (marque, modèle, moteur, km)</td><td>Établissement du devis technique</td><td>Nécessité contractuelle</td></tr>
           <tr><td>Zone géographique</td><td>Vérification de la zone d'intervention</td><td>Nécessité contractuelle</td></tr>
+          <tr><td>Immatriculation (facultatif)</td><td>Identification précise du calculateur moteur</td><td>Mesures précontractuelles</td></tr>
+          <tr><td>Prestations souhaitées</td><td>Établissement du devis</td><td>Mesures précontractuelles</td></tr>
+          <tr><td>Message libre</td><td>Traitement de votre demande</td><td>Consentement</td></tr>
+          <tr><td>Adresse e-mail seule (simulateur)</td><td>Envoi du devis chiffré demandé</td><td>Consentement</td></tr>
         </tbody>
       </table>
-      <p>Le formulaire de contact fonctionne via WhatsApp — les données saisies sont transmises directement dans un message WhatsApp sans stockage sur nos serveurs.</p>
+      <p>Le formulaire de devis a deux effets : il ouvre WhatsApp avec votre message pré-rempli, <strong>et il enregistre votre demande dans notre base de données</strong> (Google Cloud Firestore), afin que nous puissions y répondre même si le message WhatsApp n'est finalement pas envoyé. Le formulaire du simulateur enregistre uniquement votre adresse e-mail et le véhicule que vous indiquez.</p>
 
       <h2>Durée de conservation</h2>
-      <p>Les données transmises via WhatsApp sont conservées dans l'historique de messagerie conformément aux conditions de Meta. Aucune base de données client n'est hébergée sur le site areprog.fr.</p>
+      <p>Les demandes de devis sont conservées <strong>3 ans à compter du dernier contact</strong>, conformément à la recommandation de la CNIL en matière de prospection commerciale, puis supprimées. Les données transmises via WhatsApp restent par ailleurs dans l'historique de messagerie conformément aux conditions de Meta.</p>
 
       <h2>Partage des données</h2>
       <p>Vos données ne sont jamais vendues ni cédées à des tiers à des fins commerciales. Elles peuvent être partagées uniquement avec :</p>
       <ul>
         <li><strong>Meta (WhatsApp)</strong> — pour la transmission du message de devis (voir la <a href="https://www.whatsapp.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">politique de confidentialité de WhatsApp</a>)</li>
+        <li><strong>Google Ireland Ltd</strong> — hébergement des demandes de devis (Firebase Firestore), en qualité de sous-traitant (voir la <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">politique de confidentialité de Firebase</a>)</li>
+        <li><strong>EmailJS</strong> — acheminement de l'e-mail de notification qui nous prévient d'une nouvelle demande</li>
+        <li><strong>Umami Software</strong> — mesure d'audience anonyme, sans cookie ni donnée personnelle</li>
       </ul>
 
       <h2>Cookies et stockage local</h2>
@@ -136,7 +146,8 @@
       <ul>
         <li><strong>sessionStorage</strong> : mémorise si vous avez fermé le widget WhatsApp flottant, afin de ne pas le réafficher durant la session. Aucune donnée personnelle n'est stockée.</li>
       </ul>
-      <p>Aucun cookie tiers (Google Analytics, Facebook Pixel, etc.) n'est déposé sur votre navigateur.</p>
+      <p><strong>Aucun cookie tiers publicitaire ou de tracking</strong> (Google Analytics, Facebook Pixel, etc.) n'est déposé sur votre navigateur.</p>
+      <p>La mesure d'audience du site est assurée par <strong>Umami</strong>, qui fonctionne <strong>sans cookie et sans identifiant persistant</strong> : aucune information n'est lue ni inscrite dans votre navigateur à cette fin, et aucune donnée ne permet de vous identifier. Pour vous en exclure, activez l'option « Do Not Track » de votre navigateur.</p>
 
       <h2>Vos droits (RGPD)</h2>
       <p>Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, vous disposez des droits suivants :</p>
