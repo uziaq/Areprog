@@ -165,3 +165,19 @@
   .prestation-grid { grid-template-columns: 1fr 1fr; }
   .contact-hero-title { font-size: 2.6rem; }
 }
+
+/* Envoi échoué : le formulaire reste rempli, l'encart propose les canaux directs. */
+.form-error-box {
+  margin: 1.2rem 0 0;
+  padding: .9rem 1.1rem;
+  border: 1px solid var(--red);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  background: rgba(248,113,113,.08);
+  color: var(--text2);
+  font-size: .85rem;
+  line-height: 1.6;
+}
+.form-error-box strong { display: block; color: var(--text); margin-bottom: .2rem; }
+.form-error-box a { color: var(--blue); }
+.form-error-box[hidden] { display: none; }
