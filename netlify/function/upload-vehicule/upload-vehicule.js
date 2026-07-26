@@ -1,14 +1,26 @@
 // Netlify Function — upload photos & documents véhicule vers Firebase Storage
 // Env vars requises : FIREBASE_SERVICE_ACCOUNT (JSON service account)
+//
+// Réservé aux utilisateurs authentifiés : les fichiers déposés deviennent
+// lisibles publiquement (les liens sont ouverts sans compte depuis la fiche
+// véhicule), donc l'écriture doit rester strictement contrôlée.
 
 const admin = require('firebase-admin');
 
 const BUCKET = 'areprog-devis.firebasestorage.app';
-const ALLOWED = [
-  'image/jpeg', 'image/png', 'image/webp',
-  'application/pdf',
-];
+const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 const MAX_BYTES = 8 * 1024 * 1024;
+const SAFE_SEGMENT = /^[A-Za-z0-9_-]{1,80}$/;
+const SAFE_FILENAME = /^[A-Za-z0-9 _.-]{1,200}\.(jpe?g|png|webp|pdf)$/i;
+
+// Le type déclaré par le navigateur n'engage à rien : on vérifie aussi la
+// signature binaire avant de publier le fichier.
+const SIGNATURES = {
+  'image/jpeg':      (b) => b.subarray(0, 3).toString('hex') === 'ffd8ff',
+  'image/png':       (b) => b.subarray(0, 8).toString('hex') === '89504e470d0a1a0a',
+  'image/webp':      (b) => b.subarray(0, 4).toString('latin1') === 'RIFF' && b.subarray(8, 12).toString('latin1') === 'WEBP',
+  'application/pdf': (b) => b.subarray(0, 5).toString('latin1') === '%PDF-',
+};
 
 let ready = false;
 
@@ -19,48 +31,78 @@ function initAdmin() {
   ready = true;
 }
 
-// Nom de fichier sûr : pas de séparateur de chemin ni de caractère exotique
-function safeName(name) {
-  return String(name).replace(/[^a-zA-Z0-9._-]/g, '_').slice(-80) || 'fichier';
+async function requireAuth(event) {
+  const header = event.headers.authorization || event.headers.Authorization || '';
+  const match = /^Bearer\s+(.+)$/i.exec(header.trim());
+  if (!match) return null;
+  try {
+    return await admin.auth().verifyIdToken(match[1]);
+  } catch (e) {
+    console.warn('upload-vehicule: jeton refusé —', e.code || e.message);
+    return null;
+  }
 }
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
-
 exports.handler = async function(event) {
+  const origin = event.headers.origin || event.headers.Origin || '';
+  const cors = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS, body: '' };
+    return { statusCode: 204, headers: cors, body: '' };
   }
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers: cors, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+  }
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    return { statusCode: 403, headers: cors, body: JSON.stringify({ error: 'Origine non autorisée' }) };
   }
 
   try {
     initAdmin();
-    var body = JSON.parse(event.body || '{}');
-    var fileBase64  = body.fileBase64;
-    var vehiculeId  = body.vehiculeId;
-    var filename    = body.filename;
-    var contentType = body.contentType || 'application/octet-stream';
-    var kind        = body.kind === 'document' ? 'documents' : 'photos';
+
+    const caller = await requireAuth(event);
+    if (!caller) {
+      return { statusCode: 401, headers: cors, body: JSON.stringify({ error: 'Authentification requise' }) };
+    }
+
+    const body        = JSON.parse(event.body || '{}');
+    const fileBase64  = body.fileBase64;
+    const vehiculeId  = body.vehiculeId;
+    const filename    = body.filename;
+    const contentType = body.contentType;
+    const kind        = body.kind === 'document' ? 'documents' : 'photos';
 
     if (!fileBase64 || !vehiculeId || !filename) {
-      return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Paramètres manquants' }) };
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Paramètres manquants' }) };
     }
-    if (ALLOWED.indexOf(contentType) === -1) {
-      return { statusCode: 415, headers: CORS, body: JSON.stringify({ error: 'Type de fichier non autorisé : ' + contentType }) };
+    // vehiculeId et filename composent le chemin de l'objet : sans validation,
+    // un « ../ » ou un « / » permettrait d'écraser les fichiers d'un autre
+    // véhicule — ou n'importe quel objet du bucket.
+    if (!SAFE_SEGMENT.test(String(vehiculeId))) {
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Identifiant de véhicule invalide' }) };
+    }
+    if (!SAFE_FILENAME.test(String(filename))) {
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Nom de fichier invalide' }) };
+    }
+    if (!Object.prototype.hasOwnProperty.call(SIGNATURES, contentType)) {
+      return { statusCode: 415, headers: cors, body: JSON.stringify({ error: 'Type de fichier non autorisé' }) };
     }
 
-    var buffer = Buffer.from(fileBase64, 'base64');
-    if (buffer.length > MAX_BYTES) {
-      return { statusCode: 413, headers: CORS, body: JSON.stringify({ error: 'Fichier trop volumineux (max 8 Mo)' }) };
+    const buffer = Buffer.from(fileBase64, 'base64');
+    if (buffer.length === 0 || buffer.length > MAX_BYTES) {
+      return { statusCode: 413, headers: cors, body: JSON.stringify({ error: 'Fichier vide ou trop volumineux (8 Mo max)' }) };
+    }
+    if (!SIGNATURES[contentType](buffer)) {
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Le contenu ne correspond pas au type annoncé' }) };
     }
 
-    var path = 'vehicules/' + safeName(vehiculeId) + '/' + kind + '/' + Date.now() + '-' + safeName(filename);
-    var file = admin.storage().bucket().file(path);
+    const path = 'vehicules/' + vehiculeId + '/' + kind + '/' + Date.now() + '-' + filename;
+    const file = admin.storage().bucket().file(path);
 
     await file.save(buffer, {
       metadata: { contentType: contentType },
@@ -68,22 +110,24 @@ exports.handler = async function(event) {
       resumable: false,
     });
 
-    var encodedPath = file.name.split('/').map(encodeURIComponent).join('/');
+    const encodedPath = file.name.split('/').map(encodeURIComponent).join('/');
 
     return {
       statusCode: 200,
-      headers: Object.assign({ 'Content-Type': 'application/json' }, CORS),
+      headers: cors,
       body: JSON.stringify({
         url:  'https://storage.googleapis.com/' + BUCKET + '/' + encodedPath,
         path: file.name,
       }),
     };
-  } catch(e) {
+  } catch (e) {
+    // Les messages du SDK Firebase citent le bucket, le projet et le service
+    // account : ils restent dans les logs Netlify.
     console.error('upload-vehicule error:', e);
     return {
       statusCode: 500,
-      headers: Object.assign({ 'Content-Type': 'application/json' }, CORS),
-      body: JSON.stringify({ error: e.message }),
+      headers: cors,
+      body: JSON.stringify({ error: "L'envoi du fichier a échoué." }),
     };
   }
 };
