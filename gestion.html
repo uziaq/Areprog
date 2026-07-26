@@ -4288,18 +4288,6 @@ var editingRdvId = null;
 function loadRdvs() {
   try { return JSON.parse(localStorage.getItem(RDV_KEY) || '[]'); } catch(e) { return []; }
 }
-function saveRdvs(arr) {
-  localStorage.setItem(RDV_KEY, JSON.stringify(arr));
-  if (db && syncOk) {
-    // Sauvegarde chaque RDV dans son propre document pour éviter l'écrasement global
-    var batch = db.batch();
-    arr.forEach(function(rdv) {
-      batch.set(db.collection('rdvs').doc(String(rdv.id)), rdv);
-    });
-    batch.commit().catch(function(e){ console.warn('Firebase rdvs batch:', e); });
-  }
-}
-
 function saveOneRdv(rdv) {
   if (db && syncOk) {
     db.collection('rdvs').doc(String(rdv.id)).set(rdv)
@@ -4741,50 +4729,12 @@ function ejsSend(templateId, params) {
 }
 
 // ── Envoi email rappel RDV ────────────────────────────────────
+// Les rappels RDV sont envoyés de façon fiable par la fonction planifiée
+// Netlify rdv-rappels (cron 5 min, dédup Firestore). Ce hook client ne fait
+// plus d'envoi réel — la bannière "Rappel envoyé" est désormais affichée
+// par startRdvsRealtimeSync() en réaction à l'état confirmé Firestore.
 function sendReminderEmail(rdv, minutes) {
-  var key = rdv.id + '|' + minutes;
-  if (_rappelInFlight[key]) return Promise.resolve();
-  _rappelInFlight[key] = true;
-
-  var cl = rdv.clientId ? loadClients().find(function(c){ return c.id===rdv.clientId; }) : null;
-  var vehs = cl && cl.vehs && cl.vehs.length ? cl.vehs : (cl&&cl.vm?[{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||''}]:[]);
-  var selV = (rdv.vehIdx!=null && vehs[rdv.vehIdx]) ? vehs[rdv.vehIdx] : vehs[0];
-  var vehLabel = selV ? [selV.vm,selV.vmo,selV.vmot,selV.van?'('+selV.van+')':''].filter(Boolean).join(' ') : '';
-  var opt = RAPPEL_OPTIONS.find(function(o){ return parseInt(o.v)===minutes; });
-
-  return ejsSend(EJS_TPL_RAPPEL, {
-    to_email:    EJS_FROM_EMAIL,
-    rdv_title:   rdv.title||'',
-    rdv_date:    rdv.date ? fmtDate(rdv.date) : '',
-    rdv_heure:   rdv.heure||'Non précisée',
-    rdv_lieu:    rdv.lieu||'Non précisé',
-    rdv_client:  cl ? cl.nom : 'Non précisé',
-    rdv_vehicule: vehLabel||'Non précisé',
-    rdv_notes:   rdv.notes||'',
-    rappel_label: opt ? opt.l : minutes+' min avant',
-  }).then(function(){
-    markRappelSent(rdv.id, minutes);
-    showNotifBanner('📧', 'Rappel envoyé', rdv.title||'');
-    delete _rappelInFlight[key];
-  }).catch(function(e){
-    console.error('EmailJS rappel:', e);
-    var msg = (e && (e.text || e.message)) || 'Erreur inconnue';
-    showNotifBanner('⚠️', 'Erreur EmailJS rappel', msg);
-    delete _rappelInFlight[key];
-    throw e;
-  });
-}
-
-// Marque un rappel comme envoyé dans la liste des rdvs (persisté Firebase + localStorage)
-function markRappelSent(rdvId, minutes) {
-  var rdvs = loadRdvs();
-  var i = rdvs.findIndex(function(r){ return r.id === rdvId; });
-  if (i < 0) return;
-  rdvs[i].rappelsSent = rdvs[i].rappelsSent || [];
-  if (rdvs[i].rappelsSent.indexOf(minutes) < 0) {
-    rdvs[i].rappelsSent.push(minutes);
-    saveRdvs(rdvs);
-  }
+  return Promise.resolve();
 }
 
 function cancelRdvTimers(rdvId) {
@@ -4824,7 +4774,6 @@ function runRappelCheck() {
   if (!_ejsReady || typeof emailjs === 'undefined') return;
   var now = Date.now();
   var rdvs = loadRdvs();
-  var dirty = false;
   rdvs.forEach(function(rdv) {
     var rappels = rdv.rappels && rdv.rappels.length ? rdv.rappels
       : (rdv.rappel && rdv.rappel>0 ? [rdv.rappel] : []);
@@ -4836,16 +4785,10 @@ function runRappelCheck() {
       if (rdv.rappelsSent.indexOf(m) >= 0) return;
       var fire = fireBase - m*60000;
       if (fire > now) return; // futur — géré par scheduleRdvNotif
-      if (now - fire > STALE_RAPPEL_MS) {
-        // trop vieux : on marque sans envoyer pour éviter un flood
-        rdv.rappelsSent.push(m);
-        dirty = true;
-        return;
-      }
+      if (now - fire > STALE_RAPPEL_MS) return; // trop vieux : la fonction planifiée gère déjà ce cas côté serveur
       sendReminderEmail(rdv, m);
     });
   });
-  if (dirty) saveRdvs(rdvs);
 }
 
 function updateRappelIndicator() {
@@ -4868,32 +4811,8 @@ function checkTodayNotifs() {
   if (!_rappelLoopInterval) {
     _rappelLoopInterval = setInterval(runRappelCheck, RAPPEL_LOOP_MS);
   }
-
-  // Alertes factures impayées — dédup journalier (évite un envoi à chaque reload)
-  if (typeof emailjs === 'undefined') return;
-  var todayKey = new Date().toISOString().slice(0,10);
-  if (localStorage.getItem('ar_last_facture_alert_day') === todayKey) return;
-  var now = new Date(); now.setHours(0,0,0,0);
-  var sent = false;
-  loadDocs().filter(function(d){ return d.type==='facture'&&d.statut!=='payé'&&d.statut!=='annulé'; }).forEach(function(d) {
-    var days = Math.floor((now - new Date(d.date))/86400000);
-    if (days===7||days===14||days===30) {
-      sent = true;
-      setTimeout(function(){
-        ejsSend(EJS_TPL_RAPPEL, {
-          to_email: EJS_FROM_EMAIL,
-          rdv_title: 'Facture impayée — '+(d.cn||''),
-          rdv_date: fmtDate(d.date),
-          rdv_heure: 'Depuis '+days+' jours',
-          rdv_lieu: '', rdv_client: d.cn||'',
-          rdv_vehicule: [d.vm,d.vmo].filter(Boolean).join(' '),
-          rdv_notes: 'Montant : '+fmt(d.ttc||0)+' · Ref : '+(d.num||''),
-          rappel_label: 'Alerte automatique',
-        }).catch(function(){});
-      }, 5000);
-    }
-  });
-  if (sent) localStorage.setItem('ar_last_facture_alert_day', todayKey);
+  // Les factures impayées en retard sont visibles dans le panneau "Alertes"
+  // du tableau de bord (renderAutoAlerts) — plus d'email envoyé ici.
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -5692,9 +5611,15 @@ function updateListeFilterCounts() {
 // ══════════════════════════════════════════════════════════════
 //  SYNC RDVS EN TEMPS RÉEL (Firebase onSnapshot)
 // ══════════════════════════════════════════════════════════════
+var _rdvsSnapshotSeen = false;
+
 function startRdvsRealtimeSync() {
   if (!db || !syncOk) return;
   db.collection('rdvs').onSnapshot(function(snapshot) {
+    var previousRdvs = loadRdvs();
+    var prevSentById = {};
+    previousRdvs.forEach(function(r){ prevSentById[r.id] = r.rappelsSent || []; });
+
     var rdvs = [];
     snapshot.forEach(function(doc) {
       var data = doc.data();
@@ -5703,6 +5628,20 @@ function startRdvsRealtimeSync() {
       if (data && data.id) rdvs.push(data);
     });
     localStorage.setItem(RDV_KEY, JSON.stringify(rdvs));
+
+    // Bannière "Rappel envoyé" — uniquement quand Firestore confirme un
+    // nouvel envoi (fait par la fonction planifiée côté serveur), jamais
+    // sur simple hypothèse côté client. Ignoré au tout premier snapshot.
+    if (_rdvsSnapshotSeen) {
+      rdvs.forEach(function(r) {
+        var prevSent = prevSentById[r.id] || [];
+        (r.rappelsSent || []).forEach(function(m) {
+          if (prevSent.indexOf(m) < 0) showNotifBanner('📧', 'Rappel envoyé', r.title||'');
+        });
+      });
+    }
+    _rdvsSnapshotSeen = true;
+
     // Rafraîchir l'agenda si ouvert
     if ($('t-agenda') && $('t-agenda').classList.contains('on')) {
       renderCalendar();
@@ -5711,7 +5650,7 @@ function startRdvsRealtimeSync() {
     // Reprogrammer les rappels
     cancelAllRdvTimers();
     rdvs.forEach(function(r){ scheduleRdvNotif(r); });
-    runRappelCheck();
+    updateRappelIndicator();
   }, function(err) {
     console.warn('RDV realtime sync error:', err);
   });
