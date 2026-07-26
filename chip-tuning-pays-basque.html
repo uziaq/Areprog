@@ -130,8 +130,8 @@
     .faq-q:hover .faq-q-text { color: var(--blue); }
     .faq-q-icon { width: 1.3rem; height: 1.3rem; min-width: 1.3rem; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .75rem; color: var(--muted); transition: all .3s; }
     .faq-item.open .faq-q-icon { background: var(--blue); border-color: var(--blue); color: #fff; transform: rotate(45deg); }
-    .faq-a { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s; }
-    .faq-item.open .faq-a { max-height: 400px; padding-bottom: 1.3rem; }
+    .faq-a { max-height: 0; overflow: hidden; visibility: hidden; transition: max-height .4s ease, padding .3s, visibility 0s .4s; }
+    .faq-item.open .faq-a { max-height: 900px; padding-bottom: 1.3rem; visibility: visible; transition: max-height .4s ease, padding .3s, visibility 0s; }
     .faq-a p { color: var(--muted); line-height: 1.75; font-size: .9rem; }
 
     /* CTA */
@@ -366,32 +366,32 @@
       <h2 class="section-title">Vos questions<br><em>chip tuning</em></h2>
       <div class="faq-list">
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <button class="faq-q" type="button" id="faq-q-1" aria-controls="faq-a-1" aria-expanded="false">
             <span class="faq-q-text">Chip tuning et reprogrammation moteur, c'est la même chose ?</span>
             <span class="faq-q-icon" aria-hidden="true">+</span>
           </button>
-          <div class="faq-a"><p>Oui, dans le langage courant. Chip tuning est le terme historique (modification d'une puce physique sur les vieux calculateurs) devenu générique pour désigner toute reprogrammation ECU. Chez AREPROG, on intervient uniquement via port OBD ou mode Boot/Bench — pas de modification physique du calculateur.</p></div>
+          <div class="faq-a" id="faq-a-1" role="region" aria-labelledby="faq-q-1"><p>Oui, dans le langage courant. Chip tuning est le terme historique (modification d'une puce physique sur les vieux calculateurs) devenu générique pour désigner toute reprogrammation ECU. Chez AREPROG, on intervient uniquement via port OBD ou mode Boot/Bench — pas de modification physique du calculateur.</p></div>
         </div>
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <button class="faq-q" type="button" id="faq-q-2" aria-controls="faq-a-2" aria-expanded="false">
             <span class="faq-q-text">Le chip tuning est-il légal au Pays Basque ?</span>
             <span class="faq-q-icon" aria-hidden="true">+</span>
           </button>
-          <div class="faq-a"><p>La reprogrammation moteur n'est pas expressément interdite en France. Un Stage 1 reste dans les normes d'émissions et passe le contrôle technique. Les désactivations FAP/AdBlue sont réservées à un usage non homologué sur voie publique. Nous vous informons clairement avant chaque intervention.</p></div>
+          <div class="faq-a" id="faq-a-2" role="region" aria-labelledby="faq-q-2"><p>La reprogrammation moteur n'est pas expressément interdite en France. Un Stage 1 reste dans les normes d'émissions et passe le contrôle technique. Les désactivations FAP/AdBlue sont réservées à un usage non homologué sur voie publique. Nous vous informons clairement avant chaque intervention.</p></div>
         </div>
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <button class="faq-q" type="button" id="faq-q-3" aria-controls="faq-a-3" aria-expanded="false">
             <span class="faq-q-text">Peut-on faire un chip tuning sur n'importe quel véhicule ?</span>
             <span class="faq-q-icon" aria-hidden="true">+</span>
           </button>
-          <div class="faq-a"><p>Pratiquement tous les véhicules avec injection électronique modernes (après 2000) sont compatibles. On intervient sur VW, Audi, BMW, Mercedes, Peugeot, Renault, Citroën, Ford, Opel, Toyota et beaucoup d'autres. Envoyez-nous la marque, le modèle et la motorisation — on confirme la faisabilité sous 24h gratuitement.</p></div>
+          <div class="faq-a" id="faq-a-3" role="region" aria-labelledby="faq-q-3"><p>Pratiquement tous les véhicules avec injection électronique modernes (après 2000) sont compatibles. On intervient sur VW, Audi, BMW, Mercedes, Peugeot, Renault, Citroën, Ford, Opel, Toyota et beaucoup d'autres. Envoyez-nous la marque, le modèle et la motorisation — on confirme la faisabilité sous 24h gratuitement.</p></div>
         </div>
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <button class="faq-q" type="button" id="faq-q-4" aria-controls="faq-a-4" aria-expanded="false">
             <span class="faq-q-text">Combien coûte le chip tuning au Pays Basque ?</span>
             <span class="faq-q-icon" aria-hidden="true">+</span>
           </button>
-          <div class="faq-a"><p>Un Stage 1 (chip tuning standard) se situe entre 300 et 380€ selon la motorisation, déplacement en atelier inclus dans la zone Pays Basque. La conversion E85 débute à 300€. Les désactivations EGR/FAP/AdBlue ont des tarifs fixes de 150 à 250€. Devis gratuit et personnalisé sous 24h.</p></div>
+          <div class="faq-a" id="faq-a-4" role="region" aria-labelledby="faq-q-4"><p>Un Stage 1 (chip tuning standard) se situe entre 300 et 380€ selon la motorisation, déplacement en atelier inclus dans la zone Pays Basque. La conversion E85 débute à 300€. Les désactivations EGR/FAP/AdBlue ont des tarifs fixes de 150 à 250€. Devis gratuit et personnalisé sous 24h.</p></div>
         </div>
       </div>
     </section>

@@ -157,8 +157,8 @@
  font-size:.75rem; color:var(--muted); transition:all .3s;
  }
  .faq-item.open .faq-q-icon { background:var(--blue); border-color:var(--blue); color:#fff; transform:rotate(45deg); }
- .faq-a { max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s; }
- .faq-item.open .faq-a { max-height:400px; padding-bottom:1.3rem; }
+ .faq-a { max-height: 0; overflow: hidden; visibility: hidden; transition: max-height .4s ease, padding .3s, visibility 0s .4s; }
+ .faq-item.open .faq-a { max-height: 900px; padding-bottom: 1.3rem; visibility: visible; transition: max-height .4s ease, padding .3s, visibility 0s; }
  .faq-a p { color:var(--muted); line-height:1.75; font-size:.9rem; }
  .faq-a strong { color:var(--text); font-weight:500; }
 

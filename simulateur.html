@@ -975,38 +975,38 @@
           <div class="sim-faq-mini">
 
             <div class="sim-faq-item">
-              <button class="sim-faq-q">
+              <button class="sim-faq-q" type="button" id="sim-faq-q-1" aria-expanded="false" aria-controls="sim-faq-a-1">
                 Le Stage 1 abîme-t-il le moteur ?
-                <span class="sim-faq-icon">+</span>
+                <span class="sim-faq-icon" aria-hidden="true">+</span>
               </button>
-              <div class="sim-faq-a">Non. Un Stage 1 sérieux reste dans les tolérances mécaniques d'origine. Diagnostic
+              <div class="sim-faq-a" id="sim-faq-a-1" role="region" aria-labelledby="sim-faq-q-1">Non. Un Stage 1 sérieux reste dans les tolérances mécaniques d'origine. Diagnostic
                 complet avant chaque intervention.</div>
             </div>
 
             <div class="sim-faq-item">
-              <button class="sim-faq-q">
+              <button class="sim-faq-q" type="button" id="sim-faq-q-2" aria-expanded="false" aria-controls="sim-faq-a-2">
                 La reprogrammation est-elle réversible ?
-                <span class="sim-faq-icon">+</span>
+                <span class="sim-faq-icon" aria-hidden="true">+</span>
               </button>
-              <div class="sim-faq-a">Oui, 100%. Votre fichier d'origine est conservé et peut être réinstallé à tout
+              <div class="sim-faq-a" id="sim-faq-a-2" role="region" aria-labelledby="sim-faq-q-2">Oui, 100%. Votre fichier d'origine est conservé et peut être réinstallé à tout
                 moment, gratuitement.</div>
             </div>
 
             <div class="sim-faq-item">
-              <button class="sim-faq-q">
+              <button class="sim-faq-q" type="button" id="sim-faq-q-3" aria-expanded="false" aria-controls="sim-faq-a-3">
                 L'E85 convient-il à mon essence turbo ?
-                <span class="sim-faq-icon">+</span>
+                <span class="sim-faq-icon" aria-hidden="true">+</span>
               </button>
-              <div class="sim-faq-a">La quasi-totalité des essences turbo post-2000 est compatible. On vérifie
+              <div class="sim-faq-a" id="sim-faq-a-3" role="region" aria-labelledby="sim-faq-q-3">La quasi-totalité des essences turbo post-2000 est compatible. On vérifie
                 gratuitement avant toute intervention.</div>
             </div>
 
             <div class="sim-faq-item">
-              <button class="sim-faq-q">
+              <button class="sim-faq-q" type="button" id="sim-faq-q-4" aria-expanded="false" aria-controls="sim-faq-a-4">
                 Combien de temps dure l'intervention ?
-                <span class="sim-faq-icon">+</span>
+                <span class="sim-faq-icon" aria-hidden="true">+</span>
               </button>
-              <div class="sim-faq-a">Entre 45 min et 1h30 en standard. Certains calculateurs nécessitent jusqu'à 2h30.
+              <div class="sim-faq-a" id="sim-faq-a-4" role="region" aria-labelledby="sim-faq-q-4">Entre 45 min et 1h30 en standard. Certains calculateurs nécessitent jusqu'à 2h30.
               </div>
             </div>
 
@@ -1145,8 +1145,13 @@
         var isOpen = item.classList.contains('open');
         document.querySelectorAll('.sim-faq-item.open').forEach(function (i) {
           i.classList.remove('open');
+          var b = i.querySelector('.sim-faq-q');
+          if (b) b.setAttribute('aria-expanded', 'false');
         });
-        if (!isOpen) item.classList.add('open');
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
       });
     });
 

@@ -111,6 +111,9 @@ html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
+    /* Sans ceci, le délai de masquage des réponses FAQ (visibility 0s .4s)
+       survivrait : le contenu resterait visible 0,4 s après le repli. */
+    transition-delay: 0s !important;
   }
   /* Le contenu révélé au défilement doit rester visible sans animation. */
   .reveal { opacity: 1 !important; transform: none !important; }
