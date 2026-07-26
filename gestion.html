@@ -79,6 +79,9 @@ select option{background:#1d222d}
 .nb{padding:7px 15px;border-radius:6px;border:none;background:transparent;color:var(--text-dim);font-size:13px;font-weight:500;transition:all .15s}
 .nb:hover{background:var(--bg3);color:var(--text)}
 .nb.on{background:var(--bg3);color:var(--blue)}
+/* Pastille du nombre de demandes en attente, sur l'onglet Demandes. */
+.dem-badge{display:inline-block;min-width:17px;padding:1px 5px;margin-left:5px;border-radius:9px;background:var(--blue);color:#fff;font-size:10.5px;font-weight:700;line-height:15px;text-align:center;vertical-align:middle}
+.dem-badge[hidden]{display:none}
 .logout-btn{padding:6px 13px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-size:12px;transition:all .15s}
 .logout-btn:hover{border-color:var(--red);color:var(--red)}
 .main{padding:28px 32px;max-width:1280px;margin:0 auto}
@@ -1086,6 +1089,7 @@ select option{background:#1d222d}
     </div>
     <div class="tb-nav">
       <button class="nb on" onclick="showTab('dash')">Dashboard</button>
+      <button class="nb" onclick="showTab('demandes')">📥 Demandes <span id="dem-badge" class="dem-badge" hidden></span></button>
       <button class="nb" onclick="newDoc()">+ Nouveau</button>
       <button class="nb" onclick="showTab('liste')">Documents</button>
       <button class="nb" onclick="showTab('carnet')">👥 Clients</button>
@@ -1690,6 +1694,24 @@ select option{background:#1d222d}
       </div>
 
       <div class="parc-grid" id="parc-grid"></div>
+    </div>
+
+    <!-- ══ DEMANDES WEB ═══════════════════════════════════ -->
+    <div class="tc" id="t-demandes">
+      <div class="sh">
+        <div class="sh-title">Demandes reçues depuis le site</div>
+        <div class="sh-actions" style="display:flex;gap:8px">
+          <button class="btn-s" onclick="renderDemandes()">↻ Rafraîchir</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-chip active" id="dchip-nouveau" onclick="setDemFilter('nouveau',this)">📥 À traiter <span class="filter-count" id="dcount-nouveau"></span></button>
+        <button class="filter-chip" id="dchip-traite" onclick="setDemFilter('traite',this)">✅ Traitées <span class="filter-count" id="dcount-traite"></span></button>
+        <button class="filter-chip" id="dchip-" onclick="setDemFilter('',this)">Toutes <span class="filter-count" id="dcount-"></span></button>
+      </div>
+
+      <div id="demandes-body"></div>
     </div>
 
   </div>
@@ -2649,6 +2671,9 @@ function initApp() {
   setTimeout(checkTodayNotifs, 2000);
   // Vérifier si un brouillon existe
   setTimeout(checkAndRestoreDraft, 500);
+  // Compter les demandes web en attente pour la pastille de l'onglet, sans
+  // attendre que l'onglet soit ouvert.
+  setTimeout(renderDemandes, 1500);
 }
 
 function resetForm(goToForm) {
@@ -5506,9 +5531,16 @@ function exportCSV() {
 // ============================================================
 //  TABS (complet)
 // ============================================================
+// ⚠ Les deux tableaux ci-dessous sont POSITIONNELS : le i-ème nom correspond
+// au i-ème bouton .nb de la barre. L'index 2 ('form') est le bouton
+// « + Nouveau », qui n'ouvre pas d'onglet mais partage la position.
+// Ajouter un onglet impose de le déclarer ici ET au bon rang dans .tb-nav.
+var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','sms'];
+
 function showTab(t) {
-  ['dash','form','liste','carnet','template','services','agenda','parc','stats','search','sms'].forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
-  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',['dash','form','liste','carnet','template','services','agenda','parc','stats','search','sms'][i]===t); });
+  TABS.forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
+  document.querySelectorAll('.nb').forEach(function(b,i){ b.classList.toggle('on',TABS[i]===t); });
+  if(t==='demandes') renderDemandes();
   if(t==='dash')     renderDash();
   if(t==='liste')    renderListe();
   if(t==='carnet')   renderCarnet();
@@ -5962,6 +5994,206 @@ function loadSmsLog() {
     .catch(function(e) {
       el.innerHTML = '<div style="color:#ef4444;font-size:13px;padding:16px">Erreur : ' + escHtml(e.message) + '</div>';
     });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DEMANDES WEB — formulaire de contact, simulateur, configurateur VAG
+//  Lecture directe de Firestore (pas de cache localStorage) : ces documents
+//  sont écrits par le site public, jamais par ce back-office.
+// ══════════════════════════════════════════════════════════════
+var _demandes = [];
+var _demFilter = 'nouveau';
+
+function setDemFilter(f, btn) {
+  _demFilter = f;
+  document.querySelectorAll('#t-demandes .filter-chip').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  paintDemandes();
+}
+
+// Normalise les deux collections vers une forme commune : `leads` (contact et
+// simulateur) et `vag_orders` (configurateur) n'ont pas le même schéma.
+function normaliserDemande(id, d, collection) {
+  var veh = d.vehicle || {};
+  var prestations = Array.isArray(d.prestations) ? d.prestations
+    : Array.isArray(d.options) ? d.options.map(function(o){ return o && o.name ? o.name : String(o); })
+    : [];
+  var quand = null;
+  if (d.createdAt && typeof d.createdAt.toDate === 'function') quand = d.createdAt.toDate();
+  else if (d.createdAt) quand = new Date(d.createdAt);
+  return {
+    id: id,
+    collection: collection,
+    source: collection === 'vag_orders' ? 'vag' : (d.source || 'contact'),
+    nom: d.name || '',
+    tel: d.phone || '',
+    email: d.email || '',
+    ville: d.city || '',
+    message: d.message || '',
+    marque: veh.brand || '',
+    modele: veh.model || '',
+    annee: veh.year || '',
+    moteur: veh.engine || '',
+    km: veh.km || '',
+    immat: veh.plate || '',
+    prestations: prestations,
+    total: typeof d.total === 'number' ? d.total : null,
+    statut: d.status || 'nouveau',
+    quand: quand
+  };
+}
+
+function renderDemandes() {
+  var el = $('demandes-body');
+  if (!el) return;
+  if (!db) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Firebase non connecté</div>';
+    return;
+  }
+  el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Chargement…</div>';
+
+  // Une collection absente ou vide ne doit pas faire échouer l'autre.
+  var lire = function(nom) {
+    return db.collection(nom).orderBy('createdAt', 'desc').limit(200).get()
+      .then(function(snap) {
+        var out = [];
+        snap.forEach(function(doc){ out.push(normaliserDemande(doc.id, doc.data(), nom)); });
+        return out;
+      })
+      .catch(function(e) { console.warn('demandes: lecture ' + nom + ' —', e.message); return []; });
+  };
+
+  Promise.all([lire('leads'), lire('vag_orders')])
+    .then(function(res) {
+      _demandes = res[0].concat(res[1]).sort(function(a, b) {
+        return (b.quand ? b.quand.getTime() : 0) - (a.quand ? a.quand.getTime() : 0);
+      });
+      paintDemandes();
+    })
+    .catch(function(e) {
+      el.innerHTML = '<div style="color:#ef4444;font-size:13px;padding:16px">Erreur : ' + escHtml(e.message) + '</div>';
+    });
+}
+
+function paintDemandes() {
+  var el = $('demandes-body');
+  if (!el) return;
+
+  var nouveaux = _demandes.filter(function(d){ return d.statut === 'nouveau'; }).length;
+  var traites  = _demandes.length - nouveaux;
+  if ($('dcount-nouveau')) $('dcount-nouveau').textContent = nouveaux;
+  if ($('dcount-traite'))  $('dcount-traite').textContent  = traites;
+  if ($('dcount-'))        $('dcount-').textContent        = _demandes.length;
+
+  var badge = $('dem-badge');
+  if (badge) { badge.textContent = nouveaux; badge.hidden = nouveaux === 0; }
+
+  var liste = _demFilter === ''
+    ? _demandes
+    : _demandes.filter(function(d){
+        return _demFilter === 'nouveau' ? d.statut === 'nouveau' : d.statut !== 'nouveau';
+      });
+
+  if (!liste.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">'
+      + (_demFilter === 'nouveau' ? 'Aucune demande en attente. 👌' : 'Aucune demande.') + '</div>';
+    return;
+  }
+  el.innerHTML = liste.map(carteDemande).join('');
+}
+
+var SOURCE_LABEL = {
+  contact:    { txt: '📝 Formulaire', col: 'var(--blue)' },
+  simulateur: { txt: '📊 Simulateur', col: 'var(--orange)' },
+  vag:        { txt: '⚙️ Codage VAG', col: 'var(--green)' }
+};
+
+function carteDemande(d) {
+  var src = SOURCE_LABEL[d.source] || SOURCE_LABEL.contact;
+  var veh = [d.marque, d.modele, d.annee ? '(' + d.annee + ')' : ''].filter(Boolean).join(' ');
+  var quand = d.quand ? d.quand.toLocaleString('fr-FR') : '—';
+  var ref = escHtml(d.collection) + ':' + escHtml(d.id);
+
+  var lignes = '';
+  var ajouter = function(label, valeur) {
+    if (!valeur) return;
+    lignes += '<div style="display:flex;gap:8px;font-size:12.5px;margin-top:3px">'
+      + '<span style="color:var(--text-muted);min-width:88px">' + label + '</span>'
+      + '<span>' + escHtml(valeur) + '</span></div>';
+  };
+  ajouter('Véhicule', veh);
+  ajouter('Motorisation', d.moteur);
+  ajouter('Kilométrage', d.km);
+  ajouter('Immat.', d.immat);
+  ajouter('Zone', d.ville);
+  ajouter('Prestations', d.prestations.join(', '));
+  if (d.total !== null) ajouter('Total estimé', fmt(d.total));
+  ajouter('Message', d.message);
+
+  var contacts = '';
+  if (d.tel) contacts += '<a href="tel:' + escHtml(d.tel) + '" class="btn-s btn-sm">📞 ' + escHtml(d.tel) + '</a>';
+  if (d.email) contacts += '<a href="mailto:' + escHtml(d.email) + '" class="btn-s btn-sm">✉️ ' + escHtml(d.email) + '</a>';
+
+  var actions = d.statut === 'nouveau'
+    ? '<button class="btn-p btn-sm" onclick="demandeVersDevis(\'' + ref + '\')">→ Créer le devis</button>'
+      + '<button class="btn-s btn-sm" onclick="marquerDemande(\'' + ref + '\',\'traite\')">✓ Marquer traitée</button>'
+    : '<button class="btn-s btn-sm" onclick="demandeVersDevis(\'' + ref + '\')">→ Créer le devis</button>'
+      + '<button class="btn-s btn-sm" onclick="marquerDemande(\'' + ref + '\',\'nouveau\')">↩ Rouvrir</button>';
+
+  return '<div style="background:var(--bg2);border:1px solid ' + (d.statut === 'nouveau' ? 'var(--border-blue)' : 'var(--border)') + ';border-radius:10px;padding:14px 16px;margin-bottom:10px">'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">'
+      + '<div>'
+        + '<span style="font-size:11px;font-weight:700;color:' + src.col + '">' + src.txt + '</span>'
+        + (d.statut === 'nouveau' ? '' : '<span style="font-size:11px;color:var(--text-muted);margin-left:8px">traitée</span>')
+        + '<div style="font-family:var(--fh);font-size:17px;font-weight:700;margin-top:2px">' + (escHtml(d.nom) || 'Sans nom') + '</div>'
+      + '</div>'
+      + '<div style="font-size:11px;color:var(--text-muted);white-space:nowrap">' + escHtml(quand) + '</div>'
+    + '</div>'
+    + '<div style="margin-top:8px">' + lignes + '</div>'
+    + '<div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">' + contacts + actions + '</div>'
+    + '</div>';
+}
+
+function trouverDemande(ref) {
+  var i = ref.indexOf(':');
+  var collection = ref.slice(0, i), id = ref.slice(i + 1);
+  return _demandes.find(function(d){ return d.collection === collection && d.id === id; });
+}
+
+function marquerDemande(ref, statut) {
+  var d = trouverDemande(ref);
+  if (!d || !db) return;
+  db.collection(d.collection).doc(d.id).update({ status: statut })
+    .then(function(){ d.statut = statut; paintDemandes(); })
+    .catch(function(e){ alert('Impossible de mettre à jour : ' + e.message); });
+}
+
+// Préremplit le formulaire de devis puis bascule dessus — même patron que
+// selectClientAndGo() et loadDoc().
+function demandeVersDevis(ref) {
+  var d = trouverDemande(ref);
+  if (!d) return;
+  resetForm(false);
+  $('f-type').value = 'devis';
+  $('f-cnom').value  = d.nom || '';
+  $('f-ctel').value  = d.tel || '';
+  $('f-cemail').value= d.email || '';
+  $('f-cville').value= d.ville || '';
+  $('f-vm').value    = d.marque || '';
+  $('f-vmo').value   = d.modele || '';
+  $('f-vmot').value  = d.moteur || '';
+  $('f-van').value   = d.annee || '';
+  $('f-vim').value   = d.immat || '';
+  $('f-vkm').value   = d.km || '';
+  var notes = [];
+  if (d.prestations.length) notes.push('Prestations demandées : ' + d.prestations.join(', '));
+  if (d.message) notes.push(d.message);
+  if ($('f-notes')) $('f-notes').value = notes.join('\n');
+  onTypeChange();
+  renderLines();
+  showTab('form');
+  // La demande est prise en charge : elle sort de la file d'attente.
+  if (d.statut === 'nouveau') marquerDemande(ref, 'traite');
 }
 
 function sendTestSms() {
