@@ -140,10 +140,13 @@ select option{background:#1d222d}
 .rm-line:hover{border-color:var(--red);color:var(--red)}
 .add-line{width:100%;margin-top:6px;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:7px;color:var(--text-dim);font-size:13px;transition:all .15s}
 .add-line:hover{border-color:var(--blue);color:var(--blue)}
-.line-desc-wrap{margin-top:-2px;margin-bottom:6px}
-.line-desc{width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-top:none;border-radius:0 0 7px 7px;color:var(--text-dim);outline:none;transition:border-color .2s;font-size:12px;box-sizing:border-box}
+.line-desc-wrap{margin-top:-2px;margin-bottom:6px;display:flex;gap:6px}
+.line-desc{flex:2;min-width:0;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-top:none;border-radius:0 0 7px 7px;color:var(--text-dim);outline:none;transition:border-color .2s;font-size:12px;box-sizing:border-box}
 .line-desc:focus{border-color:var(--blue);color:var(--text)}
 .line-desc::placeholder{color:var(--text-muted);font-style:italic}
+.line-ref{flex:1;min-width:0;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-top:none;border-radius:0 0 7px 7px;color:var(--text-dim);outline:none;transition:border-color .2s;font-size:12px;box-sizing:border-box}
+.line-ref:focus{border-color:var(--blue);color:var(--text)}
+.line-ref::placeholder{color:var(--text-muted);font-style:italic}
 /* AUTOCOMPLETE DÉSIGNATION */
 .ac-wrap{position:relative;width:100%}
 .ac-wrap input{width:100%;box-sizing:border-box}
@@ -882,6 +885,7 @@ select option{background:#1d222d}
   .lt-val{font-family:var(--fm);font-size:15px;font-weight:600;color:var(--blue)}
   .lt-val-ttc{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--text-dim)}
   .add-line{padding:10px;font-size:13px}
+  .line-desc-wrap{flex-direction:column}
 
   /* ── TOTAUX ── */
   .totaux-card{padding:14px}
@@ -2762,7 +2766,7 @@ function initLineAutocomplete(inputEl, lid) {
 
 function addLine(data) {
   data = data || {};
-  lines.push({ id: Date.now() + Math.random(), label: data.label || '', qte: data.qte || 1, pu: data.pu || 0, desc: data.desc || '', remise: data.remise || 0, remiseType: data.remiseType === 'eur' ? 'eur' : 'pct' });
+  lines.push({ id: Date.now() + Math.random(), label: data.label || '', qte: data.qte || 1, pu: data.pu || 0, desc: data.desc || '', ref: data.ref || '', remise: data.remise || 0, remiseType: data.remiseType === 'eur' ? 'eur' : 'pct' });
   renderLines();
 }
 
@@ -2816,9 +2820,19 @@ function renderLines() {
       descInput.addEventListener('input', function() { lineDesc(this, id); });
     })(line.id);
 
+    var refInput = document.createElement('input');
+    refInput.type = 'text';
+    refInput.className = 'line-ref';
+    refInput.placeholder = 'Réf. pièce / MO (optionnel)';
+    refInput.value = line.ref || '';
+    (function(id) {
+      refInput.addEventListener('input', function() { lineRef(this, id); });
+    })(line.id);
+
     var descWrap = document.createElement('div');
     descWrap.className = 'line-desc-wrap';
     descWrap.appendChild(descInput);
+    descWrap.appendChild(refInput);
 
     wrapper.appendChild(div);
     wrapper.appendChild(descWrap);
@@ -2916,6 +2930,13 @@ function lineDesc(inp, lid) {
   var line = lines.find(function(l) { return l.id === lid; });
   if (!line) return;
   line.desc = inp.value;
+  onFormChange();
+}
+
+function lineRef(inp, lid) {
+  var line = lines.find(function(l) { return l.id === lid; });
+  if (!line) return;
+  line.ref = inp.value;
   onFormChange();
 }
 
@@ -3312,7 +3333,9 @@ function renderDocHTML(doc, tplOverride) {
     else remStr = '− ' + (Math.round(rVal * 100) / 100).toString().replace('.', ',') + ' %';
     var htStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : lineNetHT(l).toFixed(2) + ' €';
     var ttcStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + (lineNetHT(l) * (1 + tvaRate)).toFixed(2) + ' €</strong>';
-    var descRow = l.desc ? '<tr><td colspan="6" style="padding-top:2px;padding-bottom:8px;font-size:12px;color:#888;font-style:italic">' + escHtml(l.desc) + '</td></tr>' : '';
+    var refStr = l.ref ? 'Réf. pièce/MO : ' + escHtml(l.ref) : '';
+    var descRowText = [refStr, l.desc ? escHtml(l.desc) : ''].filter(Boolean).join(' — ');
+    var descRow = descRowText ? '<tr><td colspan="6" style="padding-top:2px;padding-bottom:8px;font-size:12px;color:#888;font-style:italic">' + descRowText + '</td></tr>' : '';
     return '<tr><td>' + escHtml(l.label || '—') + '</td><td>' + (l.qte != null ? l.qte : 1) + '</td><td>' + puStr + '</td><td>' + remStr + '</td><td>' + htStr + '</td><td>' + ttcStr + '</td></tr>' + descRow;
   }).join('');
 
