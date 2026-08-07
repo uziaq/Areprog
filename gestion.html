@@ -2823,7 +2823,7 @@ function renderLines() {
     var refInput = document.createElement('input');
     refInput.type = 'text';
     refInput.className = 'line-ref';
-    refInput.placeholder = 'Réf. pièce / MO (optionnel)';
+    refInput.placeholder = 'Réf. (optionnel)';
     refInput.value = line.ref || '';
     (function(id) {
       refInput.addEventListener('input', function() { lineRef(this, id); });
@@ -3333,7 +3333,7 @@ function renderDocHTML(doc, tplOverride) {
     else remStr = '− ' + (Math.round(rVal * 100) / 100).toString().replace('.', ',') + ' %';
     var htStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : lineNetHT(l).toFixed(2) + ' €';
     var ttcStr = l.offert ? '<span style="color:#22c55e;font-weight:700">Offert</span>' : '<strong>' + (lineNetHT(l) * (1 + tvaRate)).toFixed(2) + ' €</strong>';
-    var refStr = l.ref ? 'Réf. pièce/MO : ' + escHtml(l.ref) : '';
+    var refStr = l.ref ? 'Réf : ' + escHtml(l.ref) : '';
     var descRowText = [refStr, l.desc ? escHtml(l.desc) : ''].filter(Boolean).join(' — ');
     var descRow = descRowText ? '<tr><td colspan="6" style="padding-top:2px;padding-bottom:8px;font-size:12px;color:#888;font-style:italic">' + descRowText + '</td></tr>' : '';
     return '<tr><td>' + escHtml(l.label || '—') + '</td><td>' + (l.qte != null ? l.qte : 1) + '</td><td>' + puStr + '</td><td>' + remStr + '</td><td>' + htStr + '</td><td>' + ttcStr + '</td></tr>' + descRow;
