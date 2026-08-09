@@ -1,17 +1,16 @@
-// Netlify Scheduled Function — envoi automatique des rappels RDV par EmailJS
-// Toutes les 5 minutes : lit Firestore, envoie via EmailJS, persiste l'état.
+// Netlify Scheduled Function — envoi automatique des rappels RDV par Resend
+// Toutes les 5 minutes : lit Firestore, envoie via Resend, persiste l'état.
 //
 // Env vars requises (Netlify dashboard) :
 //   FIREBASE_SERVICE_ACCOUNT : JSON complet du service account Firebase
-//   EMAILJS_PRIVATE_KEY      : clé privée EmailJS (Account → General → Private Key)
+//   RESEND_API_KEY           : clé API Resend
+//   RESEND_FROM              : adresse d'expédition vérifiée (optionnel)
 
 const { schedule } = require('@netlify/functions');
 const admin = require('firebase-admin');
 
-const EJS_SERVICE    = 'service_ipazk28';
-const EJS_TPL_RAPPEL = 'Rappel AREPROG';
-const EJS_PUBLIC_KEY = '5Lk7jHaGZ9YzEfM51';
-const EJS_FROM_EMAIL = 'arthur@areprog.fr';
+const RESEND_FROM   = 'AREPROG <rappels@areprog.fr>';
+const RAPPEL_TO_EMAIL = 'arthur@areprog.fr';
 const STALE_RAPPEL_MS = 7 * 24 * 3600000;
 
 const RAPPEL_LABELS = {
@@ -29,24 +28,27 @@ function initFirebase() {
   admin.initializeApp({ credential: admin.credential.cert(creds) });
 }
 
-async function sendEmailJS(params) {
-  const privKey = process.env.EMAILJS_PRIVATE_KEY;
-  if (!privKey) throw new Error('EMAILJS_PRIVATE_KEY non configurée');
-  const body = {
-    service_id: EJS_SERVICE,
-    template_id: EJS_TPL_RAPPEL,
-    user_id: EJS_PUBLIC_KEY,
-    accessToken: privKey,
-    template_params: params,
-  };
-  const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+function escapeHtml(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+async function sendResend(subject, html) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error('RESEND_API_KEY non configurée');
+  const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      from: process.env.RESEND_FROM || RESEND_FROM,
+      to: [RAPPEL_TO_EMAIL],
+      subject: subject,
+      html: html,
+    }),
   });
   if (!res.ok) {
     const txt = await res.text().catch(function(){ return ''; });
-    throw new Error('EmailJS HTTP ' + res.status + ' : ' + txt);
+    throw new Error('Resend HTTP ' + res.status + ' : ' + txt);
   }
 }
 
@@ -60,20 +62,25 @@ function computeFireBase(rdv) {
   return isNaN(t) ? null : t;
 }
 
-function buildEmailParams(rdv, minutes) {
+function buildRappelEmail(rdv, minutes) {
   const vehLabel = [rdv.vm, rdv.vmo, rdv.vmot, rdv.van ? '(' + rdv.van + ')' : '']
     .filter(Boolean).join(' ');
-  return {
-    to_email:     EJS_FROM_EMAIL,
-    rdv_title:    rdv.title || '',
-    rdv_date:     rdv.date || '',
-    rdv_heure:    rdv.heure || 'Non précisée',
-    rdv_lieu:     rdv.lieu || 'Non précisé',
-    rdv_client:   rdv.clientNom || 'Non précisé',
-    rdv_vehicule: vehLabel || 'Non précisé',
-    rdv_notes:    rdv.notes || '',
-    rappel_label: RAPPEL_LABELS[minutes] || (minutes + ' min avant'),
-  };
+  const label = RAPPEL_LABELS[minutes] || (minutes + ' min avant');
+  const row = (l, v) => v
+    ? `<tr><td style="padding:4px 12px 4px 0;color:#666">${l}</td><td style="padding:4px 0"><strong>${escapeHtml(v)}</strong></td></tr>`
+    : '';
+  const subject = 'Rappel RDV — ' + (rdv.title || 'Sans titre') + ' (' + label + ')';
+  const html = '<table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">'
+    + row('Titre', rdv.title)
+    + row('Date', rdv.date)
+    + row('Heure', rdv.heure || 'Non précisée')
+    + row('Lieu', rdv.lieu || 'Non précisé')
+    + row('Client', rdv.clientNom || 'Non précisé')
+    + row('Véhicule', vehLabel || 'Non précisé')
+    + row('Notes', rdv.notes)
+    + row('Rappel', label)
+    + '</table>';
+  return { subject, html };
 }
 
 const handler = async () => {
@@ -117,7 +124,8 @@ const handler = async () => {
         }
 
         try {
-          await sendEmailJS(buildEmailParams(rdv, m));
+          const email = buildRappelEmail(rdv, m);
+          await sendResend(email.subject, email.html);
           rdv.rappelsSent.push(m);
           dirty = true;
           sent++;

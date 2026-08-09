@@ -50,10 +50,9 @@ self.addEventListener('activate', function(e) {
 self.addEventListener('fetch', function(e) {
   var url = new URL(e.request.url);
 
-  // Ne pas intercepter les requêtes Firebase, EmailJS, OLSX
+  // Ne pas intercepter les requêtes Firebase, OLSX
   if (url.hostname.includes('firebase') ||
       url.hostname.includes('googleapis') ||
-      url.hostname.includes('emailjs') ||
       url.hostname.includes('olsx') ||
       url.hostname.includes('netlify') ||
       url.hostname.includes('jsdelivr') ||

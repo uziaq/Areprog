@@ -5,7 +5,7 @@
 <meta name="robots" content="noindex, nofollow"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AREPROG — Devis & Factures</title>
-<!-- EmailJS + jsPDF + html2canvas : chargés dynamiquement après DOMContentLoaded -->
+<!-- jsPDF + html2canvas : chargés dynamiquement après DOMContentLoaded -->
 <!-- Auth : Firebase Authentication -->
 <!-- PWA Manifest pour installation iOS/Android -->
 <link rel="manifest" href="/manifest.json"/>
@@ -2189,7 +2189,7 @@ async function authedFetch(url, options) {
 
 // Au chargement : session encore valide → connecter directement
 document.addEventListener('DOMContentLoaded', function() {
-  // Charger EmailJS, jsPDF, html2canvas dynamiquement
+  // Charger jsPDF, html2canvas dynamiquement
   function loadScript(src, cb) {
     var s = document.createElement('script');
     s.src = src;
@@ -2197,13 +2197,6 @@ document.addEventListener('DOMContentLoaded', function() {
     s.onerror = function(){ console.warn('Script non chargé:', src); };
     document.head.appendChild(s);
   }
-  loadScript('https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js', function() {
-    try {
-      emailjs.init({ publicKey: '5Lk7jHaGZ9YzEfM51' });
-      _ejsReady = true;
-      console.log('EmailJS initialisé ✓');
-    } catch(e) { console.warn('EmailJS init failed:', e); }
-  });
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
 
@@ -4590,13 +4583,9 @@ function deleteRdvFromModal() {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  EMAILJS — Rappels RDV + Envoi devis/factures
+//  EMAIL (Resend, via la fonction Netlify send-email) — Rappels RDV + Envoi devis/factures
 // ══════════════════════════════════════════════════════════════
-var EJS_SERVICE       = 'service_ipazk28';
-var EJS_TPL_RAPPEL    = 'Rappel AREPROG';  // Rappels agenda
-var EJS_TPL_DOC       = 'DEVIS';  // Envoi devis/factures
-var EJS_PUBLIC_KEY    = '5Lk7jHaGZ9YzEfM51';
-var EJS_FROM_EMAIL    = 'arthur@areprog.fr';
+var NOTIF_EMAIL       = 'arthur@areprog.fr'; // destinataire des notifs internes + reply-to client
 var notifTimer        = null;
 var _currentDocForEmail = null; // doc en cours d'affichage dans le modal
 
@@ -4606,35 +4595,6 @@ var _rappelLoopInterval = null; // setInterval id pour runRappelCheck
 var _rappelInFlight     = {};   // "rdvId|minutes" → true (dédup intra-onglet)
 var STALE_RAPPEL_MS     = 7 * 24 * 3600000; // rappels ratés depuis > 7j : on marque sans envoyer
 var RAPPEL_LOOP_MS      = 60000; // boucle de rattrapage toutes les 60s
-
-// Init EmailJS — robuste, attend que le SDK soit chargé
-var _ejsReady = false;
-function initEmailJS() {
-  if (_ejsReady) return; // déjà initialisé
-  if (typeof emailjs === 'undefined') return; // SDK pas encore chargé
-  try {
-    emailjs.init({ publicKey: '5Lk7jHaGZ9YzEfM51' });
-    _ejsReady = true;
-    console.log('EmailJS initialisé ✓');
-  } catch(e) {
-    console.warn('EmailJS init erreur:', e);
-  }
-}
-// Tenter à l'exécution du script
-initEmailJS();
-// Tenter après chargement complet de la page (scripts externes inclus)
-window.addEventListener('load', function() {
-  initEmailJS();
-  // Si toujours pas prêt, réessayer toutes les 500ms jusqu'à 5s
-  if (!_ejsReady) {
-    var attempts = 0;
-    var retryInterval = setInterval(function() {
-      initEmailJS();
-      attempts++;
-      if (_ejsReady || attempts >= 10) clearInterval(retryInterval);
-    }, 500);
-  }
-});
 
 // ── Rappels multiples UI ──────────────────────────────────────
 var RAPPEL_OPTIONS = [
@@ -4680,19 +4640,16 @@ function setRappels(arr) {
   arr.forEach(function(v) { addRappelRow(String(v)); });
 }
 
-// ── Envoi email via API REST EmailJS (sans SDK) ──────────────
-function ejsSend(templateId, params) {
-  return fetch('https://api.emailjs.com/api/v1.0/email/send', {
+// ── Envoi email via la fonction Netlify send-email (Resend, authentifiée) ──
+function envoyerEmail(to, subject, html, replyTo) {
+  return authedFetch('/.netlify/functions/send-email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      service_id:      EJS_SERVICE,
-      template_id:     templateId,
-      user_id:         EJS_PUBLIC_KEY,
-      template_params: params,
-    }),
+    body: JSON.stringify({ to: to, subject: subject, html: html, replyTo: replyTo || undefined }),
   }).then(function(res) {
-    if (!res.ok) return res.text().then(function(t){ throw { status: res.status, text: t }; });
+    if (!res.ok) return res.json().catch(function(){ return {}; }).then(function(j) {
+      throw { status: res.status, text: j.error || ('HTTP ' + res.status) };
+    });
   });
 }
 
@@ -4707,25 +4664,24 @@ function sendReminderEmail(rdv, minutes) {
   var selV = (rdv.vehIdx!=null && vehs[rdv.vehIdx]) ? vehs[rdv.vehIdx] : vehs[0];
   var vehLabel = selV ? [selV.vm,selV.vmo,selV.vmot,selV.van?'('+selV.van+')':''].filter(Boolean).join(' ') : '';
   var opt = RAPPEL_OPTIONS.find(function(o){ return parseInt(o.v)===minutes; });
+  var label = opt ? opt.l : minutes+' min avant';
 
-  return ejsSend(EJS_TPL_RAPPEL, {
-    to_email:    EJS_FROM_EMAIL,
-    rdv_title:   rdv.title||'',
-    rdv_date:    rdv.date ? fmtDate(rdv.date) : '',
-    rdv_heure:   rdv.heure||'Non précisée',
-    rdv_lieu:    rdv.lieu||'Non précisé',
-    rdv_client:  cl ? cl.nom : 'Non précisé',
-    rdv_vehicule: vehLabel||'Non précisé',
-    rdv_notes:   rdv.notes||'',
-    rappel_label: opt ? opt.l : minutes+' min avant',
-  }).then(function(){
+  var row = function(l, v) { return v ? '<tr><td style="padding:4px 12px 4px 0;color:#666">'+l+'</td><td style="padding:4px 0"><strong>'+escHtml(v)+'</strong></td></tr>' : ''; };
+  var subject = 'Rappel RDV — ' + (rdv.title||'Sans titre') + ' (' + label + ')';
+  var html = '<table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">'
+    + row('Titre', rdv.title) + row('Date', rdv.date ? fmtDate(rdv.date) : '')
+    + row('Heure', rdv.heure||'Non précisée') + row('Lieu', rdv.lieu||'Non précisé')
+    + row('Client', cl ? cl.nom : 'Non précisé') + row('Véhicule', vehLabel||'Non précisé')
+    + row('Notes', rdv.notes) + row('Rappel', label) + '</table>';
+
+  return envoyerEmail(NOTIF_EMAIL, subject, html).then(function(){
     markRappelSent(rdv.id, minutes);
     showNotifBanner('📧', 'Rappel envoyé', rdv.title||'');
     delete _rappelInFlight[key];
   }).catch(function(e){
-    console.error('EmailJS rappel:', e);
+    console.error('Rappel email:', e);
     var msg = (e && (e.text || e.message)) || 'Erreur inconnue';
-    showNotifBanner('⚠️', 'Erreur EmailJS rappel', msg);
+    showNotifBanner('⚠️', 'Erreur envoi rappel', msg);
     delete _rappelInFlight[key];
     throw e;
   });
@@ -4776,8 +4732,7 @@ function scheduleRdvNotif(rdv) {
 // Boucle de rattrapage : envoie tous les rappels dont l'heure est passée et non encore marqués sent
 function runRappelCheck() {
   updateRappelIndicator();
-  if (!_ejsReady) initEmailJS();
-  if (!_ejsReady || typeof emailjs === 'undefined') return;
+  if (!firebase.auth().currentUser) return;
   var now = Date.now();
   var rdvs = loadRdvs();
   var dirty = false;
@@ -4826,7 +4781,7 @@ function checkTodayNotifs() {
   }
 
   // Alertes factures impayées — dédup journalier (évite un envoi à chaque reload)
-  if (typeof emailjs === 'undefined') return;
+  if (!firebase.auth().currentUser) return;
   var todayKey = new Date().toISOString().slice(0,10);
   if (localStorage.getItem('ar_last_facture_alert_day') === todayKey) return;
   var now = new Date(); now.setHours(0,0,0,0);
@@ -4836,16 +4791,10 @@ function checkTodayNotifs() {
     if (days===7||days===14||days===30) {
       sent = true;
       setTimeout(function(){
-        ejsSend(EJS_TPL_RAPPEL, {
-          to_email: EJS_FROM_EMAIL,
-          rdv_title: 'Facture impayée — '+(d.cn||''),
-          rdv_date: fmtDate(d.date),
-          rdv_heure: 'Depuis '+days+' jours',
-          rdv_lieu: '', rdv_client: d.cn||'',
-          rdv_vehicule: [d.vm,d.vmo].filter(Boolean).join(' '),
-          rdv_notes: 'Montant : '+fmt(d.ttc||0)+' · Ref : '+(d.num||''),
-          rappel_label: 'Alerte automatique',
-        }).catch(function(){});
+        var subject = 'Facture impayée — '+(d.cn||'')+' — depuis '+days+' jours';
+        var html = '<p>Montant : <strong>'+fmt(d.ttc||0)+'</strong> · Ref : '+escHtml(d.num||'')+'</p>'
+          + '<p>Véhicule : '+escHtml([d.vm,d.vmo].filter(Boolean).join(' '))+'</p>';
+        envoyerEmail(NOTIF_EMAIL, subject, html).catch(function(){});
       }, 5000);
     }
   });
@@ -4903,19 +4852,14 @@ async function confirmSendEmail() {
     var tpl = loadTemplate();
     var message = $('send-message').value;
     var type = doc.type === 'facture' ? 'Facture' : 'Devis';
+    var subject = (tpl.nom || 'AREPROG') + ' — ' + type + ' ' + (doc.num || '') + ' — ' + fmt(doc.ttc || 0);
+    var html = '<div style="font-family:sans-serif;font-size:14px;line-height:1.6">'
+      + '<p>' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
+      + '<p><a href="' + pdfUrl + '" style="display:inline-block;padding:10px 18px;background:#2196F3;color:#fff;text-decoration:none;border-radius:6px">📄 Voir le ' + type.toLowerCase() + ' (PDF)</a></p>'
+      + '<p style="color:#666;font-size:12px">' + escHtml(doc.cn || '') + ' — ' + escHtml(type) + ' ' + escHtml(doc.num || '') + ' du ' + (doc.date ? fmtDate(doc.date) : '') + ' — Montant TTC : ' + fmt(doc.ttc || 0) + '</p>'
+      + '</div>';
 
-    await ejsSend(EJS_TPL_DOC, {
-      to_email:    toEmail,
-      from_name:   tpl.nom || 'AREPROG',
-      from_email:  EJS_FROM_EMAIL,
-      doc_type:    type,
-      doc_num:     doc.num || '',
-      doc_date:    doc.date ? fmtDate(doc.date) : '',
-      client_nom:  doc.cn || '',
-      montant_ttc: fmt(doc.ttc || 0),
-      message:     message,
-      devis_url:   pdfUrl,
-    });
+    await envoyerEmail(toEmail, subject, html, NOTIF_EMAIL);
 
     showSendStatus('success', 'Email envoyé à '+toEmail+' ✓');
     btn.textContent = '✓ Envoyé !';
@@ -5904,7 +5848,8 @@ function normaliserDemande(id, d, collection) {
     prestations: prestations,
     total: typeof d.total === 'number' ? d.total : null,
     statut: d.status || 'nouveau',
-    quand: quand
+    quand: quand,
+    devisDraft: (d.devisDraft && Array.isArray(d.devisDraft.lignes)) ? d.devisDraft : null
   };
 }
 
@@ -5999,10 +5944,33 @@ function carteDemande(d) {
   if (d.tel) contacts += '<a href="tel:' + escHtml(d.tel) + '" class="btn-s btn-sm">📞 ' + escHtml(d.tel) + '</a>';
   if (d.email) contacts += '<a href="mailto:' + escHtml(d.email) + '" class="btn-s btn-sm">✉️ ' + escHtml(d.email) + '</a>';
 
+  // Devis brouillon calculé automatiquement depuis le catalogue (lead-capture.js) :
+  // affiché ici pour validation avant tout envoi.
+  var devisPreview = '';
+  if (d.devisDraft && d.devisDraft.lignes.length) {
+    var lignesHtml = d.devisDraft.lignes.map(function(l) {
+      return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:2px 0">'
+        + '<span>' + escHtml(l.label) + '</span>'
+        + '<span style="white-space:nowrap;color:' + (l.pu > 0 ? 'var(--text)' : 'var(--orange)') + '">' + (l.pu > 0 ? fmt(l.pu) : 'à tarifer') + '</span>'
+        + '</div>';
+    }).join('');
+    devisPreview = '<div style="background:var(--bg);border:1px dashed var(--border-blue);border-radius:8px;padding:10px 12px;margin-top:10px">'
+      + '<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px">📄 Devis auto-généré'
+        + (d.devisDraft.aTarifer ? ' — ' + d.devisDraft.aTarifer + ' ligne(s) à tarifer' : '') + '</div>'
+      + lignesHtml
+      + '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-top:6px;border-top:1px solid var(--border);padding-top:6px"><span>Total estimé</span><span>' + fmt(d.devisDraft.total) + '</span></div>'
+      + '</div>';
+  }
+
+  var creerLabel = d.devisDraft ? '✏️ Modifier le devis' : '→ Créer le devis';
+  var confirmBtn = (d.devisDraft && d.email)
+    ? '<button class="btn-p btn-sm" onclick="confirmerEtEnvoyerDevis(\'' + ref + '\')" style="background:var(--green)">✅ Confirmer & envoyer</button>'
+    : '';
+
   var actions = d.statut === 'nouveau'
-    ? '<button class="btn-p btn-sm" onclick="demandeVersDevis(\'' + ref + '\')">→ Créer le devis</button>'
+    ? confirmBtn + '<button class="btn-s btn-sm" onclick="demandeVersDevis(\'' + ref + '\')">' + creerLabel + '</button>'
       + '<button class="btn-s btn-sm" onclick="marquerDemande(\'' + ref + '\',\'traite\')">✓ Marquer traitée</button>'
-    : '<button class="btn-s btn-sm" onclick="demandeVersDevis(\'' + ref + '\')">→ Créer le devis</button>'
+    : confirmBtn + '<button class="btn-s btn-sm" onclick="demandeVersDevis(\'' + ref + '\')">' + creerLabel + '</button>'
       + '<button class="btn-s btn-sm" onclick="marquerDemande(\'' + ref + '\',\'nouveau\')">↩ Rouvrir</button>';
 
   return '<div style="background:var(--bg2);border:1px solid ' + (d.statut === 'nouveau' ? 'var(--border-blue)' : 'var(--border)') + ';border-radius:10px;padding:14px 16px;margin-bottom:10px">'
@@ -6015,6 +5983,7 @@ function carteDemande(d) {
       + '<div style="font-size:11px;color:var(--text-muted);white-space:nowrap">' + escHtml(quand) + '</div>'
     + '</div>'
     + '<div style="margin-top:8px">' + lignes + '</div>'
+    + devisPreview
     + '<div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">' + contacts + actions + '</div>'
     + '</div>';
 }
@@ -6050,15 +6019,38 @@ function demandeVersDevis(ref) {
   $('f-van').value   = d.annee || '';
   $('f-vim').value   = d.immat || '';
   $('f-vkm').value   = d.km || '';
+  if (d.devisDraft && d.devisDraft.lignes.length) {
+    lines = d.devisDraft.lignes.map(function(l) {
+      return { id: Date.now() + Math.random(), label: l.label || '', qte: l.qte || 1, pu: l.pu || 0, desc: l.desc || '', ref: l.ref || '', remise: l.remise || 0, remiseType: l.remiseType === 'eur' ? 'eur' : 'pct' };
+    });
+  }
   var notes = [];
   if (d.prestations.length) notes.push('Prestations demandées : ' + d.prestations.join(', '));
+  if (d.devisDraft && d.devisDraft.aTarifer) notes.push('⚠ ' + d.devisDraft.aTarifer + ' prestation(s) à tarifer manuellement.');
   if (d.message) notes.push(d.message);
   if ($('f-notes')) $('f-notes').value = notes.join('\n');
   onTypeChange();
   renderLines();
+  calcTotaux();
   showTab('form');
   // La demande est prise en charge : elle sort de la file d'attente.
   if (d.statut === 'nouveau') marquerDemande(ref, 'traite');
+}
+
+// Enregistre le devis auto-rempli à partir d'une demande puis ouvre
+// directement l'aperçu + l'envoi par email — il ne reste plus qu'à confirmer
+// l'envoi (bouton "Envoyer" du modal), sans repasser par tout le formulaire.
+function confirmerEtEnvoyerDevis(ref) {
+  demandeVersDevis(ref);
+  if (!$('f-cnom').value.trim()) { alert('Renseignez le nom du client avant de confirmer.'); return; }
+  var doc = buildObj();
+  var docs = loadDocs();
+  docs.unshift(doc);
+  editId = doc.id;
+  saveDocs(docs);
+  renderDash();
+  previewDoc(doc.id);
+  sendDocByEmail();
 }
 
 // ══════════════════════════════════════════════════════════════

@@ -155,11 +155,11 @@ github.com/votre-username/areprog/
 
 ---
 
-## Rappels RDV automatiques (Netlify Scheduled Function)
+## Emails (Resend)
 
-La fonction `netlify/function/rdv-rappels/rdv-rappels.js` envoie les rappels
-d'agenda toutes les 5 minutes, **même navigateur fermé**. Elle lit Firestore
-et utilise l'API REST EmailJS.
+Tous les envois d'email du site (rappels RDV, alertes factures impayées,
+notification de nouvelle demande, envoi de devis/factures aux clients)
+passent par [Resend](https://resend.com), à la place d'EmailJS.
 
 ### Variables d'environnement à créer dans Netlify
 
@@ -170,20 +170,46 @@ Netlify dashboard → Site settings → Environment variables → Add a variable
    - Cliquer « Générer une nouvelle clé privée » → télécharge un JSON
    - Coller **tout le contenu JSON** comme valeur
 
-2. **`EMAILJS_PRIVATE_KEY`**
-   - EmailJS dashboard → Account → General → **Private Key**
+2. **`RESEND_API_KEY`**
+   - Resend dashboard → API Keys → **Create API Key**
    - La copier telle quelle comme valeur
 
-### Vérification du champ « To Email » du template
+3. **`RESEND_FROM`** (optionnel)
+   - Adresse d'expédition à utiliser, ex. `AREPROG <devis@areprog.fr>`
+   - Nécessite d'avoir vérifié le domaine `areprog.fr` dans Resend
+     (Resend dashboard → Domains → Add Domain → suivre les enregistrements
+     DNS à ajouter chez le registrar). Sans domaine vérifié, Resend refuse
+     d'envoyer depuis une adresse `@areprog.fr`.
+   - Si absent, chaque fonction utilise une adresse par défaut codée en dur
+     (`devis@areprog.fr`, `rappels@areprog.fr`, `contact@areprog.fr`) — à
+     adapter une fois le domaine vérifié.
 
-Template `template_mlbev47` dans EmailJS dashboard → champ **To Email** doit
-contenir `{{to_email}}`. Sinon l'envoi réussit silencieusement mais n'arrive
-jamais. C'est le piège classique.
+### Rappels RDV automatiques (Netlify Scheduled Function)
 
-### Tester la fonction
+La fonction `netlify/function/rdv-rappels/rdv-rappels.js` envoie les rappels
+d'agenda toutes les 5 minutes, **même navigateur fermé**. Elle lit Firestore
+et appelle directement l'API REST Resend.
 
-Après déploiement :
+Après déploiement, pour tester :
 ```
 netlify functions:invoke rdv-rappels
 ```
 Ou Netlify dashboard → Functions → rdv-rappels → Logs.
+
+### Devis / factures / notifications depuis `gestion.html`
+
+`gestion.html` n'appelle plus jamais Resend directement (la clé API ne doit
+jamais être exposée côté navigateur) : il passe par la fonction
+`netlify/function/send-email/send-email.js`, qui vérifie le jeton Firebase
+de l'admin connecté avant de relayer l'envoi vers Resend.
+
+### Demandes web → devis automatique
+
+`netlify/function/lead-capture/lead-capture.js` (appelée par le formulaire
+de contact et le simulateur) enregistre chaque demande dans Firestore
+(`leads`) et pré-calcule un brouillon de devis en associant les prestations
+demandées au catalogue de prix (`config/catalogue`, synchronisé depuis
+`gestion.html`). Ce brouillon apparaît dans l'onglet **Demandes** de
+`gestion.html` : il suffit de cliquer sur « ✅ Confirmer & envoyer » pour
+enregistrer le devis définitif et ouvrir directement la fenêtre d'envoi par
+email — plus qu'à confirmer l'envoi.
