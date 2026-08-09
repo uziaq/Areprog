@@ -4806,6 +4806,52 @@ function checkTodayNotifs() {
 // ══════════════════════════════════════════════════════════════
 var _emailDocPdfB64 = null;
 
+function docTypeLabel(doc) {
+  return doc && doc.type === 'facture' ? 'Facture' : doc && doc.type === 'ordre' ? 'Ordre de réparation' : 'Devis';
+}
+
+// Article + libellé accordés selon le type, pour les tournures "ce devis" /
+// "cette facture" / "cet ordre de réparation".
+function docTypeArticle(type) {
+  if (type === 'Facture') return 'cette facture';
+  if (type === 'Ordre de réparation') return 'cet ordre de réparation';
+  return 'ce devis';
+}
+
+// Message par défaut, personnalisé avec les infos déjà connues du document
+// (client, véhicule, montant, validité) — reste modifiable avant l'envoi.
+function buildDefaultMessage(doc, tpl, type) {
+  var prenom = (doc.cn || '').trim().split(/\s+/)[0] || '';
+  var salutation = 'Bonjour' + (prenom ? ' ' + prenom : '') + ',';
+  var vehicule = [doc.vm, doc.vmo].filter(Boolean).join(' ');
+  var montant = fmt(doc.ttc || 0);
+  var contact = [tpl.tel, tpl.web].filter(Boolean).join(' · ');
+  var signature = 'Cordialement,\n' + (tpl.nom || 'AREPROG') + (contact ? '\n' + contact : '');
+
+  if (type === 'Facture') {
+    return salutation + '\n\n'
+      + 'Merci pour votre confiance. Vous trouverez ci-joint votre facture ' + (doc.num || '')
+      + (vehicule ? ' pour l\'intervention réalisée sur votre ' + vehicule : '') + ', d\'un montant de ' + montant + ' TTC.\n\n'
+      + 'N\'hésitez pas à nous contacter pour toute question concernant cette facture.\n\n'
+      + signature;
+  }
+  if (type === 'Ordre de réparation') {
+    return salutation + '\n\n'
+      + 'Vous trouverez ci-joint l\'ordre de réparation ' + (doc.num || '')
+      + (vehicule ? ' pour votre ' + vehicule : '') + '.\n\n'
+      + 'Merci de le relire avant votre venue à l\'atelier ; n\'hésitez pas à nous contacter pour toute question.\n\n'
+      + signature;
+  }
+  var validite = doc.ech ? ' Il est valable jusqu\'au ' + fmtDate(doc.ech) + '.' : '';
+  return salutation + '\n\n'
+    + 'Merci pour votre demande. Vous trouverez ci-joint votre devis ' + (doc.num || '')
+    + (vehicule ? ' pour votre ' + vehicule : '') + ', d\'un montant de ' + montant + ' TTC.' + validite + '\n\n'
+    + 'Pour valider cette intervention, il vous suffit de répondre à cet email ou de nous appeler'
+    + (tpl.tel ? ' au ' + tpl.tel : '') + ' : nous conviendrons ensemble d\'un créneau à l\'atelier.\n\n'
+    + 'N\'hésitez pas à revenir vers nous pour toute question, nous restons à votre disposition.\n\n'
+    + signature;
+}
+
 function sendDocByEmail() {
   // Récupérer l'email du client si connu
   var doc = _currentDocForEmail;
@@ -4813,9 +4859,8 @@ function sendDocByEmail() {
   $('send-to-email').value = defaultEmail;
   // Message par défaut
   var tpl = loadTemplate();
-  var type = doc && doc.type === 'facture' ? 'facture' : 'devis';
-  var num  = doc ? doc.num : '';
-  $('send-message').value = 'Bonjour,\n\nVeuillez trouver ci-joint votre ' + type + ' ' + num + '.\n\nCordialement,\n' + (tpl.nom||'AREPROG') + '\n' + (tpl.tel||'');
+  var type = docTypeLabel(doc);
+  $('send-message').value = buildDefaultMessage(doc || {}, tpl, type);
   $('send-email-status').style.display = 'none';
   $('send-email-confirm-btn').disabled = false;
   $('send-email-confirm-btn').textContent = '📧 Envoyer';
@@ -4848,7 +4893,7 @@ function buildDocEmailHtml(doc, tpl, type, message) {
       + '<div style="padding:26px 28px">'
         + '<p style="margin:0 0 18px;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
         + '<div style="background:#f9fafb;border:1px solid #eef0f2;border-radius:8px;padding:14px 18px;margin:0 0 18px">' + recap + '</div>'
-        + '<p style="margin:0;font-size:13px;color:#374151">📎 Vous trouverez ' + (type === 'Facture' ? 'cette facture' : 'ce devis') + ' en pièce jointe, au format PDF.</p>'
+        + '<p style="margin:0;font-size:13px;color:#374151">📎 Vous trouverez ' + docTypeArticle(type) + ' en pièce jointe, au format PDF.</p>'
       + '</div>'
       + '<div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">'
         + escHtml(tpl.footer || '').replace(/\n/g, '<br>')
@@ -4876,7 +4921,7 @@ async function confirmSendEmail() {
     btn.textContent = 'Envoi en cours…';
     var tpl = loadTemplate();
     var message = $('send-message').value;
-    var type = doc.type === 'facture' ? 'Facture' : 'Devis';
+    var type = docTypeLabel(doc);
     var subject = (tpl.nom || 'AREPROG') + ' — ' + type + ' ' + (doc.num || '') + ' — ' + fmt(doc.ttc || 0);
     var html = buildDocEmailHtml(doc, tpl, type, message);
 
