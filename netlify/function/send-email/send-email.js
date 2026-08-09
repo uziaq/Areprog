@@ -17,7 +17,12 @@ const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 const DEFAULT_FROM = 'AREPROG <devis@areprog.fr>';
 const MAX_HTML_LEN = 200 * 1024;
 const MAX_ATTACHMENTS = 3;
-const MAX_ATTACHMENT_B64_LEN = 8 * 1024 * 1024; // ~6 Mo de PDF une fois décodé
+// Les fonctions Netlify (Lambda synchrone) refusent toute requête au-delà
+// d'~6 Mo — souvent sans réponse HTTP propre, juste une coupure de connexion
+// ("Load failed" / "Failed to fetch" côté navigateur). On reste large en
+// dessous pour garder de la marge au JSON (sujet, HTML, en-têtes) et pour
+// pouvoir renvoyer une vraie erreur 413 plutôt qu'une requête coupée.
+const MAX_ATTACHMENT_B64_LEN = 4 * 1024 * 1024; // ~3 Mo de PDF une fois décodé
 const SAFE_FILENAME = /^[A-Za-z0-9 _.-]{1,150}$/;
 const B64_RE = /^[A-Za-z0-9+/]+=*$/;
 
