@@ -4931,6 +4931,15 @@ async function confirmSendEmail() {
     var doc = _currentDocForEmail || {};
     var filename = buildPdfTitle(doc) + '.pdf';
 
+    // Les fonctions Netlify coupent la connexion (sans réponse HTTP propre,
+    // juste "Load failed"/"Failed to fetch") au-delà d'~6 Mo de requête —
+    // on vérifie donc ici, avant l'envoi, avec la même limite que le serveur
+    // (send-email.js) pour donner un message clair plutôt qu'une erreur réseau.
+    var MAX_PDF_B64 = 4 * 1024 * 1024;
+    if (pdfB64.length > MAX_PDF_B64) {
+      throw new Error('Le PDF généré est trop volumineux pour être envoyé par email (~' + Math.round(pdfB64.length / 1024 / 1024 * 0.75) + ' Mo). Réduisez le nombre de lignes/pages, ou retirez des images, puis réessayez.');
+    }
+
     btn.textContent = 'Envoi en cours…';
     var tpl = loadTemplate();
     var message = $('send-message').value;
@@ -4963,7 +4972,14 @@ async function confirmSendEmail() {
 
   } catch(e) {
     console.error('Envoi email doc:', e);
-    showSendStatus('error', 'Erreur : '+(e.text||e.message||'Réessayez.'));
+    var msg = e.text || e.message || 'Réessayez.';
+    // "Load failed" (Safari) / "Failed to fetch" (Chrome) = échec réseau brut,
+    // sans réponse du serveur : le message générique du navigateur n'aide pas
+    // l'utilisateur, on l'oriente vers les causes les plus probables.
+    if (/load failed|failed to fetch|networkerror/i.test(msg)) {
+      msg = 'Connexion au serveur interrompue pendant l\'envoi (souvent : PDF trop volumineux, ou coupure réseau). Réessayez ; si ça persiste avec ce document, vérifiez son nombre de pages.';
+    }
+    showSendStatus('error', 'Erreur : ' + msg);
     btn.disabled = false;
     btn.textContent = '📧 Envoyer';
   }
