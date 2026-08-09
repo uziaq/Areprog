@@ -154,21 +154,6 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" for="f-zone">Zone d'intervention <span class="required">*</span></label>
-            <div class="select-wrap">
-              <select class="form-select" id="f-zone" required aria-describedby="err-zone">
-                <option value="">— Choisir votre secteur —</option>
-                <option value="Pays Basque (Bayonne, Biarritz, Anglet, Saint-Jean-de-Luz…)">Pays Basque — Bayonne, Biarritz, Anglet, Saint-Jean-de-Luz…</option>
-                <option value="Pyrénées-Atlantiques (Pau, Orthez, Mourenx…)">Pyrénées-Atlantiques — Pau, Orthez, Mourenx…</option>
-                <option value="Landes (Dax et alentours)">Landes — Dax et alentours</option>
-                <option value="Yonne (Auxerre, Sens, Joigny…)">Yonne (89) — Auxerre, Sens, Joigny…</option>
-                <option value="Autre zone">Autre zone — me contacter pour vérifier</option>
-              </select>
-            </div>
-            <div class="form-error-msg" id="err-zone" role="alert" aria-live="polite">Champ requis</div>
-          </div>
-
           <!-- ÉTAPE 2 — Véhicule -->
           <div class="form-section-header">
             <span class="form-section-num">2</span>
@@ -385,15 +370,6 @@
         </div>
 
         <div class="sidebar-block">
-          <div class="sidebar-block-title">Zones d'intervention</div>
-          <div class="zone-list">
-            <a href="/reprogrammation-moteur-bayonne" class="zone-pill">
-              <span class="zone-pill-num">64</span><span>Pays Basque</span>
-            </a>
-            </div>
-        </div>
-
-        <div class="sidebar-block">
           <div class="sidebar-block-title">Estimez vos gains</div>
           <p class="sidebar-p">Calculez puissance ou économies avant de demander un devis.</p>
           <a href="/simulateur" class="btn btn-blue-outline sidebar-cta">Simulateur de gains →</a>
@@ -422,7 +398,7 @@
   <script src="nav.js"></script>
   <script src="whatsapp-widget.js"></script>
   <script>
-    const progressFields = ['f-prenom','f-tel','f-zone','f-marque','f-modele'];
+    const progressFields = ['f-prenom','f-tel','f-marque','f-modele'];
 
     function updateProgress() {
       const filled = progressFields.filter(id => {
@@ -442,7 +418,6 @@
     progressFields.forEach(id => {
       document.getElementById(id)?.addEventListener('input', updateProgress);
     });
-    document.getElementById('f-zone')?.addEventListener('change', updateProgress);
 
     // La classe .checked porte le style ; l'état réel vit sur la case à cocher,
     // ce qui garde la sélection accessible au clavier et aux lecteurs d'écran.
@@ -456,7 +431,6 @@
       const required = [
         {id:'f-prenom', err:'err-prenom'},
         {id:'f-tel',    err:'err-tel'},
-        {id:'f-zone',   err:'err-zone'},
         {id:'f-marque', err:'err-marque'},
         {id:'f-modele', err:'err-modele'},
       ];
@@ -494,7 +468,7 @@
 
       const v = id => document.getElementById(id)?.value.trim() || '';
       const prenom = v('f-prenom'), nom = v('f-nom'), tel = v('f-tel');
-      const email = v('f-email'), zone = v('f-zone');
+      const email = v('f-email');
       const marque = v('f-marque'), modele = v('f-modele');
       const annee = v('f-annee'), moteur = v('f-moteur'), km = v('f-km');
       const immat = (v('f-immat')).toUpperCase();
@@ -511,7 +485,6 @@
           name: `${prenom}${nom ? ' ' + nom : ''}`.trim(),
           phone: tel,
           email: email,
-          city: zone,
           message: message,
           vehicle: { brand: marque, model: modele, year: annee, engine: moteur, km: km, plate: immat },
           prestations: [...document.querySelectorAll('.prestation-check input:checked')].map(el => el.value),
@@ -535,7 +508,7 @@
         });
     }
 
-    ['f-prenom','f-tel','f-zone','f-marque','f-modele'].forEach(id => {
+    ['f-prenom','f-tel','f-marque','f-modele'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', function() {
         this.classList.remove('error');
         this.removeAttribute('aria-invalid');
