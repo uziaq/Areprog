@@ -25,10 +25,9 @@ netlify/edge-functions/seo-meta.js → SSR meta tag injection for /codage-vag/* 
 
 Functions with their own subdirectory:
 - `netlify/function/rdv-rappels/` — scheduled every 5 min: email appointment reminders via Resend
-- `netlify/function/upload-devis/` — PDF upload to Firebase Storage
 - `netlify/function/upload-vehicule/` — photo/document upload for the vehicle stock module (Firebase Storage, `vehicules/<id>/…`)
 - `netlify/function/lead-capture/` — records contact form / simulateur leads to Firestore `leads`, auto-builds a draft quote (`devisDraft`) by matching requested prestations against the price catalogue (`config/catalogue`), and notifies via Resend
-- `netlify/function/send-email/` — authenticated (Firebase idToken) proxy to the Resend API; used by `gestion.html` for RDV reminders, unpaid-invoice alerts, and sending devis/factures to clients (keeps the Resend API key server-side)
+- `netlify/function/send-email/` — authenticated (Firebase idToken) proxy to the Resend API; used by `gestion.html` for RDV reminders, unpaid-invoice alerts, and sending devis/factures to clients with the PDF as an attachment (keeps the Resend API key server-side)
 
 Functions at the root of `netlify/function/`:
 - `claude-proxy.js` — proxies requests to Anthropic API (CORS workaround)
@@ -73,7 +72,7 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 
 | Variable | Used by |
 |---|---|
-| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-devis, upload-vehicule, lead-capture, send-email |
+| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-vehicule, lead-capture, send-email |
 | `RESEND_API_KEY` | rdv-rappels, lead-capture, send-email |
 | `RESEND_FROM` | rdv-rappels, lead-capture, send-email (optional — defaults to a hardcoded `AREPROG <...@areprog.fr>` sender per function) |
 | `ANTHROPIC_API_KEY` | claude-proxy |
