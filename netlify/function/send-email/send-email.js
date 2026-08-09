@@ -2,8 +2,9 @@
 // POST /.netlify/functions/send-email
 //
 // Réservée aux utilisateurs authentifiés (gestion.html) : rappels RDV,
-// alertes factures impayées, envoi de devis/factures aux clients. La clé
-// Resend ne doit jamais être exposée côté navigateur, d'où ce proxy.
+// alertes factures impayées, envoi de devis/factures aux clients (avec le
+// PDF en pièce jointe). La clé Resend ne doit jamais être exposée côté
+// navigateur, d'où ce proxy.
 //
 // Env vars (Netlify dashboard) :
 //   FIREBASE_SERVICE_ACCOUNT : JSON du service account Firebase   (requis)
@@ -15,6 +16,10 @@ const admin = require('firebase-admin');
 const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 const DEFAULT_FROM = 'AREPROG <devis@areprog.fr>';
 const MAX_HTML_LEN = 200 * 1024;
+const MAX_ATTACHMENTS = 3;
+const MAX_ATTACHMENT_B64_LEN = 8 * 1024 * 1024; // ~6 Mo de PDF une fois décodé
+const SAFE_FILENAME = /^[A-Za-z0-9 _.-]{1,150}$/;
+const B64_RE = /^[A-Za-z0-9+/]+=*$/;
 
 let ready = false;
 function initAdmin() {
@@ -70,6 +75,7 @@ exports.handler = async function (event) {
     const subject = typeof body.subject === 'string' ? body.subject.trim().slice(0, 200) : '';
     const html = typeof body.html === 'string' ? body.html : '';
     const replyTo = body.replyTo;
+    const attachmentsIn = Array.isArray(body.attachments) ? body.attachments : [];
 
     if (!emailValide(to)) {
       return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Destinataire invalide' }) };
@@ -79,6 +85,22 @@ exports.handler = async function (event) {
     }
     if (html.length > MAX_HTML_LEN) {
       return { statusCode: 413, headers: cors, body: JSON.stringify({ error: 'Contenu trop volumineux' }) };
+    }
+    if (attachmentsIn.length > MAX_ATTACHMENTS) {
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Trop de pièces jointes' }) };
+    }
+
+    const attachments = [];
+    for (const a of attachmentsIn) {
+      const filename = typeof a.filename === 'string' ? a.filename.trim() : '';
+      const content = typeof a.content === 'string' ? a.content : '';
+      if (!SAFE_FILENAME.test(filename)) {
+        return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Nom de pièce jointe invalide' }) };
+      }
+      if (!content || content.length > MAX_ATTACHMENT_B64_LEN || !B64_RE.test(content)) {
+        return { statusCode: 413, headers: cors, body: JSON.stringify({ error: 'Pièce jointe invalide ou trop volumineuse' }) };
+      }
+      attachments.push({ filename: filename, content: content });
     }
 
     const apiKey = process.env.RESEND_API_KEY;
@@ -93,6 +115,7 @@ exports.handler = async function (event) {
       html: html,
     };
     if (emailValide(replyTo)) payload.reply_to = replyTo;
+    if (attachments.length) payload.attachments = attachments;
 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
