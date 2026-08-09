@@ -2,24 +2,90 @@
 // POST /.netlify/functions/lead-capture
 //
 // Reçoit les demandes du formulaire de contact et du simulateur, les écrit dans
-// Firestore avec le SDK admin (aucune règle publique à ouvrir), puis notifie
-// par e-mail. La notification est optionnelle : un échec d'envoi ne doit jamais
-// faire perdre la demande.
+// Firestore avec le SDK admin (aucune règle publique à ouvrir), pré-calcule un
+// brouillon de devis à partir du catalogue de prix, puis notifie par e-mail.
+// La notification est optionnelle : un échec d'envoi ne doit jamais faire
+// perdre la demande.
 //
 // Env vars (Netlify dashboard) :
-//   FIREBASE_SERVICE_ACCOUNT : JSON du service account Firebase        (requis)
-//   EMAILJS_PRIVATE_KEY      : clé privée EmailJS                      (requis pour l'e-mail)
-//   EMAILJS_LEAD_TEMPLATE    : id du template EmailJS de notification  (requis pour l'e-mail)
+//   FIREBASE_SERVICE_ACCOUNT : JSON du service account Firebase   (requis)
+//   RESEND_API_KEY           : clé API Resend                     (requis pour l'e-mail)
+//   RESEND_FROM              : adresse d'expédition vérifiée      (optionnel)
 
 const admin = require('firebase-admin');
 
 const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 
-const EJS_SERVICE    = 'service_ipazk28';
-const EJS_PUBLIC_KEY = '5Lk7jHaGZ9YzEfM51';
-const EJS_TO_EMAIL   = 'contact@areprog.fr';
+const RESEND_FROM  = 'AREPROG <contact@areprog.fr>';
+const NOTIF_TO_EMAIL = 'contact@areprog.fr';
 
 const MAX = { court: 120, moyen: 200, long: 2000 };
+
+// ── Brouillon de devis : associe chaque prestation demandée à une ligne du
+// catalogue (config/catalogue) quand le libellé correspond clairement. Les
+// packs combinés sont volontairement exclus (tarif différent d'une simple
+// somme) — l'admin les applique manuellement s'il le juge pertinent.
+const PRESTATION_KEYWORDS = [
+  { match: /stage\s*1\b/i, keywords: ['stage 1'] },
+  { match: /stage\s*2\b/i, keywords: ['stage 2'] },
+  { match: /e85/i, keywords: ['e85'] },
+  { match: /optimisation.*consommation|consommation.*optimis/i, keywords: ['optimisation', 'consommation'] },
+  { match: /\begr\b/i, keywords: ['egr'] },
+  { match: /\bfap\b|\bdpf\b/i, keywords: ['fap'] },
+  { match: /adblue/i, keywords: ['adblue'] },
+  { match: /\bodis\b/i, keywords: ['odis'] },
+];
+
+function normaliserTexte(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function trouverItemCatalogue(prestation, catalogue) {
+  const regle = PRESTATION_KEYWORDS.find(function (r) { return r.match.test(prestation); });
+  if (!regle) return null;
+  for (const groupe of catalogue) {
+    if (/pack/i.test(groupe.g || '')) continue;
+    for (const item of (groupe.items || [])) {
+      const label = normaliserTexte(item.l);
+      if (regle.keywords.every(function (k) { return label.includes(k); })) return item;
+    }
+  }
+  return null;
+}
+
+async function chargerCatalogue() {
+  try {
+    const snap = await admin.firestore().collection('config').doc('catalogue').get();
+    const cat = snap.exists ? snap.data().cat : null;
+    return Array.isArray(cat) ? cat : [];
+  } catch (e) {
+    console.warn('lead-capture : catalogue introuvable —', e.message);
+    return [];
+  }
+}
+
+function construireDevisDraft(prestations, catalogue) {
+  if (!catalogue.length || !prestations.length) return null;
+  const lignes = [];
+  let total = 0;
+  let aTarifer = 0;
+  prestations.forEach(function (p) {
+    const item = trouverItemCatalogue(p, catalogue);
+    if (item) {
+      lignes.push({ label: item.l, qte: 1, pu: item.p, desc: '', ref: '', remise: 0, remiseType: 'pct' });
+      total += item.p;
+    } else {
+      lignes.push({ label: p, qte: 1, pu: 0, desc: 'À tarifer', ref: '', remise: 0, remiseType: 'pct' });
+      aTarifer++;
+    }
+  });
+  if (!lignes.length) return null;
+  return { lignes: lignes, total: total, aTarifer: aTarifer };
+}
 
 function initFirebase() {
   if (admin.apps.length) return;
@@ -66,34 +132,36 @@ function escape(s) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function devisDraftHtml(draft) {
+  if (!draft) return '';
+  const lignes = draft.lignes.map(function (l) {
+    const prix = l.pu > 0 ? l.pu.toFixed(2) + ' €' : 'à tarifer';
+    return `<tr><td style="padding:2px 12px 2px 0">${escape(l.label)}</td><td style="padding:2px 0;text-align:right">${prix}</td></tr>`;
+  }).join('');
+  return '<p style="margin:16px 0 4px;font-weight:bold">Devis brouillon (créé automatiquement) :</p>'
+    + '<table style="font-family:sans-serif;font-size:14px;border-collapse:collapse;width:100%">' + lignes + '</table>'
+    + `<p style="margin:6px 0 0"><strong>Total estimé : ${draft.total.toFixed(2)} €</strong>`
+    + (draft.aTarifer ? ` — ${draft.aTarifer} ligne(s) à tarifer manuellement` : '') + '</p>';
+}
+
 async function notifier(lead) {
-  const template = process.env.EMAILJS_LEAD_TEMPLATE;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
-  if (!template || !privateKey) {
-    console.warn('lead-capture : notification ignorée (EMAILJS_LEAD_TEMPLATE ou EMAILJS_PRIVATE_KEY absente)');
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('lead-capture : notification ignorée (RESEND_API_KEY absente)');
     return false;
   }
 
-  const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+  const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
     body: JSON.stringify({
-      service_id: EJS_SERVICE,
-      template_id: template,
-      user_id: EJS_PUBLIC_KEY,
-      accessToken: privateKey,
-      template_params: {
-        to_email:    EJS_TO_EMAIL,
-        subject:     `Nouvelle demande — ${lead.name || 'sans nom'}`,
-        client_nom:  lead.name || '—',
-        client_tel:  lead.phone || '—',
-        client_mail: lead.email || '—',
-        source:      lead.source === 'simulateur' ? 'Simulateur' : 'Formulaire de contact',
-        resume_html: resumeHtml(lead),
-      },
+      from: process.env.RESEND_FROM || RESEND_FROM,
+      to: [NOTIF_TO_EMAIL],
+      subject: `Nouvelle demande — ${lead.name || 'sans nom'}`,
+      html: resumeHtml(lead) + devisDraftHtml(lead.devisDraft),
     }),
   });
-  if (!res.ok) throw new Error('EmailJS ' + res.status + ' : ' + (await res.text()).slice(0, 200));
+  if (!res.ok) throw new Error('Resend ' + res.status + ' : ' + (await res.text()).slice(0, 200));
   return true;
 }
 
@@ -164,6 +232,9 @@ exports.handler = async (event) => {
   let id;
   try {
     initFirebase();
+    const catalogue = await chargerCatalogue();
+    const devisDraft = construireDevisDraft(lead.prestations, catalogue);
+    if (devisDraft) lead.devisDraft = devisDraft;
     const ref = await admin.firestore().collection('leads').add(lead);
     id = ref.id;
   } catch (e) {
