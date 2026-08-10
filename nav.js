@@ -51,6 +51,7 @@ const NAV_HTML = `
  <li><a href="/about" data-page="about">À propos</a></li>
  <li><a href="/faq" data-page="faq">FAQ</a></li>
  <li><a href="/contact" data-page="contact">Contact</a></li>
+ <li><a href="/rdv" data-page="rdv">Prendre RDV</a></li>
  </ul>
  <a href="/contact" class="nav-cta">Devis gratuit</a>
  <button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème"></button>
@@ -91,6 +92,7 @@ const NAV_HTML = `
  <a href="/faq" data-page="faq">FAQ</a>
  <a href="/simulateur" data-page="simulateur">Simulateur</a>
  <a href="/contact" data-page="contact">Nous contacter</a>
+ <a href="/rdv" data-page="rdv">Prendre RDV</a>
 </div>
 `;
 
@@ -136,6 +138,7 @@ const FOOTER_HTML = `
  <a href="/about">À propos</a>
  <a href="/guide-reprogrammation-moteur">Guide reprogrammation</a>
  <a href="/contact">Devis gratuit</a>
+ <a href="/rdv">Prendre RDV</a>
  </div>
  </div>
  <div class="footer-bottom">

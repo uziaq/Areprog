@@ -1,0 +1,36 @@
+/* ══ CRÉNEAUX ════════════════════════════════════════════ */
+.slot-hint { font-size: .78rem; color: var(--muted2); margin-top: .5rem; }
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .6rem;
+  margin-top: 1rem;
+}
+.slot-btn {
+  padding: .75rem .5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .85rem;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.slot-btn:hover:not(.disabled) { border-color: var(--blue); color: var(--text); }
+.slot-btn.selected { border-color: var(--blue); background: var(--blue-dim); color: var(--blue-light); }
+.slot-btn.disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+@media (max-width: 900px) {
+  .slot-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  .slot-grid { grid-template-columns: repeat(2, 1fr); }
+}
