@@ -14,6 +14,7 @@ const NAV_HTML = `
  <ul class="nav-dropdown-menu">
  <li><a href="/diagnostic">Diagnostic multimarque</a></li>
  <li><a href="/diagnostic-vag">Diagnostic VAG <span class="nav-badge">ODIS</span></a></li>
+ <li><a href="/diagnostic-bmw">Diagnostic BMW <span class="nav-badge">ISTA</span></a></li>
  </ul>
  </li>
  <li class="nav-dropdown">
@@ -22,7 +23,6 @@ const NAV_HTML = `
  <li><a href="/stage1">Stage 1</a></li>
  <li><a href="/stage2">Stage 2</a></li>
  <li><a href="/conversion-e85">Conversion E85</a></li>
- <li><a href="/ethanol-prix">Prix E85 en temps réel</a></li>
  <li><a href="/optimisation-consommation">Optimisation consommation</a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Désactivations</li>
@@ -72,13 +72,13 @@ const NAV_HTML = `
  <div class="nav-mobile-group-label">Diagnostic</div>
  <a href="/diagnostic" class="nav-mobile-sub" data-page="diagnostic">Diagnostic multimarque</a>
  <a href="/diagnostic-vag" class="nav-mobile-sub" data-page="diagnostic-vag">Diagnostic VAG (ODIS)</a>
+ <a href="/diagnostic-bmw" class="nav-mobile-sub" data-page="diagnostic-bmw">Diagnostic BMW (ISTA)</a>
  </div>
  <div class="nav-mobile-group">
  <div class="nav-mobile-group-label">Reprogrammation</div>
  <a href="/stage1" class="nav-mobile-sub" data-page="stage1">Stage 1</a>
  <a href="/stage2" class="nav-mobile-sub" data-page="stage2">Stage 2</a>
  <a href="/conversion-e85" class="nav-mobile-sub" data-page="conversion-e85">Conversion E85</a>
- <a href="/ethanol-prix" class="nav-mobile-sub" data-page="ethanol-prix">Prix E85 en temps réel</a>
  <a href="/optimisation-consommation" class="nav-mobile-sub" data-page="optimisation-consommation">Optimisation consommation</a>
  <a href="/desactivation-egr" class="nav-mobile-sub" data-page="desactivation-egr">Désactivation EGR</a>
  <a href="/desactivation-fap" class="nav-mobile-sub" data-page="desactivation-fap">Désactivation FAP</a>
@@ -106,6 +106,7 @@ const FOOTER_HTML = `
  <div class="footer-col-title">Diagnostic</div>
  <a href="/diagnostic">Diagnostic multimarque</a>
  <a href="/diagnostic-vag">Diagnostic VAG (ODIS)</a>
+ <a href="/diagnostic-bmw">Diagnostic BMW (ISTA)</a>
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Reprogrammation</div>
@@ -131,10 +132,8 @@ const FOOTER_HTML = `
  <div class="footer-col-title">Navigation</div>
  <a href="/tarifs">Tarifs 2026</a>
  <a href="/simulateur">Simulateur de gains</a>
- <a href="/ethanol-prix">Prix E85 en temps réel</a>
  <a href="/faq">FAQ</a>
  <a href="/about">À propos</a>
- <a href="/chip-tuning-pays-basque">Chip Tuning Pays Basque</a>
  <a href="/guide-reprogrammation-moteur">Guide reprogrammation</a>
  <a href="/contact">Devis gratuit</a>
  </div>

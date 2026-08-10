@@ -118,6 +118,7 @@
 
 /* ── BANDE VAG ────────────────────────── */
 .diag-vag-band { background: linear-gradient(135deg, #1565C0 0%, #1976D2 50%, #2196F3 100%); padding: 1.6rem 5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.diag-vag-band + .diag-vag-band { border-top: 1px solid rgba(255,255,255,.15); }
 .diag-vag-band-left { display: flex; align-items: center; gap: 1.2rem; }
 .diag-vag-mark { font-family: var(--font-mono); font-weight: 800; font-size: 1.8rem; color: #fff; letter-spacing: -.01em; }
 .diag-vag-sep { width: 1px; height: 2rem; background: rgba(255,255,255,.25); }

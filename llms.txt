@@ -13,6 +13,7 @@ Allow: /
 # Pages autorisées à l'indexation IA
 Allow: /diagnostic
 Allow: /diagnostic-vag
+Allow: /diagnostic-bmw
 Allow: /reprogrammation
 Allow: /stage1
 Allow: /stage2
