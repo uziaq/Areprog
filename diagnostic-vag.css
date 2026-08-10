@@ -13,6 +13,13 @@
       position: absolute; top: 0; right: 0; bottom: 0; left: 50%;
       background: linear-gradient(135deg, var(--blue-dim) 0%, transparent 70%);
     }
+    .odis-back-link {
+      display: inline-block; font-size: .8rem; color: var(--muted);
+      text-decoration: none; margin-bottom: 1.2rem;
+      transition: color .2s;
+    }
+    .odis-back-link:hover { color: var(--blue); }
+
     .odis-official-badge {
       display: inline-flex; align-items: center; gap: .8rem;
       border: 1px solid var(--blue);

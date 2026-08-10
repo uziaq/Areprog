@@ -177,18 +177,16 @@
   .services-section { background: var(--bg); padding: 6rem 5rem; }
   .services-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; gap: 2rem; }
   .services-header p { color: var(--muted); max-width: 400px; font-size: .9rem; line-height: 1.6; }
-  .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
-  .service-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.8rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: border-color .25s, background .25s, transform .25s, box-shadow .25s; position: relative; overflow: hidden; }
-  .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; pointer-events: none; }
-  .service-card:hover { border-color: rgba(33,150,243,.25); background: var(--surface2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.3); }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-icon { font-size: 1.6rem; margin-bottom: 1rem; }
-  .service-label { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); margin-bottom: .5rem; }
-  .service-name { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; line-height: 1.1; margin-bottom: .8rem; color: var(--text); }
-  .service-desc { font-size: .85rem; color: var(--muted); line-height: 1.6; flex: 1; }
-  .service-gains { display: flex; gap: 1.2rem; margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
-  .sg-val { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: var(--blue-light); line-height: 1; }
-  .sg-label { font-size: .68rem; color: var(--muted); margin-top: .2rem; }
+  .universe-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
+  .universe-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 3rem 2.4rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: border-color .25s, background .25s, transform .25s, box-shadow .25s; position: relative; overflow: hidden; }
+  .universe-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; pointer-events: none; }
+  .universe-card:hover { border-color: rgba(33,150,243,.3); background: var(--surface2); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.3); }
+  .universe-card:hover::before { transform: scaleX(1); }
+  .universe-icon { font-size: 2.4rem; margin-bottom: 1.4rem; }
+  .universe-label { font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); margin-bottom: .6rem; }
+  .universe-name { font-family: var(--font-display); font-weight: 800; font-size: 2rem; line-height: 1.05; text-transform: uppercase; margin-bottom: 1rem; color: var(--text); }
+  .universe-desc { font-size: .92rem; color: var(--muted); line-height: 1.65; flex: 1; }
+  .universe-link { display: inline-block; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--border); font-size: .82rem; font-weight: 500; color: var(--blue-light); }
 
   /* ══════════════════════════════════════
      TÉMOIGNAGES
@@ -302,7 +300,6 @@
     .hero-title { font-size: clamp(2.5rem,8vw,5rem); }
     .why-grid { grid-template-columns: 1fr; }
     .why-right { display: none; }
-    .services-grid { grid-template-columns: repeat(2,1fr); }
     .temo-grid { grid-template-columns: repeat(2,1fr); }
     .zones-grid { grid-template-columns: repeat(2,1fr); }
     .zone-card.wide { grid-column: span 2; grid-template-columns: 1fr; }
@@ -318,7 +315,7 @@
     .trust-bar { grid-template-columns: repeat(2,1fr); }
     .trust-item:nth-child(2) { border-right: none; }
     .trust-item:nth-child(1), .trust-item:nth-child(2) { border-bottom: 1px solid var(--border); }
-    .services-grid { grid-template-columns: 1fr; }
+    .universe-grid { grid-template-columns: 1fr; }
     .temo-grid { grid-template-columns: 1fr; }
     .zones-grid { grid-template-columns: 1fr; }
     .zone-card.wide { grid-column: span 1; }

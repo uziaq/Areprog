@@ -46,6 +46,16 @@
     /* ── LAYOUT ─────────────────────────── */
     .tarifs-body { padding: 4rem 5rem; display: flex; flex-direction: column; gap: 4rem; }
 
+    /* ── ZONE TITLE (Diagnostic / Reprogrammation) ────── */
+    .tarifs-zone-title {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      text-transform: uppercase; letter-spacing: -.01em;
+      color: var(--text); margin-bottom: -1.5rem;
+      padding-bottom: 1rem; border-bottom: 2px solid var(--blue);
+      display: inline-block;
+    }
+
     /* ── SECTION TITLE ───────────────────── */
     .tarifs-section-title {
       font-family: var(--font-mono,'Barlow Condensed'),sans-serif;

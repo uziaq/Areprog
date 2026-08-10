@@ -4,21 +4,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AREPROG is a French-language SaaS platform for automotive chip-tuning and reprogramming services (Stage 1/2, E85 conversion, EGR/FAP/AdBlue deactivation, VAG coding) targeting Pays Basque and surrounding regions.
+AREPROG is a French-language SaaS platform for automotive diagnostics and chip-tuning/reprogramming services (electronic diagnostics, Stage 1/2, E85 conversion, EGR/FAP/AdBlue deactivation) targeting Pays Basque and surrounding regions.
+
+The site is organized into two separate service "universes", each with its own hub page:
+- **Diagnostic** (`diagnostic.html`, `/diagnostic`) — multi-brand electronic diagnostics (fault codes, electrical faults, pre-purchase inspection, antipollution), plus a VAG-specialist sub-page (`diagnostic-vag.html`, `/diagnostic-vag`) built around the official ODIS tool.
+- **Reprogrammation** (`reprogrammation.html`, `/reprogrammation`) — Stage 1/2, E85 conversion, EGR/FAP/AdBlue deactivation, gearbox (TCU) reprogramming, consumption optimization.
+
+`index.html` remains the main SEO-loaded homepage and funnels visitors into these two hubs via a two-card split (`.universe-grid`/`.universe-card` in `home.css`).
 
 ## Architecture
 
 **No build step.** This is a static site deployed via Netlify with its root as the publish directory (`publish = "."`). Pushing to GitHub triggers automatic Netlify deployment.
 
 ```
-netlify.toml        → build config (publish=".", functions dir, edge function routes)
-*.html              → one file per page/route (no SPA, ~50 pages)
-nav.js              → shared navigation, footer, WhatsApp widget, dark/light theme toggle (injected on all pages)
+netlify.toml        → build config (publish=".", functions dir)
+*.html              → one file per page/route (no SPA, ~40 pages)
+nav.js              → shared navigation (Diagnostic ▾ / Reprogrammation ▾ dropdowns), footer, WhatsApp widget, dark/light theme toggle (injected on all pages)
 shared.css          → design system (CSS custom properties, dark-first theme, utility classes)
-codage-vag.js       → VAG coding wizard app (IIFE module: VCApp)
-codage-vag-data.js  → VAG database: brands, 100+ models, 50+ options with compatibility matrix
 netlify/function/   → Netlify serverless functions (Node.js/CommonJS)
-netlify/edge-functions/seo-meta.js → SSR meta tag injection for /codage-vag/* routes
 ```
 
 ### Netlify Functions
@@ -35,17 +38,9 @@ Functions at the root of `netlify/function/`:
 
 All functions use `exports.handler` (CommonJS) and include CORS headers for `https://areprog.fr`.
 
-### Edge Function
-
-`netlify/edge-functions/seo-meta.js` handles `/codage-vag/*` routes. It injects dynamic `<title>`, `<meta>`, and JSON-LD tags server-side based on the brand/model slug in the URL — required for SEO since the codage-vag page is otherwise a client-side wizard.
-
-### VAG Coding Wizard (`codage-vag.js`)
-
-Structured as an IIFE (`VCApp = (() => { ... })()`). State managed in a single `state` object. Three-step wizard: brand → model/year → options cart. VAG data (brands, models, options, platform compatibility) lives entirely in `codage-vag-data.js` and is exposed as `window.VAG`.
-
 ### Firebase
 
-Firebase config is hardcoded in `codage-vag.js` (public, gated by Firebase security rules). Server-side admin access uses `FIREBASE_SERVICE_ACCOUNT` env var in Netlify functions. Collections: `rdvs`, `config`, `docs`, `clients`, `vehicules`.
+Firebase config is hardcoded in `gestion.html` (public, gated by Firebase security rules) for the admin app's own Auth/Firestore access. Server-side admin access uses `FIREBASE_SERVICE_ACCOUNT` env var in Netlify functions. Collections: `rdvs`, `config`, `docs`, `clients`, `vehicules`.
 
 ## CSS Conventions
 

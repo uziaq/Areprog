@@ -10,7 +10,14 @@ const NAV_HTML = `
  <ul class="nav-links">
  <li><a href="/" data-page="index">Accueil</a></li>
  <li class="nav-dropdown">
- <a href="#" class="nav-dropdown-toggle" data-page="services">Services ▾</a>
+ <a href="#" class="nav-dropdown-toggle" data-page="diagnostic">Diagnostic ▾</a>
+ <ul class="nav-dropdown-menu">
+ <li><a href="/diagnostic">Diagnostic multimarque</a></li>
+ <li><a href="/diagnostic-vag">Diagnostic VAG <span class="nav-badge">ODIS</span></a></li>
+ </ul>
+ </li>
+ <li class="nav-dropdown">
+ <a href="#" class="nav-dropdown-toggle" data-page="reprogrammation">Reprogrammation ▾</a>
  <ul class="nav-dropdown-menu">
  <li><a href="/stage1">Stage 1</a></li>
  <li><a href="/stage2">Stage 2</a></li>
@@ -23,13 +30,9 @@ const NAV_HTML = `
  <li><a href="/desactivation-fap">FAP</a></li>
  <li><a href="/desactivation-adblue">AdBlue</a></li>
  <li class="dropdown-divider"></li>
- <li><a href="/odis">Diagnostic ODIS <span class="nav-badge">VAG</span></a></li>
- <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Entretien</li>
  <li><a href="/vidange-boite-automatique">Vidange Boîte Auto</a></li>
  <li><a href="/reprogrammation-boite-vitesse">Reprog Boîte (TCU) <span class="nav-badge" style="color:#FCD34D;border-color:rgba(245,158,11,.4)">NEW</span></a></li>
- <li class="dropdown-divider"></li>
- <li><a href="/codage-vag">Codage VAG <span class="nav-badge" style="color:var(--green);border-color:rgba(52,211,153,.4)">NEW</span></a></li>
  </ul>
  </li>
  <li class="nav-dropdown">
@@ -66,7 +69,12 @@ const NAV_HTML = `
  <a href="/reprogrammation-moteur-hendaye" class="nav-mobile-sub">Hendaye</a>
  </div>
  <div class="nav-mobile-group">
- <div class="nav-mobile-group-label">Services</div>
+ <div class="nav-mobile-group-label">Diagnostic</div>
+ <a href="/diagnostic" class="nav-mobile-sub" data-page="diagnostic">Diagnostic multimarque</a>
+ <a href="/diagnostic-vag" class="nav-mobile-sub" data-page="diagnostic-vag">Diagnostic VAG (ODIS)</a>
+ </div>
+ <div class="nav-mobile-group">
+ <div class="nav-mobile-group-label">Reprogrammation</div>
  <a href="/stage1" class="nav-mobile-sub" data-page="stage1">Stage 1</a>
  <a href="/stage2" class="nav-mobile-sub" data-page="stage2">Stage 2</a>
  <a href="/conversion-e85" class="nav-mobile-sub" data-page="conversion-e85">Conversion E85</a>
@@ -75,10 +83,8 @@ const NAV_HTML = `
  <a href="/desactivation-egr" class="nav-mobile-sub" data-page="desactivation-egr">Désactivation EGR</a>
  <a href="/desactivation-fap" class="nav-mobile-sub" data-page="desactivation-fap">Désactivation FAP</a>
  <a href="/desactivation-adblue" class="nav-mobile-sub" data-page="desactivation-adblue">Désactivation AdBlue</a>
- <a href="/odis" class="nav-mobile-sub" data-page="odis">Diagnostic ODIS VAG</a>
  <a href="/vidange-boite-automatique" class="nav-mobile-sub" data-page="vidange-boite-automatique">Vidange Boîte Automatique</a>
  <a href="/reprogrammation-boite-vitesse" class="nav-mobile-sub" data-page="reprogrammation-boite-vitesse">Reprogrammation Boîte (TCU)</a>
- <a href="/codage-vag" class="nav-mobile-sub" data-page="codage-vag">Codage VAG — Options cachées</a>
  </div>
  <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
  <a href="/about" data-page="about">À propos</a>
@@ -97,7 +103,12 @@ const FOOTER_HTML = `
  <a href="tel:+33667924630" class="footer-tel"> 06 67 92 46 30</a>
  </div>
  <div class="footer-col">
- <div class="footer-col-title">Services</div>
+ <div class="footer-col-title">Diagnostic</div>
+ <a href="/diagnostic">Diagnostic multimarque</a>
+ <a href="/diagnostic-vag">Diagnostic VAG (ODIS)</a>
+ </div>
+ <div class="footer-col">
+ <div class="footer-col-title">Reprogrammation</div>
  <a href="/stage1">Stage 1</a>
  <a href="/stage2">Stage 2</a>
  <a href="/conversion-e85">Conversion E85</a>
@@ -105,10 +116,8 @@ const FOOTER_HTML = `
  <a href="/desactivation-egr">Désactivation EGR</a>
  <a href="/desactivation-fap">Désactivation FAP</a>
  <a href="/desactivation-adblue">Désactivation AdBlue</a>
- <a href="/odis">Diagnostic ODIS VAG</a>
  <a href="/vidange-boite-automatique">Vidange Boîte Automatique</a>
  <a href="/reprogrammation-boite-vitesse">Reprogrammation Boîte (TCU)</a>
- <a href="/codage-vag">Codage VAG</a>
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Zones</div>
