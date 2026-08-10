@@ -5917,7 +5917,7 @@ function loadFrais(frais) {
 // L'initialisation est gérée par netlifyIdentity.on('init') ci-dessus
 
 // ══════════════════════════════════════════════════════════════
-//  DEMANDES WEB — formulaire de contact, simulateur, configurateur VAG
+//  DEMANDES WEB — formulaire de contact, simulateur
 //  Lecture directe de Firestore (pas de cache localStorage) : ces documents
 //  sont écrits par le site public, jamais par ce back-office.
 // ══════════════════════════════════════════════════════════════
@@ -5931,8 +5931,8 @@ function setDemFilter(f, btn) {
   paintDemandes();
 }
 
-// Normalise les deux collections vers une forme commune : `leads` (contact et
-// simulateur) et `vag_orders` (configurateur) n'ont pas le même schéma.
+// Normalise les documents de la collection `leads` (contact et simulateur)
+// vers une forme commune consommée par paintDemandes().
 function normaliserDemande(id, d, collection) {
   var veh = d.vehicle || {};
   var prestations = Array.isArray(d.prestations) ? d.prestations
@@ -5944,7 +5944,7 @@ function normaliserDemande(id, d, collection) {
   return {
     id: id,
     collection: collection,
-    source: collection === 'vag_orders' ? 'vag' : (d.source || 'contact'),
+    source: d.source || 'contact',
     nom: d.name || '',
     tel: d.phone || '',
     email: d.email || '',
@@ -5973,20 +5973,11 @@ function renderDemandes() {
   }
   el.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Chargement…</div>';
 
-  // Une collection absente ou vide ne doit pas faire échouer l'autre.
-  var lire = function(nom) {
-    return db.collection(nom).orderBy('createdAt', 'desc').limit(200).get()
-      .then(function(snap) {
-        var out = [];
-        snap.forEach(function(doc){ out.push(normaliserDemande(doc.id, doc.data(), nom)); });
-        return out;
-      })
-      .catch(function(e) { console.warn('demandes: lecture ' + nom + ' —', e.message); return []; });
-  };
-
-  Promise.all([lire('leads'), lire('vag_orders')])
-    .then(function(res) {
-      _demandes = res[0].concat(res[1]).sort(function(a, b) {
+  db.collection('leads').orderBy('createdAt', 'desc').limit(200).get()
+    .then(function(snap) {
+      var out = [];
+      snap.forEach(function(doc){ out.push(normaliserDemande(doc.id, doc.data(), 'leads')); });
+      _demandes = out.sort(function(a, b) {
         return (b.quand ? b.quand.getTime() : 0) - (a.quand ? a.quand.getTime() : 0);
       });
       paintDemandes();
@@ -6025,8 +6016,7 @@ function paintDemandes() {
 
 var SOURCE_LABEL = {
   contact:    { txt: '📝 Formulaire', col: 'var(--blue)' },
-  simulateur: { txt: '📊 Simulateur', col: 'var(--orange)' },
-  vag:        { txt: '⚙️ Codage VAG', col: 'var(--green)' }
+  simulateur: { txt: '📊 Simulateur', col: 'var(--orange)' }
 };
 
 function carteDemande(d) {

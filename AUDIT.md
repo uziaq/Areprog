@@ -16,6 +16,12 @@
 > 3. **Révoquer le token OLSX** exposé et le placer dans la variable d'environnement
 >    Netlify `OLSX_TOKEN` — le code le lit désormais depuis là (point S5).
 >    Sans cette variable, le simulateur OLSX affiche un message d'indisponibilité.
+>
+> **Module retiré depuis cet audit :** le configurateur « Codage VAG »
+> (`codage-vag.html`, `codage-marque.html`, `codage-modele.html`, l'edge
+> function `seo-meta.js`, la collection Firestore `vag_orders`, etc.) a été
+> supprimé du site. Tous les points ci-dessous qui le concernent sont donc
+> **obsolètes** — ils décrivent du code qui n'existe plus.
 
 ---
 

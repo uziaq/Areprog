@@ -7,6 +7,10 @@
 /admin                              /gestion.html                       301
 
 # ── Clean URLs (sans .html) ─────────────────────────────────
+/diagnostic                         /diagnostic.html                    200
+/diagnostic-vag                     /diagnostic-vag.html                200
+/diagnostic-bmw                     /diagnostic-bmw.html                200
+/reprogrammation                    /reprogrammation.html               200
 /stage1                             /stage1.html                        200
 /stage2                             /stage2.html                        200
 /conversion-e85                     /conversion-e85.html                200
@@ -14,17 +18,14 @@
 /desactivation-fap                  /desactivation-fap.html             200
 /desactivation-adblue               /desactivation-adblue.html          200
 /optimisation-consommation          /optimisation-consommation.html     200
-/odis                               /odis.html                          200
 /tarifs                             /tarifs.html                        200
 /contact                            /contact.html                       200
 /about                              /about.html                         200
 /faq                                /faq.html                           200
 /simulateur                         /simulateur.html                    200
 /guide-reprogrammation-moteur       /guide-reprogrammation-moteur.html  200
-/chip-tuning-pays-basque            /chip-tuning-pays-basque.html       200
 /mentions-legales                   /mentions-legales.html              200
 /politique-confidentialite          /politique-confidentialite.html     200
-/ethanol-prix                       /ethanol-prix.html                  200
 
 # Pages locales
 /reprogrammation-moteur-bayonne          /reprogrammation-moteur-bayonne.html          200
@@ -34,9 +35,9 @@
 /reprogrammation-moteur-saint-jean-de-luz /reprogrammation-moteur-saint-jean-de-luz.html 200
 # Pages retirées : la cible /reprogrammation-moteur n'a jamais existé, ces trois
 # redirections aboutissaient donc en 404.
-/reprogrammation-moteur-pau              /chip-tuning-pays-basque                      301
-/reprogrammation-moteur-dax              /chip-tuning-pays-basque                      301
-/reprogrammation-moteur-auxerre          /chip-tuning-pays-basque                      301
+/reprogrammation-moteur-pau              /reprogrammation                              301
+/reprogrammation-moteur-dax              /reprogrammation                              301
+/reprogrammation-moteur-auxerre          /reprogrammation                              301
 
 # Espace pro — Devis & Factures (existant)
 /gestion                            /gestion.html                       200
@@ -48,24 +49,10 @@
 /dossiers                           /gestion.html                       200
 /clients                            /gestion.html                       200
 
-# ── Codage VAG ───────────────────────────────────────────────
-/codage-vag                         /codage-vag.html                    200
-/codage-options-vag                 /codage-options-vag.html            200
-/installation-options-vag           /installation-options-vag.html      200
-
 # Les routes /boutique-vag, /produit-vag et /gestion-boutique visaient des
 # fichiers qui n'existent pas : elles renvoyaient 404 et sont retirées.
-
-# ── Pages /codage-vag/marque  (ex: /codage-vag/volkswagen) ───
-/codage-vag/volkswagen              /codage-marque.html                 200
-/codage-vag/audi                    /codage-marque.html                 200
-/codage-vag/seat                    /codage-marque.html                 200
-/codage-vag/cupra                   /codage-marque.html                 200
-/codage-vag/skoda                   /codage-marque.html                 200
-
-# ── Pages /codage-vag/marque/modele ──────────────────────────
-# ex: /codage-vag/volkswagen/golf-8, /codage-vag/audi/a3-8y
-/codage-vag/:brand/:model           /codage-modele.html                 200
+# Le module Codage VAG (/codage-vag, /codage-options-vag, /installation-options-vag,
+# /codage-vag/:brand[/:model]) a été retiré du site.
 
 # ── Redirections 301 anciennes URLs ─────────────────────────
 /boutique                           /contact                            301
@@ -75,3 +62,9 @@
 /confirmation                       /                                   301
 /confirmation.html                  /                                   301
 /admin.html                         /gestion.html                       301
+/odis                                /diagnostic-vag                    301
+/odis.html                           /diagnostic-vag                    301
+/chip-tuning-pays-basque             /reprogrammation                   301
+/chip-tuning-pays-basque.html        /reprogrammation                   301
+/ethanol-prix                        /conversion-e85                    301
+/ethanol-prix.html                   /conversion-e85                    301

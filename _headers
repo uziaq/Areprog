@@ -62,12 +62,6 @@
   Cache-Control: no-cache
 
 # ── Pas d'indexation sur les pages privées et utilitaires ───
-/codage-vag-admin
-  X-Robots-Tag: noindex, nofollow
-
-/codage-vag-admin.html
-  X-Robots-Tag: noindex, nofollow
-
 /confirmation.html
   X-Robots-Tag: noindex, nofollow
 
