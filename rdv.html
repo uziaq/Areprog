@@ -383,9 +383,9 @@
   <script src="nav.js"></script>
   <script src="whatsapp-widget.js"></script>
   <script>
-    var HOURS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
     var selectedHeure = null;
-    var busySlotsCache = {};
+    var currentDateClosed = true; // tant qu'aucune date n'est chargée, on bloque l'envoi
+    var creneauxCache = {}; // dateStr → { slots, busy, closed, reason }
 
     var dateInput = document.getElementById('f-date');
     var slotGrid = document.getElementById('slot-grid');
@@ -401,32 +401,32 @@
       dateInput.max = toISO(max);
     })();
 
-    function pad(n) { return String(n).padStart(2, '0'); }
-
-    function isSunday(dateStr) {
-      var d = new Date(dateStr + 'T00:00:00');
-      return d.getDay() === 0;
-    }
-
-    function renderSlots(dateStr, busy, closed) {
+    // Les jours ouverts, les horaires proposés et les fermetures exceptionnelles
+    // sont réglés depuis gestion.html (⚙️ Créneaux RDV) — cette page ne fait
+    // aucune hypothèse locale, elle affiche ce que le serveur renvoie.
+    function renderSlots(dateStr, data) {
       selectedHeure = null;
-      if (!dateStr) {
+      currentDateClosed = true;
+      if (!dateStr || !data) {
         slotGrid.innerHTML = '';
         slotHint.textContent = 'Sélectionnez une date pour voir les créneaux disponibles.';
         return;
       }
-      if (closed) {
+      if (data.closed) {
         slotGrid.innerHTML = '';
-        slotHint.textContent = "L'atelier est fermé le dimanche — choisissez un autre jour.";
+        slotHint.textContent = (data.reason || "L'atelier est fermé ce jour-là") + ' — choisissez un autre jour.';
         return;
       }
+      currentDateClosed = false;
+      var slots = data.slots || [];
+      var busy = data.busy || [];
       var now = new Date();
       var isToday = dateStr === now.toISOString().slice(0, 10);
       var nowMinutes = now.getHours() * 60 + now.getMinutes();
 
       var html = '';
       var dispo = 0;
-      HOURS.forEach(function(h) {
+      slots.forEach(function(h) {
         var slotMinutes = parseInt(h.slice(0, 2), 10) * 60;
         var passe = isToday && slotMinutes <= nowMinutes;
         var pris = busy.indexOf(h) >= 0;
@@ -458,16 +458,15 @@
 
     function chargerCreneaux(dateStr) {
       if (!dateStr) { renderSlots(null); return; }
-      if (isSunday(dateStr)) { renderSlots(dateStr, [], true); return; }
-      if (busySlotsCache[dateStr]) { renderSlots(dateStr, busySlotsCache[dateStr], false); return; }
+      if (creneauxCache[dateStr]) { renderSlots(dateStr, creneauxCache[dateStr]); return; }
 
       slotGrid.innerHTML = '';
       slotHint.textContent = 'Chargement des créneaux…';
       fetch('/.netlify/functions/rdv-booking?date=' + encodeURIComponent(dateStr))
         .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
         .then(function(data) {
-          busySlotsCache[dateStr] = data.busy || [];
-          renderSlots(dateStr, busySlotsCache[dateStr], !!data.closed);
+          creneauxCache[dateStr] = data;
+          renderSlots(dateStr, data);
         })
         .catch(function() {
           slotGrid.innerHTML = '';
@@ -515,7 +514,7 @@
       var valid = true;
       var firstInvalid = null;
 
-      if (!dateInput.value || isSunday(dateInput.value)) {
+      if (!dateInput.value || currentDateClosed) {
         dateInput.classList.add('error');
         document.getElementById('err-date')?.classList.add('visible');
         valid = false;
@@ -598,7 +597,7 @@
           if (e && e.slotTaken) {
             // Le créneau vient d'être pris par quelqu'un d'autre : on force le
             // rechargement pour éviter de renvoyer la même demande en boucle.
-            delete busySlotsCache[e.dateForRefresh];
+            delete creneauxCache[e.dateForRefresh];
             chargerCreneaux(e.dateForRefresh);
             selectedHeure = null;
           }

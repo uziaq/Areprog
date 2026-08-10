@@ -23,9 +23,15 @@ const NOTIF_TO_EMAIL  = 'contact@areprog.fr';
 
 const MAX = { court: 120, moyen: 200, long: 2000 };
 
-// Lun–Sam 8h–19h (cf. schema.org OpeningHoursSpecification des pages publiques) :
-// créneaux d'une heure, le dernier commençant à 18h pour finir avant la fermeture.
-const HOURS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
+// Valeurs par défaut si config/rdvDispo n'existe pas encore (même valeurs
+// que celles pré-remplies dans la modale « Créneaux RDV » de gestion.html).
+// Lun–Sam 8h–19h (cf. schema.org OpeningHoursSpecification des pages
+// publiques) : créneaux d'une heure, le dernier commençant à 18h.
+const DEFAULT_DISPO = {
+  jours: [1, 2, 3, 4, 5, 6], // 0 = dimanche … 6 = samedi
+  heures: ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+  fermetures: [], // [{ date: 'YYYY-MM-DD', label: '...' }]
+};
 const MAX_DAYS_AHEAD = 90;
 
 function initFirebase() {
@@ -34,6 +40,24 @@ function initFirebase() {
   if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT non configurée');
   const creds = typeof raw === 'string' ? JSON.parse(raw) : raw;
   admin.initializeApp({ credential: admin.credential.cert(creds) });
+}
+
+// Lue à chaque requête (pas de cache) : gestion.html doit pouvoir changer
+// les créneaux et voir l'effet immédiatement sur la page publique.
+async function chargerDispo() {
+  try {
+    const snap = await admin.firestore().collection('config').doc('rdvDispo').get();
+    if (!snap.exists) return DEFAULT_DISPO;
+    const data = snap.data() || {};
+    return {
+      jours: Array.isArray(data.jours) && data.jours.length ? data.jours : DEFAULT_DISPO.jours,
+      heures: Array.isArray(data.heures) && data.heures.length ? data.heures : DEFAULT_DISPO.heures,
+      fermetures: Array.isArray(data.fermetures) ? data.fermetures : [],
+    };
+  } catch (e) {
+    console.warn('rdv-booking : config rdvDispo introuvable —', e.message);
+    return DEFAULT_DISPO;
+  }
 }
 
 function texte(valeur, maxLen) {
@@ -45,16 +69,26 @@ function emailValide(e) {
   return !e || /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e);
 }
 
-function dateValide(d) {
+// Fermeture ce jour-là : jour de semaine non ouvert, ou date listée dans les
+// fermetures exceptionnelles. Renvoie le motif (ou null si ouvert).
+function raisonFermeture(dateStr, dispo) {
+  const parsed = new Date(dateStr + 'T00:00:00Z');
+  if (isNaN(parsed.getTime())) return 'Date invalide';
+  if (!dispo.jours.includes(parsed.getUTCDay())) return 'Atelier fermé ce jour-là';
+  const exceptionnelle = dispo.fermetures.find((f) => f && f.date === dateStr);
+  if (exceptionnelle) return exceptionnelle.label ? `Fermeture exceptionnelle — ${exceptionnelle.label}` : 'Fermeture exceptionnelle';
+  return null;
+}
+
+function dateValide(d, dispo) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return false;
   const parsed = new Date(d + 'T00:00:00Z');
   if (isNaN(parsed.getTime())) return false;
-  const jour = parsed.getUTCDay(); // 0 = dimanche
-  if (jour === 0) return false;
   const aujourdhui = new Date();
   const minuitAuj = Date.UTC(aujourdhui.getUTCFullYear(), aujourdhui.getUTCMonth(), aujourdhui.getUTCDate());
   const diffJours = (parsed.getTime() - minuitAuj) / 86400000;
-  return diffJours >= 0 && diffJours <= MAX_DAYS_AHEAD;
+  if (diffJours < 0 || diffJours > MAX_DAYS_AHEAD) return false;
+  return raisonFermeture(d, dispo) === null;
 }
 
 function escape(s) {
@@ -120,20 +154,20 @@ exports.handler = async (event) => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Date invalide' }) };
     }
-    const parsed = new Date(date + 'T00:00:00Z');
-    const ferme = isNaN(parsed.getTime()) || parsed.getUTCDay() === 0;
-    if (ferme) {
-      return { statusCode: 200, headers: cors, body: JSON.stringify({ slots: HOURS, busy: HOURS, closed: true }) };
-    }
     try {
       initFirebase();
+      const dispo = await chargerDispo();
+      const reason = raisonFermeture(date, dispo);
+      if (reason) {
+        return { statusCode: 200, headers: cors, body: JSON.stringify({ slots: dispo.heures, busy: dispo.heures, closed: true, reason }) };
+      }
       const snap = await admin.firestore().collection('rdvs').where('date', '==', date).get();
       const busy = [];
       snap.forEach((doc) => {
         const h = doc.data().heure;
         if (h) busy.push(h);
       });
-      return { statusCode: 200, headers: cors, body: JSON.stringify({ slots: HOURS, busy, closed: false }) };
+      return { statusCode: 200, headers: cors, body: JSON.stringify({ slots: dispo.heures, busy, closed: false }) };
     } catch (e) {
       console.error('rdv-booking GET : lecture Firestore échouée —', e.message);
       return { statusCode: 500, headers: cors, body: JSON.stringify({ error: 'Lecture des créneaux impossible' }) };
@@ -184,15 +218,18 @@ exports.handler = async (event) => {
   if (!emailValide(rdv.clientEmail)) {
     return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Adresse e-mail invalide' }) };
   }
-  if (!dateValide(rdv.date)) {
-    return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Date indisponible (atelier fermé le dimanche, ou hors période de réservation)' }) };
-  }
-  if (!HOURS.includes(rdv.heure)) {
-    return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Créneau horaire invalide' }) };
-  }
 
   try {
     initFirebase();
+    const dispo = await chargerDispo();
+
+    if (!dateValide(rdv.date, dispo)) {
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Date indisponible (atelier fermé ce jour-là, ou hors période de réservation)' }) };
+    }
+    if (!dispo.heures.includes(rdv.heure)) {
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Créneau horaire invalide' }) };
+    }
+
     const db = admin.firestore();
     const collRdvs = db.collection('rdvs');
 

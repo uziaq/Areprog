@@ -483,6 +483,21 @@ select option{background:#1d222d}
 .rdv-modal.open{display:flex}
 .rdv-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:500px;max-width:100%;padding:26px}
 .rdv-box-title{font-family:var(--fh);font-size:19px;font-weight:700;margin-bottom:18px}
+.rdv-box-wide{width:620px}
+
+/* Modal Créneaux RDV (réglages de disponibilité) */
+.dispo-days{display:flex;flex-wrap:wrap;gap:6px}
+.dispo-day-btn{padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text-dim);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.dispo-day-btn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.dispo-hours{display:flex;flex-wrap:wrap;gap:6px}
+.dispo-hour-chip{padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text-dim);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.dispo-hour-chip.on{background:#16a34a;border-color:#16a34a;color:#fff}
+.dispo-closures-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.dispo-closure-row{display:flex;gap:6px;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:6px 10px}
+.dispo-closure-row span{flex:1;font-size:12px}
+.dispo-add-row{display:flex;gap:6px;margin-top:10px}
+.dispo-add-row input[type="date"]{flex:0 0 150px}
+.dispo-add-row input[type="text"]{flex:1}
 
 /* Confirmation RDV copier */
 .rdv-confirm-btn{
@@ -1318,6 +1333,7 @@ select option{background:#1d222d}
         <div class="sh-title">Agenda</div>
         <div class="sh-actions">
           <span class="push-badge" style="background:rgba(34,197,94,.1);color:var(--green)">📧 Rappels par email</span>
+          <button class="btn-s" onclick="openRdvDispoModal()">⚙️ Créneaux RDV</button>
           <button class="btn-p" onclick="openRdvModal(null)">+ Nouveau RDV</button>
         </div>
       </div>
@@ -1943,6 +1959,42 @@ select option{background:#1d222d}
   </div>
 </div>
 
+<!-- MODAL CRÉNEAUX RDV (disponibilité pour la prise de RDV en ligne) -->
+<div class="rdv-modal" id="rdv-dispo-modal" onclick="if(event.target===this)closeRdvDispoModal()">
+  <div class="rdv-box rdv-box-wide">
+    <div class="rdv-box-title">⚙️ Créneaux RDV — page publique /rdv</div>
+    <p style="font-size:12px;color:var(--text-dim);margin-top:-10px;margin-bottom:16px">Définit les jours, heures et fermetures proposés aux clients qui réservent en ligne.</p>
+
+    <div class="fr">
+      <label>Jours ouverts</label>
+      <div class="dispo-days" id="dispo-days"></div>
+    </div>
+
+    <div class="fr">
+      <label>Créneaux horaires proposés</label>
+      <div class="dispo-hours" id="dispo-hours"></div>
+    </div>
+
+    <div class="fr">
+      <label>Fermetures exceptionnelles (jours fériés, vacances…)</label>
+      <div class="dispo-closures-list" id="dispo-closures-list"></div>
+      <div class="dispo-add-row">
+        <input type="date" id="dispo-new-date"/>
+        <input type="text" id="dispo-new-label" placeholder="Motif (facultatif) — ex : Vacances d'été"/>
+        <button type="button" class="btn-s" onclick="addDispoClosure()">+ Ajouter</button>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
+      <button class="btn-d" onclick="resetRdvDispo()">↺ Réinitialiser</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn-s" onclick="closeRdvDispoModal()">Annuler</button>
+        <button class="btn-g" onclick="saveRdvDispoFromModal()">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL ENVOI EMAIL -->
 <div class="rdv-modal" id="send-email-modal" onclick="if(event.target===this)$('send-email-modal').classList.remove('open')" style="z-index:330">
   <div class="rdv-box" style="max-width:420px">
@@ -2324,6 +2376,7 @@ function syncFromFirebase(callback) {
         localStorage.setItem('ar_clients', JSON.stringify(clients));
       }
       syncCatalogueFromFirebase();
+      syncRdvDispoFromFirebase();
       syncRdvsFromFirebase();
       setSyncStatus(true, 'Firebase synchronisé');
       renderDash();
@@ -4109,6 +4162,145 @@ function syncCatalogueFromFirebase() {
       }
     })
     .catch(function(){});
+}
+
+// ============================================================
+//  CRÉNEAUX RDV — disponibilité de la page publique /rdv
+//  Lu par netlify/function/rdv-booking (config/rdvDispo). Mêmes
+//  valeurs par défaut que la fonction si le document n'existe pas.
+// ============================================================
+var RDV_DISPO_KEY = 'ar_rdv_dispo';
+var RDV_DISPO_DEFAULT = {
+  jours: [1,2,3,4,5,6], // 0=dimanche … 6=samedi
+  heures: ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+  fermetures: [], // [{date:'2026-12-25', label:'Noël'}]
+};
+var DISPO_JOURS_LABELS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+var DISPO_HEURES_CANDIDATS = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+
+function loadRdvDispo() {
+  try {
+    var raw = localStorage.getItem(RDV_DISPO_KEY);
+    var d = raw ? JSON.parse(raw) : null;
+    if (!d || !Array.isArray(d.jours) || !Array.isArray(d.heures)) return JSON.parse(JSON.stringify(RDV_DISPO_DEFAULT));
+    return { jours: d.jours, heures: d.heures, fermetures: Array.isArray(d.fermetures) ? d.fermetures : [] };
+  } catch(e) { return JSON.parse(JSON.stringify(RDV_DISPO_DEFAULT)); }
+}
+
+function saveRdvDispo(dispo) {
+  localStorage.setItem(RDV_DISPO_KEY, JSON.stringify(dispo));
+  if (db && syncOk) {
+    db.collection('config').doc('rdvDispo').set(dispo)
+      .catch(function(e){ console.warn('Firebase rdvDispo save:', e); });
+  }
+}
+
+function syncRdvDispoFromFirebase() {
+  if (!db) return;
+  db.collection('config').doc('rdvDispo').get()
+    .then(function(doc) {
+      if (doc.exists) localStorage.setItem(RDV_DISPO_KEY, JSON.stringify(doc.data()));
+    })
+    .catch(function(){});
+}
+
+// État en cours d'édition dans la modale (copie de travail, appliquée à
+// l'enregistrement seulement au clic sur "Enregistrer").
+var dispoDraft = null;
+
+function openRdvDispoModal() {
+  dispoDraft = loadRdvDispo();
+  renderDispoDays();
+  renderDispoHours();
+  renderDispoClosures();
+  $('rdv-dispo-modal').classList.add('open');
+}
+
+function closeRdvDispoModal() {
+  $('rdv-dispo-modal').classList.remove('open');
+  dispoDraft = null;
+}
+
+function renderDispoDays() {
+  var el = $('dispo-days');
+  if (!el) return;
+  el.innerHTML = DISPO_JOURS_LABELS.map(function(label, i) {
+    var on = dispoDraft.jours.indexOf(i) >= 0;
+    return '<button type="button" class="dispo-day-btn'+(on?' on':'')+'" onclick="toggleDispoDay('+i+')">'+label+'</button>';
+  }).join('');
+}
+
+function toggleDispoDay(i) {
+  var idx = dispoDraft.jours.indexOf(i);
+  if (idx >= 0) dispoDraft.jours.splice(idx, 1);
+  else dispoDraft.jours.push(i);
+  renderDispoDays();
+}
+
+function renderDispoHours() {
+  var el = $('dispo-hours');
+  if (!el) return;
+  el.innerHTML = DISPO_HEURES_CANDIDATS.map(function(h) {
+    var on = dispoDraft.heures.indexOf(h) >= 0;
+    return '<button type="button" class="dispo-hour-chip'+(on?' on':'')+'" onclick="toggleDispoHour(\''+h+'\')">'+h+'</button>';
+  }).join('');
+}
+
+function toggleDispoHour(h) {
+  var idx = dispoDraft.heures.indexOf(h);
+  if (idx >= 0) dispoDraft.heures.splice(idx, 1);
+  else dispoDraft.heures.push(h);
+  dispoDraft.heures.sort();
+  renderDispoHours();
+}
+
+function renderDispoClosures() {
+  var el = $('dispo-closures-list');
+  if (!el) return;
+  if (!dispoDraft.fermetures.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:12px">Aucune fermeture exceptionnelle programmée.</div>';
+    return;
+  }
+  var sorted = dispoDraft.fermetures.slice().sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
+  el.innerHTML = sorted.map(function(f) {
+    var d = f.date ? f.date.split('-').reverse().join('/') : '?';
+    return '<div class="dispo-closure-row"><span><strong>'+d+'</strong>'+(f.label ? ' — '+escHtml(f.label) : '')+'</span>'
+      + '<button type="button" onclick="removeDispoClosure(\''+f.date+'\')" style="width:26px;height:26px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:14px">×</button></div>';
+  }).join('');
+}
+
+function addDispoClosure() {
+  var date = $('dispo-new-date').value;
+  if (!date) { alert('Choisissez une date.'); return; }
+  var label = $('dispo-new-label').value.trim();
+  if (dispoDraft.fermetures.some(function(f){ return f.date === date; })) {
+    alert('Cette date est déjà dans la liste.');
+    return;
+  }
+  dispoDraft.fermetures.push({ date: date, label: label });
+  $('dispo-new-date').value = '';
+  $('dispo-new-label').value = '';
+  renderDispoClosures();
+}
+
+function removeDispoClosure(date) {
+  dispoDraft.fermetures = dispoDraft.fermetures.filter(function(f){ return f.date !== date; });
+  renderDispoClosures();
+}
+
+function resetRdvDispo() {
+  if (!confirm('Réinitialiser les créneaux aux valeurs par défaut (Lun–Sam, 8h–18h, aucune fermeture) ?')) return;
+  dispoDraft = JSON.parse(JSON.stringify(RDV_DISPO_DEFAULT));
+  renderDispoDays();
+  renderDispoHours();
+  renderDispoClosures();
+}
+
+function saveRdvDispoFromModal() {
+  if (!dispoDraft.jours.length) { alert('Sélectionnez au moins un jour ouvert.'); return; }
+  if (!dispoDraft.heures.length) { alert('Sélectionnez au moins un créneau horaire.'); return; }
+  saveRdvDispo(dispoDraft);
+  closeRdvDispoModal();
 }
 
 // ============================================================
