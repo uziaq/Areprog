@@ -189,9 +189,15 @@ document.addEventListener('DOMContentLoaded', () => {
    const isOpen = mobile.classList.toggle('open');
    burger.setAttribute('aria-expanded', isOpen);
    burger.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+   // La barre d'appel et la bulle WhatsApp flottent par-dessus le bas de
+   // l'écran : sans ça, elles masquent les derniers liens du menu mobile.
+   document.documentElement.classList.toggle('nav-mobile-open', isOpen);
  });
  mobile.querySelectorAll('a').forEach(a => {
- a.addEventListener('click', () => mobile.classList.remove('open'));
+ a.addEventListener('click', () => {
+   mobile.classList.remove('open');
+   document.documentElement.classList.remove('nav-mobile-open');
+ });
  });
  }
 
