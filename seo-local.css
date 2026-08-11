@@ -16,29 +16,16 @@
  .seo-hero-bg {
  position: absolute; inset: 0;
  background:
- radial-gradient(ellipse 55% 60% at 75% 40%, rgba(30,136,229,.1), transparent),
- linear-gradient(to bottom, transparent 40%, rgba(14,15,17,.9) 100%);
+ radial-gradient(ellipse 55% 60% at 75% 40%, rgba(13,91,175,.08), transparent),
+ linear-gradient(to bottom, transparent 40%, rgba(244,245,247,.92) 100%);
  }
  .seo-hero-grid {
  position: absolute; inset: 0;
  background-image:
- linear-gradient(rgba(37,39,41,.4) 1px, transparent 1px),
- linear-gradient(90deg, rgba(37,39,41,.4) 1px, transparent 1px);
- background-size: 60px 60px;
- mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, black, transparent);
- }
- /* ── Thème clair ───────────────────────
-    Le voile du héros et la trame étaient figés en sombre : sur fond clair,
-    le bas du héros virait au noir alors que le texte y restait sombre. */
- [data-theme="light"] .seo-hero-bg {
- background:
- radial-gradient(ellipse 55% 60% at 75% 40%, rgba(13,91,175,.08), transparent),
- linear-gradient(to bottom, transparent 40%, rgba(244,245,247,.92) 100%);
- }
- [data-theme="light"] .seo-hero-grid {
- background-image:
  linear-gradient(rgba(120,128,140,.18) 1px, transparent 1px),
  linear-gradient(90deg, rgba(120,128,140,.18) 1px, transparent 1px);
+ background-size: 60px 60px;
+ mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, black, transparent);
  }
 
  .seo-breadcrumb {
