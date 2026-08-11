@@ -19,8 +19,8 @@ The site is organized into two separate service "universes", each with its own h
 ```
 netlify.toml        → build config (publish=".", functions dir)
 *.html              → one file per page/route (no SPA, ~40 pages)
-nav.js              → shared navigation (Diagnostic ▾ / Reprogrammation ▾ dropdowns), footer, WhatsApp widget, dark/light theme toggle (injected on all pages)
-shared.css          → design system (CSS custom properties, dark-first theme, utility classes)
+nav.js              → shared navigation (Diagnostic ▾ / Reprogrammation ▾ dropdowns), footer, WhatsApp widget (injected on all pages)
+shared.css          → design system (CSS custom properties, light theme, utility classes)
 netlify/function/   → Netlify serverless functions (Node.js/CommonJS)
 ```
 
@@ -28,9 +28,12 @@ netlify/function/   → Netlify serverless functions (Node.js/CommonJS)
 
 Functions with their own subdirectory:
 - `netlify/function/rdv-rappels/` — scheduled every 5 min: email appointment reminders via Resend
+- `netlify/function/rdv-booking/` — public online booking (GET returns free/busy slots for a date, POST creates a `rdvs` doc with `statut: 'a_confirmer'`); honeypot + rate-limited (see `_lib/rate-limit.js`)
 - `netlify/function/upload-vehicule/` — photo/document upload for the vehicle stock module (Firebase Storage, `vehicules/<id>/…`)
-- `netlify/function/lead-capture/` — records contact form / simulateur leads to Firestore `leads`, auto-builds a draft quote (`devisDraft`) by matching requested prestations against the price catalogue (`config/catalogue`), and notifies via Resend
-- `netlify/function/send-email/` — authenticated (Firebase idToken) proxy to the Resend API; used by `gestion.html` for RDV reminders, unpaid-invoice alerts, and sending devis/factures to clients with the PDF as an attachment (keeps the Resend API key server-side)
+- `netlify/function/lead-capture/` — records contact form / simulateur leads to Firestore `leads`, auto-builds a draft quote (`devisDraft`) by matching requested prestations against the price catalogue (`config/catalogue`), and notifies via Resend; honeypot + rate-limited
+- `netlify/function/send-email/` — authenticated (Firebase idToken) proxy to the Resend API; used by `gestion.html` for RDV reminders, unpaid-invoice alerts, sending devis/factures to clients with the PDF as an attachment, and Google-review requests (keeps the Resend API key server-side)
+- `netlify/function/perf-check/` — internal tool backing `/perf`: proxies Google PageSpeed Insights, `path` param restricted to a hardcoded allowlist of the site's own public routes (never an arbitrary URL, to avoid an open-proxy scanning vector)
+- `netlify/function/_lib/rate-limit.js` — shared Firestore-backed per-IP rate limiter (`rateLimits` collection), not a standalone function; required by `lead-capture` and `rdv-booking`
 
 Functions at the root of `netlify/function/`:
 - `claude-proxy.js` — proxies requests to Anthropic API (CORS workaround)
@@ -44,15 +47,15 @@ Firebase config is hardcoded in `gestion.html` (public, gated by Firebase securi
 
 ## CSS Conventions
 
-`shared.css` defines the design system. Dark mode is the default; light mode is toggled via `[data-theme="light"]` on `<html>`.
+`shared.css` defines the design system. Light theme only (no dark mode, no toggle).
 
 Key custom properties:
 ```css
---bg: #0d0e10        /* dark background */
---surface: #17181b
---blue: #2196F3
---green: #34D399
---text: #eceef1
+--bg: #f4f5f7        /* light background */
+--surface: #ffffff
+--blue: #0d5baf
+--green: #0b7a52
+--text: #1a1c1f
 --nav-h: 64px
 --radius: 3px / --radius-lg: 8px
 ```
@@ -71,6 +74,7 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 | `RESEND_API_KEY` | rdv-rappels, lead-capture, send-email |
 | `RESEND_FROM` | rdv-rappels, lead-capture, send-email (optional — defaults to a hardcoded `AREPROG <...@areprog.fr>` sender per function) |
 | `ANTHROPIC_API_KEY` | claude-proxy |
+| `PAGESPEED_API_KEY` | perf-check — **required in practice**: verified live (2026-08-11) that Google's keyless PageSpeed Insights quota is 0/day (always returns HTTP 429), not just "more limited" as the API docs imply. Free key, 25,000 requests/day: https://developers.google.com/speed/docs/insights/v5/get-started |
 
 ## Key Patterns
 

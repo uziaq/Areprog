@@ -15,6 +15,7 @@
 //   RESEND_FROM              : adresse d'expédition vérifiée      (optionnel)
 
 const admin = require('firebase-admin');
+const { checkRateLimit } = require('../_lib/rate-limit');
 
 const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 
@@ -207,6 +208,18 @@ exports.handler = async (event) => {
   // Champ leurre : rempli uniquement par les robots, qui remplissent tout.
   if (body.website) {
     return { statusCode: 200, headers: cors, body: JSON.stringify({ ok: true }) };
+  }
+
+  try {
+    initFirebase();
+  } catch (e) {
+    console.error('rdv-booking : Firebase non initialisé —', e.message);
+    return { statusCode: 500, headers: cors, body: JSON.stringify({ error: 'Configuration serveur invalide.' }) };
+  }
+
+  const rl = await checkRateLimit(admin.firestore(), event, 'rdv-booking', { max: 5, windowMs: 10 * 60 * 1000 });
+  if (rl.limited) {
+    return { statusCode: 429, headers: cors, body: JSON.stringify({ error: 'Trop de demandes depuis cette connexion. Merci de réessayer dans quelques minutes.' }) };
   }
 
   const v = body.vehicle || {};

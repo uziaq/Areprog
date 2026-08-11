@@ -10,9 +10,10 @@
 <!-- PWA Manifest pour installation iOS/Android -->
 <link rel="manifest" href="/manifest.json"/>
 <meta name="mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="AREPROG"/>
-<meta name="theme-color" content="#0a0c10"/>
+<meta name="theme-color" content="#f4f5f7" id="theme-color-meta"/>
+<script>(function(){try{var t=localStorage.getItem('ar_theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -22,21 +23,28 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
 :root{
-  --blue:#1E90FF;--blue-dim:#1570cc;--blue-glow:rgba(30,144,255,.15);
-  --bg:#0a0c10;--bg2:#0f1117;--bg3:#161a22;--bg4:#1d222d;
-  --border:rgba(255,255,255,.08);--border-blue:rgba(30,144,255,.3);
-  --text:#e8eaf0;--text-dim:#7a8099;--text-muted:#4a5068;
-  --green:#22c55e;--orange:#f59e0b;--red:#ef4444;
+  --blue:#0d5baf;--blue-dim:#0a4a8f;--blue-glow:rgba(13,91,175,.15);
+  --bg:#f4f5f7;--bg2:#ffffff;--bg3:#eef0f2;--bg4:#e3e7ec;
+  --border:rgba(0,0,0,.1);--border-blue:rgba(13,91,175,.3);
+  --text:#1a1c1f;--text-dim:#4b5566;--text-muted:#8791a0;
+  --green:#0b7a52;--orange:#8a5200;--red:#c22f2f;
   --radius:10px;
   --fh:'Barlow Condensed',sans-serif;
   --fb:'Barlow',sans-serif;
   --fm:'JetBrains Mono',monospace;
 }
+html[data-theme="dark"]{
+  --blue:#3b8eef;--blue-dim:#2f72c4;--blue-glow:rgba(59,142,239,.18);
+  --bg:#14161a;--bg2:#1c1f25;--bg3:#242830;--bg4:#2e333d;
+  --border:rgba(255,255,255,.1);--border-blue:rgba(59,142,239,.35);
+  --text:#e8eaed;--text-dim:#a8b0bd;--text-muted:#6b7280;
+  --green:#2fb37c;--orange:#d68a2c;--red:#e5544f;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;min-height:100vh}
 input,select,textarea,button{font-family:var(--fb);font-size:14px}
 button{cursor:pointer}
-select option{background:#1d222d}
+select option{background:var(--bg2);color:var(--text)}
 
 /* LOGIN */
 #login-screen{
@@ -48,7 +56,7 @@ select option{background:#1d222d}
   padding:48px 40px;width:380px;text-align:center;
   box-shadow:0 0 80px rgba(30,144,255,.1),0 2px 0 rgba(30,144,255,.3) inset;
 }
-.login-logo{font-family:var(--fh);font-size:36px;font-weight:800;color:#fff;letter-spacing:3px}
+.login-logo{font-family:var(--fh);font-size:36px;font-weight:800;color:var(--text);letter-spacing:3px}
 .login-logo span{color:var(--blue)}
 .login-sub{color:var(--text-dim);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;margin-top:4px}
 .lf{margin-bottom:16px;text-align:left}
@@ -65,7 +73,7 @@ select option{background:#1d222d}
   background:var(--bg2);border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:100;
 }
-.tb-brand{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:2px;color:#fff}
+.tb-brand{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:2px;color:var(--text)}
 .topbar-row1{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px}
 .tb-brand span{color:var(--blue)}
 .tb-nav{display:flex;gap:2px;padding:0 8px}
@@ -90,7 +98,7 @@ select option{background:#1d222d}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
 .sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
 .sc-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px}
-.sc-val{font-family:var(--fh);font-size:30px;font-weight:700;color:#fff}
+.sc-val{font-family:var(--fh);font-size:30px;font-weight:700;color:var(--text)}
 .sc-val.blue{color:var(--blue)}.sc-val.green{color:var(--green)}.sc-val.orange{color:var(--orange)}
 .sc-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
 
@@ -152,7 +160,7 @@ select option{background:#1d222d}
 .ac-wrap input{width:100%;box-sizing:border-box}
 .ac-drop{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--bg3);border:1px solid var(--blue);border-radius:7px;z-index:200;max-height:240px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.5);display:none}
 .ac-drop.open{display:block}
-.ac-item{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.04)}
+.ac-item{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid rgba(0,0,0,.06)}
 .ac-item:last-child{border-bottom:none}
 .ac-item:hover,.ac-item.active{background:var(--bg2);color:var(--blue)}
 .ac-item .ac-price{font-family:var(--fm);font-size:11px;color:var(--text-muted);flex-shrink:0}
@@ -161,7 +169,7 @@ select option{background:#1d222d}
 
 /* TOTAUX */
 .totaux-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px}
-.totaux-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.totaux-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)}
 .totaux-row:last-child{border:none;padding-top:14px;margin-top:6px;border-top:1px solid var(--border-blue)}
 .totaux-row.big{font-size:16px;font-weight:700}
 .totaux-row.big .tv{color:var(--blue);font-family:var(--fm);font-size:18px}
@@ -174,8 +182,8 @@ select option{background:#1d222d}
 /* TABLE LISTE */
 .dt{width:100%;border-collapse:collapse}
 .dt th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:10px 14px;border-bottom:1px solid var(--border)}
-.dt td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
-.dt tr:hover td{background:rgba(255,255,255,.02)}
+.dt td{padding:11px 14px;border-bottom:1px solid rgba(0,0,0,.06);vertical-align:middle}
+.dt tr:hover td{background:rgba(0,0,0,.03)}
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
 .b-devis{background:rgba(245,158,11,.15);color:var(--orange)}
 .b-facture{background:rgba(30,144,255,.15);color:var(--blue)}
@@ -310,7 +318,7 @@ select option{background:#1d222d}
 .filter-chip.active-red{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)}
 .filter-count{
   font-size:10px;padding:1px 5px;border-radius:10px;
-  background:rgba(255,255,255,.1);margin-left:2px;
+  background:rgba(0,0,0,.06);margin-left:2px;
 }
 
 /* ── RACCOURCIS CLAVIER ── */
@@ -327,7 +335,7 @@ select option{background:#1d222d}
 .shortcuts-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:350;align-items:center;justify-content:center;padding:20px}
 .shortcuts-modal.open{display:flex}
 .shortcuts-box{background:var(--bg2);border:1px solid var(--border-blue);border-radius:14px;width:500px;max-width:100%;padding:26px;max-height:80vh;overflow-y:auto}
-.shortcut-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.shortcut-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)}
 .shortcut-row:last-child{border-bottom:none}
 .shortcut-desc{font-size:13px;color:var(--text-dim)}
 .shortcut-keys{display:flex;gap:4px}
@@ -427,11 +435,11 @@ select option{background:#1d222d}
   border-bottom:1px solid var(--border);
 }
 .cal-cell{
-  min-height:80px;min-width:0;border-right:1px solid rgba(255,255,255,.04);
-  border-bottom:1px solid rgba(255,255,255,.04);padding:6px;
+  min-height:80px;min-width:0;border-right:1px solid rgba(0,0,0,.06);
+  border-bottom:1px solid rgba(0,0,0,.06);padding:6px;
   cursor:pointer;transition:background .1s;position:relative;overflow:hidden;
 }
-.cal-cell:hover{background:rgba(255,255,255,.03)}
+.cal-cell:hover{background:rgba(0,0,0,.03)}
 .cal-cell.today{background:rgba(30,144,255,.06)}
 .cal-cell.today .cal-day-num{color:var(--blue);font-weight:700}
 .cal-cell.other-month .cal-day-num{color:var(--text-muted);opacity:.4}
@@ -469,7 +477,7 @@ select option{background:#1d222d}
 .alert-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
 .alert-item{
   display:flex;align-items:flex-start;gap:10px;padding:9px 0;
-  border-bottom:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(0,0,0,.06);
 }
 .alert-item:last-child{border-bottom:none}
 .alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
@@ -588,7 +596,7 @@ select option{background:#1d222d}
   display:flex;align-items:center;gap:8px;padding:8px 10px;
   border-radius:6px;transition:background .1s;
 }
-.cat-item:hover{background:rgba(255,255,255,.04)}
+.cat-item:hover{background:rgba(0,0,0,.04)}
 .cat-item-label{flex:1;font-size:13px;color:var(--text)}
 .cat-item-price{font-family:var(--fm);font-size:12px;color:var(--blue);min-width:60px;text-align:right}
 .cat-item-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
@@ -857,7 +865,7 @@ select option{background:#1d222d}
     gap:6px 8px;
     margin-bottom:12px;
     padding-bottom:12px;
-    border-bottom:1px solid rgba(255,255,255,.06);
+    border-bottom:1px solid rgba(0,0,0,.08);
     align-items:end;
   }
   /* Row 1 : désignation + supprimer */
@@ -1103,6 +1111,8 @@ select option{background:#1d222d}
     <div class="topbar-row1">
       <div class="tb-brand">ARE<span>PROG</span></div>
       <div style="display:flex;align-items:center;gap:6px">
+        <a href="/perf" target="_blank" rel="noopener" class="logout-btn" title="Analyse de performance des pages publiques (PageSpeed Insights)">📈 Perf</a>
+        <button id="theme-toggle-btn" onclick="toggleTheme()" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:14px" title="Mode sombre / clair">🌙</button>
         <button onclick="$('shortcuts-modal').classList.add('open')" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:14px;font-weight:700" title="Raccourcis clavier (?)">?</button>
         <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
       </div>
@@ -2020,6 +2030,27 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
+<!-- MODAL DEMANDE D'AVIS GOOGLE -->
+<div class="rdv-modal" id="avis-modal" onclick="if(event.target===this)$('avis-modal').classList.remove('open')" style="z-index:330">
+  <div class="rdv-box" style="max-width:420px">
+    <div class="rdv-box-title">⭐ Demander un avis Google</div>
+    <div id="avis-last-info" style="display:none;font-size:12px;color:var(--text-muted);margin-bottom:10px"></div>
+    <div class="fr">
+      <label>Email du client</label>
+      <input id="avis-to-email" type="email" placeholder="client@email.fr" autocomplete="off"/>
+    </div>
+    <div class="fr">
+      <label>Message personnalisé (optionnel)</label>
+      <textarea id="avis-message" rows="5"></textarea>
+    </div>
+    <div id="avis-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:10px"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('avis-modal').classList.remove('open')">Annuler</button>
+      <button class="btn-g" id="avis-confirm-btn" onclick="confirmSendAvis()">⭐ Envoyer</button>
+    </div>
+  </div>
+</div>
+
 <!-- NOTIFICATION BANNER -->
 <div class="notif-banner" id="notif-banner">
   <div class="notif-icon" id="notif-icon">🔔</div>
@@ -2233,6 +2264,26 @@ function doLogout() {
   firebase.auth().signOut();
 }
 
+function applyThemeIcon() {
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  var btn = $('theme-toggle-btn');
+  if (btn) btn.textContent = dark ? '☀️' : '🌙';
+  var meta = $('theme-color-meta');
+  if (meta) meta.setAttribute('content', dark ? '#14161a' : '#f4f5f7');
+}
+
+function toggleTheme() {
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (dark) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('ar_theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('ar_theme', 'dark');
+  }
+  applyThemeIcon();
+}
+
 // Appel d'une Netlify Function avec le jeton d'identité Firebase.
 // Les fonctions refusent les requêtes non authentifiées.
 async function authedFetch(url, options) {
@@ -2246,6 +2297,7 @@ async function authedFetch(url, options) {
 
 // Au chargement : session encore valide → connecter directement
 document.addEventListener('DOMContentLoaded', function() {
+  applyThemeIcon();
   // Charger jsPDF, html2canvas dynamiquement
   function loadScript(src, cb) {
     var s = document.createElement('script');
@@ -3605,6 +3657,11 @@ function buildTable(docs, withDelete) {
       ? ' <span title="Envoy\u00e9 par email le ' + escHtml(new Date(d.lastEmailAt).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})) + ' \u00e0 ' + escHtml(d.lastEmailTo||'') + '" style="cursor:help;font-size:11px">\u2709\ufe0f</span>'
       : '';
     var delBtn = withDelete ? '<button class="btn-d btn-sm" onclick="deleteDoc('+d.id+')">🗑</button>' : '';
+    // Demander un avis n'a de sens qu'une fois la facture payée (prestation
+    // terminée) et si on a une adresse à qui l'envoyer.
+    var avisBtn = (d.type === 'facture' && d.statut === 'payé' && d.ce)
+      ? '<button class="btn-s btn-sm" onclick="openAvisModal('+d.id+')" title="'+(d.avisEmailAt ? 'Déjà demandé le '+escHtml(new Date(d.avisEmailAt).toLocaleDateString('fr-FR')) : 'Demander un avis Google')+'">⭐'+(d.avisEmailAt ? '' : ' Avis')+'</button>'
+      : '';
     return '<tr>'
       + '<td><span class="doc-num">'+(escHtml(d.num)||'—')+'</span></td>'
       + '<td>'+typeBadge+'</td>'
@@ -3615,6 +3672,7 @@ function buildTable(docs, withDelete) {
       + '<td><div class="act-cell">'
         + '<button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button>'
         + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'
+        + avisBtn
         + delBtn
       + '</div></td>'
       + '</tr>';
@@ -5186,6 +5244,110 @@ function showSendStatus(type, msg) {
   el.textContent = msg;
 }
 
+// ── Demande d'avis Google (facture payée → e-mail avec lien vers l'avis) ──
+// Réutilise la fonction générique send-email : pas de PDF joint, juste un
+// bouton vers la fiche Google de l'atelier.
+var GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/XymJPM5Tgh8eRSM36';
+var _currentDocForAvis = null;
+
+function openAvisModal(docId) {
+  var doc = loadDocs().find(function(d){ return d.id === docId; });
+  if (!doc) return;
+  _currentDocForAvis = doc;
+  $('avis-to-email').value = doc.ce || '';
+  var prenom = (doc.cn || '').split(' ')[0] || '';
+  $('avis-message').value = 'Bonjour' + (prenom ? ' ' + prenom : '') + ',\n\n'
+    + 'Merci d\'avoir fait confiance à AREPROG. Si vous êtes satisfait(e) de l\'intervention, '
+    + 'un avis Google nous aiderait beaucoup à nous faire connaître.\n\n'
+    + 'Cordialement,\nAREPROG';
+  var lastInfo = $('avis-last-info');
+  if (doc.avisEmailAt) {
+    lastInfo.textContent = '⭐ Déjà demandé le ' + new Date(doc.avisEmailAt).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) + ' à ' + (doc.avisEmailTo || '');
+    lastInfo.style.display = 'block';
+  } else {
+    lastInfo.style.display = 'none';
+  }
+  $('avis-status').style.display = 'none';
+  $('avis-confirm-btn').disabled = false;
+  $('avis-confirm-btn').textContent = '⭐ Envoyer';
+  $('avis-modal').classList.add('open');
+}
+
+function buildAvisEmailHtml(tpl, message) {
+  var color = /^#[0-9a-fA-F]{6}$/.test(tpl.color) ? tpl.color : '#2196F3';
+  return '<div style="background:#f4f5f7;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">'
+    + '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb">'
+      + '<div style="background:' + color + ';padding:22px 28px">'
+        + '<div style="color:#fff;font-size:20px;font-weight:700;letter-spacing:.3px">' + escHtml(tpl.nom || 'AREPROG') + '</div>'
+      + '</div>'
+      + '<div style="padding:26px 28px">'
+        + '<p style="margin:0 0 22px;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
+        + '<div style="text-align:center">'
+          + '<a href="' + GOOGLE_REVIEW_URL + '" style="display:inline-block;background:' + color + ';color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:8px">★★★★★ Laisser un avis Google</a>'
+        + '</div>'
+      + '</div>'
+      + '<div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">'
+        + escHtml(tpl.footer || '').replace(/\n/g, '<br>')
+      + '</div>'
+    + '</div>'
+  + '</div>';
+}
+
+async function confirmSendAvis() {
+  var toEmail = $('avis-to-email').value.trim();
+  if (!toEmail || !toEmail.includes('@')) {
+    showAvisStatus('error', 'Email invalide.');
+    return;
+  }
+  var btn = $('avis-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+  try {
+    var doc = _currentDocForAvis || {};
+    var tpl = loadTemplate();
+    var message = $('avis-message').value;
+    var subject = (tpl.nom || 'AREPROG') + ' — Votre avis compte pour nous';
+    var html = buildAvisEmailHtml(tpl, message);
+
+    await envoyerEmail(toEmail, subject, html, NOTIF_EMAIL);
+
+    if (doc.id) {
+      var docs = loadDocs();
+      var idx = docs.findIndex(function(d){ return d.id === doc.id; });
+      if (idx >= 0) {
+        docs[idx].avisEmailAt = new Date().toISOString();
+        docs[idx].avisEmailTo = toEmail;
+        saveDocs(docs);
+        _currentDocForAvis = docs[idx];
+        if ($('t-liste') && $('t-liste').classList.contains('on')) renderListe();
+      }
+    }
+
+    showAvisStatus('success', 'Demande envoyée à '+toEmail+' ✓');
+    btn.textContent = '✓ Envoyé !';
+    setTimeout(function(){ $('avis-modal').classList.remove('open'); }, 2000);
+    showNotifBanner('⭐', 'Demande d\'avis envoyée !', toEmail);
+  } catch(e) {
+    console.error('Envoi demande avis:', e);
+    var msg = e.text || e.message || 'Réessayez.';
+    if (/load failed|failed to fetch|networkerror/i.test(msg)) {
+      msg = 'Connexion au serveur interrompue pendant l\'envoi. Réessayez.';
+    }
+    showAvisStatus('error', 'Erreur : ' + msg);
+    btn.disabled = false;
+    btn.textContent = '⭐ Envoyer';
+  }
+}
+
+function showAvisStatus(type, msg) {
+  var el = $('avis-status');
+  el.style.display = 'block';
+  el.style.background = type==='success'?'rgba(34,197,94,.1)':'rgba(239,68,68,.1)';
+  el.style.color = type==='success'?'var(--green)':'var(--red)';
+  el.style.border = '1px solid '+(type==='success'?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)');
+  el.textContent = msg;
+}
+
 async function generatePdfBase64() {
   // Utiliser jsPDF + html2canvas pour capturer le document
   var original = $('preview');
@@ -5568,7 +5730,7 @@ function showClientHistory(clientId) {
   if (docs.length) {
     html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px">Documents</div>';
     html += docs.map(function(d) {
-      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)">'
         + '<span class="badge ' + (d.type==='devis'?'b-devis':'b-facture') + '">' + d.type + '</span>'
         + '<span class="doc-num">' + escHtml(d.num) + '</span>'
         + '<span style="font-size:12px;color:var(--text-dim)">' + fmtDate(d.date) + '</span>'
