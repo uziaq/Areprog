@@ -1103,6 +1103,7 @@ select option{background:#fff}
     <div class="topbar-row1">
       <div class="tb-brand">ARE<span>PROG</span></div>
       <div style="display:flex;align-items:center;gap:6px">
+        <a href="/perf" target="_blank" rel="noopener" class="logout-btn" title="Analyse de performance des pages publiques (PageSpeed Insights)">📈 Perf</a>
         <button onclick="$('shortcuts-modal').classList.add('open')" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:14px;font-weight:700" title="Raccourcis clavier (?)">?</button>
         <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
       </div>
@@ -2016,6 +2017,27 @@ Cordialement, AREPROG"></textarea>
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
       <button class="btn-s" onclick="$('send-email-modal').classList.remove('open')">Annuler</button>
       <button class="btn-g" id="send-email-confirm-btn" onclick="confirmSendEmail()">📧 Envoyer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DEMANDE D'AVIS GOOGLE -->
+<div class="rdv-modal" id="avis-modal" onclick="if(event.target===this)$('avis-modal').classList.remove('open')" style="z-index:330">
+  <div class="rdv-box" style="max-width:420px">
+    <div class="rdv-box-title">⭐ Demander un avis Google</div>
+    <div id="avis-last-info" style="display:none;font-size:12px;color:var(--text-muted);margin-bottom:10px"></div>
+    <div class="fr">
+      <label>Email du client</label>
+      <input id="avis-to-email" type="email" placeholder="client@email.fr" autocomplete="off"/>
+    </div>
+    <div class="fr">
+      <label>Message personnalisé (optionnel)</label>
+      <textarea id="avis-message" rows="5"></textarea>
+    </div>
+    <div id="avis-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:10px"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn-s" onclick="$('avis-modal').classList.remove('open')">Annuler</button>
+      <button class="btn-g" id="avis-confirm-btn" onclick="confirmSendAvis()">⭐ Envoyer</button>
     </div>
   </div>
 </div>
@@ -3605,6 +3627,11 @@ function buildTable(docs, withDelete) {
       ? ' <span title="Envoy\u00e9 par email le ' + escHtml(new Date(d.lastEmailAt).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})) + ' \u00e0 ' + escHtml(d.lastEmailTo||'') + '" style="cursor:help;font-size:11px">\u2709\ufe0f</span>'
       : '';
     var delBtn = withDelete ? '<button class="btn-d btn-sm" onclick="deleteDoc('+d.id+')">🗑</button>' : '';
+    // Demander un avis n'a de sens qu'une fois la facture payée (prestation
+    // terminée) et si on a une adresse à qui l'envoyer.
+    var avisBtn = (d.type === 'facture' && d.statut === 'payé' && d.ce)
+      ? '<button class="btn-s btn-sm" onclick="openAvisModal('+d.id+')" title="'+(d.avisEmailAt ? 'Déjà demandé le '+escHtml(new Date(d.avisEmailAt).toLocaleDateString('fr-FR')) : 'Demander un avis Google')+'">⭐'+(d.avisEmailAt ? '' : ' Avis')+'</button>'
+      : '';
     return '<tr>'
       + '<td><span class="doc-num">'+(escHtml(d.num)||'—')+'</span></td>'
       + '<td>'+typeBadge+'</td>'
@@ -3615,6 +3642,7 @@ function buildTable(docs, withDelete) {
       + '<td><div class="act-cell">'
         + '<button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button>'
         + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'
+        + avisBtn
         + delBtn
       + '</div></td>'
       + '</tr>';
@@ -5179,6 +5207,110 @@ async function confirmSendEmail() {
 
 function showSendStatus(type, msg) {
   var el = $('send-email-status');
+  el.style.display = 'block';
+  el.style.background = type==='success'?'rgba(34,197,94,.1)':'rgba(239,68,68,.1)';
+  el.style.color = type==='success'?'var(--green)':'var(--red)';
+  el.style.border = '1px solid '+(type==='success'?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)');
+  el.textContent = msg;
+}
+
+// ── Demande d'avis Google (facture payée → e-mail avec lien vers l'avis) ──
+// Réutilise la fonction générique send-email : pas de PDF joint, juste un
+// bouton vers la fiche Google de l'atelier.
+var GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/XymJPM5Tgh8eRSM36';
+var _currentDocForAvis = null;
+
+function openAvisModal(docId) {
+  var doc = loadDocs().find(function(d){ return d.id === docId; });
+  if (!doc) return;
+  _currentDocForAvis = doc;
+  $('avis-to-email').value = doc.ce || '';
+  var prenom = (doc.cn || '').split(' ')[0] || '';
+  $('avis-message').value = 'Bonjour' + (prenom ? ' ' + prenom : '') + ',\n\n'
+    + 'Merci d\'avoir fait confiance à AREPROG. Si vous êtes satisfait(e) de l\'intervention, '
+    + 'un avis Google nous aiderait beaucoup à nous faire connaître.\n\n'
+    + 'Cordialement,\nAREPROG';
+  var lastInfo = $('avis-last-info');
+  if (doc.avisEmailAt) {
+    lastInfo.textContent = '⭐ Déjà demandé le ' + new Date(doc.avisEmailAt).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) + ' à ' + (doc.avisEmailTo || '');
+    lastInfo.style.display = 'block';
+  } else {
+    lastInfo.style.display = 'none';
+  }
+  $('avis-status').style.display = 'none';
+  $('avis-confirm-btn').disabled = false;
+  $('avis-confirm-btn').textContent = '⭐ Envoyer';
+  $('avis-modal').classList.add('open');
+}
+
+function buildAvisEmailHtml(tpl, message) {
+  var color = /^#[0-9a-fA-F]{6}$/.test(tpl.color) ? tpl.color : '#2196F3';
+  return '<div style="background:#f4f5f7;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">'
+    + '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb">'
+      + '<div style="background:' + color + ';padding:22px 28px">'
+        + '<div style="color:#fff;font-size:20px;font-weight:700;letter-spacing:.3px">' + escHtml(tpl.nom || 'AREPROG') + '</div>'
+      + '</div>'
+      + '<div style="padding:26px 28px">'
+        + '<p style="margin:0 0 22px;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
+        + '<div style="text-align:center">'
+          + '<a href="' + GOOGLE_REVIEW_URL + '" style="display:inline-block;background:' + color + ';color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:8px">★★★★★ Laisser un avis Google</a>'
+        + '</div>'
+      + '</div>'
+      + '<div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">'
+        + escHtml(tpl.footer || '').replace(/\n/g, '<br>')
+      + '</div>'
+    + '</div>'
+  + '</div>';
+}
+
+async function confirmSendAvis() {
+  var toEmail = $('avis-to-email').value.trim();
+  if (!toEmail || !toEmail.includes('@')) {
+    showAvisStatus('error', 'Email invalide.');
+    return;
+  }
+  var btn = $('avis-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+  try {
+    var doc = _currentDocForAvis || {};
+    var tpl = loadTemplate();
+    var message = $('avis-message').value;
+    var subject = (tpl.nom || 'AREPROG') + ' — Votre avis compte pour nous';
+    var html = buildAvisEmailHtml(tpl, message);
+
+    await envoyerEmail(toEmail, subject, html, NOTIF_EMAIL);
+
+    if (doc.id) {
+      var docs = loadDocs();
+      var idx = docs.findIndex(function(d){ return d.id === doc.id; });
+      if (idx >= 0) {
+        docs[idx].avisEmailAt = new Date().toISOString();
+        docs[idx].avisEmailTo = toEmail;
+        saveDocs(docs);
+        _currentDocForAvis = docs[idx];
+        if ($('t-liste') && $('t-liste').classList.contains('on')) renderListe();
+      }
+    }
+
+    showAvisStatus('success', 'Demande envoyée à '+toEmail+' ✓');
+    btn.textContent = '✓ Envoyé !';
+    setTimeout(function(){ $('avis-modal').classList.remove('open'); }, 2000);
+    showNotifBanner('⭐', 'Demande d\'avis envoyée !', toEmail);
+  } catch(e) {
+    console.error('Envoi demande avis:', e);
+    var msg = e.text || e.message || 'Réessayez.';
+    if (/load failed|failed to fetch|networkerror/i.test(msg)) {
+      msg = 'Connexion au serveur interrompue pendant l\'envoi. Réessayez.';
+    }
+    showAvisStatus('error', 'Erreur : ' + msg);
+    btn.disabled = false;
+    btn.textContent = '⭐ Envoyer';
+  }
+}
+
+function showAvisStatus(type, msg) {
+  var el = $('avis-status');
   el.style.display = 'block';
   el.style.background = type==='success'?'rgba(34,197,94,.1)':'rgba(239,68,68,.1)';
   el.style.color = type==='success'?'var(--green)':'var(--red)';
