@@ -19,8 +19,8 @@ The site is organized into two separate service "universes", each with its own h
 ```
 netlify.toml        → build config (publish=".", functions dir)
 *.html              → one file per page/route (no SPA, ~40 pages)
-nav.js              → shared navigation (Diagnostic ▾ / Reprogrammation ▾ dropdowns), footer, WhatsApp widget, dark/light theme toggle (injected on all pages)
-shared.css          → design system (CSS custom properties, dark-first theme, utility classes)
+nav.js              → shared navigation (Diagnostic ▾ / Reprogrammation ▾ dropdowns), footer, WhatsApp widget (injected on all pages)
+shared.css          → design system (CSS custom properties, light theme, utility classes)
 netlify/function/   → Netlify serverless functions (Node.js/CommonJS)
 ```
 
@@ -44,15 +44,15 @@ Firebase config is hardcoded in `gestion.html` (public, gated by Firebase securi
 
 ## CSS Conventions
 
-`shared.css` defines the design system. Dark mode is the default; light mode is toggled via `[data-theme="light"]` on `<html>`.
+`shared.css` defines the design system. Light theme only (no dark mode, no toggle).
 
 Key custom properties:
 ```css
---bg: #0d0e10        /* dark background */
---surface: #17181b
---blue: #2196F3
---green: #34D399
---text: #eceef1
+--bg: #f4f5f7        /* light background */
+--surface: #ffffff
+--blue: #0d5baf
+--green: #0b7a52
+--text: #1a1c1f
 --nav-h: 64px
 --radius: 3px / --radius-lg: 8px
 ```

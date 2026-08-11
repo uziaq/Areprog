@@ -74,6 +74,16 @@
   /* Hero right — diagnostic card */
   .hero-right { position: relative; z-index: 1; animation: fadeUp .7s .3s ease both; }
   .hero-card {
+    /* Mockup d'écran d'outil de diagnostic : reste sombre quel que soit le
+       thème du site, donc ses propres variables sont figées ici. */
+    --border: #26282c;
+    --border2: #32353a;
+    --muted: #7c8490;
+    --muted2: #868e9b;
+    --text2: #c8cdd4;
+    --blue: #2196F3;
+    --blue-light: #42A5F5;
+    --green: #34D399;
     background: #0a0b0d;
     border: 1px solid var(--border2);
     border-radius: 10px;
