@@ -308,6 +308,15 @@ nav {
   overscroll-behavior: contain;
 }
 .nav-mobile.open { display: block; }
+
+/* Le menu mobile ouvert a la priorité : la barre d'appel sticky et la bulle
+   WhatsApp flottent par-dessus le bas de l'écran et masquaient sinon les
+   derniers liens (Simulateur, Contact, Prendre RDV…). Classe posée sur
+   <html> par nav.js à l'ouverture/fermeture du burger. */
+html.nav-mobile-open .mobile-call-bar,
+html.nav-mobile-open #wa-widget {
+  display: none;
+}
 .nav-mobile a {
   display: block; padding: .85rem 1.5rem;
   font-family: var(--font-body); font-size: .92rem;
