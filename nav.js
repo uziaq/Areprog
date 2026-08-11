@@ -3,6 +3,22 @@
  Navigation, footer, SEO schema, WhatsApp widget
  ═══════════════════════════════════════════ */
 
+// ── Mesure d'audience Umami — sans cookie, sans donnée personnelle ─────────
+// Point unique : avant, ce <script> (avec un ID factice "UMAMI_WEBSITE_ID")
+// était dupliqué tel quel dans le <head> de chaque page, si bien que le vrai
+// identifiant n'a jamais remplacé le texte d'exemple sur aucune des 29
+// pages concernées — zéro donnée de trafic collectée depuis la mise en
+// ligne. Remplacer la valeur ci-dessous par l'identifiant fourni par
+// cloud.umami.is (une seule fois, ici) active le suivi sur tout le site.
+const UMAMI_WEBSITE_ID = 'UMAMI_WEBSITE_ID';
+if (UMAMI_WEBSITE_ID && UMAMI_WEBSITE_ID !== 'UMAMI_WEBSITE_ID' && !document.querySelector('script[data-website-id]')) {
+  const umamiScript = document.createElement('script');
+  umamiScript.defer = true;
+  umamiScript.src = 'https://cloud.umami.is/script.js';
+  umamiScript.setAttribute('data-website-id', UMAMI_WEBSITE_ID);
+  document.head.appendChild(umamiScript);
+}
+
 const NAV_HTML = `
 <a href="#contenu" class="skip-link">Aller au contenu</a>
 <nav>
@@ -145,7 +161,7 @@ const FOOTER_HTML = `
  <div class="footer-bottom-links">
  <a href="/mentions-legales">Mentions légales</a>
    <a href="/politique-confidentialite">Confidentialité</a>
- <a href="/sitemap-visuel.html">Plan du site</a>
+ <a href="/sitemap-visuel">Plan du site</a>
  </div>
  </div>
 </footer>

@@ -5,6 +5,7 @@
 
 # ── Admin (anciennement Netlify Identity — migré vers Firebase Auth) ─────
 /admin                              /gestion.html                       301
+/perf                                /perf.html                          200
 
 # ── Clean URLs (sans .html) ─────────────────────────────────
 /diagnostic                         /diagnostic.html                    200
@@ -29,6 +30,7 @@
 /vidange-boite-automatique          /vidange-boite-automatique.html     200
 /mentions-legales                   /mentions-legales.html              200
 /politique-confidentialite          /politique-confidentialite.html     200
+/sitemap-visuel                     /sitemap-visuel.html                200
 
 # Pages locales
 /reprogrammation-moteur-bayonne          /reprogrammation-moteur-bayonne.html          200

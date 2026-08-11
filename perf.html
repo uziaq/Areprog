@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analyse performance — AREPROG</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
+  <link rel="stylesheet" href="shared.css?v=20260811"/>
+  <style>
+    .page-wrap { padding-top: 0; min-height: 100vh; }
+
+    .perf-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      padding: 1.1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .perf-brand {
+      font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;
+      letter-spacing: .08em; color: var(--text); text-decoration: none;
+    }
+    .perf-brand span { color: var(--blue); }
+    .perf-bar-sub {
+      font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted); margin-left: .6rem;
+    }
+    .perf-bar-back {
+      font-size: .82rem; color: var(--muted); text-decoration: none;
+    }
+    .perf-bar-back:hover { color: var(--text); }
+
+    main.perf-main { padding: 2.4rem 2rem 5rem; max-width: 1180px; margin: 0 auto; }
+
+    .perf-head h1 {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: -.01em; text-transform: uppercase; line-height: 1.02;
+    }
+    .perf-head h1 em { font-style: italic; font-weight: 300; color: var(--blue-light); }
+    .perf-head p { color: var(--muted); max-width: 62ch; margin-top: .6rem; font-size: .94rem; }
+
+    .perf-controls {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      margin-top: 1.6rem; padding: 1rem 1.2rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    }
+    .seg { display: inline-flex; border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; }
+    .seg button {
+      font-family: var(--font-body); font-size: .82rem; font-weight: 500;
+      color: var(--muted); background: var(--surface); border: none;
+      padding: .5rem 1rem; cursor: pointer; transition: background .15s, color .15s;
+    }
+    .seg button + button { border-left: 1px solid var(--border2); }
+    .seg button.on { background: var(--blue); color: #fff; }
+
+    .perf-run-all {
+      font-family: var(--font-display); font-weight: 700; font-size: .78rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      background: var(--blue); color: #fff; border: none;
+      padding: .65rem 1.3rem; border-radius: var(--radius); cursor: pointer;
+      transition: background .2s;
+    }
+    .perf-run-all:hover:not(:disabled) { background: var(--blue-light); }
+    .perf-run-all:disabled { opacity: .55; cursor: default; }
+
+    .perf-stop {
+      font-family: var(--font-body); font-size: .8rem; color: var(--muted);
+      background: transparent; border: 1px solid var(--border2); border-radius: var(--radius);
+      padding: .6rem 1rem; cursor: pointer; display: none;
+    }
+    .perf-stop.show { display: inline-block; }
+    .perf-stop:hover { color: var(--text); border-color: var(--text2); }
+
+    .perf-progress { font-family: var(--font-mono); font-size: .74rem; color: var(--muted); margin-left: auto; }
+
+    .perf-note { font-size: .76rem; color: var(--muted2); margin-top: .6rem; }
+
+    .perf-table-wrap { margin-top: 1.6rem; overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+    table.perf-table { width: 100%; border-collapse: collapse; font-size: .86rem; min-width: 900px; }
+    .perf-table thead th {
+      text-align: left; font-family: var(--font-mono); font-size: .64rem;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--muted2);
+      padding: .8rem 1rem; border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .perf-table tbody td { padding: .75rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .perf-table tbody tr:last-child td { border-bottom: none; }
+    .perf-page-name { color: var(--text); font-weight: 500; }
+    .perf-page-path { display: block; color: var(--muted2); font-size: .74rem; font-family: var(--font-mono); }
+
+    .score-chip {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 34px; padding: .2rem .4rem;
+      font-family: var(--font-mono); font-weight: 700; font-size: .78rem;
+      border-radius: 100px; font-variant-numeric: tabular-nums;
+    }
+    .score-chip.s-good { background: rgba(11,122,82,.1); color: var(--green); }
+    .score-chip.s-mid  { background: rgba(138,82,0,.1); color: var(--amber); }
+    .score-chip.s-bad  { background: rgba(194,47,47,.1); color: var(--red); }
+    .score-chip.s-none { background: var(--surface3); color: var(--muted2); }
+
+    .metric-val { font-family: var(--font-mono); font-size: .78rem; color: var(--text2); font-variant-numeric: tabular-nums; }
+    .perf-status { font-size: .78rem; color: var(--muted2); font-style: italic; }
+    .perf-status.err { color: var(--red); font-style: normal; }
+
+    .row-btn {
+      font-family: var(--font-body); font-size: .76rem; color: var(--blue-light);
+      background: transparent; border: 1px solid rgba(33,150,243,.35); border-radius: var(--radius);
+      padding: .35rem .7rem; cursor: pointer; white-space: nowrap;
+    }
+    .row-btn:hover:not(:disabled) { background: var(--blue-dim); }
+    .row-btn:disabled { opacity: .5; cursor: default; }
+
+    @media (max-width: 720px) {
+      .perf-bar { padding: 1rem 1.2rem; }
+      main.perf-main { padding: 1.8rem 1.2rem 4rem; }
+      .perf-progress { margin-left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body data-page="perf">
+  <div class="page-wrap">
+
+    <div class="perf-bar">
+      <div>
+        <a href="/gestion" class="perf-brand">ARE<span>PROG</span></a><span class="perf-bar-sub">Analyse performance</span>
+      </div>
+      <a href="/gestion" class="perf-bar-back">← Retour à l'espace gestion</a>
+    </div>
+
+    <main class="perf-main">
+      <div class="perf-head">
+        <h1>Performance <em>du site</em></h1>
+        <p>Passe chaque page publique au banc PageSpeed Insights (Lighthouse) : score global, accessibilité, bonnes pratiques, SEO, et les métriques Core Web Vitals qui comptent pour le classement Google. Un scan prend 15 à 30 secondes par page.</p>
+      </div>
+
+      <div class="perf-controls">
+        <div class="seg" role="group" aria-label="Stratégie d'analyse">
+          <button type="button" class="on" data-strategy="mobile" id="btn-mobile">📱 Mobile</button>
+          <button type="button" data-strategy="desktop" id="btn-desktop">🖥 Desktop</button>
+        </div>
+        <button type="button" class="perf-run-all" id="btn-run-all">Tout analyser</button>
+        <button type="button" class="perf-stop" id="btn-stop">Arrêter</button>
+        <div class="perf-progress" id="progress" hidden></div>
+      </div>
+      <div class="perf-note">Les résultats varient légèrement d'un scan à l'autre (charge réseau simulée) — normal pour Lighthouse. Un score sous 50 est classé « à corriger » par Google, 50–89 « à améliorer », 90+ « bon ».</div>
+
+      <div class="perf-table-wrap">
+        <table class="perf-table">
+          <thead>
+            <tr>
+              <th>Page</th>
+              <th>Perf.</th>
+              <th>Access.</th>
+              <th>Bonnes prat.</th>
+              <th>SEO</th>
+              <th>LCP</th>
+              <th>CLS</th>
+              <th>TBT</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="perf-body"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+  (function(){
+    "use strict";
+
+    // Groupes = mêmes routes que _redirects / sitemap.xml, jamais une URL
+    // arbitraire : la fonction perf-check refuse tout `path` hors de cette liste.
+    var PAGES = [
+      { path: '/', label: 'Accueil' },
+      { path: '/diagnostic', label: 'Diagnostic multimarque' },
+      { path: '/diagnostic-vag', label: 'Diagnostic VAG (ODIS)' },
+      { path: '/diagnostic-bmw', label: 'Diagnostic BMW (ISTA)' },
+      { path: '/reprogrammation', label: 'Reprogrammation (hub)' },
+      { path: '/stage1', label: 'Stage 1' },
+      { path: '/stage2', label: 'Stage 2' },
+      { path: '/conversion-e85', label: 'Conversion E85' },
+      { path: '/optimisation-consommation', label: 'Optimisation consommation' },
+      { path: '/desactivation-egr', label: 'Désactivation EGR' },
+      { path: '/desactivation-fap', label: 'Désactivation FAP' },
+      { path: '/desactivation-adblue', label: 'Désactivation AdBlue' },
+      { path: '/vidange-boite-automatique', label: 'Vidange boîte auto' },
+      { path: '/reprogrammation-boite-vitesse', label: 'Reprog. boîte (TCU)' },
+      { path: '/reprogrammation-moteur-bayonne', label: 'Zone — Bayonne' },
+      { path: '/reprogrammation-moteur-biarritz', label: 'Zone — Biarritz' },
+      { path: '/reprogrammation-moteur-anglet', label: 'Zone — Anglet' },
+      { path: '/reprogrammation-moteur-saint-jean-de-luz', label: 'Zone — Saint-Jean-de-Luz' },
+      { path: '/reprogrammation-moteur-hendaye', label: 'Zone — Hendaye' },
+      { path: '/tarifs', label: 'Tarifs' },
+      { path: '/simulateur', label: 'Simulateur de gains' },
+      { path: '/faq', label: 'FAQ' },
+      { path: '/about', label: 'À propos' },
+      { path: '/guide-reprogrammation-moteur', label: 'Guide reprogrammation' },
+      { path: '/contact', label: 'Contact' },
+      { path: '/rdv', label: 'Prendre RDV' },
+      { path: '/mentions-legales', label: 'Mentions légales' },
+      { path: '/politique-confidentialite', label: 'Confidentialité' },
+    ];
+
+    var body = document.getElementById('perf-body');
+    var strategy = 'mobile';
+    var stopRequested = false;
+    var running = false;
+
+    var btnMobile = document.getElementById('btn-mobile');
+    var btnDesktop = document.getElementById('btn-desktop');
+    var btnRunAll = document.getElementById('btn-run-all');
+    var btnStop = document.getElementById('btn-stop');
+    var progressEl = document.getElementById('progress');
+
+    function setStrategy(s){
+      strategy = s;
+      btnMobile.classList.toggle('on', s === 'mobile');
+      btnDesktop.classList.toggle('on', s === 'desktop');
+    }
+    btnMobile.addEventListener('click', function(){ if (!running) setStrategy('mobile'); });
+    btnDesktop.addEventListener('click', function(){ if (!running) setStrategy('desktop'); });
+
+    function scoreChip(val){
+      if (val === null || val === undefined) return '<span class="score-chip s-none">—</span>';
+      var cls = val >= 90 ? 's-good' : val >= 50 ? 's-mid' : 's-bad';
+      return '<span class="score-chip ' + cls + '">' + val + '</span>';
+    }
+
+    function buildRow(page, i){
+      var tr = document.createElement('tr');
+      tr.id = 'row-' + i;
+      tr.innerHTML =
+        '<td><span class="perf-page-name">' + page.label + '</span><span class="perf-page-path">' + page.path + '</span></td>'
+        + '<td data-cell="performance">' + scoreChip(null) + '</td>'
+        + '<td data-cell="accessibility">' + scoreChip(null) + '</td>'
+        + '<td data-cell="bestPractices">' + scoreChip(null) + '</td>'
+        + '<td data-cell="seo">' + scoreChip(null) + '</td>'
+        + '<td data-cell="lcp"><span class="metric-val">—</span></td>'
+        + '<td data-cell="cls"><span class="metric-val">—</span></td>'
+        + '<td data-cell="tbt"><span class="metric-val">—</span></td>'
+        + '<td><button type="button" class="row-btn" data-idx="' + i + '">Analyser</button></td>';
+      return tr;
+    }
+
+    PAGES.forEach(function(p, i){ body.appendChild(buildRow(p, i)); });
+
+    function setStatus(i, text, isErr){
+      var tr = document.getElementById('row-' + i);
+      var existing = tr.querySelector('.perf-status');
+      if (existing) existing.remove();
+      if (!text) return;
+      var span = document.createElement('div');
+      span.className = 'perf-status' + (isErr ? ' err' : '');
+      span.textContent = text;
+      tr.querySelector('td:last-child').appendChild(span);
+    }
+
+    function applyResult(i, data){
+      var tr = document.getElementById('row-' + i);
+      var s = data.scores || {};
+      tr.querySelector('[data-cell="performance"]').innerHTML = scoreChip(s.performance);
+      tr.querySelector('[data-cell="accessibility"]').innerHTML = scoreChip(s.accessibility);
+      tr.querySelector('[data-cell="bestPractices"]').innerHTML = scoreChip(s.bestPractices);
+      tr.querySelector('[data-cell="seo"]').innerHTML = scoreChip(s.seo);
+      var m = data.metrics || {};
+      var lcp = m['largest-contentful-paint'];
+      var cls = m['cumulative-layout-shift'];
+      var tbt = m['total-blocking-time'];
+      tr.querySelector('[data-cell="lcp"]').innerHTML = '<span class="metric-val">' + (lcp && lcp.value || '—') + '</span>';
+      tr.querySelector('[data-cell="cls"]').innerHTML = '<span class="metric-val">' + (cls && cls.value || '—') + '</span>';
+      tr.querySelector('[data-cell="tbt"]').innerHTML = '<span class="metric-val">' + (tbt && tbt.value || '—') + '</span>';
+    }
+
+    function runOne(i){
+      var page = PAGES[i];
+      var tr = document.getElementById('row-' + i);
+      var btn = tr.querySelector('.row-btn');
+      btn.disabled = true;
+      setStatus(i, 'Analyse en cours…');
+
+      return fetch('/.netlify/functions/perf-check?path=' + encodeURIComponent(page.path) + '&strategy=' + strategy)
+        .then(function(r){
+          return r.json().then(function(json){
+            if (!r.ok) throw new Error(json.error || ('HTTP ' + r.status));
+            return json;
+          });
+        })
+        .then(function(data){
+          applyResult(i, data);
+          setStatus(i, null);
+        })
+        .catch(function(e){
+          setStatus(i, e.message || 'Échec de l\'analyse', true);
+        })
+        .finally(function(){
+          btn.disabled = false;
+        });
+    }
+
+    body.addEventListener('click', function(e){
+      var btn = e.target.closest('.row-btn');
+      if (!btn || running) return;
+      runOne(parseInt(btn.dataset.idx, 10));
+    });
+
+    async function runAll(){
+      running = true;
+      stopRequested = false;
+      btnRunAll.disabled = true;
+      btnStop.classList.add('show');
+      progressEl.hidden = false;
+
+      for (var i = 0; i < PAGES.length; i++) {
+        if (stopRequested) break;
+        progressEl.textContent = 'Page ' + (i + 1) + ' / ' + PAGES.length + ' — ' + PAGES[i].label;
+        await runOne(i);
+      }
+
+      progressEl.textContent = stopRequested ? 'Arrêté.' : 'Analyse complète.';
+      running = false;
+      btnRunAll.disabled = false;
+      btnStop.classList.remove('show');
+    }
+
+    btnRunAll.addEventListener('click', runAll);
+    btnStop.addEventListener('click', function(){ stopRequested = true; });
+  })();
+  </script>
+</body>
+</html>
