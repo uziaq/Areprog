@@ -151,6 +151,25 @@ exports.handler = async (event) => {
   }
 
   if (event.httpMethod === 'GET') {
+    const month = texte((event.queryStringParameters || {}).month, 7);
+    if (/^\d{4}-\d{2}$/.test(month)) {
+      try {
+        initFirebase();
+        const dispo = await chargerDispo();
+        const [y, m] = month.split('-').map(Number);
+        const joursDansMois = new Date(Date.UTC(y, m, 0)).getUTCDate();
+        const closedDates = [];
+        for (let d = 1; d <= joursDansMois; d++) {
+          const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          if (raisonFermeture(dateStr, dispo) !== null) closedDates.push(dateStr);
+        }
+        return { statusCode: 200, headers: cors, body: JSON.stringify({ closedDates }) };
+      } catch (e) {
+        console.error('rdv-booking GET (month) : lecture Firestore échouée —', e.message);
+        return { statusCode: 500, headers: cors, body: JSON.stringify({ error: 'Lecture du calendrier impossible' }) };
+      }
+    }
+
     const date = texte((event.queryStringParameters || {}).date, 10);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Date invalide' }) };
