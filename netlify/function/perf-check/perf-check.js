@@ -7,10 +7,12 @@
 // publiques réelles (mêmes routes que _redirects / sitemap.xml) — jamais une
 // URL arbitraire fournie par l'appelant.
 //
-// Env var optionnelle (Netlify dashboard) :
-//   PAGESPEED_API_KEY : relève le plafond de requêtes/jour de l'API publique
-//                        PageSpeed Insights (fonctionne aussi sans, en plus
-//                        limité). https://developers.google.com/speed/docs/insights/v5/get-started
+// Env var requise en pratique (Netlify dashboard) :
+//   PAGESPEED_API_KEY : sans clé, le quota journalier de l'API keyless est à
+//                        0 (vérifié en conditions réelles le 11/08/2026 —
+//                        Google renvoie systématiquement 429), donc l'outil
+//                        ne fonctionne pas sans elle. Clé gratuite, 25 000
+//                        requêtes/jour : https://developers.google.com/speed/docs/insights/v5/get-started
 
 const SITE_ORIGIN = 'https://areprog.fr';
 
@@ -104,7 +106,15 @@ exports.handler = async (event) => {
     if (!res.ok) {
       const txt = await res.text().catch(() => '');
       console.error('perf-check : PageSpeed API', res.status, txt.slice(0, 300));
-      return { statusCode: 502, headers: cors, body: JSON.stringify({ error: 'PageSpeed Insights indisponible (HTTP ' + res.status + ').' }) };
+      // Vérifié en conditions réelles (11/08/2026) : sans clé, le quota
+      // journalier de l'API keyless n'est pas juste "réduit", il est à 0 —
+      // Google renvoie systématiquement 429. La clé PAGESPEED_API_KEY n'est
+      // donc pas une optimisation, elle est nécessaire pour que cet outil
+      // fonctionne. https://developers.google.com/speed/docs/insights/v5/get-started
+      const msg = res.status === 429
+        ? "Quota PageSpeed Insights dépassé. Sans clé API, Google autorise très peu de requêtes — configurez PAGESPEED_API_KEY dans les variables d'environnement Netlify (clé gratuite, 25 000 requêtes/jour : https://developers.google.com/speed/docs/insights/v5/get-started)."
+        : 'PageSpeed Insights indisponible (HTTP ' + res.status + ').';
+      return { statusCode: 502, headers: cors, body: JSON.stringify({ error: msg }) };
     }
 
     const data = await res.json();
