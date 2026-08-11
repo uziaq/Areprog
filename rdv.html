@@ -131,9 +131,19 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="f-date">Date <span class="required">*</span></label>
-            <input type="date" class="form-input" id="f-date" required aria-describedby="err-date"/>
-            <div class="form-error-msg" id="err-date" role="alert" aria-live="polite">Choisissez une date (atelier fermé le dimanche)</div>
+            <label class="form-label">Date <span class="required">*</span></label>
+            <div class="rdv-cal" id="rdv-cal">
+              <div class="rdv-cal-head">
+                <button type="button" class="rdv-cal-nav" id="cal-prev" aria-label="Mois précédent">‹</button>
+                <div class="rdv-cal-title" id="cal-title">—</div>
+                <button type="button" class="rdv-cal-nav" id="cal-next" aria-label="Mois suivant">›</button>
+              </div>
+              <div class="rdv-cal-weekdays">
+                <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+              </div>
+              <div class="rdv-cal-grid" id="cal-grid" role="grid" aria-label="Sélection de la date"></div>
+            </div>
+            <div class="form-error-msg" id="err-date" role="alert" aria-live="polite">Choisissez une date dans le calendrier</div>
             <div class="slot-hint" id="slot-hint">Sélectionnez une date pour voir les créneaux disponibles.</div>
           </div>
 
@@ -384,22 +394,93 @@
   <script src="whatsapp-widget.js"></script>
   <script>
     var selectedHeure = null;
+    var selectedDate = null; // 'YYYY-MM-DD'
     var currentDateClosed = true; // tant qu'aucune date n'est chargée, on bloque l'envoi
     var creneauxCache = {}; // dateStr → { slots, busy, closed, reason }
+    var closedDatesCache = {}; // 'YYYY-MM' → ['YYYY-MM-DD', …]
 
-    var dateInput = document.getElementById('f-date');
     var slotGrid = document.getElementById('slot-grid');
     var slotHint = document.getElementById('slot-hint');
+    var calGrid = document.getElementById('cal-grid');
+    var calTitle = document.getElementById('cal-title');
+    var calPrev = document.getElementById('cal-prev');
+    var calNext = document.getElementById('cal-next');
 
-    // Bornes du sélecteur : aujourd'hui → +90 jours (même fenêtre que le serveur).
-    (function initDateBounds() {
-      var today = new Date();
-      var max = new Date();
-      max.setDate(max.getDate() + 90);
-      var toISO = function(d) { return d.toISOString().slice(0, 10); };
-      dateInput.min = toISO(today);
-      dateInput.max = toISO(max);
-    })();
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function toISO(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+    function monthKey(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1); }
+
+    // Fenêtre de réservation : aujourd'hui → +90 jours (même fenêtre que le serveur).
+    var TODAY = new Date();
+    var TODAY_STR = toISO(TODAY);
+    var MAX_DATE = new Date();
+    MAX_DATE.setDate(MAX_DATE.getDate() + 90);
+    var MAX_DATE_STR = toISO(MAX_DATE);
+
+    // Mois affiché dans le calendrier (toujours ramené au 1er du mois).
+    var calMonth = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+
+    function loadMonthClosedDates(monthDate, then) {
+      var key = monthKey(monthDate);
+      if (closedDatesCache[key]) { then(closedDatesCache[key]); return; }
+      fetch('/.netlify/functions/rdv-booking?month=' + encodeURIComponent(key))
+        .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+        .then(function(data) {
+          closedDatesCache[key] = data.closedDates || [];
+          then(closedDatesCache[key]);
+        })
+        .catch(function() { then([]); }); // en cas d'échec, on laisse tous les jours cliquables — la vérification se refait à la sélection
+    }
+
+    function renderCalendar() {
+      calTitle.textContent = calMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+      var isCurrentMonth = calMonth.getFullYear() === TODAY.getFullYear() && calMonth.getMonth() === TODAY.getMonth();
+      var maxMonthDate = new Date(MAX_DATE.getFullYear(), MAX_DATE.getMonth(), 1);
+      var isMaxMonth = calMonth.getFullYear() === maxMonthDate.getFullYear() && calMonth.getMonth() === maxMonthDate.getMonth();
+      calPrev.disabled = isCurrentMonth;
+      calNext.disabled = isMaxMonth;
+
+      loadMonthClosedDates(calMonth, function(closedDates) {
+        var year = calMonth.getFullYear(), month = calMonth.getMonth();
+        var firstWeekday = (new Date(year, month, 1).getDay() + 6) % 7; // lundi = 0
+        var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        var html = '';
+        for (var b = 0; b < firstWeekday; b++) html += '<span class="cal-day-blank"></span>';
+        for (var day = 1; day <= daysInMonth; day++) {
+          var dStr = year + '-' + pad2(month + 1) + '-' + pad2(day);
+          var horsPeriode = dStr < TODAY_STR || dStr > MAX_DATE_STR;
+          var ferme = closedDates.indexOf(dStr) >= 0;
+          var indispo = horsPeriode || ferme;
+          var classes = ['cal-day-btn'];
+          if (dStr === TODAY_STR) classes.push('today');
+          if (dStr === selectedDate) classes.push('selected');
+          html += '<button type="button" class="' + classes.join(' ') + '" data-date="' + dStr + '" '
+            + (indispo ? 'disabled' : '') + ' aria-label="' + day + ' ' + calTitle.textContent + '">' + day + '</button>';
+        }
+        calGrid.innerHTML = html;
+
+        calGrid.querySelectorAll('.cal-day-btn:not(:disabled)').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            selectedDate = btn.dataset.date;
+            document.getElementById('err-date')?.classList.remove('visible');
+            calGrid.querySelectorAll('.cal-day-btn').forEach(function(b) { b.classList.remove('selected'); });
+            btn.classList.add('selected');
+            chargerCreneaux(selectedDate);
+            updateProgress();
+          });
+        });
+      });
+    }
+
+    calPrev.addEventListener('click', function() {
+      calMonth.setMonth(calMonth.getMonth() - 1);
+      renderCalendar();
+    });
+    calNext.addEventListener('click', function() {
+      calMonth.setMonth(calMonth.getMonth() + 1);
+      renderCalendar();
+    });
 
     // Les jours ouverts, les horaires proposés et les fermetures exceptionnelles
     // sont réglés depuis gestion.html (⚙️ Créneaux RDV) — cette page ne fait
@@ -474,18 +555,11 @@
         });
     }
 
-    dateInput.addEventListener('change', function() {
-      document.getElementById('err-date')?.classList.remove('visible');
-      dateInput.classList.remove('error');
-      chargerCreneaux(dateInput.value);
-      updateProgress();
-    });
-
-    var progressFields = ['f-date', 'f-nom', 'f-tel'];
+    renderCalendar();
 
     function updateProgress() {
       var filled = 0;
-      if (dateInput.value) filled++;
+      if (selectedDate) filled++;
       if (selectedHeure) filled++;
       if (document.getElementById('f-nom').value.trim()) filled++;
       if (document.getElementById('f-tel').value.trim()) filled++;
@@ -514,11 +588,14 @@
       var valid = true;
       var firstInvalid = null;
 
-      if (!dateInput.value || currentDateClosed) {
-        dateInput.classList.add('error');
+      var calEl = document.getElementById('rdv-cal');
+      if (!selectedDate || currentDateClosed) {
+        calEl.classList.add('error');
         document.getElementById('err-date')?.classList.add('visible');
         valid = false;
-        firstInvalid = firstInvalid || dateInput;
+        firstInvalid = firstInvalid || calEl;
+      } else {
+        calEl.classList.remove('error');
       }
       if (!selectedHeure) {
         document.getElementById('err-heure')?.classList.add('visible');
@@ -564,7 +641,7 @@
           name: v('f-nom'),
           phone: v('f-tel'),
           email: v('f-email'),
-          date: dateInput.value,
+          date: selectedDate,
           heure: selectedHeure,
           vehicle: { brand: v('f-marque'), model: v('f-modele'), year: v('f-annee'), engine: v('f-moteur'), plate: v('f-immat').toUpperCase() },
           prestations: [...document.querySelectorAll('.prestation-check input:checked')].map(function(el) { return el.value; }),
@@ -580,12 +657,12 @@
           if (!res.ok) {
             var err = new Error(res.data && res.data.error ? res.data.error : ('http ' + res.status));
             err.slotTaken = res.data && res.data.code === 'SLOT_TAKEN';
-            err.dateForRefresh = dateInput.value;
+            err.dateForRefresh = selectedDate;
             throw err;
           }
           var msg = document.getElementById('form-success-msg');
           if (msg) {
-            msg.innerHTML = 'Rendez-vous demandé pour le <strong>' + dateInput.value.split('-').reverse().join('/') + '</strong> à <strong>' + selectedHeure + '</strong>.<br>On confirme sous 24h ouvrées.';
+            msg.innerHTML = 'Rendez-vous demandé pour le <strong>' + selectedDate.split('-').reverse().join('/') + '</strong> à <strong>' + selectedHeure + '</strong>.<br>On confirme sous 24h ouvrées.';
           }
           document.getElementById('form-wrap').style.display = 'none';
           document.getElementById('form-success').classList.add('visible');
