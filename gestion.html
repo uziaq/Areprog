@@ -12,7 +12,8 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="AREPROG"/>
-<meta name="theme-color" content="#f4f5f7"/>
+<meta name="theme-color" content="#f4f5f7" id="theme-color-meta"/>
+<script>(function(){try{var t=localStorage.getItem('ar_theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -32,11 +33,18 @@
   --fb:'Barlow',sans-serif;
   --fm:'JetBrains Mono',monospace;
 }
+html[data-theme="dark"]{
+  --blue:#3b8eef;--blue-dim:#2f72c4;--blue-glow:rgba(59,142,239,.18);
+  --bg:#14161a;--bg2:#1c1f25;--bg3:#242830;--bg4:#2e333d;
+  --border:rgba(255,255,255,.1);--border-blue:rgba(59,142,239,.35);
+  --text:#e8eaed;--text-dim:#a8b0bd;--text-muted:#6b7280;
+  --green:#2fb37c;--orange:#d68a2c;--red:#e5544f;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;min-height:100vh}
 input,select,textarea,button{font-family:var(--fb);font-size:14px}
 button{cursor:pointer}
-select option{background:#fff}
+select option{background:var(--bg2);color:var(--text)}
 
 /* LOGIN */
 #login-screen{
@@ -1104,6 +1112,7 @@ select option{background:#fff}
       <div class="tb-brand">ARE<span>PROG</span></div>
       <div style="display:flex;align-items:center;gap:6px">
         <a href="/perf" target="_blank" rel="noopener" class="logout-btn" title="Analyse de performance des pages publiques (PageSpeed Insights)">📈 Perf</a>
+        <button id="theme-toggle-btn" onclick="toggleTheme()" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:14px" title="Mode sombre / clair">🌙</button>
         <button onclick="$('shortcuts-modal').classList.add('open')" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:14px;font-weight:700" title="Raccourcis clavier (?)">?</button>
         <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
       </div>
@@ -2255,6 +2264,26 @@ function doLogout() {
   firebase.auth().signOut();
 }
 
+function applyThemeIcon() {
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  var btn = $('theme-toggle-btn');
+  if (btn) btn.textContent = dark ? '☀️' : '🌙';
+  var meta = $('theme-color-meta');
+  if (meta) meta.setAttribute('content', dark ? '#14161a' : '#f4f5f7');
+}
+
+function toggleTheme() {
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (dark) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('ar_theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('ar_theme', 'dark');
+  }
+  applyThemeIcon();
+}
+
 // Appel d'une Netlify Function avec le jeton d'identité Firebase.
 // Les fonctions refusent les requêtes non authentifiées.
 async function authedFetch(url, options) {
@@ -2268,6 +2297,7 @@ async function authedFetch(url, options) {
 
 // Au chargement : session encore valide → connecter directement
 document.addEventListener('DOMContentLoaded', function() {
+  applyThemeIcon();
   // Charger jsPDF, html2canvas dynamiquement
   function loadScript(src, cb) {
     var s = document.createElement('script');
