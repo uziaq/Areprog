@@ -14,7 +14,7 @@
 const admin = require('firebase-admin');
 
 const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
-const DEFAULT_FROM = 'AREPROG <devis@areprog.fr>';
+const DEFAULT_FROM = 'AREPROG <contact@areprog.fr>';
 const MAX_HTML_LEN = 200 * 1024;
 const MAX_ATTACHMENTS = 3;
 // Les fonctions Netlify (Lambda synchrone) refusent toute requête au-delà

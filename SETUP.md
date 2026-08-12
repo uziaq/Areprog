@@ -180,9 +180,8 @@ Netlify dashboard → Site settings → Environment variables → Add a variable
      (Resend dashboard → Domains → Add Domain → suivre les enregistrements
      DNS à ajouter chez le registrar). Sans domaine vérifié, Resend refuse
      d'envoyer depuis une adresse `@areprog.fr`.
-   - Si absent, chaque fonction utilise une adresse par défaut codée en dur
-     (`devis@areprog.fr`, `rappels@areprog.fr`, `contact@areprog.fr`) — à
-     adapter une fois le domaine vérifié.
+   - Si absent, chaque fonction utilise la même adresse par défaut codée en
+     dur (`contact@areprog.fr`) — à adapter une fois le domaine vérifié.
 
 ### Rappels RDV automatiques (Netlify Scheduled Function)
 

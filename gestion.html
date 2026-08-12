@@ -3554,8 +3554,10 @@ function buildTable(docs, withDelete) {
       ? ' <span title="Envoy\u00e9 par email le ' + escHtml(new Date(d.lastEmailAt).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})) + ' \u00e0 ' + escHtml(d.lastEmailTo||'') + '" style="cursor:help;font-size:11px">\u2709\ufe0f</span>'
       : '';
     var delBtn = withDelete ? '<button class="btn-d btn-sm" onclick="deleteDoc('+d.id+')">🗑</button>' : '';
-    // Demander un avis n'a de sens qu'une fois la facture payée (prestation
-    // terminée) et si on a une adresse à qui l'envoyer.
+    // La demande d'avis est désormais intégrée directement à l'email de la
+    // facture (voir buildDocEmailHtml). Ce bouton reste disponible comme
+    // relance manuelle une fois la facture payée (prestation terminée) et si
+    // on a une adresse à qui l'envoyer.
     var avisBtn = (d.type === 'facture' && d.statut === 'payé' && d.ce)
       ? '<button class="btn-s btn-sm" onclick="openAvisModal('+d.id+')" title="'+(d.avisEmailAt ? 'Déjà demandé le '+escHtml(new Date(d.avisEmailAt).toLocaleDateString('fr-FR')) : 'Demander un avis Google')+'">⭐'+(d.avisEmailAt ? '' : ' Avis')+'</button>'
       : '';
@@ -5053,7 +5055,13 @@ function buildDocEmailHtml(doc, tpl, type, message) {
       + '<div style="padding:26px 28px">'
         + '<p style="margin:0 0 18px;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
         + '<div style="background:#f9fafb;border:1px solid #eef0f2;border-radius:8px;padding:14px 18px;margin:0 0 18px">' + recap + '</div>'
-        + '<p style="margin:0;font-size:13px;color:#374151">📎 Vous trouverez ' + docTypeArticle(type) + ' en pièce jointe, au format PDF.</p>'
+        + '<p style="margin:0' + (type === 'Facture' ? ' 0 22px' : '') + ';font-size:13px;color:#374151">📎 Vous trouverez ' + docTypeArticle(type) + ' en pièce jointe, au format PDF.</p>'
+        + (type === 'Facture'
+          ? '<div style="text-align:center;padding-top:18px;border-top:1px solid #eef0f2">'
+            + '<p style="margin:0 0 12px;font-size:13px;color:#374151">Si vous êtes satisfait(e) de notre intervention, un avis Google nous aiderait beaucoup à nous faire connaître :</p>'
+            + '<a href="' + GOOGLE_REVIEW_URL + '" style="display:inline-block;background:' + color + ';color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:8px">★★★★★ Laisser un avis Google</a>'
+          + '</div>'
+          : '')
       + '</div>'
       + '<div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">'
         + escHtml(tpl.footer || '').replace(/\n/g, '<br>')
@@ -5105,6 +5113,13 @@ async function confirmSendEmail() {
         docs[idx].lastEmailAt = new Date().toISOString();
         docs[idx].lastEmailTo = toEmail;
         if (docs[idx].statut === 'créé') docs[idx].statut = 'envoyé';
+        // La facture embarque désormais directement le lien d'avis Google
+        // (voir buildDocEmailHtml) : on trace la demande comme pour l'envoi
+        // manuel, pour que le bouton ⭐ de la liste reflète l'état réel.
+        if (type === 'Facture') {
+          docs[idx].avisEmailAt = new Date().toISOString();
+          docs[idx].avisEmailTo = toEmail;
+        }
         saveDocs(docs);
         _currentDocForEmail = docs[idx];
         renderDash();
