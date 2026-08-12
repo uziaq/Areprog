@@ -1,9 +1,15 @@
-/* ══ CALENDRIER ══════════════════════════════════════════ */
+/* ══ CALENDRIER ══════════════════════════════════════════
+   Largeur plafonnée : sans ça, les 7 colonnes s'étirent sur toute la
+   colonne du formulaire (~700px de large en desktop) et chaque jour
+   devient un pavé disproportionné. Un calendrier compact, avec des
+   cases rondes familières (agenda / Material date picker), se reconnaît
+   plus vite comme "un calendrier cliquable". */
 .rdv-cal {
+  max-width: 360px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  padding: 1rem;
+  padding: .9rem;
   transition: border-color .15s;
 }
 .rdv-cal.error { border-color: var(--red); }
@@ -12,23 +18,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: .8rem;
+  margin-bottom: .7rem;
 }
 .rdv-cal-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: .95rem;
   text-transform: capitalize;
 }
 .rdv-cal-nav {
-  width: 2rem;
-  height: 2rem;
+  width: 1.8rem;
+  height: 1.8rem;
   flex-shrink: 0;
   border: 1px solid var(--border);
   background: var(--surface2);
   border-radius: var(--radius);
   color: var(--text2);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
   transition: border-color .15s, color .15s;
@@ -41,42 +47,41 @@
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
   font-family: var(--font-mono);
-  font-size: .65rem;
+  font-size: .62rem;
   font-weight: 700;
-  letter-spacing: .05em;
+  letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--muted2);
-  margin-bottom: .4rem;
+  margin-bottom: .3rem;
 }
 .rdv-cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
+  gap: 2px;
 }
 .cal-day-blank { visibility: hidden; }
 .cal-day-btn {
   aspect-ratio: 1;
+  max-width: 2.6rem;
+  margin: 0 auto;
   border: 1px solid transparent;
   background: transparent;
-  border-radius: var(--radius);
+  border-radius: 50%;
   color: var(--text2);
   font-family: var(--font-body);
-  font-size: .85rem;
+  font-size: .82rem;
   cursor: pointer;
   transition: border-color .15s, background .15s, color .15s;
 }
-.cal-day-btn:hover:not(:disabled) { border-color: var(--blue); color: var(--text); }
-.cal-day-btn.today { font-weight: 700; color: var(--blue-light); }
+.cal-day-btn:hover:not(:disabled) { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+.cal-day-btn.today { font-weight: 700; color: var(--blue-light); border-color: var(--blue-dim); }
 .cal-day-btn.selected { background: var(--blue); border-color: var(--blue); color: #fff; }
+.cal-day-btn.selected:hover:not(:disabled) { background: var(--blue); color: #fff; }
 .cal-day-btn:disabled {
   color: var(--muted);
   opacity: .35;
   cursor: not-allowed;
   text-decoration: line-through;
-}
-
-@media (max-width: 480px) {
-  .cal-day-btn { font-size: .78rem; }
 }
 
 /* ══ CRÉNEAUX ════════════════════════════════════════════ */
