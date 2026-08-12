@@ -5,11 +5,11 @@
    cases rondes familières (agenda / Material date picker), se reconnaît
    plus vite comme "un calendrier cliquable". */
 .rdv-cal {
-  max-width: 360px;
+  max-width: 440px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  padding: .9rem;
+  padding: 1.1rem;
   transition: border-color .15s;
 }
 .rdv-cal.error { border-color: var(--red); }
@@ -18,23 +18,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: .7rem;
+  margin-bottom: .8rem;
 }
 .rdv-cal-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: .95rem;
+  font-size: 1.05rem;
   text-transform: capitalize;
 }
 .rdv-cal-nav {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2rem;
+  height: 2rem;
   flex-shrink: 0;
   border: 1px solid var(--border);
   background: var(--surface2);
   border-radius: var(--radius);
   color: var(--text2);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   line-height: 1;
   cursor: pointer;
   transition: border-color .15s, color .15s;
@@ -47,29 +47,29 @@
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
   font-family: var(--font-mono);
-  font-size: .62rem;
+  font-size: .68rem;
   font-weight: 700;
   letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--muted2);
-  margin-bottom: .3rem;
+  margin-bottom: .4rem;
 }
 .rdv-cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 4px;
 }
 .cal-day-blank { visibility: hidden; }
 .cal-day-btn {
   aspect-ratio: 1;
-  max-width: 2.6rem;
+  max-width: 3.1rem;
   margin: 0 auto;
   border: 1px solid transparent;
   background: transparent;
   border-radius: 50%;
   color: var(--text2);
   font-family: var(--font-body);
-  font-size: .82rem;
+  font-size: .9rem;
   cursor: pointer;
   transition: border-color .15s, background .15s, color .15s;
 }
