@@ -92,7 +92,7 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 |---|---|
 | `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-vehicule, lead-capture, send-email |
 | `RESEND_API_KEY` | rdv-rappels, lead-capture, send-email |
-| `RESEND_FROM` | rdv-rappels, lead-capture, send-email (optional — defaults to a hardcoded `AREPROG <...@areprog.fr>` sender per function) |
+| `RESEND_FROM` | rdv-rappels, lead-capture, send-email (optional — all three now default to the same hardcoded `AREPROG <contact@areprog.fr>` sender, kept in sync manually since each function hardcodes its own copy) |
 | `ANTHROPIC_API_KEY` | claude-proxy |
 | `PAGESPEED_API_KEY` | perf-check — **required in practice**: verified live (2026-08-11) that Google's keyless PageSpeed Insights quota is 0/day (always returns HTTP 429), not just "more limited" as the API docs imply. Free key, 25,000 requests/day: https://developers.google.com/speed/docs/insights/v5/get-started |
 

@@ -9,7 +9,7 @@
 const { schedule } = require('@netlify/functions');
 const admin = require('firebase-admin');
 
-const RESEND_FROM   = 'AREPROG <rappels@areprog.fr>';
+const RESEND_FROM   = 'AREPROG <contact@areprog.fr>';
 const RAPPEL_TO_EMAIL = 'arthur@areprog.fr';
 const STALE_RAPPEL_MS = 7 * 24 * 3600000;
 
