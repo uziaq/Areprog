@@ -62,6 +62,26 @@ Key custom properties:
 
 Fonts: `Barlow Condensed` (headings, nav) and `Barlow` (body) via Google Fonts.
 
+### Cache-busting local CSS/JS
+
+`_headers` forces `Cache-Control: public, max-age=86400` (24h) on every `.css`/`.js`, and there's no build step to hash filenames. Every local stylesheet/script reference across all pages carries a `?v=YYYYMMDD` query string (e.g. `shared.css?v=20260812`) for exactly this reason: **whenever you edit `shared.css`, `nav.js`, or any page-specific `.css`/`.js` (including `<link rel="preload">` hints), bump the `?v=` on every reference to that file to today's date** — otherwise visitors with a warm cache keep the stale version for up to 24h and your change appears "not deployed" even though it is. A quick way to bump everything at once:
+```bash
+python3 - <<'EOF'
+import re, glob
+VERSION = "YYYYMMDD"  # today
+ASSETS = ["shared.css", "nav.js", "contact.css", "diagnostic-bmw.css", "diagnostic-vag.css",
+          "diagnostic.css", "home.css", "rdv.css", "reprogrammation.css", "seo-local.css",
+          "services.css", "tarifs.css", "whatsapp-widget.js"]
+for path in glob.glob("*.html"):
+    content = original = open(path, encoding="utf-8").read()
+    for asset in ASSETS:
+        content = re.sub(r'(href|src)="(/?)' + re.escape(asset) + r'(\?v=\d+)?"',
+                          lambda m: f'{m.group(1)}="{m.group(2)}{asset}?v={VERSION}"', content)
+    if content != original:
+        open(path, "w", encoding="utf-8").write(content)
+EOF
+```
+
 ## Routing & URLs
 
 Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.html` suffixes — avoid deploying there. The `_redirects` and `_headers` files handle Netlify-specific HTTP rules.
