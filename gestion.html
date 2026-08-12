@@ -264,28 +264,7 @@ select option{background:var(--bg2);color:var(--text)}
 .badge-decl{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700;background:rgba(34,197,94,.12);color:var(--green)}
 .badge-non-decl{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700;background:rgba(245,158,11,.12);color:var(--orange)}
 
-/* ── FRAIS ── */
-.frais-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
-.frais-title{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-.frais-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.frais-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px}
-.frais-card-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.frais-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.frais-row:last-child{margin-bottom:0}
-.frais-row label{font-size:12px;color:var(--text-dim);flex:1}
-.frais-input{width:90px;padding:6px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;text-align:right;font-family:var(--fm)}
-.frais-input:focus{outline:none;border-color:var(--blue)}
-.frais-total{display:flex;justify-content:space-between;align-items:center;padding:10px 0 0;border-top:1px solid var(--border);margin-top:8px}
-.frais-total-label{font-size:12px;color:var(--text-dim)}
-.frais-total-val{font-family:var(--fm);font-size:15px;font-weight:700;color:var(--blue)}
-.frais-marge{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(30,144,255,.06);border-radius:8px;margin-top:10px}
-.frais-marge-label{font-size:12px;color:var(--text-dim)}
-.frais-marge-val{font-family:var(--fm);font-size:14px;font-weight:700}
-.marge-pos{color:var(--green)}
-.marge-neg{color:var(--red)}
-
 @media(max-width:768px){
-  .frais-grid{grid-template-columns:1fr}
   .decl-btn{font-size:11px;padding:7px 6px}
 }
 
@@ -1426,82 +1405,6 @@ select option{background:var(--bg2);color:var(--text)}
       </div>
       <div id="search-results" class="search-results">
         <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>
-      </div>
-
-      <!-- SECTION FRAIS -->
-      <div class="frais-section" id="frais-section">
-        <div class="frais-title">
-          <span>💸 Mes frais sur cette intervention</span>
-          <span class="frais-total-val" id="frais-total-display">0,00 €</span>
-        </div>
-        <div class="frais-grid">
-          <!-- Carburant / Déplacement -->
-          <div class="frais-card">
-            <div class="frais-card-title">⛽ Carburant & déplacement</div>
-            <div class="frais-row">
-              <label>Kilomètres</label>
-              <input class="frais-input" id="f-km" type="number" min="0" step="1" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">km</span>
-            </div>
-            <div class="frais-row">
-              <label>Taux km (€/km)</label>
-              <input class="frais-input" id="f-taux-km" type="number" min="0" step="0.01" value="0.40" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-            <div class="frais-row">
-              <label>Carburant direct</label>
-              <input class="frais-input" id="f-carburant" type="number" min="0" step="0.01" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-          </div>
-          <!-- Matériel / Consommables -->
-          <div class="frais-card">
-            <div class="frais-card-title">🔧 Matériel & consommables</div>
-            <div class="frais-row">
-              <label>Matériel</label>
-              <input class="frais-input" id="f-materiel" type="number" min="0" step="0.01" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-            <div class="frais-row">
-              <label>Consommables</label>
-              <input class="frais-input" id="f-consommables" type="number" min="0" step="0.01" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-          </div>
-          <!-- Péages -->
-          <div class="frais-card">
-            <div class="frais-card-title">🛣️ Péages</div>
-            <div class="frais-row">
-              <label>Péages autoroute</label>
-              <input class="frais-input" id="f-peages" type="number" min="0" step="0.01" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-            <div class="frais-row">
-              <label>Parking</label>
-              <input class="frais-input" id="f-parking" type="number" min="0" step="0.01" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-          </div>
-          <!-- Repas -->
-          <div class="frais-card">
-            <div class="frais-card-title">🍽️ Repas</div>
-            <div class="frais-row">
-              <label>Repas</label>
-              <input class="frais-input" id="f-repas" type="number" min="0" step="0.01" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-            <div class="frais-row">
-              <label>Hébergement</label>
-              <input class="frais-input" id="f-hebergement" type="number" min="0" step="0.01" placeholder="0" oninput="calcFrais()"/>
-              <span style="font-size:11px;color:var(--text-muted)">€</span>
-            </div>
-          </div>
-        </div>
-        <!-- Marge nette -->
-        <div class="frais-marge" id="frais-marge-bar">
-          <div class="frais-marge-label">Marge nette estimée (TTC − frais)</div>
-          <div class="frais-marge-val" id="frais-marge-val">—</div>
-        </div>
       </div>
 
     </div>
@@ -2739,7 +2642,6 @@ function resetForm(goToForm) {
   renderGainsBar();
   if ($('f-gains')) { $('f-gains').value = ''; previewGainsBadge(); }
   resetDeclaration();
-  resetFrais();
   addLine();
   if (goToForm) showTab('form');
 }
@@ -3243,8 +3145,6 @@ function buildObj() {
     gains: currentGains ? JSON.parse(JSON.stringify(currentGains)) : null,
     customGains: ($('f-gains') ? $('f-gains').value.split('\n').map(function(g){return g.trim();}).filter(Boolean) : []),
     declare: getDeclaration(),
-    frais: getFraisObj(),
-    fraisTotal: calcFraisTotal(),
     tvaRate: parseFloat($('f-tva').value),
     htBrut: brut,
     remiseLignes: remiseLignes,
@@ -3317,7 +3217,6 @@ function loadDocData(doc) {
     previewGainsBadge();
   }
   setDeclaration(doc.declare !== false);
-  loadFrais(doc.frais || null);
   if ($('f-motif')) $('f-motif').value = doc.motif || '';
   if ($('f-delai')) $('f-delai').value = doc.delai || '';
   if ($('f-sigclient')) $('f-sigclient').checked = doc.sigclient || false;
@@ -3359,8 +3258,6 @@ function loadDoc(docId) {
   renderGainsBar();
   // Restaurer déclaration
   setDeclaration(doc.declare !== false);
-  // Restaurer frais
-  loadFrais(doc.frais || null);
   // Restaurer les gains personnalisés
   if ($('f-gains')) {
     if (doc.customGains && doc.customGains.length) {
@@ -5774,9 +5671,6 @@ function renderStats() {
   var panierMoyen = payees.length > 0 ? caTotal / payees.length : 0;
 
   // KPIs
-  // Calcul frais et marge sur les docs filtrés
-  var totalFrais = docs.reduce(function(s,d){ return s + (d.fraisTotal || calcFraisTotal(d.frais||{})); }, 0);
-  var margeNette = caTotal - totalFrais;
   var nbDeclare  = docs.filter(function(d){ return d.declare !== false; }).length;
   var nbNonDecl  = docs.filter(function(d){ return d.declare === false; }).length;
 
@@ -5784,8 +5678,6 @@ function renderStats() {
   if (kpis) kpis.innerHTML = [
     { val: fmt(caTotal),     lbl: 'CA encaissé' },
     { val: fmt(caAttente),   lbl: 'En attente' },
-    { val: fmt(totalFrais),  lbl: 'Frais totaux' },
-    { val: fmt(margeNette),  lbl: 'Marge nette', color: margeNette >= 0 ? 'var(--green)' : 'var(--red)' },
     { val: convRate + '%',   lbl: 'Taux conversion' },
     { val: fmt(panierMoyen), lbl: 'Panier moyen' },
     { val: nbDeclare + '',   lbl: 'Déclarés', color: 'var(--green)' },
@@ -5860,25 +5752,15 @@ function renderStats() {
 // ============================================================
 function exportCSV() {
   var docs = loadDocs();
-  var rows = [['Numéro','Type','Date','Client','Véhicule','Immat','Montant HT','Remise totale','TVA','Montant TTC','Statut','Déclaré','Frais Total','Km','Carburant','Matériel','Péages','Repas','Marge Nette','Prestations']];
+  var rows = [['Numéro','Type','Date','Client','Véhicule','Immat','Montant HT','Remise totale','TVA','Montant TTC','Statut','Déclaré','Prestations']];
   docs.forEach(function(d) {
     var prests = (d.lines||[]).map(function(l){ return l.label?l.label.split(' — ')[0]:''; }).filter(Boolean).join(' | ');
-    var fr = d.frais || {};
-    var frTotal = d.fraisTotal || calcFraisTotal(fr);
-    var marge = (d.ttc||0) - frTotal;
     rows.push([
       d.num||'', d.type||'', d.date||'', d.cn||'',
       [d.vm,d.vmo].filter(Boolean).join(' '), d.vim||'',
       (d.ht||0).toFixed(2), (d.remiseTotale||0).toFixed(2), (d.tva||0).toFixed(2), (d.ttc||0).toFixed(2),
       d.statut||'',
       d.declare === false ? 'Non déclaré' : 'Déclaré',
-      frTotal.toFixed(2),
-      (fr['km']||0) + ' km',
-      (fr['carburant']||0).toFixed(2),
-      ((fr['materiel']||0)+(fr['consommables']||0)).toFixed(2),
-      ((fr['peages']||0)+(fr['parking']||0)).toFixed(2),
-      ((fr['repas']||0)+(fr['hebergement']||0)).toFixed(2),
-      marge.toFixed(2),
       prests
     ]);
   });
@@ -6197,72 +6079,6 @@ function getDeclaration() {
 
 function resetDeclaration() {
   setDeclaration(true);
-}
-
-// ══════════════════════════════════════════════════════════════
-//  FRAIS
-// ══════════════════════════════════════════════════════════════
-var FRAIS_FIELDS = ['km','taux-km','carburant','materiel','consommables','peages','parking','repas','hebergement'];
-
-function getFraisObj() {
-  var obj = {};
-  FRAIS_FIELDS.forEach(function(f) {
-    var el = $('f-' + f);
-    obj[f] = el ? (parseFloat(el.value) || 0) : 0;
-  });
-  return obj;
-}
-
-function calcFraisTotal(frais) {
-  frais = frais || getFraisObj();
-  var depl = (frais['km'] || 0) * (frais['taux-km'] || 0.40) + (frais['carburant'] || 0);
-  var mat  = (frais['materiel'] || 0) + (frais['consommables'] || 0);
-  var road = (frais['peages'] || 0) + (frais['parking'] || 0);
-  var food = (frais['repas'] || 0) + (frais['hebergement'] || 0);
-  return depl + mat + road + food;
-}
-
-function calcFrais() {
-  var frais = getFraisObj();
-  var total = calcFraisTotal(frais);
-  // Afficher le total
-  var dispEl = $('frais-total-display');
-  if (dispEl) dispEl.textContent = fmt(total);
-  // Calculer la marge nette
-  var ttc = parseFloat(($('t-ttc') ? $('t-ttc').textContent : '0').replace(',','.').replace(' €','').replace(' ','')) || 0;
-  var marge = ttc - total;
-  var margeEl = $('frais-marge-val');
-  if (margeEl) {
-    margeEl.textContent = fmt(marge);
-    margeEl.className = 'frais-marge-val ' + (marge >= 0 ? 'marge-pos' : 'marge-neg');
-  }
-  onFormChange();
-}
-
-function resetFrais() {
-  FRAIS_FIELDS.forEach(function(f) {
-    var el = $('f-' + f);
-    if (!el) return;
-    if (f === 'taux-km') { el.value = '0.40'; return; }
-    el.value = '';
-  });
-  calcFrais();
-}
-
-function loadFrais(frais) {
-  if (!frais) { resetFrais(); return; }
-  FRAIS_FIELDS.forEach(function(f) {
-    var el = $('f-' + f);
-    if (!el) return;
-    if (frais[f] !== undefined && frais[f] !== 0) {
-      el.value = frais[f];
-    } else if (f === 'taux-km') {
-      el.value = frais[f] || '0.40';
-    } else {
-      el.value = '';
-    }
-  });
-  calcFrais();
 }
 
 // ══════════════════════════════════════════════════════════════
