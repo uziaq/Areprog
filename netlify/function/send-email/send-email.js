@@ -16,13 +16,19 @@ const admin = require('firebase-admin');
 const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 const DEFAULT_FROM = 'AREPROG <contact@areprog.fr>';
 const MAX_HTML_LEN = 200 * 1024;
-const MAX_ATTACHMENTS = 3;
+// Devis/facture en PDF + jusqu'à 7 photos jointes (existantes ou ajoutées
+// pour l'envoi depuis la modale d'envoi de gestion.html).
+const MAX_ATTACHMENTS = 8;
 // Les fonctions Netlify (Lambda synchrone) refusent toute requête au-delà
 // d'~6 Mo — souvent sans réponse HTTP propre, juste une coupure de connexion
 // ("Load failed" / "Failed to fetch" côté navigateur). On reste large en
 // dessous pour garder de la marge au JSON (sujet, HTML, en-têtes) et pour
 // pouvoir renvoyer une vraie erreur 413 plutôt qu'une requête coupée.
-const MAX_ATTACHMENT_B64_LEN = 4 * 1024 * 1024; // ~3 Mo de PDF une fois décodé
+const MAX_ATTACHMENT_B64_LEN = 4 * 1024 * 1024; // ~3 Mo par pièce jointe une fois décodée
+// Plafond cumulé (PDF + toutes les photos) : le plafond par pièce jointe
+// seul ne suffit pas à borner la requête totale une fois plusieurs photos
+// ajoutées côté client.
+const MAX_TOTAL_ATTACH_B64_LEN = 5 * 1024 * 1024;
 const SAFE_FILENAME = /^[A-Za-z0-9 _.-]{1,150}$/;
 const B64_RE = /^[A-Za-z0-9+/]+=*$/;
 
@@ -106,6 +112,10 @@ exports.handler = async function (event) {
         return { statusCode: 413, headers: cors, body: JSON.stringify({ error: 'Pièce jointe invalide ou trop volumineuse' }) };
       }
       attachments.push({ filename: filename, content: content });
+    }
+    const totalAttachLen = attachments.reduce(function (s, a) { return s + a.content.length; }, 0);
+    if (totalAttachLen > MAX_TOTAL_ATTACH_B64_LEN) {
+      return { statusCode: 413, headers: cors, body: JSON.stringify({ error: 'Pièces jointes trop volumineuses au total' }) };
     }
 
     const apiKey = process.env.RESEND_API_KEY;
