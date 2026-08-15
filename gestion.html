@@ -2379,6 +2379,8 @@ function addVehicleRow(data) {
   if (!vl) return;
   var div = document.createElement('div');
   div.className = 'veh-row';
+  div.dataset.vehId = data.id || ('cv' + Date.now() + id);
+  div._photos = (data.photos || []).slice();
   div.style.cssText = 'background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px';
   div.innerHTML =
     '<div style="display:flex;gap:6px;margin-bottom:6px">'
@@ -2390,8 +2392,74 @@ function addVehicleRow(data) {
     + '<input class="vr-vmot" type="text" placeholder="Motorisation" value="'+escHtml(data.vmot)+'" style="flex:2;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px"/>'
     + '<input class="vr-van" type="text" placeholder="Année" value="'+escHtml(data.van)+'" style="flex:0.8;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px"/>'
     + '<input class="vr-vim" type="text" placeholder="Immat" value="'+escHtml(data.vim)+'" style="flex:1.2;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;text-transform:uppercase"/>'
+    + '</div>'
+    + '<textarea class="vr-notes" placeholder="Notes internes (état du véhicule, historique, remarques...)" style="width:100%;margin-top:6px;padding:7px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12.5px;font-family:inherit;resize:vertical;min-height:40px;box-sizing:border-box">'+escHtml(data.notes)+'</textarea>'
+    + '<div class="veh-media vr-photo-list" style="margin-top:8px"></div>'
+    + '<div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+    + '<label class="veh-upload" style="font-size:11px;padding:6px 10px">📷 Ajouter des photos<input type="file" accept="image/*" multiple style="display:none" onchange="uploadClientVehPhotos(this)"/></label>'
+    + '<span class="vr-photo-status" style="font-size:11px"></span>'
     + '</div>';
   vl.appendChild(div);
+  renderVehRowPhotos(div);
+}
+
+function renderVehRowPhotos(row) {
+  var el = row.querySelector('.vr-photo-list');
+  if (!el) return;
+  var photos = row._photos || [];
+  el.innerHTML = photos.map(function(p, i) {
+    return '<div class="veh-thumb" style="background-image:url(\''+escHtml(p.url)+'\')">'
+      + '<div class="veh-thumb-acts">'
+        + '<button type="button" onclick="openClientVehPhoto(this,'+i+')" title="Ouvrir">⤢</button>'
+        + '<button type="button" onclick="removeClientVehPhoto(this,'+i+')" title="Retirer">🗑</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function openClientVehPhoto(btn, i) {
+  var row = btn.closest('.veh-row');
+  if (row && row._photos[i]) window.open(row._photos[i].url, '_blank', 'noopener');
+}
+
+function removeClientVehPhoto(btn, i) {
+  var row = btn.closest('.veh-row');
+  if (!row) return;
+  row._photos.splice(i, 1);
+  renderVehRowPhotos(row);
+}
+
+// Envoi des photos d'un véhicule client vers Firebase Storage (même fonction
+// Netlify que le module Parc auto — resizeImage/fileToBase64/UPLOAD_EXT/
+// safeUploadName/uploadVehFile sont définis plus bas dans ce même script).
+async function uploadClientVehPhotos(input) {
+  var row = input.closest('.veh-row');
+  var files = Array.prototype.slice.call(input.files || []);
+  input.value = '';
+  if (!files.length || !row) return;
+  var status = row.querySelector('.vr-photo-status');
+  for (var i = 0; i < files.length; i++) {
+    status.textContent = 'Envoi ' + (i + 1) + '/' + files.length + '…';
+    status.style.color = 'var(--text-dim)';
+    try {
+      var img = await resizeImage(files[i], 1600);
+      var ct  = img ? img.contentType : (files[i].type || '');
+      if (!UPLOAD_EXT[ct]) throw new Error('Format non accepté : ' + (files[i].name || 'photo'));
+      var b64  = img ? img.base64 : await fileToBase64(files[i]);
+      var name = safeUploadName(files[i].name || 'photo', UPLOAD_EXT[ct]);
+      var res = await uploadVehFile({
+        fileBase64: b64, contentType: ct, kind: 'photo',
+        vehiculeId: row.dataset.vehId, filename: name,
+      });
+      row._photos.push({ url: res.url, path: res.path, name: name });
+      renderVehRowPhotos(row);
+    } catch(e) {
+      status.textContent = '✗ ' + e.message;
+      status.style.color = 'var(--red)';
+      return;
+    }
+  }
+  status.textContent = '✓ ' + files.length + ' photo' + (files.length > 1 ? 's' : '') + ' ajoutée' + (files.length > 1 ? 's' : '');
+  status.style.color = 'var(--green)';
 }
 
 // Ouvrir le sélecteur de véhicule pour un client dans le formulaire devis
@@ -3675,12 +3743,14 @@ function saveClient() {
   // Collecter les véhicules depuis les lignes dynamiques
   var vehs = [];
   document.querySelectorAll('#ac-veh-list .veh-row').forEach(function(row) {
-    var vm   = row.querySelector('.vr-vm').value.trim();
-    var vmo  = row.querySelector('.vr-vmo').value.trim();
-    var vmot = row.querySelector('.vr-vmot').value.trim();
-    var van  = row.querySelector('.vr-van').value.trim();
-    var vim  = row.querySelector('.vr-vim').value.trim();
-    if (vm || vmo || vim) vehs.push({ vm:vm, vmo:vmo, vmot:vmot, van:van, vim:vim });
+    var vm    = row.querySelector('.vr-vm').value.trim();
+    var vmo   = row.querySelector('.vr-vmo').value.trim();
+    var vmot  = row.querySelector('.vr-vmot').value.trim();
+    var van   = row.querySelector('.vr-van').value.trim();
+    var vim   = row.querySelector('.vr-vim').value.trim();
+    var notes = row.querySelector('.vr-notes').value.trim();
+    var photos = row._photos || [];
+    if (vm || vmo || vim) vehs.push({ id: row.dataset.vehId, vm:vm, vmo:vmo, vmot:vmot, van:van, vim:vim, notes:notes, photos:photos });
   });
   // Compatibilité rétro : conserver vm/vmo/etc sur le premier véhicule
   var firstVeh = vehs[0] || {};
@@ -5623,7 +5693,15 @@ function showClientHistory(clientId) {
 
   var vehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm?[{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}]:[]);
   var vehsHTML = vehs.map(function(v){
-    return '<span style="background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:11px;margin-right:4px">🚗 '+escHtml([v.vm,v.vmo,v.van?'('+v.van+')':''].filter(Boolean).join(' '))+'</span>';
+    var label = [v.vm,v.vmo,v.van?'('+v.van+')':'',v.vim?'· '+v.vim:''].filter(Boolean).join(' ');
+    var extra = '';
+    if (v.notes) extra += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;white-space:pre-wrap">📝 '+escHtml(v.notes)+'</div>';
+    if (v.photos && v.photos.length) {
+      extra += '<div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap">' + v.photos.map(function(p){
+        return '<a href="'+escHtml(p.url)+'" target="_blank" rel="noopener" style="display:block;width:52px;height:40px;border-radius:5px;border:1px solid var(--border);background:var(--bg4) center/cover no-repeat;background-image:url(\''+escHtml(p.url)+'\')"></a>';
+      }).join('') + '</div>';
+    }
+    return '<div style="display:inline-block;vertical-align:top;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;margin:0 6px 6px 0;min-width:160px">🚗 '+escHtml(label)+extra+'</div>';
   }).join('');
 
   var totalCA = docs.filter(function(d){return d.statut==='payé';}).reduce(function(s,d){return s+(d.ttc||0);},0);
