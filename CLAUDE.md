@@ -29,7 +29,7 @@ netlify/function/   → Netlify serverless functions (Node.js/CommonJS)
 Functions with their own subdirectory:
 - `netlify/function/rdv-rappels/` — scheduled every 5 min: email appointment reminders via Resend
 - `netlify/function/rdv-booking/` — public online booking (GET returns free/busy slots for a date, POST creates a `rdvs` doc with `statut: 'a_confirmer'`); honeypot + rate-limited (see `_lib/rate-limit.js`)
-- `netlify/function/upload-vehicule/` — photo/document upload for the vehicle stock module (Firebase Storage, `vehicules/<id>/…`)
+- `netlify/function/upload-vehicule/` — photo/document/video upload for the vehicle stock module and for per-vehicle client records (Firebase Storage, `vehicules/<id>/{photos,documents,videos}/…`); videos capped at 4 MB (base64 JSON body must stay under Netlify's ~6 MB function payload limit), photos/PDFs at 8 MB
 - `netlify/function/lead-capture/` — records contact form / simulateur leads to Firestore `leads`, auto-builds a draft quote (`devisDraft`) by matching requested prestations against the price catalogue (`config/catalogue`), and notifies via Resend; honeypot + rate-limited
 - `netlify/function/send-email/` — authenticated (Firebase idToken) proxy to the Resend API; used by `gestion.html` for RDV reminders, unpaid-invoice alerts, sending devis/factures to clients with the PDF as an attachment, and Google-review requests (keeps the Resend API key server-side)
 - `netlify/function/perf-check/` — internal tool backing `/perf`: proxies Google PageSpeed Insights, `path` param restricted to a hardcoded allowlist of the site's own public routes (never an arbitrary URL, to avoid an open-proxy scanning vector)
@@ -103,3 +103,4 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 - Schema.org JSON-LD, Open Graph, and Twitter Card meta tags are included in every page `<head>` for SEO.
 - The `gestion.html` admin page manages appointments (RDVs) and requires Firebase Authentication.
 - The "Parc auto" tab in `gestion.html` tracks vehicle buy/resell: each vehicle carries its expenses, photos and documents inline, mirrored in `localStorage.ar_vehicules` and the Firestore `vehicules` collection (same offline-first + `onSnapshot` pattern as `docs`/`clients`/`rdvs`). Cost price = purchase price + expenses; margin = sale price − cost price.
+- Each vehicle inside a client's `vehs[]` array (carnet clients, add/edit client modal) can also carry its own `notes` (free text), `photos` and `videos` (uploaded via the same `upload-vehicule` function, keyed by a per-vehicle `id` generated client-side, e.g. `cv<timestamp>`). Shown read-only in the client history modal (`showClientHistory`).
