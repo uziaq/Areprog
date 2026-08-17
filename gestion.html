@@ -2755,6 +2755,8 @@ function genNum(prefix) {
 // ============================================================
 var lines = [];
 var editId = null;
+var loadedType = null;
+var loadedNum = null;
 
 function initApp() {
   resetForm(false);
@@ -2787,6 +2789,8 @@ function initApp() {
 
 function resetForm(goToForm) {
   editId = null;
+  loadedType = 'devis';
+  loadedNum = null;
   lines = [];
   $('f-type').value = 'devis';
   $('f-num').value = genNum('DEV');
@@ -2814,7 +2818,15 @@ function onTypeChange() {
   var labels = { devis: ['Modifier le devis', 'Nouveau devis'], facture: ['Modifier la facture', 'Nouvelle facture'], ordre: ['Modifier l\'ordre de réparation', 'Nouvel ordre de réparation'] };
   var l = labels[t] || labels['devis'];
   $('form-h').textContent = editId ? l[0] : l[1];
-  if (!editId) $('f-num').value = genNum(t === 'devis' ? 'DEV' : t === 'ordre' ? 'ODR' : 'FAC');
+  if (!editId) {
+    $('f-num').value = genNum(t === 'devis' ? 'DEV' : t === 'ordre' ? 'ODR' : 'FAC');
+  } else if (t !== loadedType) {
+    // Changement de type d'un document existant (ex: devis → facture) : nouveau numéro dans la série du nouveau type
+    $('f-num').value = genNum(t === 'devis' ? 'DEV' : t === 'ordre' ? 'ODR' : 'FAC');
+  } else {
+    // Retour au type d'origine : on restaure le numéro d'origine du document
+    $('f-num').value = loadedNum;
+  }
   var odrFields = document.getElementById('odr-fields');
   if (odrFields) odrFields.style.display = t === 'ordre' ? '' : 'none';
   var echLabel = document.querySelector('label[for="f-ech"]') || (function(){ var el = $('f-ech'); return el ? el.previousElementSibling : null; })();
@@ -3352,6 +3364,8 @@ function saveDoc() {
 function loadDocData(doc) {
   if (!doc) return;
   editId = doc.id || null;
+  loadedType = doc.type || 'devis';
+  loadedNum = doc.num || '';
   $('f-type').value  = doc.type  || 'devis';
   $('f-num').value   = doc.num   || '';
   $('f-date').value  = doc.date  || today();
@@ -3394,6 +3408,8 @@ function loadDoc(docId) {
   var doc = loadDocs().find(function(d) { return d.id === docId; });
   if (!doc) return;
   editId = doc.id;
+  loadedType = doc.type;
+  loadedNum = doc.num;
   $('f-type').value = doc.type;
   $('f-num').value = doc.num;
   $('f-date').value = doc.date;
