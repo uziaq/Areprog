@@ -149,6 +149,7 @@ select option{background:var(--bg2);color:var(--text)}
 .add-line{width:100%;margin-top:6px;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:7px;color:var(--text-dim);font-size:13px;transition:all .15s}
 .add-line:hover{border-color:var(--blue);color:var(--blue)}
 .line-desc-wrap{margin-top:-2px;margin-bottom:6px;display:flex;gap:6px}
+.line-desc-wrap>.ac-wrap{flex:1;width:auto}
 .line-desc{flex:2;min-width:0;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-top:none;border-radius:0 0 7px 7px;color:var(--text-dim);outline:none;transition:border-color .2s;font-size:12px;box-sizing:border-box}
 .line-desc:focus{border-color:var(--blue);color:var(--text)}
 .line-desc::placeholder{color:var(--text-muted);font-style:italic}
@@ -165,6 +166,9 @@ select option{background:var(--bg2);color:var(--text)}
 .ac-item:hover,.ac-item.active{background:var(--bg2);color:var(--blue)}
 .ac-item .ac-price{font-family:var(--fm);font-size:11px;color:var(--text-muted);flex-shrink:0}
 .ac-item:hover .ac-price,.ac-item.active .ac-price{color:var(--blue)}
+.ac-item .ac-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.ac-item .ac-ref{font-family:var(--fm);font-size:10px;color:var(--text-muted)}
+.ac-item:hover .ac-ref,.ac-item.active .ac-ref{color:var(--blue)}
 .ac-sep{padding:4px 12px 3px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);background:var(--bg2)}
 
 /* TOTAUX */
@@ -577,6 +581,10 @@ select option{background:var(--bg2);color:var(--text)}
 }
 .cat-item:hover{background:rgba(0,0,0,.04)}
 .cat-item-label{flex:1;font-size:13px;color:var(--text)}
+.cat-item-type{font-size:9px;text-transform:uppercase;letter-spacing:.5px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:600}
+.cat-item-type.piece{background:rgba(11,122,82,.12);color:var(--green)}
+.cat-item-type.mo{background:rgba(13,91,175,.12);color:var(--blue)}
+.cat-item-ref{font-family:var(--fm);font-size:10px;color:var(--text-muted);margin-left:6px}
 .cat-item-price{font-family:var(--fm);font-size:12px;color:var(--blue);min-width:60px;text-align:right}
 .cat-item-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
 .cat-item:hover .cat-item-actions{opacity:1}
@@ -1103,7 +1111,7 @@ select option{background:var(--bg2);color:var(--text)}
       <button class="nb" onclick="showTab('liste')">Documents</button>
       <button class="nb" onclick="showTab('carnet')">👥 Clients</button>
       <button class="nb" onclick="showTab('template')">🎨 Template</button>
-      <button class="nb" onclick="showTab('services')">⚙️ Services</button>
+      <button class="nb" onclick="showTab('services')">⚙️ Catalogue</button>
       <button class="nb" onclick="showTab('agenda')">📅 Agenda</button>
       <button class="nb" onclick="showTab('parc')">🚗 Parc auto</button>
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
@@ -1424,14 +1432,14 @@ select option{background:var(--bg2);color:var(--text)}
     <!-- SERVICES -->
     <div class="tc" id="t-services">
       <div class="sh">
-        <div class="sh-title">Catalogue des services</div>
+        <div class="sh-title">Catalogue — services, pièces & main-d'œuvre</div>
         <div class="sh-actions">
           <button class="btn-s" onclick="resetCatalogue()">↺ Réinitialiser</button>
           <button class="btn-p" onclick="exportCatalogue()">⬇ Exporter</button>
         </div>
       </div>
       <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px">
-        Modifie le nom, le prix et l'organisation de tes services. Les changements s'appliquent immédiatement dans les formulaires de devis.
+        Gère tes services, tes références pièces et tes lignes de main-d'œuvre (nom, type, référence, prix). Les changements s'appliquent immédiatement : en tapant dans la désignation ou la référence d'une ligne de devis/facture, l'entrée correspondante est proposée et remplit automatiquement le prix et la description.
       </p>
       <div id="cat-editor"></div>
       <button class="cat-add-group" onclick="addCatGroup()">+ Ajouter une catégorie</button>
@@ -1766,11 +1774,27 @@ select option{background:var(--bg2);color:var(--text)}
 <div class="cat-modal" id="cat-item-modal" onclick="if(event.target===this)closeCatModal()">
   <div class="cat-box">
     <div class="cat-box-title" id="cat-modal-title">Modifier le service</div>
-    <div class="fr"><label>Nom du service</label>
+    <div class="fr"><label>Désignation</label>
       <input id="cat-item-label" type="text" placeholder="Ex : Stage 1 — Reprogrammation moteur"/>
+    </div>
+    <div style="display:flex;gap:10px">
+      <div class="fr" style="flex:1"><label>Type</label>
+        <select id="cat-item-type">
+          <option value="service">Service</option>
+          <option value="piece">Pièce</option>
+          <option value="mo">Main-d'œuvre</option>
+        </select>
+      </div>
+      <div class="fr" style="flex:1"><label>Référence</label>
+        <input id="cat-item-ref" type="text" placeholder="Ex : REF-1234"/>
+      </div>
     </div>
     <div class="fr"><label>Prix indicatif (€ HT) — mettre 0 pour "Sur devis"</label>
       <input id="cat-item-price" type="number" min="0" step="1" placeholder="330"/>
+    </div>
+    <div class="fr">
+      <label>Description produit (optionnel — reprise dans la description de la ligne de devis)</label>
+      <input id="cat-item-desc" type="text" placeholder="Ex : Filtre à particules Bosch, réf. constructeur 1K0131...">
     </div>
     <div class="fr">
       <label>Gains / bénéfices (un par ligne — affichés sur le devis)</label>
@@ -2844,16 +2868,18 @@ function buildSuggestions(query) {
   var cat = loadCat();
   cat.forEach(function(group) {
     group.items.forEach(function(it) {
-      if (it.l.toLowerCase().indexOf(q) !== -1 && !seen[it.l]) {
+      var matches = it.l.toLowerCase().indexOf(q) !== -1 || (it.ref && it.ref.toLowerCase().indexOf(q) !== -1);
+      if (matches && !seen[it.l]) {
         seen[it.l] = true;
-        results.push({ label: it.l, price: it.p || 0, group: group.g });
+        results.push({ label: it.l, price: it.p || 0, group: group.g, ref: it.ref || '', desc: it.desc || '', type: it.type || 'service' });
       }
     });
   });
   return results.slice(0, 20);
 }
 
-function initLineAutocomplete(inputEl, lid) {
+function initLineAutocomplete(inputEl, lid, field) {
+  field = field === 'ref' ? 'ref' : 'label';
   var wrap = document.createElement('div');
   wrap.className = 'ac-wrap';
   inputEl.parentNode.insertBefore(wrap, inputEl);
@@ -2883,12 +2909,21 @@ function initLineAutocomplete(inputEl, lid) {
       }
       var item = document.createElement('div');
       item.className = 'ac-item';
+      var main = document.createElement('div');
+      main.className = 'ac-main';
       var lbl = document.createElement('span');
       lbl.textContent = s.label;
+      main.appendChild(lbl);
+      if (s.ref) {
+        var refEl = document.createElement('span');
+        refEl.className = 'ac-ref';
+        refEl.textContent = 'R\u00e9f. ' + s.ref;
+        main.appendChild(refEl);
+      }
       var pr = document.createElement('span');
       pr.className = 'ac-price';
       pr.textContent = s.price > 0 ? s.price.toFixed(2) + '\u00a0\u20ac' : '';
-      item.appendChild(lbl);
+      item.appendChild(main);
       item.appendChild(pr);
       (function(suggestion) {
         item.addEventListener('mousedown', function(e) {
@@ -2907,22 +2942,31 @@ function initLineAutocomplete(inputEl, lid) {
     if (!line) return;
     line.label = s.label;
     line.pu = s.price || 0;
-    inputEl.value = s.label;
+    line.ref = s.ref || '';
+    line.desc = s.desc || '';
+    inputEl.value = field === 'ref' ? line.ref : line.label;
     hideDrop();
-    var row = inputEl.closest('.line-row');
-    if (row) {
-      var puInp = row.querySelector('.lf-pu input');
+    var wrapperEl = inputEl.closest('.line-item');
+    if (wrapperEl) {
+      var puInp = wrapperEl.querySelector('.lf-pu input');
       if (puInp) puInp.value = line.pu.toFixed(2);
-      var ltVal = row.querySelector('.lt-val');
+      var ltVal = wrapperEl.querySelector('.lt-val');
       if (ltVal && !line.offert) ltVal.textContent = lineNetHT(line).toFixed(2) + '\u00a0\u20ac';
-      var ltValTtc = row.querySelector('.lt-val-ttc');
+      var ltValTtc = wrapperEl.querySelector('.lt-val-ttc');
       if (ltValTtc && !line.offert) ltValTtc.textContent = lineNetTTC(line).toFixed(2) + '\u00a0\u20ac';
+      var labelInp = wrapperEl.querySelector('.line-label-input');
+      if (labelInp && labelInp !== inputEl) labelInp.value = line.label;
+      var refInp = wrapperEl.querySelector('.line-ref');
+      if (refInp && refInp !== inputEl) refInp.value = line.ref;
+      var descInp = wrapperEl.querySelector('.line-desc');
+      if (descInp) descInp.value = line.desc;
     }
     calcTotaux();
+    onFormChange();
   }
   inputEl.addEventListener('input', function() {
     var line = lines.find(function(l) { return l.id === lid; });
-    if (line) line.label = inputEl.value;
+    if (line) { line[field] = inputEl.value; onFormChange(); }
     if (inputEl.value.length >= 1) {
       showDrop(buildSuggestions(inputEl.value));
     } else {
@@ -3000,14 +3044,13 @@ function renderLines() {
     refInput.className = 'line-ref';
     refInput.placeholder = 'Réf. (optionnel)';
     refInput.value = line.ref || '';
-    (function(id) {
-      refInput.addEventListener('input', function() { lineRef(this, id); });
-    })(line.id);
 
     var descWrap = document.createElement('div');
     descWrap.className = 'line-desc-wrap';
     descWrap.appendChild(refInput);
     descWrap.appendChild(descInput);
+
+    (function(id) { initLineAutocomplete(refInput, id, 'ref'); })(line.id);
 
     wrapper.appendChild(div);
     wrapper.appendChild(descWrap);
@@ -3105,13 +3148,6 @@ function lineDesc(inp, lid) {
   var line = lines.find(function(l) { return l.id === lid; });
   if (!line) return;
   line.desc = inp.value;
-  onFormChange();
-}
-
-function lineRef(inp, lid) {
-  var line = lines.find(function(l) { return l.id === lid; });
-  if (!line) return;
-  line.ref = inp.value;
   onFormChange();
 }
 
@@ -4110,8 +4146,11 @@ function renderCatEditor() {
   el.innerHTML = cat.map(function(grp, gi) {
     var items = (grp.items || []).map(function(it, ii) {
       var gainsCount = (it.gains || []).filter(Boolean).length;
+      var typeLabel = it.type === 'piece' ? 'Pièce' : (it.type === 'mo' ? 'MO' : '');
       return '<div class="cat-item">'
         + '<div class="cat-item-label">' + escHtml(it.l)
+          + (typeLabel ? ' <span class="cat-item-type ' + it.type + '">' + typeLabel + '</span>' : '')
+          + (it.ref ? ' <span class="cat-item-ref">Réf. ' + escHtml(it.ref) + '</span>' : '')
           + (gainsCount > 0 ? ' <span style="font-size:10px;color:var(--green);margin-left:6px">✓ ' + gainsCount + ' gain' + (gainsCount>1?'s':'') + '</span>' : '') + '</div>'
         + '<div class="cat-item-price">' + (it.p > 0 ? it.p + ' €' : '<span style="color:var(--text-muted)">Sur devis</span>') + '</div>'
         + '<div class="cat-item-actions">'
@@ -4125,7 +4164,7 @@ function renderCatEditor() {
     return '<div class="cat-group">'
       + '<div class="cat-group-head" onclick="toggleCatGroup(this)">'
         + '<div class="cat-group-name">' + escHtml(grp.g) + '</div>'
-        + '<div class="cat-group-count">' + (grp.items||[]).length + ' service' + ((grp.items||[]).length > 1 ? 's' : '') + '</div>'
+        + '<div class="cat-group-count">' + (grp.items||[]).length + ' entrée' + ((grp.items||[]).length > 1 ? 's' : '') + '</div>'
         + '<div class="cat-group-actions" onclick="event.stopPropagation()">'
           + '<button class="cat-icon-btn" onclick="renameCatGroup(' + gi + ')" title="Renommer">✏️</button>'
           + '<button class="cat-icon-btn" onclick="moveCatGroup(' + gi + ',-1)" title="Monter">↑</button>'
@@ -4135,7 +4174,7 @@ function renderCatEditor() {
       + '</div>'
       + '<div class="cat-items" id="cat-group-' + gi + '">'
         + items
-        + '<button class="cat-add-item" onclick="addCatItem(' + gi + ')">+ Ajouter un service</button>'
+        + '<button class="cat-add-item" onclick="addCatItem(' + gi + ')">+ Ajouter une entrée</button>'
       + '</div>'
     + '</div>';
   }).join('');
@@ -4156,7 +4195,7 @@ function openCatModal(gi, ii) {
   catEditingItem  = ii;
   var cat = loadCat();
   var isNew = ii === null;
-  $('cat-modal-title').textContent = isNew ? 'Nouveau service' : 'Modifier le service';
+  $('cat-modal-title').textContent = isNew ? 'Nouvelle entrée' : 'Modifier l\'entrée';
 
   // Remplir le select des groupes
   var sel = $('cat-item-group');
@@ -4169,10 +4208,16 @@ function openCatModal(gi, ii) {
     $('cat-item-label').value = it.l;
     $('cat-item-price').value = it.p;
     $('cat-item-gains').value = (it.gains || []).join('\n');
+    $('cat-item-type').value = it.type || 'service';
+    $('cat-item-ref').value = it.ref || '';
+    $('cat-item-desc').value = it.desc || '';
   } else {
     $('cat-item-label').value = '';
     $('cat-item-price').value = '';
     $('cat-item-gains').value = '';
+    $('cat-item-type').value = 'service';
+    $('cat-item-ref').value = '';
+    $('cat-item-desc').value = '';
   }
   $('cat-item-modal').classList.add('open');
   setTimeout(function(){ $('cat-item-label').focus(); }, 100);
@@ -4191,7 +4236,10 @@ function saveCatItem() {
   var cat = loadCat();
 
   var gainsRaw = ($('cat-item-gains').value || '').split('\n').map(function(g){ return g.trim(); }).filter(Boolean);
-  var item = { l: label, p: price, gains: gainsRaw };
+  var type = $('cat-item-type').value || 'service';
+  var ref = $('cat-item-ref').value.trim();
+  var desc = $('cat-item-desc').value.trim();
+  var item = { l: label, p: price, gains: gainsRaw, type: type, ref: ref, desc: desc };
 
   if (catEditingItem === null) {
     // Nouveau
