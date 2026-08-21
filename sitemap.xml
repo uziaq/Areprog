@@ -88,12 +88,6 @@
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/optimisation-consommation</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://areprog.fr/diagnostic</loc>
     <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>

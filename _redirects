@@ -18,7 +18,6 @@
 /desactivation-egr                  /desactivation-egr.html             200
 /desactivation-fap                  /desactivation-fap.html             200
 /desactivation-adblue               /desactivation-adblue.html          200
-/optimisation-consommation          /optimisation-consommation.html     200
 /tarifs                             /tarifs.html                        200
 /contact                            /contact.html                       200
 /rdv                                /rdv.html                           200
@@ -73,3 +72,7 @@
 /chip-tuning-pays-basque.html        /reprogrammation                   301
 /ethanol-prix                        /conversion-e85                    301
 /ethanol-prix.html                   /conversion-e85                    301
+
+# Prestation retirée du catalogue (2026-08-21)
+/optimisation-consommation           /reprogrammation                   301
+/optimisation-consommation.html      /reprogrammation                   301

@@ -39,7 +39,6 @@ const NAV_HTML = `
  <li><a href="/stage1">Stage 1</a></li>
  <li><a href="/stage2">Stage 2</a></li>
  <li><a href="/conversion-e85">Conversion E85</a></li>
- <li><a href="/optimisation-consommation">Optimisation consommation</a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Désactivations</li>
  <li><a href="/desactivation-egr">EGR</a></li>
@@ -95,7 +94,6 @@ const NAV_HTML = `
  <a href="/stage1" class="nav-mobile-sub" data-page="stage1">Stage 1</a>
  <a href="/stage2" class="nav-mobile-sub" data-page="stage2">Stage 2</a>
  <a href="/conversion-e85" class="nav-mobile-sub" data-page="conversion-e85">Conversion E85</a>
- <a href="/optimisation-consommation" class="nav-mobile-sub" data-page="optimisation-consommation">Optimisation consommation</a>
  <a href="/desactivation-egr" class="nav-mobile-sub" data-page="desactivation-egr">Désactivation EGR</a>
  <a href="/desactivation-fap" class="nav-mobile-sub" data-page="desactivation-fap">Désactivation FAP</a>
  <a href="/desactivation-adblue" class="nav-mobile-sub" data-page="desactivation-adblue">Désactivation AdBlue</a>
@@ -130,7 +128,6 @@ const FOOTER_HTML = `
  <a href="/stage1">Stage 1</a>
  <a href="/stage2">Stage 2</a>
  <a href="/conversion-e85">Conversion E85</a>
- <a href="/optimisation-consommation">Optimisation consommation</a>
  <a href="/desactivation-egr">Désactivation EGR</a>
  <a href="/desactivation-fap">Désactivation FAP</a>
  <a href="/desactivation-adblue">Désactivation AdBlue</a>

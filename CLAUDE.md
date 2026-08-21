@@ -8,7 +8,7 @@ AREPROG is a French-language SaaS platform for automotive diagnostics and chip-t
 
 The site is organized into two separate service "universes", each with its own hub page:
 - **Diagnostic** (`diagnostic.html`, `/diagnostic`) — multi-brand electronic diagnostics (fault codes, electrical faults, pre-purchase inspection, antipollution), plus a VAG-specialist sub-page (`diagnostic-vag.html`, `/diagnostic-vag`) built around the official ODIS tool.
-- **Reprogrammation** (`reprogrammation.html`, `/reprogrammation`) — Stage 1/2, E85 conversion, EGR/FAP/AdBlue deactivation, gearbox (TCU) reprogramming, consumption optimization.
+- **Reprogrammation** (`reprogrammation.html`, `/reprogrammation`) — Stage 1/2, E85 conversion, EGR/FAP/AdBlue deactivation, gearbox (TCU) reprogramming.
 
 `index.html` remains the main SEO-loaded homepage and funnels visitors into these two hubs via a two-card split (`.universe-grid`/`.universe-card` in `home.css`).
 

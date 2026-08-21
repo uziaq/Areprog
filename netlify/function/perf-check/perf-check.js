@@ -31,7 +31,6 @@ const ALLOWED_PATHS = [
   '/desactivation-egr',
   '/desactivation-fap',
   '/desactivation-adblue',
-  '/optimisation-consommation',
   '/reprogrammation-boite-vitesse',
   '/vidange-boite-automatique',
   '/tarifs',

@@ -30,7 +30,6 @@ const PRESTATION_KEYWORDS = [
   { match: /stage\s*1\b/i, keywords: ['stage 1'] },
   { match: /stage\s*2\b/i, keywords: ['stage 2'] },
   { match: /e85/i, keywords: ['e85'] },
-  { match: /optimisation.*consommation|consommation.*optimis/i, keywords: ['optimisation', 'consommation'] },
   { match: /\begr\b/i, keywords: ['egr'] },
   { match: /\bfap\b|\bdpf\b/i, keywords: ['fap'] },
   { match: /adblue/i, keywords: ['adblue'] },
