@@ -5718,7 +5718,10 @@ function showAvisStatus(type, msg) {
   el.textContent = msg;
 }
 
-async function generatePdfBase64(elId) {
+async function generatePdfBase64(elId, opts) {
+  opts = opts || {};
+  var scale = opts.scale || 2;
+  var quality = opts.quality || 0.92;
   // Utiliser jsPDF + html2canvas pour capturer le document
   var original = $(elId || 'preview');
   if (!original) throw new Error('Aperçu non disponible');
@@ -5741,7 +5744,7 @@ async function generatePdfBase64(elId) {
   var canvas;
   try {
     canvas = await html2canvas(clone, {
-      scale: 2,
+      scale: scale,
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
@@ -5760,7 +5763,7 @@ async function generatePdfBase64(elId) {
   // Gestion multi-pages si le doc est long
   while (pos < imgH) {
     if (pos > 0) pdf.addPage();
-    pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, -pos, imgW, imgH);
+    pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'JPEG', 0, -pos, imgW, imgH);
     pos += pageH;
   }
 
@@ -6536,10 +6539,34 @@ function buildCodagePreviewHtml() {
   return { total: total };
 }
 
+// La liste de codages peut faire plusieurs dizaines de lignes (donc
+// plusieurs pages A4), bien plus long que les devis/factures habituels —
+// on réessaie donc à une résolution/qualité JPEG décroissante jusqu'à
+// repasser sous la limite du serveur (send-email.js : 4 Mo en base64 par
+// pièce jointe), plutôt que d'imposer d'office une qualité basse à tout
+// le monde (le rendu par défaut de generatePdfBase64 reste inchangé pour
+// les devis/factures).
+var CODAGE_PDF_ATTEMPTS = [
+  { scale: 2,    quality: 0.92 },
+  { scale: 1.5,  quality: 0.82 },
+  { scale: 1.15, quality: 0.65 },
+  { scale: 0.85, quality: 0.5 },
+];
+var CODAGE_MAX_PDF_B64 = 4 * 1024 * 1024;
+
+async function generateCodagePdfBase64() {
+  var last;
+  for (var i = 0; i < CODAGE_PDF_ATTEMPTS.length; i++) {
+    last = await generatePdfBase64('codage-preview', CODAGE_PDF_ATTEMPTS[i]);
+    if (last.length <= CODAGE_MAX_PDF_B64) return last;
+  }
+  throw new Error('Le PDF généré est trop volumineux pour être envoyé par email même en qualité réduite (~' + Math.round(last.length / 1024 / 1024 * 0.75) + ' Mo). Décoche des lignes ou des catégories entières, puis réessaie.');
+}
+
 async function previewCodagePdf() {
   if (!_codageModelKey) { alert('Choisis d’abord un modèle de catalogue.'); return; }
   buildCodagePreviewHtml();
-  var b64 = await generatePdfBase64('codage-preview');
+  var b64 = await generateCodagePdfBase64();
   var bin = atob(b64);
   var bytes = new Uint8Array(bin.length);
   for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -6581,10 +6608,7 @@ async function confirmSendCodageEmail() {
     var m = window.CODAGES_CATALOGUE[_codageModelKey];
     var info = buildCodagePreviewHtml();
     if (!info.total) throw new Error('Aucune option cochée : sélectionne au moins une ligne à envoyer.');
-    var pdfB64 = await generatePdfBase64('codage-preview');
-
-    var MAX_PDF_B64 = 4 * 1024 * 1024;
-    if (pdfB64.length > MAX_PDF_B64) throw new Error('Le PDF généré est trop volumineux pour être envoyé par email. Décoche des lignes puis réessaie.');
+    var pdfB64 = await generateCodagePdfBase64();
 
     var filename = 'Options-codage-' + m.marque + '-' + m.modele.replace(/[^a-zA-Z0-9]+/g, '-') + '.pdf';
     btn.textContent = 'Envoi en cours…';
