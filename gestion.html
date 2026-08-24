@@ -19,6 +19,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<!-- Catalogue des codages/options par véhicule (onglet "Options codage") -->
+<script src="codages-data.js?v=20260824"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
 <style>
@@ -1116,6 +1118,7 @@ select option{background:var(--bg2);color:var(--text)}
       <button class="nb" onclick="showTab('parc')">🚗 Parc auto</button>
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
+      <button class="nb" onclick="showTab('codage')">🔧 Options codage</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -1577,6 +1580,74 @@ select option{background:var(--bg2);color:var(--text)}
       </div>
 
       <div class="parc-grid" id="parc-grid"></div>
+    </div>
+
+    <!-- OPTIONS CODAGE — envoi client -->
+    <div class="tc" id="t-codage">
+      <div class="sh">
+        <div class="sh-title">🔧 Options codage — liste véhicule</div>
+      </div>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px">
+        Sélectionne un client et son véhicule pour générer la liste des options activables par codage (faisabilité,
+        prérequis), puis envoie-la par email en PDF. Coche/décoche les lignes à inclure avant l'envoi.
+      </p>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">1. Client & véhicule</div>
+        <div class="fr">
+          <label>Client</label>
+          <input id="codage-client-search" type="text" placeholder="Rechercher un client…" autocomplete="off" oninput="renderCodageClientResults()" onfocus="renderCodageClientResults()"/>
+          <div id="codage-client-results" class="search-results" style="display:none;max-height:260px;margin-top:6px"></div>
+        </div>
+        <div id="codage-client-picked" style="display:none;margin-top:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px">
+            <span id="codage-client-picked-name" style="font-size:13px;font-weight:600"></span>
+            <button class="btn-s btn-sm" onclick="resetCodageClient()">✕ Changer</button>
+          </div>
+        </div>
+        <div class="fr" id="codage-veh-row" style="display:none">
+          <label>Véhicule</label>
+          <select id="codage-veh-select" onchange="onCodageVehChange()"></select>
+        </div>
+      </div>
+
+      <div class="card" id="codage-model-card" style="display:none;margin-bottom:16px">
+        <div class="card-title">2. Modèle de catalogue</div>
+        <div class="fr">
+          <label>Liste de codages à utiliser</label>
+          <select id="codage-model-select" onchange="renderCodageOptions()"></select>
+        </div>
+        <div class="fg2">
+          <div class="fr"><label>Immatriculation</label><input id="codage-immat" type="text" placeholder="AA-123-BB"/></div>
+          <div class="fr"><label>Finition / année</label><input id="codage-finition" type="text" placeholder="ex. Style 1.5 TSI / 2019"/></div>
+        </div>
+      </div>
+
+      <div class="card" id="codage-options-card" style="display:none;margin-bottom:16px">
+        <div class="sh" style="margin-bottom:10px">
+          <div class="card-title" style="margin:0">3. Options à inclure</div>
+          <div class="sh-actions" style="display:flex;gap:8px">
+            <button class="btn-s btn-sm" onclick="setAllCodageChecks(true)">Tout cocher</button>
+            <button class="btn-s btn-sm" onclick="setAllCodageChecks(false)">Tout décocher</button>
+          </div>
+        </div>
+        <div id="codage-cats"></div>
+      </div>
+
+      <div class="card" id="codage-send-card" style="display:none">
+        <div class="card-title">4. Envoi par email</div>
+        <div class="fr"><label>Email du client</label><input id="codage-to-email" type="email" placeholder="client@email.fr"/></div>
+        <div class="fr"><label>Objet</label><input id="codage-subject" type="text" placeholder="Objet du mail"/></div>
+        <div class="fr"><label>Message personnalisé (optionnel)</label><textarea id="codage-message" rows="4"></textarea></div>
+        <div id="codage-send-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:6px"></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
+          <button class="btn-s" onclick="previewCodagePdf()">👁 Aperçu PDF</button>
+          <button class="btn-g" id="codage-send-btn" onclick="confirmSendCodageEmail()">📧 Envoyer</button>
+        </div>
+      </div>
+
+      <!-- Gabarit hors-écran capturé par html2canvas pour générer le PDF -->
+      <div id="codage-preview" style="position:fixed;top:0;left:-99999px;width:780px;background:#fff"></div>
     </div>
 
     <!-- ══ DEMANDES WEB ═══════════════════════════════════ -->
@@ -5647,9 +5718,9 @@ function showAvisStatus(type, msg) {
   el.textContent = msg;
 }
 
-async function generatePdfBase64() {
+async function generatePdfBase64(elId) {
   // Utiliser jsPDF + html2canvas pour capturer le document
-  var original = $('preview');
+  var original = $(elId || 'preview');
   if (!original) throw new Error('Aperçu non disponible');
 
   // Le #preview affiché à l'écran suit .modal-inner{max-width:100%}, donc sur
@@ -6197,7 +6268,7 @@ function exportCSV() {
 // au i-ème bouton .nb de la barre. L'index 2 ('form') est le bouton
 // « + Nouveau », qui n'ouvre pas d'onglet mais partage la position.
 // Ajouter un onglet impose de le déclarer ici ET au bon rang dans .tb-nav.
-var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search'];
+var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','codage'];
 
 function showTab(t) {
   TABS.forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
@@ -6212,6 +6283,336 @@ function showTab(t) {
   if(t==='parc')     renderParc();
   if(t==='stats')    renderStats();
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
+  if(t==='codage')   initCodageTab();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  OPTIONS CODAGE — sélection client/véhicule + envoi email du
+//  catalogue de codages (codages-data.js) correspondant au modèle.
+// ══════════════════════════════════════════════════════════════
+var _codageClient = null;
+var _codageVehs = [];
+var _codageVeh = null;
+var _codageModelKey = null;
+
+function initCodageTab() {
+  $('codage-client-results').style.display = 'none';
+}
+
+function normCodageStr(s) {
+  return (s || '').toString().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function renderCodageClientResults() {
+  var q = normCodageStr($('codage-client-search').value);
+  var box = $('codage-client-results');
+  if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  var matches = loadClients().filter(function(c) {
+    var hay = normCodageStr([c.nom, c.tel, c.email, c.vm, c.vmo, c.vim].join(' '));
+    return hay.indexOf(q) >= 0;
+  }).slice(0, 15);
+  box.style.display = 'block';
+  box.innerHTML = matches.length ? matches.map(function(c) {
+    var veh = (c.vehs && c.vehs[0]) ? (c.vehs[0].vm + ' ' + c.vehs[0].vmo) : (c.vm ? (c.vm + ' ' + c.vmo) : '');
+    return '<div class="search-result-item" onclick="pickCodageClient(' + c.id + ')">'
+      + '<div style="font-weight:600;font-size:13px">' + escHtml(c.nom) + '</div>'
+      + '<div style="font-size:12px;color:var(--text-dim)">' + escHtml(veh || 'Aucun véhicule enregistré') + '</div>'
+      + '</div>';
+  }).join('') : '<div style="padding:12px;font-size:12.5px;color:var(--text-muted)">Aucun client trouvé.</div>';
+}
+
+function pickCodageClient(id) {
+  var cl = loadClients().find(function(c) { return c.id === id; });
+  if (!cl) return;
+  _codageClient = cl;
+  $('codage-client-results').style.display = 'none';
+  $('codage-client-search').value = '';
+  $('codage-client-picked').style.display = 'block';
+  $('codage-client-picked-name').textContent = cl.nom + (cl.email ? ' — ' + cl.email : '');
+
+  _codageVehs = (cl.vehs && cl.vehs.length) ? cl.vehs : (cl.vm ? [{ vm: cl.vm, vmo: cl.vmo, vmot: cl.vmot, van: cl.van, vim: cl.vim }] : []);
+  var vehRow = $('codage-veh-row'), vehSel = $('codage-veh-select');
+  if (_codageVehs.length) {
+    vehSel.innerHTML = _codageVehs.map(function(v, i) {
+      return '<option value="' + i + '">' + escHtml([v.vm, v.vmo, v.van ? '(' + v.van + ')' : ''].filter(Boolean).join(' ') || 'Véhicule ' + (i + 1)) + '</option>';
+    }).join('');
+    vehRow.style.display = 'block';
+    vehSel.selectedIndex = 0;
+    onCodageVehChange();
+  } else {
+    vehRow.style.display = 'none';
+    _codageVeh = null;
+    $('codage-model-card').style.display = 'block';
+    populateCodageModelSelect(null);
+    $('codage-options-card').style.display = 'block';
+    $('codage-send-card').style.display = 'block';
+    renderCodageOptions();
+    prefillCodageSend();
+  }
+}
+
+function resetCodageClient() {
+  _codageClient = null; _codageVeh = null; _codageVehs = [];
+  $('codage-client-picked').style.display = 'none';
+  $('codage-veh-row').style.display = 'none';
+  $('codage-model-card').style.display = 'none';
+  $('codage-options-card').style.display = 'none';
+  $('codage-send-card').style.display = 'none';
+  $('codage-client-search').value = '';
+  $('codage-client-search').focus();
+}
+
+function onCodageVehChange() {
+  var i = Number($('codage-veh-select').value || 0);
+  _codageVeh = _codageVehs[i] || null;
+  $('codage-immat').value = (_codageVeh && _codageVeh.vim) || '';
+  $('codage-finition').value = (_codageVeh && _codageVeh.vmot) ? (_codageVeh.vmot + (_codageVeh.van ? ' / ' + _codageVeh.van : '')) : ((_codageVeh && _codageVeh.van) || '');
+
+  $('codage-model-card').style.display = 'block';
+  $('codage-options-card').style.display = 'block';
+  $('codage-send-card').style.display = 'block';
+  populateCodageModelSelect(matchCodageModel(_codageVeh));
+  renderCodageOptions();
+  prefillCodageSend();
+}
+
+// Rapprochement marque/modèle libre (champ texte du carnet clients) avec
+// une clé du catalogue codages-data.js : comparaison par mots-clés normalisés
+// (accents/casse ignorés), pas de liste de marques figée côté app.
+function matchCodageModel(veh) {
+  var cat = window.CODAGES_CATALOGUE || {};
+  var hay = normCodageStr(veh ? [veh.vm, veh.vmo].join(' ') : '');
+  if (!hay) return null;
+  var best = null, bestScore = 0;
+  Object.keys(cat).forEach(function(key) {
+    var m = cat[key];
+    var needle = normCodageStr([m.marque, m.modele, key.replace(/-/g, ' ')].join(' '));
+    var words = needle.split(' ').filter(function(w) { return w.length > 1; });
+    var score = words.reduce(function(s, w) { return s + (hay.indexOf(w) >= 0 ? 1 : 0); }, 0);
+    if (score > bestScore) { bestScore = score; best = key; }
+  });
+  return bestScore > 0 ? best : null;
+}
+
+function populateCodageModelSelect(preselectKey) {
+  var cat = window.CODAGES_CATALOGUE || {};
+  var sel = $('codage-model-select');
+  var keys = Object.keys(cat);
+  sel.innerHTML = '<option value="">— Choisir un modèle —</option>' + keys.map(function(k) {
+    var m = cat[k];
+    return '<option value="' + k + '">' + escHtml(m.marque + ' ' + m.modele + ' (' + m.periode + ')') + '</option>';
+  }).join('');
+  sel.value = preselectKey || '';
+  _codageModelKey = sel.value || null;
+}
+
+var FAISABILITE_LABELS = { OUI: 'OUI', COND: 'SOUS CONDITION', RETROFIT: 'RETROFIT', ENTRETIEN: 'ENTRETIEN' };
+var FAISABILITE_COLORS = {
+  OUI:       { bg: '#dcfce7', fg: '#0b7a52' },
+  COND:      { bg: '#fef3c7', fg: '#92610a' },
+  RETROFIT:  { bg: '#dbeafe', fg: '#1d4ed8' },
+  ENTRETIEN: { bg: '#e5e7eb', fg: '#374151' },
+};
+
+function renderCodageOptions() {
+  var key = $('codage-model-select').value;
+  _codageModelKey = key || null;
+  var box = $('codage-cats');
+  var m = key && window.CODAGES_CATALOGUE ? window.CODAGES_CATALOGUE[key] : null;
+  if (!m) { box.innerHTML = '<p style="color:var(--text-muted);font-size:13px">Choisis un modèle de catalogue ci-dessus.</p>'; return; }
+
+  box.innerHTML = m.categories.map(function(cat, ci) {
+    var rows = cat.items.map(function(it, ii) {
+      var col = FAISABILITE_COLORS[it.faisabilite] || FAISABILITE_COLORS.OUI;
+      var id = 'codage-chk-' + ci + '-' + ii;
+      return '<label style="display:grid;grid-template-columns:20px 1fr 130px;gap:10px;align-items:start;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer">'
+        + '<input type="checkbox" id="' + id + '" checked style="margin-top:3px"/>'
+        + '<span><span style="font-size:13px;color:var(--text)">' + escHtml(it.option) + '</span>'
+        + '<span style="display:block;font-size:11.5px;color:var(--text-dim);margin-top:2px">' + escHtml(it.prerequis) + '</span></span>'
+        + '<span style="justify-self:start;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;background:' + col.bg + ';color:' + col.fg + ';white-space:nowrap">' + FAISABILITE_LABELS[it.faisabilite] + '</span>'
+        + '</label>';
+    }).join('');
+    return '<div style="margin-bottom:14px">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 4px">'
+        + '<div style="font-size:13.5px;font-weight:700;color:var(--text)">' + escHtml(cat.nom) + ' <span style="color:var(--text-muted);font-weight:400">(' + cat.items.length + ')</span></div>'
+        + '<div style="display:flex;gap:6px">'
+          + '<button type="button" class="btn-s btn-sm" onclick="setCatCodageChecks(' + ci + ',true)">Tout</button>'
+          + '<button type="button" class="btn-s btn-sm" onclick="setCatCodageChecks(' + ci + ',false)">Aucun</button>'
+        + '</div>'
+      + '</div>'
+      + rows
+    + '</div>';
+  }).join('');
+}
+
+function setAllCodageChecks(val) {
+  document.querySelectorAll('#codage-cats input[type=checkbox]').forEach(function(cb) { cb.checked = val; });
+}
+function setCatCodageChecks(ci, val) {
+  document.querySelectorAll('#codage-cats input[id^="codage-chk-' + ci + '-"]').forEach(function(cb) { cb.checked = val; });
+}
+
+function prefillCodageSend() {
+  var m = _codageModelKey && window.CODAGES_CATALOGUE ? window.CODAGES_CATALOGUE[_codageModelKey] : null;
+  $('codage-to-email').value = (_codageClient && _codageClient.email) || '';
+  $('codage-subject').value = 'Vos options de codage — ' + (m ? (m.marque + ' ' + m.modele) : 'votre véhicule') + ' — AREPROG';
+  $('codage-message').value = 'Bonjour ' + ((_codageClient && _codageClient.nom) ? _codageClient.nom.split(' ')[0] : '') + ',\n\n'
+    + 'Voici la liste des options personnalisables par codage sur votre véhicule, avec leur faisabilité et les prérequis éventuels. '
+    + 'Cochez celles qui vous intéressent sur le document et faites-le nous savoir pour un devis.\n\n'
+    + 'Cordialement, AREPROG';
+  $('codage-send-status').style.display = 'none';
+  $('codage-send-btn').disabled = false;
+  $('codage-send-btn').textContent = '📧 Envoyer';
+}
+
+// Construit le document imprimable (capturé par html2canvas) à partir des
+// lignes cochées uniquement.
+function buildCodagePreviewHtml() {
+  var m = window.CODAGES_CATALOGUE[_codageModelKey];
+  var selectedCats = [];
+  var counts = { OUI: 0, COND: 0, RETROFIT: 0, ENTRETIEN: 0 };
+  m.categories.forEach(function(cat, ci) {
+    var items = [];
+    cat.items.forEach(function(it, ii) {
+      var cb = $('codage-chk-' + ci + '-' + ii);
+      if (cb && cb.checked) { items.push(it); counts[it.faisabilite]++; }
+    });
+    if (items.length) selectedCats.push({ nom: cat.nom, items: items });
+  });
+  var total = counts.OUI + counts.COND + counts.RETROFIT + counts.ENTRETIEN;
+
+  var row = function(label, val) { return val ? '<tr><td style="padding:3px 0;color:#6b7280;font-size:12px">' + label + '</td><td style="padding:3px 0;font-size:12px;font-weight:600;color:#111">' + escHtml(val) + '</td></tr>' : ''; };
+
+  var legend = [
+    ['OUI', 'Codage simple, réalisable sans équipement optionnel requis.'],
+    ['COND', 'Réalisable uniquement si le véhicule possède l’équipement précisé dans « Prérequis précis ».'],
+    ['RETROFIT', 'Nécessite l’installation préalable d’une pièce physique. Le codage active la pièce une fois montée.'],
+    ['ENTRETIEN', 'Procédure d’atelier/diagnostic liée à une intervention mécanique, pas une option de personnalisation.'],
+  ].map(function(l) {
+    var col = FAISABILITE_COLORS[l[0]];
+    return '<tr><td style="padding:4px 8px;font-size:11px;font-weight:700;background:' + col.bg + ';color:' + col.fg + ';border-radius:4px;white-space:nowrap;vertical-align:top">' + FAISABILITE_LABELS[l[0]] + '</td><td style="padding:4px 0 4px 10px;font-size:11.5px;color:#374151">' + l[1] + '</td></tr>';
+  }).join('');
+
+  var catsHtml = selectedCats.map(function(cat) {
+    var rows = cat.items.map(function(it) {
+      var col = FAISABILITE_COLORS[it.faisabilite];
+      return '<tr>'
+        + '<td style="padding:6px 8px;font-size:11.5px;color:#111;border-bottom:1px solid #eef0f2">' + escHtml(it.option) + '</td>'
+        + '<td style="padding:6px 8px;font-size:10.5px;font-weight:700;color:' + col.fg + ';background:' + col.bg + ';white-space:nowrap;border-bottom:1px solid #eef0f2">' + FAISABILITE_LABELS[it.faisabilite] + '</td>'
+        + '<td style="padding:6px 8px;font-size:11px;color:#4b5563;border-bottom:1px solid #eef0f2">' + escHtml(it.prerequis) + '</td>'
+        + '</tr>';
+    }).join('');
+    return '<div style="margin:16px 0 8px;font-size:14px;font-weight:700;color:#111">' + escHtml(cat.nom) + ' (' + cat.items.length + ')</div>'
+      + '<table style="width:100%;border-collapse:collapse"><thead><tr>'
+        + '<th style="text-align:left;padding:5px 8px;font-size:10.5px;color:#6b7280;border-bottom:1px solid #d1d5db">Option</th>'
+        + '<th style="text-align:left;padding:5px 8px;font-size:10.5px;color:#6b7280;border-bottom:1px solid #d1d5db">Faisabilité</th>'
+        + '<th style="text-align:left;padding:5px 8px;font-size:10.5px;color:#6b7280;border-bottom:1px solid #d1d5db">Prérequis précis</th>'
+      + '</tr></thead><tbody>' + rows + '</tbody></table>';
+  }).join('');
+
+  var html = '<div style="font-family:Arial,Helvetica,sans-serif;color:#111;padding:0">'
+    + '<h1 style="font-size:22px;margin:0 0 4px">' + escHtml(m.marque + ' ' + m.modele) + ' — Liste des codages et faisabilité</h1>'
+    + '<div style="font-size:12.5px;color:#6b7280;margin-bottom:14px">' + escHtml(m.sousTitre) + '</div>'
+    + '<table style="margin-bottom:16px">' + row('Date', fmtDate(today())) + row('Client', (_codageClient && _codageClient.nom) || '') + row('Immatriculation', $('codage-immat').value) + row('Finition / année', $('codage-finition').value) + '</table>'
+    + '<div style="font-size:13px;font-weight:700;margin-bottom:6px">Comment lire ce document</div>'
+    + '<p style="font-size:11.5px;color:#374151;line-height:1.6;margin:0 0 10px">Chaque option est classée selon sa faisabilité sur votre véhicule. Les codages se font par la prise OBD avec un outil officiel (VCDS, OBDeleven ou VCP), après sauvegarde complète des calculateurs concernés. Aucune pièce n’est modifiée sauf mention « Retrofit ».</p>'
+    + '<table style="width:100%;border-collapse:collapse;margin-bottom:12px">' + legend + '</table>'
+    + '<div style="background:#f9fafb;border:1px solid #eef0f2;border-radius:8px;padding:10px 14px;font-size:12px;color:#374151;margin-bottom:6px">'
+      + '<b>Récapitulatif :</b> ' + total + ' option(s) sélectionnée(s) — ' + counts.OUI + ' réalisable(s) directement, ' + counts.COND + ' sous condition d’équipement, ' + counts.RETROFIT + ' avec pièce à ajouter, ' + counts.ENTRETIEN + ' procédure(s) d’entretien.'
+    + '</div>'
+    + catsHtml
+    + '<div style="margin-top:22px;padding-top:14px;border-top:1px solid #eef0f2;font-size:10.5px;color:#6b7280;line-height:1.7">'
+      + '• La faisabilité définitive est confirmée après lecture des calculateurs du véhicule (équipements, versions logicielles).<br/>'
+      + '• Certains codages liés à l’éclairage doivent respecter la réglementation du pays d’immatriculation ; le client en assume la responsabilité.<br/>'
+      + '• Une sauvegarde complète des valeurs d’origine est effectuée avant toute intervention ; chaque codage reste réversible.<br/>'
+      + '• ' + escHtml(m.source)
+    + '</div>'
+    + '<div style="margin-top:28px;font-size:11.5px;color:#374151">Signature client : ______________________________ &nbsp;&nbsp; Date : ______________</div>'
+  + '</div>';
+
+  $('codage-preview').innerHTML = html;
+  return { total: total };
+}
+
+async function previewCodagePdf() {
+  if (!_codageModelKey) { alert('Choisis d’abord un modèle de catalogue.'); return; }
+  buildCodagePreviewHtml();
+  var b64 = await generatePdfBase64('codage-preview');
+  var bin = atob(b64);
+  var bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  var blob = new Blob([bytes], { type: 'application/pdf' });
+  window.open(URL.createObjectURL(blob), '_blank');
+}
+
+function buildCodageEmailHtml(tpl, message) {
+  var color = /^#[0-9a-fA-F]{6}$/.test(tpl.color) ? tpl.color : '#2196F3';
+  return '<div style="background:#f4f5f7;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">'
+    + '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb">'
+      + '<div style="background:' + color + ';padding:22px 28px">'
+        + '<div style="color:#fff;font-size:20px;font-weight:700;letter-spacing:.3px">' + escHtml(tpl.nom || 'AREPROG') + '</div>'
+        + (tpl.activite ? '<div style="color:rgba(255,255,255,.85);font-size:12px;margin-top:2px">' + escHtml(tpl.activite) + '</div>' : '')
+      + '</div>'
+      + '<div style="padding:26px 28px">'
+        + '<p style="margin:0 0 18px;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
+        + '<p style="margin:0;font-size:13px;color:#374151">📎 Vous trouverez la liste complète en pièce jointe, au format PDF.</p>'
+      + '</div>'
+      + '<div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">'
+        + escHtml(tpl.footer || '').replace(/\n/g, '<br>')
+      + '</div>'
+    + '</div>'
+  + '</div>';
+}
+
+async function confirmSendCodageEmail() {
+  var toEmail = $('codage-to-email').value.trim();
+  if (!toEmail || !toEmail.includes('@')) { showCodageSendStatus('error', 'Email invalide.'); return; }
+  var subject = $('codage-subject').value.trim();
+  if (!subject) { showCodageSendStatus('error', 'L’objet du mail est obligatoire.'); return; }
+  if (!_codageModelKey) { showCodageSendStatus('error', 'Choisis d’abord un modèle de catalogue.'); return; }
+
+  var btn = $('codage-send-btn');
+  btn.disabled = true;
+  btn.textContent = 'Génération PDF…';
+
+  try {
+    var m = window.CODAGES_CATALOGUE[_codageModelKey];
+    var info = buildCodagePreviewHtml();
+    if (!info.total) throw new Error('Aucune option cochée : sélectionne au moins une ligne à envoyer.');
+    var pdfB64 = await generatePdfBase64('codage-preview');
+
+    var MAX_PDF_B64 = 4 * 1024 * 1024;
+    if (pdfB64.length > MAX_PDF_B64) throw new Error('Le PDF généré est trop volumineux pour être envoyé par email. Décoche des lignes puis réessaie.');
+
+    var filename = 'Options-codage-' + m.marque + '-' + m.modele.replace(/[^a-zA-Z0-9]+/g, '-') + '.pdf';
+    btn.textContent = 'Envoi en cours…';
+    var tpl = loadTemplate();
+    var html = buildCodageEmailHtml(tpl, $('codage-message').value);
+    await envoyerEmail(toEmail, subject, html, NOTIF_EMAIL, [{ filename: filename, content: pdfB64 }]);
+
+    showCodageSendStatus('success', 'Email envoyé à ' + toEmail + ' ✓');
+    btn.textContent = '✓ Envoyé !';
+    showNotifBanner('📧', 'Liste de codages envoyée !', m.marque + ' ' + m.modele + ' → ' + toEmail);
+    setTimeout(function() { prefillCodageSend(); }, 2000);
+  } catch (e) {
+    console.error('Envoi email codage:', e);
+    var msg = e.text || e.message || 'Réessaie.';
+    if (/load failed|failed to fetch|networkerror/i.test(msg)) msg = 'Connexion au serveur interrompue pendant l’envoi. Réessaie ; si ça persiste, décoche quelques lignes pour réduire la taille du PDF.';
+    showCodageSendStatus('error', 'Erreur : ' + msg);
+    btn.disabled = false;
+    btn.textContent = '📧 Envoyer';
+  }
+}
+
+function showCodageSendStatus(type, msg) {
+  var el = $('codage-send-status');
+  el.style.display = 'block';
+  el.style.background = type === 'success' ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)';
+  el.style.color = type === 'success' ? 'var(--green)' : 'var(--red)';
+  el.style.border = '1px solid ' + (type === 'success' ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)');
+  el.textContent = msg;
 }
 
 // ══════════════════════════════════════════════════════════════
