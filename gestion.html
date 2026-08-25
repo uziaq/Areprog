@@ -1729,6 +1729,24 @@ select option{background:var(--bg2);color:var(--text)}
         </div>
       </div>
     </div>
+    <div class="veh-sec">
+      <div class="veh-sec-title"><span>📎 Fichiers du client</span><span id="ac-doc-status" style="font-weight:400;text-transform:none;letter-spacing:0"></span></div>
+      <div id="ac-doc-list" style="margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select id="ac-doc-type" style="padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px">
+          <option value="carte_id">Pièce d'identité</option>
+          <option value="carte_grise">Carte grise</option>
+          <option value="devis_signe">Devis signé</option>
+          <option value="facture">Facture</option>
+          <option value="contrat">Contrat</option>
+          <option value="autre" selected>Autre</option>
+        </select>
+        <label class="veh-upload">
+          + Ajouter un fichier
+          <input type="file" id="ac-doc-input" accept="application/pdf,image/*" multiple style="display:none" onchange="uploadClientDocs(this)"/>
+        </label>
+      </div>
+    </div>
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
       <button class="btn-s" onclick="closeAddClientModal()">Annuler</button>
       <button class="btn-g" onclick="saveClient()">💾 Enregistrer</button>
@@ -2647,6 +2665,75 @@ async function uploadClientVehVideos(input) {
     }
   }
   status.textContent = '✓ ' + files.length + ' vidéo' + (files.length > 1 ? 's' : '') + ' ajoutée' + (files.length > 1 ? 's' : '');
+  status.style.color = 'var(--green)';
+}
+
+// ── Fichiers rattachés directement à la fiche client (hors véhicule) ────────
+// acDocs reflète le formulaire ouvert ; acDraftId identifie le dossier de
+// stockage Firebase (id du client existant, ou un id généré à l'ouverture du
+// formulaire pour un nouveau client — repris comme id définitif à l'enregistrement
+// pour que les fichiers déjà envoyés restent associés au bon client).
+var acDocs = [];
+var acDraftId = null;
+
+function renderAcDocs() {
+  var el = $('ac-doc-list');
+  if (!el) return;
+  if (!acDocs.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:12px">Aucun fichier.</div>';
+    return;
+  }
+  el.innerHTML = acDocs.map(function(d, i) {
+    return '<div class="veh-doc">'
+      + '<span>' + (String(d.name||'').toLowerCase().endsWith('.pdf') ? '📄' : '🖼️') + '</span>'
+      + '<a href="' + escHtml(d.url) + '" target="_blank" rel="noopener">' + escHtml(d.name || 'fichier') + '</a>'
+      + '<span style="color:var(--text-muted);font-size:11px">' + escHtml(CLIENT_DOC_TYPES[d.type] || 'Autre') + '</span>'
+      + '<button type="button" class="exp-del" onclick="removeAcDoc(' + i + ')" title="Retirer">×</button>'
+      + '</div>';
+  }).join('');
+}
+
+function removeAcDoc(i) {
+  acDocs.splice(i, 1);
+  renderAcDocs();
+}
+
+async function uploadClientDocs(input) {
+  var files = Array.prototype.slice.call(input.files || []);
+  input.value = '';
+  if (!files.length) return;
+  var status = $('ac-doc-status');
+  var type = $('ac-doc-type').value;
+
+  for (var i = 0; i < files.length; i++) {
+    status.textContent = 'Envoi ' + (i + 1) + '/' + files.length + '…';
+    status.style.color = 'var(--text-dim)';
+    if (files[i].size > 8 * 1024 * 1024) {
+      status.textContent = '✗ ' + files[i].name + ' dépasse 8 Mo';
+      status.style.color = 'var(--red)';
+      return;
+    }
+    try {
+      var ct = files[i].type || 'application/pdf';
+      if (!UPLOAD_EXT[ct]) throw new Error('Format non accepté : ' + (files[i].name || 'fichier') + ' (PDF ou image)');
+      var name = safeUploadName(files[i].name || 'fichier', UPLOAD_EXT[ct]);
+      var res = await uploadVehFile({
+        fileBase64: await fileToBase64(files[i]),
+        contentType: ct,
+        kind: 'document',
+        entity: 'client',
+        vehiculeId: String(acDraftId),
+        filename: name,
+      });
+      acDocs.push({ url: res.url, path: res.path, name: name, type: type });
+      renderAcDocs();
+    } catch(e) {
+      status.textContent = '✗ ' + e.message;
+      status.style.color = 'var(--red)';
+      return;
+    }
+  }
+  status.textContent = '✓ ' + files.length + ' fichier' + (files.length > 1 ? 's' : '') + ' ajouté' + (files.length > 1 ? 's' : '');
   status.style.color = 'var(--green)';
 }
 
@@ -3923,10 +4010,18 @@ function closeCarnetModal() { $('carnet-modal').classList.remove('open'); }
 
 function openAddClientModal(fromCarnet) {
   editClientId = null;
+  // Généré une seule fois ici et réutilisé comme id définitif à l'enregistrement
+  // (saveClient) : les fichiers déjà envoyés pendant que le formulaire est
+  // encore ouvert doivent pointer vers le même dossier de stockage que le
+  // client une fois créé.
+  acDraftId = Date.now();
+  acDocs = [];
   $('add-client-title').textContent = 'Nouveau client';
   ['ac-nom','ac-tel','ac-email','ac-adr','ac-ville'].forEach(function(i){ $(i).value=''; });
   var vl = $('ac-veh-list'); if(vl) vl.innerHTML = '';
   addVehicleRow();
+  renderAcDocs();
+  $('ac-doc-status').textContent = '';
   closeCarnetModal();
   $('add-client-modal').classList.add('open');
 }
@@ -3936,6 +4031,8 @@ function editClient(cid) {
   var cl = loadClients().find(function(c){ return c.id === cid; });
   if (!cl) return;
   editClientId = cid;
+  acDraftId = cid;
+  acDocs = (cl.documents || []).slice();
   $('add-client-title').textContent = 'Modifier le client';
   $('ac-nom').value = cl.nom || '';
   $('ac-tel').value = cl.tel || '';
@@ -3949,6 +4046,8 @@ function editClient(cid) {
     var clVehs = cl.vehs && cl.vehs.length ? cl.vehs : (cl.vm ? [{vm:cl.vm,vmo:cl.vmo||'',vmot:cl.vmot||'',van:cl.van||'',vim:cl.vim||''}] : []);
     clVehs.forEach(function(v){ addVehicleRow(v); });
   }
+  renderAcDocs();
+  $('ac-doc-status').textContent = '';
   $('add-client-modal').classList.add('open');
 }
 
@@ -3972,12 +4071,13 @@ function saveClient() {
   // Compatibilité rétro : conserver vm/vmo/etc sur le premier véhicule
   var firstVeh = vehs[0] || {};
   var cl = {
-    id: editClientId || Date.now(),
+    id: editClientId || acDraftId || Date.now(),
     nom: nom, tel: $('ac-tel').value, email: $('ac-email').value,
     adr: $('ac-adr').value, ville: $('ac-ville').value,
     vm: firstVeh.vm||'', vmo: firstVeh.vmo||'', vmot: firstVeh.vmot||'',
     van: firstVeh.van||'', vim: firstVeh.vim||'',
     vehs: vehs,
+    documents: acDocs,
   };
   if (editClientId) {
     var i = clients.findIndex(function(c){ return c.id === editClientId; });
@@ -6107,6 +6207,17 @@ function showClientHistory(clientId) {
     + (cl.email?'<span style="font-size:13px;color:var(--text-dim)">✉️ '+escHtml(cl.email)+'</span>':'')
     + '</div>';
   if (vehsHTML) html += '<div style="margin-bottom:16px">' + vehsHTML + '</div>';
+
+  if (cl.documents && cl.documents.length) {
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px">📎 Fichiers du client</div>';
+    html += '<div style="margin-bottom:16px">' + cl.documents.map(function(d) {
+      return '<div class="veh-doc">'
+        + '<span>' + (String(d.name||'').toLowerCase().endsWith('.pdf') ? '📄' : '🖼️') + '</span>'
+        + '<a href="' + escHtml(d.url) + '" target="_blank" rel="noopener">' + escHtml(d.name || 'fichier') + '</a>'
+        + '<span style="color:var(--text-muted);font-size:11px">' + escHtml(CLIENT_DOC_TYPES[d.type] || 'Autre') + '</span>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
   html += '<div style="display:flex;gap:16px;margin-bottom:18px;flex-wrap:wrap">'
     + '<div style="background:var(--bg3);border-radius:8px;padding:10px 14px;text-align:center"><div style="font-family:var(--fh);font-size:20px;color:var(--blue)">' + docs.length + '</div><div style="font-size:10px;color:var(--text-muted)">Documents</div></div>'
     + '<div style="background:var(--bg3);border-radius:8px;padding:10px 14px;text-align:center"><div style="font-family:var(--fh);font-size:20px;color:var(--green)">' + fmt(totalCA) + '</div><div style="font-size:10px;color:var(--text-muted)">CA total</div></div>'
@@ -7201,6 +7312,15 @@ var DOC_TYPES = {
   facture_vente: 'Facture de vente',
   cession:       'Certificat de cession',
   autre:         'Autre',
+};
+
+var CLIENT_DOC_TYPES = {
+  carte_id:    "Pièce d'identité",
+  carte_grise: 'Carte grise',
+  devis_signe: 'Devis signé',
+  facture:     'Facture',
+  contrat:     'Contrat',
+  autre:       'Autre',
 };
 
 var parcFilter    = '';

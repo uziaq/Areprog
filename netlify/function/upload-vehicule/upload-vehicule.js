@@ -1,9 +1,11 @@
-// Netlify Function — upload photos, vidéos & documents véhicule vers Firebase Storage
+// Netlify Function — upload photos, vidéos & documents véhicule (ou fichiers
+// client) vers Firebase Storage
 // Env vars requises : FIREBASE_SERVICE_ACCOUNT (JSON service account)
 //
 // Réservé aux utilisateurs authentifiés : les fichiers déposés deviennent
 // lisibles publiquement (les liens sont ouverts sans compte depuis la fiche
-// véhicule), donc l'écriture doit rester strictement contrôlée.
+// véhicule ou la fiche client), donc l'écriture doit rester strictement
+// contrôlée.
 
 const admin = require('firebase-admin');
 
@@ -88,6 +90,9 @@ exports.handler = async function(event) {
     const contentType = body.contentType;
     const kind        = body.kind === 'document' ? 'documents' : body.kind === 'video' ? 'videos' : 'photos';
     const isVideo     = VIDEO_TYPES.indexOf(contentType) !== -1;
+    // Réutilisé tel quel pour les fichiers rattachés à un client (fiche
+    // client, hors véhicule) : seul le préfixe du chemin de stockage change.
+    const entity      = body.entity === 'client' ? 'clients' : 'vehicules';
 
     if (!fileBase64 || !vehiculeId || !filename) {
       return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Paramètres manquants' }) };
@@ -114,7 +119,7 @@ exports.handler = async function(event) {
       return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Le contenu ne correspond pas au type annoncé' }) };
     }
 
-    const path = 'vehicules/' + vehiculeId + '/' + kind + '/' + Date.now() + '-' + filename;
+    const path = entity + '/' + vehiculeId + '/' + kind + '/' + Date.now() + '-' + filename;
     const file = admin.storage().bucket().file(path);
 
     await file.save(buffer, {
