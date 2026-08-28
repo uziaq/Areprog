@@ -1145,7 +1145,7 @@ select option{background:var(--bg2);color:var(--text)}
       <div class="stats-row" id="stats"></div>
 
       <!-- Actions rapides -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px" id="quick-actions">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px" id="quick-actions">
         <button class="btn-p" onclick="newDoc()" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
           <span style="font-size:20px">📄</span>Nouveau devis
         </button>
@@ -1157,6 +1157,9 @@ select option{background:var(--bg2);color:var(--text)}
         </button>
         <button class="btn-s" onclick="showTab('carnet');setTimeout(function(){openAddClientModal()},100)" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
           <span style="font-size:20px">👤</span>Nouveau client
+        </button>
+        <button class="btn-s" onclick="openDevisExpressModal()" style="padding:12px;flex-direction:column;display:flex;align-items:center;gap:4px;font-size:12px">
+          <span style="font-size:20px">⚡</span>Devis express
         </button>
       </div>
 
@@ -1798,6 +1801,29 @@ select option{background:var(--bg2);color:var(--text)}
       <button class="btn-s" onclick="closeAcompteModal()">Annuler</button>
       <button class="btn-s" onclick="previewAcomptePDF()">👁 Aperçu preuve</button>
       <button class="btn-g" onclick="validerAcompteRecu()">✓ Marquer reçu + PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DEVIS EXPRESS -->
+<div class="carnet-modal" id="devis-express-modal" onclick="if(event.target===this)closeDevisExpressModal()">
+  <div class="carnet-box" style="max-width:480px;width:100%">
+    <div class="carnet-box-title">⚡ Devis express</div>
+    <p style="font-size:12.5px;color:var(--text-muted);margin:-8px 0 16px">
+      Renseigne le client et liste les prestations / pièces (une par ligne, ou séparées par des virgules). Chaque entrée est rapprochée automatiquement du catalogue ; le devis est ensuite ouvert pour vérification avant envoi.
+    </p>
+    <div class="fr">
+      <label>Client</label>
+      <input type="text" id="dex-client" placeholder="Nom du client" autocomplete="off"/>
+    </div>
+    <div class="fr">
+      <label>Prestations / pièces</label>
+      <textarea id="dex-items" rows="5" placeholder="Vidange&#10;Plaquettes avant&#10;Stage 1" oninput="updateDevisExpressPreview()"></textarea>
+    </div>
+    <div id="dex-preview"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:14px">
+      <button class="btn-s" onclick="closeDevisExpressModal()">Annuler</button>
+      <button class="btn-g" onclick="genererDevisExpress()">→ Générer le devis</button>
     </div>
   </div>
 </div>
@@ -6415,7 +6441,7 @@ function initCodageTab() {
 
 function normCodageStr(s) {
   return (s || '').toString().toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
@@ -7273,6 +7299,119 @@ function confirmerEtEnvoyerDevis(ref) {
   renderDash();
   previewDoc(doc.id);
   sendDocByEmail();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DEVIS EXPRESS — génère un devis brouillon depuis un client +
+//  une liste libre de prestations / pièces, rapprochées du
+//  catalogue (même patron que demandeVersDevis) avant validation.
+// ══════════════════════════════════════════════════════════════
+function openDevisExpressModal() {
+  $('dex-client').value = '';
+  $('dex-items').value = '';
+  $('dex-preview').innerHTML = '';
+  $('devis-express-modal').classList.add('open');
+  setTimeout(function() { $('dex-client').focus(); }, 50);
+}
+
+function closeDevisExpressModal() {
+  $('devis-express-modal').classList.remove('open');
+}
+
+function parseDevisExpressItems(raw) {
+  return String(raw || '')
+    .split(/\r?\n|,|;/)
+    .map(function(s) { return s.trim(); })
+    .filter(Boolean);
+}
+
+function normaliserTexteDex(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+// Rapproche un texte libre ("plaquettes avant") d'une ligne du catalogue :
+// référence exacte > libellé contenant le texte tel quel (même logique que
+// buildSuggestions) > recouvrement d'au moins la moitié des mots saisis.
+function matchCatalogueItemDex(query) {
+  var qNorm = normaliserTexteDex(query);
+  if (!qNorm) return null;
+  var candidates = [];
+  loadCat().forEach(function(group) {
+    (group.items || []).forEach(function(it) {
+      candidates.push({ it: it, labelNorm: normaliserTexteDex(it.l), refNorm: normaliserTexteDex(it.ref || '') });
+    });
+  });
+
+  var byRef = candidates.find(function(c) { return c.refNorm && c.refNorm === qNorm; });
+  if (byRef) return byRef.it;
+
+  var bySubstr = candidates.filter(function(c) { return c.labelNorm.indexOf(qNorm) !== -1; })
+    .sort(function(a, b) { return a.labelNorm.length - b.labelNorm.length; })[0];
+  if (bySubstr) return bySubstr.it;
+
+  var qWords = qNorm.split(' ').filter(Boolean);
+  if (!qWords.length) return null;
+  var best = null, bestRatio = 0, bestLen = Infinity;
+  candidates.forEach(function(c) {
+    var labelWords = c.labelNorm.split(' ').filter(Boolean);
+    var matched = qWords.filter(function(w) { return labelWords.indexOf(w) !== -1; }).length;
+    var ratio = matched / qWords.length;
+    if (ratio < 0.5) return;
+    if (ratio > bestRatio || (ratio === bestRatio && labelWords.length < bestLen)) {
+      best = c.it; bestRatio = ratio; bestLen = labelWords.length;
+    }
+  });
+  return best;
+}
+
+function updateDevisExpressPreview() {
+  var el = $('dex-preview');
+  var items = parseDevisExpressItems($('dex-items').value);
+  if (!items.length) { el.innerHTML = ''; return; }
+  var lignesHtml = items.map(function(text) {
+    var match = matchCatalogueItemDex(text);
+    var label = match ? match.l : text;
+    var prix = match ? (match.p > 0 ? match.p.toFixed(2) + ' €' : 'offert') : 'à tarifer';
+    return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:2px 0">'
+      + '<span>' + escHtml(label) + '</span>'
+      + '<span style="white-space:nowrap;color:' + (match ? 'var(--text)' : 'var(--orange)') + '">' + prix + '</span></div>';
+  }).join('');
+  el.innerHTML = '<div style="background:var(--bg);border:1px dashed var(--border-blue);border-radius:8px;padding:10px 12px;margin-top:4px">' + lignesHtml + '</div>';
+}
+
+function genererDevisExpress() {
+  var client = ($('dex-client').value || '').trim();
+  var items = parseDevisExpressItems($('dex-items').value);
+  if (!client) { alert('Indique le nom du client.'); return; }
+  if (!items.length) { alert('Liste au moins une prestation ou une pièce.'); return; }
+
+  resetForm(false);
+  $('f-type').value = 'devis';
+  $('f-cnom').value = client;
+
+  var aTarifer = 0;
+  lines = items.map(function(text) {
+    var match = matchCatalogueItemDex(text);
+    if (match) {
+      return { id: Date.now() + Math.random(), label: match.l, qte: 1, pu: match.p || 0, desc: match.desc || '', ref: match.ref || '', remise: 0, remiseType: 'pct' };
+    }
+    aTarifer++;
+    return { id: Date.now() + Math.random(), label: text, qte: 1, pu: 0, desc: 'À tarifer', ref: '', remise: 0, remiseType: 'pct' };
+  });
+
+  if (aTarifer && $('f-notes')) {
+    $('f-notes').value = '⚠ ' + aTarifer + ' ligne(s) à tarifer manuellement.\n' + $('f-notes').value;
+  }
+
+  onTypeChange();
+  renderLines();
+  calcTotaux();
+  closeDevisExpressModal();
+  showTab('form');
 }
 
 // ══════════════════════════════════════════════════════════════
