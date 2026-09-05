@@ -2971,6 +2971,7 @@ function initApp() {
 
 function resetForm(goToForm) {
   editId = null;
+  _demandeActuelle = null;
   loadedType = 'devis';
   loadedNum = null;
   lines = [];
@@ -3541,6 +3542,7 @@ function saveDoc() {
   }
   editId = doc.id;
   saveDocs(docs);
+  if (_demandeActuelle) lierDevisALaDemande(_demandeActuelle, doc);
   renderDash();
   // Proposer d'enregistrer le client dans le carnet si nouveau
   var cn = $('f-cnom').value.trim();
@@ -3552,6 +3554,30 @@ function saveDoc() {
     }
   }
   alert('Document enregistré ✓');
+}
+
+// Relie le devis enregistré à sa demande d'origine : on retient son id
+// (pour rouvrir le même devis au lieu d'en recréer un autre) et on
+// rafraîchit l'aperçu affiché sur la carte "Demandes" avec le contenu
+// réellement enregistré — sinon elle reste bloquée sur le brouillon
+// auto-généré à la création de la demande.
+function lierDevisALaDemande(ref, doc) {
+  var d = trouverDemande(ref);
+  if (!d || !db) return;
+  var draft = {
+    lignes: (doc.lines || []).map(function(l) {
+      return { label: l.label || '', qte: l.qte || 1, pu: l.pu || 0, desc: l.desc || '', ref: l.ref || '', remise: l.remise || 0, remiseType: l.remiseType || 'pct' };
+    }),
+    total: doc.ht,
+    aTarifer: (doc.lines || []).filter(function(l){ return !l.pu; }).length
+  };
+  db.collection(d.collection).doc(d.id).update({ devisId: doc.id, devisDraft: draft })
+    .then(function() {
+      d.devisId = doc.id;
+      d.devisDraft = draft;
+      paintDemandes();
+    })
+    .catch(function(e){ console.warn('Lien devis→demande :', e); });
 }
 
 // Charger un objet doc directement dans le formulaire (draft restore)
@@ -3602,6 +3628,7 @@ function loadDoc(docId) {
   var doc = loadDocs().find(function(d) { return d.id === docId; });
   if (!doc) return;
   editId = doc.id;
+  _demandeActuelle = null;
   loadedType = doc.type;
   loadedNum = doc.num;
   $('f-type').value = doc.type;
@@ -7044,6 +7071,10 @@ function resetDeclaration() {
 // ══════════════════════════════════════════════════════════════
 var _demandes = [];
 var _demFilter = 'nouveau';
+// Référence ("collection:id") de la demande dont le devis est actuellement
+// ouvert dans le formulaire — permet de relier le devis enregistré à la
+// demande d'origine (voir lierDevisALaDemande).
+var _demandeActuelle = null;
 
 function setDemFilter(f, btn) {
   _demFilter = f;
@@ -7081,7 +7112,8 @@ function normaliserDemande(id, d, collection) {
     total: typeof d.total === 'number' ? d.total : null,
     statut: d.status || 'nouveau',
     quand: quand,
-    devisDraft: (d.devisDraft && Array.isArray(d.devisDraft.lignes)) ? d.devisDraft : null
+    devisDraft: (d.devisDraft && Array.isArray(d.devisDraft.lignes)) ? d.devisDraft : null,
+    devisId: d.devisId || null
   };
 }
 
@@ -7229,7 +7261,20 @@ function marquerDemande(ref, statut) {
 function demandeVersDevis(ref) {
   var d = trouverDemande(ref);
   if (!d) return;
+  // Un devis a déjà été enregistré pour cette demande : on continue de
+  // l'éditer (sinon "Modifier le devis" recréerait un devis en double à
+  // chaque clic, et la demande n'aurait jamais connaissance des modifs).
+  if (d.devisId) {
+    var existant = loadDocs().find(function(doc){ return doc.id === d.devisId; });
+    if (existant) {
+      loadDoc(existant.id);
+      _demandeActuelle = ref;
+      if (d.statut === 'nouveau') marquerDemande(ref, 'traite');
+      return;
+    }
+  }
   resetForm(false);
+  _demandeActuelle = ref;
   $('f-type').value = 'devis';
   $('f-cnom').value  = d.nom || '';
   $('f-ctel').value  = d.tel || '';
@@ -7267,9 +7312,15 @@ function confirmerEtEnvoyerDevis(ref) {
   if (!$('f-cnom').value.trim()) { alert('Renseignez le nom du client avant de confirmer.'); return; }
   var doc = buildObj();
   var docs = loadDocs();
-  docs.unshift(doc);
+  if (editId) {
+    var i = docs.findIndex(function(dd) { return dd.id === editId; });
+    if (i >= 0) docs[i] = doc; else docs.unshift(doc);
+  } else {
+    docs.unshift(doc);
+  }
   editId = doc.id;
   saveDocs(docs);
+  lierDevisALaDemande(ref, doc);
   renderDash();
   previewDoc(doc.id);
   sendDocByEmail();
