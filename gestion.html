@@ -1948,9 +1948,17 @@ select option{background:var(--bg2);color:var(--text)}
       </div>
       <div>
         <div class="fr"><label>Client lié (optionnel)</label>
-          <select id="rdv-client" onchange="updateRdvVehSelect()">
+          <input id="rdv-client-search" type="text" placeholder="Rechercher un client…" autocomplete="off" oninput="renderRdvClientResults()" onfocus="renderRdvClientResults()"/>
+          <div id="rdv-client-results" class="search-results" style="display:none;max-height:220px;overflow-y:auto;margin-top:6px"></div>
+          <select id="rdv-client" style="display:none">
             <option value="">— Aucun client —</option>
           </select>
+          <div id="rdv-client-picked" style="display:none;margin-top:6px">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px">
+              <span id="rdv-client-picked-name" style="font-size:13px;font-weight:600"></span>
+              <button type="button" class="btn-s btn-sm" onclick="clearRdvClient()">✕ Changer</button>
+            </div>
+          </div>
         </div>
         <div class="fr" id="rdv-veh-row" style="display:none">
           <label>Véhicule concerné</label>
@@ -4990,7 +4998,9 @@ function renderAutoAlerts() {
 function openRdvModal(rdvId) {
   editingRdvId = rdvId;
   fillRdvClientSelect();
-  fillRdvDocSelect();
+  $('rdv-client-search').value = '';
+  $('rdv-client-results').style.display = 'none';
+  $('rdv-client-results').innerHTML = '';
 
   if (rdvId) {
     var rdv = loadRdvs().find(function(r){ return r.id === rdvId; });
@@ -5003,10 +5013,12 @@ function openRdvModal(rdvId) {
     setRappels(rdv.rappels || (rdv.rappel ? [rdv.rappel] : []));
     $('rdv-client').value = rdv.clientId || '';
     updateRdvVehSelect();
+    refreshRdvClientPicked();
 
     if (rdv.vehIdx !== null && rdv.vehIdx !== undefined && $('rdv-vehicule')) {
       $('rdv-vehicule').value = String(rdv.vehIdx);
     }
+    fillRdvDocSelect();
     $('rdv-doc').value = rdv.docId || '';
     $('rdv-lieu').value = rdv.lieu || '';
     $('rdv-notes').value = rdv.notes || '';
@@ -5020,6 +5032,9 @@ function openRdvModal(rdvId) {
     $('rdv-heure').value = '';
     setRappels([]);
     $('rdv-client').value = '';
+    updateRdvVehSelect();
+    refreshRdvClientPicked();
+    fillRdvDocSelect();
     $('rdv-doc').value = '';
     $('rdv-lieu').value = '';
     $('rdv-notes').value = '';
@@ -5052,6 +5067,59 @@ function fillRdvClientSelect() {
   updateRdvVehSelect();
 }
 
+// Recherche client pour le RDV — même patron que renderCodageClientResults() :
+// le <select id="rdv-client"> reste la source de vérité (utilisée partout
+// ailleurs dans le module RDV), la recherche ne fait que le piloter.
+function renderRdvClientResults() {
+  var q = normCodageStr($('rdv-client-search').value);
+  var box = $('rdv-client-results');
+  if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  var matches = loadClients().filter(function(c) {
+    var hay = normCodageStr([c.nom, c.tel, c.email, c.vm, c.vmo, c.vim].join(' '));
+    return hay.indexOf(q) >= 0;
+  }).slice(0, 15);
+  box.style.display = 'block';
+  box.innerHTML = matches.length ? matches.map(function(c) {
+    var veh = (c.vehs && c.vehs[0]) ? (c.vehs[0].vm + ' ' + (c.vehs[0].vmo||'')) : (c.vm ? (c.vm + ' ' + (c.vmo||'')) : '');
+    return '<div class="search-result-item" onclick="pickRdvClient(' + c.id + ')">'
+      + '<div style="font-weight:600;font-size:13px">' + escHtml(c.nom) + '</div>'
+      + '<div style="font-size:12px;color:var(--text-dim)">' + escHtml(veh || 'Aucun véhicule enregistré') + '</div>'
+      + '</div>';
+  }).join('') : '<div style="padding:12px;font-size:12.5px;color:var(--text-muted)">Aucun client trouvé.</div>';
+}
+
+function pickRdvClient(id) {
+  $('rdv-client').value = String(id);
+  $('rdv-client-search').value = '';
+  $('rdv-client-results').style.display = 'none';
+  $('rdv-client-results').innerHTML = '';
+  updateRdvVehSelect();
+  refreshRdvClientPicked();
+  fillRdvDocSelect();
+}
+
+function clearRdvClient() {
+  $('rdv-client').value = '';
+  updateRdvVehSelect();
+  refreshRdvClientPicked();
+  fillRdvDocSelect();
+  $('rdv-client-search').focus();
+}
+
+// Affiche le client sélectionné sous forme de puce (nom + tél), à la place
+// du <select> qui reste piloté par la recherche.
+function refreshRdvClientPicked() {
+  var clientId = $('rdv-client').value ? parseInt($('rdv-client').value) : null;
+  var cl = clientId ? loadClients().find(function(c){ return c.id === clientId; }) : null;
+  var picked = $('rdv-client-picked');
+  if (cl) {
+    picked.style.display = 'block';
+    $('rdv-client-picked-name').textContent = cl.nom + (cl.tel ? ' — ' + cl.tel : '');
+  } else {
+    picked.style.display = 'none';
+  }
+}
+
 function updateRdvVehSelect() {
   var clientId = parseInt($('rdv-client').value);
   var row = $('rdv-veh-row');
@@ -5078,12 +5146,27 @@ function updateRdvVehSelect() {
       }).join('');
 }
 
+var RDV_DOC_TYPE_LABEL = { devis: 'Devis', facture: 'Facture', ordre: 'Ordre' };
+
+// Une fois un client sélectionné, on ne propose que SES documents (même
+// rapprochement par nom que showClientHistory, les docs n'ayant pas de
+// clientId) — sinon on retombe sur les 50 derniers documents, tous clients
+// confondus, comme avant.
 function fillRdvDocSelect() {
   var sel = $('rdv-doc');
   if (!sel) return;
   var cur = sel.value;
-  sel.innerHTML = '<option value="">— Aucun document —</option>'
-    + loadDocs().slice(0,50).map(function(d){ return '<option value="'+d.id+'">'+escHtml(d.num)+' — '+escHtml(d.cn||'')+'</option>'; }).join('');
+  var clientId = $('rdv-client') && $('rdv-client').value ? parseInt($('rdv-client').value) : null;
+  var cl = clientId ? loadClients().find(function(c){ return c.id === clientId; }) : null;
+  var docs = cl
+    ? loadDocs().filter(function(d){ return d.cn && d.cn.trim().toLowerCase() === (cl.nom || '').trim().toLowerCase(); })
+    : loadDocs().slice(0, 50);
+  sel.innerHTML = (cl && !docs.length ? '<option value="">— Aucun document pour ce client —</option>' : '<option value="">— Aucun document —</option>')
+    + docs.map(function(d){
+        var label = escHtml(d.num) + ' — ' + (RDV_DOC_TYPE_LABEL[d.type] || d.type || '');
+        if (!cl) label += ' — ' + escHtml(d.cn || '');
+        return '<option value="'+d.id+'">' + label + '</option>';
+      }).join('');
   if (cur) sel.value = cur;
 }
 
