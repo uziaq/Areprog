@@ -1262,6 +1262,19 @@ select option{background:var(--bg2);color:var(--text)}
 
       <!-- gains-bar supprimé — géré dans le champ f-gains -->
 
+      <div class="card" id="ia-devis-card" style="margin-top:16px">
+        <div class="card-title">✨ Générer automatiquement (IA)</div>
+        <div class="fr">
+          <label>Message client / besoin exprimé</label>
+          <textarea id="ia-message" rows="4" placeholder="Colle ici le message du client ou décris le besoin : véhicule, prestations, pièces…" style="resize:vertical;font-family:inherit;font-size:13px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 12px;width:100%;box-sizing:border-box"></textarea>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn-p" id="ia-devis-btn" onclick="genererDevisIA()">✨ Générer les lignes</button>
+          <span id="ia-devis-status" style="font-size:12px;color:var(--text-muted)"></span>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Les prestations du catalogue AREPROG sont reprises au tarif exact. Les pièces et main d'œuvre hors catalogue sont estimées par l'IA et marquées « à valider » — vérifie ces prix avant d'envoyer le devis.</div>
+      </div>
+
       <div class="lines-wrap">
         <div class="card-title">Prestations</div>
         <div class="lines-head">
@@ -3163,6 +3176,60 @@ function removeLine(lid) {
   lines = lines.filter(function(l) { return l.id !== lid; });
   renderLines();
   calcTotaux();
+}
+
+// Génère des lignes de devis à partir d'un message libre, via la fonction
+// Netlify devis-ia (Claude) : reprend le tarif exact du catalogue AREPROG
+// pour les prestations reconnues, et propose une estimation « à valider »
+// pour tout le reste (pièces, main d'œuvre...).
+async function genererDevisIA() {
+  var msgEl = $('ia-message');
+  var msg = (msgEl.value || '').trim();
+  if (!msg) { alert('Décris le besoin ou colle le message du client.'); return; }
+  var btn = $('ia-devis-btn'), statusEl = $('ia-devis-status');
+  btn.disabled = true; btn.textContent = '⏳ Génération…';
+  statusEl.textContent = ''; statusEl.style.color = 'var(--text-muted)';
+  try {
+    var res = await authedFetch('/.netlify/functions/devis-ia', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Échec de la génération.');
+
+    (data.lignes || []).forEach(function(l) {
+      addLine({
+        label: l.label,
+        qte: l.qte,
+        pu: l.pu,
+        ref: l.ref || '',
+        desc: l.aValider ? ('⚠ Estimation IA à vérifier' + (l.desc ? ' — ' + l.desc : '')) : (l.desc || '')
+      });
+    });
+
+    var v = data.vehicule || {};
+    if (v.marque && !$('f-vm').value) $('f-vm').value = v.marque;
+    if (v.modele && !$('f-vmo').value) $('f-vmo').value = v.modele;
+    if (v.motorisation && !$('f-vmot').value) $('f-vmot').value = v.motorisation;
+    if (v.annee && !$('f-van').value) $('f-van').value = v.annee;
+
+    var nb = (data.lignes || []).length;
+    var nbAValider = (data.lignes || []).filter(function(l){ return l.aValider; }).length;
+    if (!nb) {
+      statusEl.textContent = data.warning || "Aucune ligne identifiée dans ce message.";
+      statusEl.style.color = '#dc2626';
+    } else {
+      statusEl.textContent = nb + ' ligne(s) ajoutée(s)' + (nbAValider ? ' — ' + nbAValider + ' à vérifier' : '');
+      statusEl.style.color = 'var(--green)';
+    }
+    onFormChange();
+  } catch (e) {
+    statusEl.textContent = e.message || 'Erreur';
+    statusEl.style.color = '#dc2626';
+  } finally {
+    btn.disabled = false; btn.textContent = '✨ Générer les lignes';
+  }
 }
 
 function renderLines() {
