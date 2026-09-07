@@ -1241,7 +1241,9 @@ select option{background:var(--bg2);color:var(--text)}
         </div>
         <div class="card">
           <div class="card-title">Client</div>
-          <div class="fr"><label>Nom / Société</label><input id="f-cnom" type="text" oninput="onFormChange()" placeholder="Prénom NOM"/></div>
+          <div class="fr"><label>Nom / Société</label><input id="f-cnom" type="text" autocomplete="off" oninput="onFormChange();renderDocClientResults()" onfocus="renderDocClientResults()" placeholder="Prénom NOM"/>
+            <div id="f-cnom-results" class="search-results" style="display:none;max-height:220px;overflow-y:auto;margin-top:6px"></div>
+          </div>
           <div class="fr"><label>Adresse</label><input id="f-cadr" type="text" placeholder="10 rue des Lilas"/></div>
           <div class="fr"><label>Ville + Code postal</label><input id="f-cville" type="text" placeholder="64100 Bayonne"/></div>
           <div class="fr"><label>Téléphone</label><input id="f-ctel" type="text" placeholder="06 XX XX XX XX"/></div>
@@ -2989,6 +2991,7 @@ function resetForm(goToForm) {
   $('f-ech').value = plusDays(30);
   $('f-statut').value = 'créé';
   ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-vm','f-vmo','f-vmot','f-van','f-vim','f-vkm','f-nint'].forEach(function(i) { $(i).value = ''; });
+  if ($('f-cnom-results')) { $('f-cnom-results').style.display = 'none'; $('f-cnom-results').innerHTML = ''; }
   $('f-tva').value = '0';
   applyRemiseGlobaleFromDoc(null);
   $('f-notes').value = 'Prestation réalisée en atelier. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
@@ -4131,6 +4134,35 @@ function deleteClient(cid) {
   deleteClientFirebase(cid);
   renderCarnet();
   renderCarnetModal();
+}
+
+// Recherche client inline sur le champ "Nom / Société" du formulaire de
+// document — même patron que renderRdvClientResults() / renderCodageClientResults().
+function renderDocClientResults() {
+  var input = $('f-cnom');
+  var box = $('f-cnom-results');
+  if (!input || !box) return;
+  var q = normCodageStr(input.value);
+  if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  var matches = loadClients().filter(function(c) {
+    var hay = normCodageStr([c.nom, c.tel, c.email, c.vm, c.vmo, c.vim].join(' '));
+    return hay.indexOf(q) >= 0;
+  }).slice(0, 15);
+  box.style.display = 'block';
+  box.innerHTML = matches.length ? matches.map(function(c) {
+    var veh = (c.vehs && c.vehs[0]) ? (c.vehs[0].vm + ' ' + (c.vehs[0].vmo||'')) : (c.vm ? (c.vm + ' ' + (c.vmo||'')) : '');
+    return '<div class="search-result-item" onclick="pickDocClient(' + c.id + ')">'
+      + '<div style="font-weight:600;font-size:13px">' + escHtml(c.nom) + '</div>'
+      + '<div style="font-size:12px;color:var(--text-dim)">' + escHtml(veh || 'Aucun véhicule enregistré') + '</div>'
+      + '</div>';
+  }).join('') : '<div style="padding:12px;font-size:12.5px;color:var(--text-muted)">Aucun client trouvé.</div>';
+}
+
+function pickDocClient(cid) {
+  selectClient(cid);
+  $('f-cnom-results').style.display = 'none';
+  $('f-cnom-results').innerHTML = '';
+  onFormChange();
 }
 
 function selectClient(cid) {
