@@ -33,10 +33,10 @@ Functions with their own subdirectory:
 - `netlify/function/lead-capture/` — records contact form / simulateur leads to Firestore `leads`, auto-builds a draft quote (`devisDraft`) by matching requested prestations against the price catalogue (`config/catalogue`), and notifies via Resend; honeypot + rate-limited
 - `netlify/function/send-email/` — authenticated (Firebase idToken) proxy to the Resend API; used by `gestion.html` for RDV reminders, unpaid-invoice alerts, sending devis/factures to clients (PDF + up to 7 optional photo attachments, fully editable subject/message and toggleable content blocks from the send modal), and Google-review requests (keeps the Resend API key server-side). Attachments capped at 4 MB each and 5 MB combined (base64 JSON body must stay under Netlify's ~6 MB function payload limit).
 - `netlify/function/perf-check/` — internal tool backing `/perf`: proxies Google PageSpeed Insights, `path` param restricted to a hardcoded allowlist of the site's own public routes (never an arbitrary URL, to avoid an open-proxy scanning vector)
-- `netlify/function/_lib/rate-limit.js` — shared Firestore-backed per-IP rate limiter (`rateLimits` collection), not a standalone function; required by `lead-capture` and `rdv-booking`
+- `netlify/function/devis-ia/` — authenticated (Firebase idToken): turns a free-text message pasted in `gestion.html`'s devis form into devis line items via Claude (Anthropic API). Official AREPROG catalogue prestations are returned at their exact price; anything else (mechanical parts, labour) gets an `aValider: true` estimate the admin must check before sending — the function has no live supplier-pricing access. Rate-limited via `_lib/rate-limit.js`.
+- `netlify/function/_lib/rate-limit.js` — shared Firestore-backed per-IP rate limiter (`rateLimits` collection), not a standalone function; required by `lead-capture`, `rdv-booking` and `devis-ia`
 
 Functions at the root of `netlify/function/`:
-- `claude-proxy.js` — proxies requests to Anthropic API (CORS workaround)
 - `olsx-token.js` — token endpoint
 
 All functions use `exports.handler` (CommonJS) and include CORS headers for `https://areprog.fr`.
@@ -93,7 +93,7 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 | `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-vehicule, lead-capture, send-email |
 | `RESEND_API_KEY` | rdv-rappels, lead-capture, send-email |
 | `RESEND_FROM` | rdv-rappels, lead-capture, send-email (optional — all three now default to the same hardcoded `AREPROG <contact@areprog.fr>` sender, kept in sync manually since each function hardcodes its own copy) |
-| `ANTHROPIC_API_KEY` | claude-proxy |
+| `ANTHROPIC_API_KEY` | devis-ia |
 | `PAGESPEED_API_KEY` | perf-check — **required in practice**: verified live (2026-08-11) that Google's keyless PageSpeed Insights quota is 0/day (always returns HTTP 429), not just "more limited" as the API docs imply. Free key, 25,000 requests/day: https://developers.google.com/speed/docs/insights/v5/get-started |
 
 ## Key Patterns
