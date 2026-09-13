@@ -1694,14 +1694,18 @@ select option{background:var(--bg2);color:var(--text)}
 
       <div class="card" id="mail-files-card" style="display:none;margin-bottom:16px">
         <div class="sh" style="margin-bottom:10px">
-          <div class="card-title" style="margin:0">2. Fichiers à joindre (optionnel)</div>
+          <div class="card-title" style="margin:0">2. Devis / factures / OdR, fichiers &amp; RDV liés (optionnel)</div>
           <div class="sh-actions" style="display:flex;gap:8px">
             <button class="btn-s btn-sm" onclick="setAllMailFileChecks(true)">Tout cocher</button>
             <button class="btn-s btn-sm" onclick="setAllMailFileChecks(false)">Tout décocher</button>
           </div>
         </div>
+        <p style="color:var(--text-dim);font-size:12px;margin:-4px 0 12px">
+          Les photos/vidéos/documents se cochent pour être joints à cet email. Un devis/facture/OdR s'envoie via son
+          propre aperçu PDF (bouton « 👁 Aperçu &amp; envoi ») ; un rendez-vous s'insère dans le message avec « ✏️ Insérer ».
+        </p>
         <div id="mail-files-list"></div>
-        <div id="mail-files-empty" style="font-size:12.5px;color:var(--text-muted)">Aucun fichier lié à ce client.</div>
+        <div id="mail-files-empty" style="font-size:12.5px;color:var(--text-muted)">Aucun document, fichier ou rendez-vous lié à ce client.</div>
       </div>
 
       <div class="card" id="mail-msg-card" style="display:none">
@@ -7064,11 +7068,17 @@ var MAIL_TEMPLATES = [
   },
   {
     id: 'relance', label: '📄 Relance devis',
-    subject: function(cl, veh, tpl) { return (tpl.nom || 'AREPROG') + ' — Suivi de votre devis'; },
+    subject: function(cl, veh, tpl) {
+      var d = mailLatestDevis(cl);
+      return (tpl.nom || 'AREPROG') + ' — Suivi de votre devis' + (d && d.num ? ' ' + d.num : '');
+    },
     message: function(cl, veh, tpl) {
+      var d = mailLatestDevis(cl);
+      var ref = d ? ' ' + (d.num || '') + (d.ttc ? ', d\'un montant de ' + fmt(d.ttc) : '') + (d.ech ? ' (valable jusqu\'au ' + fmtDate(d.ech) + ')' : '') : '';
       return mailSalutation(cl) + '\n\n'
-        + 'Nous revenons vers vous concernant le devis que nous vous avons transmis' + (veh ? ' pour votre ' + vehLabelShort(veh) : '') + '.\n\n'
-        + 'N\'hésitez pas à nous contacter si vous avez des questions, ou pour convenir ensemble d\'un créneau à l\'atelier.\n\n'
+        + 'Nous revenons vers vous concernant le devis' + ref + ' que nous vous avons transmis' + (veh ? ' pour votre ' + vehLabelShort(veh) : '') + '.\n\n'
+        + 'N\'hésitez pas à nous contacter si vous avez des questions, ou pour convenir ensemble d\'un créneau à l\'atelier.'
+        + (d ? ' Vous trouverez ci-dessus le devis correspondant, accessible depuis la liste « Devis / factures / OdR » de cet onglet si vous souhaitez le renvoyer.' : '') + '\n\n'
         + mailSignature(tpl);
     }
   },
@@ -7214,11 +7224,49 @@ function applyMailTemplate() {
 // Liste des fichiers rattachés au client (documents divers + photos/vidéos
 // de chacun de ses véhicules) avec une case à cocher par fichier — mêmes
 // URLs Firebase Storage que dans l'historique client (showClientHistory).
+// Devis/factures/ordres de réparation du client (même rapprochement par nom
+// que showClientHistory/clientDocsFor), du plus récent au plus ancien.
+function mailDocsFor(cl) {
+  return loadDocs().filter(function(d) { return (d.cn || '').trim().toLowerCase() === (cl.nom || '').trim().toLowerCase(); })
+    .sort(function(a, b) { return String(b.date || '').localeCompare(String(a.date || '')); });
+}
+
+// Devis non annulé le plus récent du client — utilisé pour personnaliser le
+// modèle « Relance devis » (référence, montant, validité réels).
+function mailLatestDevis(cl) {
+  return mailDocsFor(cl).find(function(d) { return d.type === 'devis' && d.statut !== 'annulé'; }) || null;
+}
+
+// RDVs liés au client (agenda), du plus ancien au plus récent.
+function mailRdvsFor(cl) {
+  return loadRdvs().filter(function(r) { return r.clientId === cl.id; })
+    .sort(function(a, b) { return (String(a.date || '') + (a.heure || '')).localeCompare(String(b.date || '') + (b.heure || '')); });
+}
+
 function renderMailFiles() {
   var cl = _mailClient;
   var box = $('mail-files-list');
   var empty = $('mail-files-empty');
   var html = '';
+
+  var docs = mailDocsFor(cl);
+  if (docs.length) {
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin:0 0 8px">🧾 Devis / factures / ordres de réparation</div>';
+    html += docs.map(function(d) {
+      var typeBadge = d.type === 'devis' ? '<span class="badge b-devis">Devis</span>' : d.type === 'ordre' ? '<span class="badge b-ordre">OdR</span>' : '<span class="badge b-facture">Facture</span>';
+      var statBadge = d.statut === 'payé' ? '<span class="badge b-paye">Payé ✓</span>'
+        : d.statut === 'annulé' ? '<span class="badge b-annule">Annulé</span>'
+        : d.statut === 'créé' ? '<span class="badge b-cree">📝 Créé</span>'
+        : '<span style="color:var(--text-dim);font-size:11px">' + escHtml(d.statut || '') + '</span>';
+      return '<div class="veh-doc" style="flex-wrap:wrap">'
+        + typeBadge
+        + '<span style="flex:1;min-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(d.num || '') + ' — ' + fmtDate(d.date) + '</span>'
+        + '<span style="font-family:var(--fm);color:var(--blue);font-size:12px">' + fmt(d.ttc || 0) + '</span>'
+        + statBadge
+        + '<button type="button" class="btn-s btn-sm" onclick="previewDoc(' + d.id + ')">👁 Aperçu &amp; envoi</button>'
+        + '</div>';
+    }).join('');
+  }
 
   if (cl.documents && cl.documents.length) {
     html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin:0 0 8px">📎 Documents du client</div>';
@@ -7256,8 +7304,33 @@ function renderMailFiles() {
     }
   });
 
+  var rdvs = mailRdvsFor(cl);
+  if (rdvs.length) {
+    var now = new Date();
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin:16px 0 8px">📅 Rendez-vous liés</div>';
+    html += rdvs.map(function(r) {
+      var futur = new Date(r.date + 'T' + (r.heure || '23:59')) >= now;
+      return '<div class="veh-doc" style="flex-wrap:wrap">'
+        + '<span>' + (futur ? '🟢' : '⚪') + '</span>'
+        + '<span style="flex:1;min-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(r.title || 'Rendez-vous') + ' — ' + fmtDate(r.date) + (r.heure ? ' à ' + escHtml(r.heure) : '') + (r.lieu ? ' · ' + escHtml(r.lieu) : '') + '</span>'
+        + '<button type="button" class="btn-s btn-sm" onclick="insertMailRdvLine(\'' + r.id + '\')">✏️ Insérer</button>'
+        + '</div>';
+    }).join('');
+  }
+
   box.innerHTML = html;
   empty.style.display = html ? 'none' : 'block';
+}
+
+// Ajoute la ligne d'un rendez-vous dans le message en cours de rédaction
+// (ex. pour un rappel de RDV manuel, avec la vraie date/heure/lieu).
+function insertMailRdvLine(rdvId) {
+  var rdv = loadRdvs().find(function(r) { return String(r.id) === String(rdvId); });
+  if (!rdv) return;
+  var line = '📅 Rendez-vous : ' + (rdv.title || 'Rendez-vous') + ' le ' + fmtDate(rdv.date) + (rdv.heure ? ' à ' + rdv.heure : '') + (rdv.lieu ? ' — ' + rdv.lieu : '');
+  var ta = $('mail-message');
+  ta.value = ta.value ? (ta.value.replace(/\s+$/, '') + '\n\n' + line + '\n') : (line + '\n');
+  ta.focus();
 }
 
 function setAllMailFileChecks(val) {
