@@ -1119,6 +1119,7 @@ select option{background:var(--bg2);color:var(--text)}
       <button class="nb" onclick="showTab('stats')">📊 Stats</button>
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
       <button class="nb" onclick="showTab('codage')">🔧 Options codage</button>
+      <button class="nb" onclick="showTab('mail')">✉️ Mail</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -1663,6 +1664,64 @@ select option{background:var(--bg2);color:var(--text)}
 
       <!-- Gabarit hors-écran capturé par html2canvas pour générer le PDF -->
       <div id="codage-preview" style="position:fixed;top:0;left:-99999px;width:780px;background:#fff"></div>
+    </div>
+
+    <!-- MAIL — envoi email libre à un client (documents/photos/vidéos liés) -->
+    <div class="tc" id="t-mail">
+      <div class="sh">
+        <div class="sh-title">✉️ Mail</div>
+      </div>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px">
+        Sélectionne un client, coche les documents/photos/vidéos à joindre (8 fichiers max, ~5 Mo au total), choisis
+        éventuellement un modèle de message, puis envoie.
+      </p>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">1. Client</div>
+        <div class="fr">
+          <label>Client</label>
+          <input id="mail-client-search" type="text" placeholder="Rechercher un client…" autocomplete="off" oninput="renderMailClientResults()" onfocus="renderMailClientResults()"/>
+          <div id="mail-client-results" class="search-results" style="display:none;max-height:260px;margin-top:6px"></div>
+        </div>
+        <div id="mail-client-picked" style="display:none;margin-top:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px">
+            <span id="mail-client-picked-name" style="font-size:13px;font-weight:600"></span>
+            <button class="btn-s btn-sm" onclick="resetMailClient()">✕ Changer</button>
+          </div>
+          <div id="mail-last-info" style="display:none;font-size:11.5px;color:var(--text-muted);margin-top:6px"></div>
+        </div>
+      </div>
+
+      <div class="card" id="mail-files-card" style="display:none;margin-bottom:16px">
+        <div class="sh" style="margin-bottom:10px">
+          <div class="card-title" style="margin:0">2. Fichiers à joindre (optionnel)</div>
+          <div class="sh-actions" style="display:flex;gap:8px">
+            <button class="btn-s btn-sm" onclick="setAllMailFileChecks(true)">Tout cocher</button>
+            <button class="btn-s btn-sm" onclick="setAllMailFileChecks(false)">Tout décocher</button>
+          </div>
+        </div>
+        <div id="mail-files-list"></div>
+        <div id="mail-files-empty" style="font-size:12.5px;color:var(--text-muted)">Aucun fichier lié à ce client.</div>
+      </div>
+
+      <div class="card" id="mail-msg-card" style="display:none">
+        <div class="card-title">3. Message</div>
+        <div class="fr" id="mail-veh-row" style="display:none">
+          <label>Véhicule concerné (pour personnaliser le message)</label>
+          <select id="mail-veh-select" onchange="applyMailTemplate()"></select>
+        </div>
+        <div class="fr">
+          <label>Modèle prédéfini</label>
+          <select id="mail-template-select" onchange="applyMailTemplate()"></select>
+        </div>
+        <div class="fr"><label>Email du client</label><input id="mail-to-email" type="email" placeholder="client@email.fr"/></div>
+        <div class="fr"><label>Objet</label><input id="mail-subject" type="text" placeholder="Objet du mail"/></div>
+        <div class="fr"><label>Message</label><textarea id="mail-message" rows="8"></textarea></div>
+        <div id="mail-send-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:6px"></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
+          <button class="btn-g" id="mail-send-btn" onclick="confirmSendMail()">📧 Envoyer</button>
+        </div>
+      </div>
     </div>
 
     <!-- ══ DEMANDES WEB ═══════════════════════════════════ -->
@@ -6591,7 +6650,7 @@ function exportCSV() {
 // au i-ème bouton .nb de la barre. L'index 2 ('form') est le bouton
 // « + Nouveau », qui n'ouvre pas d'onglet mais partage la position.
 // Ajouter un onglet impose de le déclarer ici ET au bon rang dans .tb-nav.
-var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','codage'];
+var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','codage','mail'];
 
 function showTab(t) {
   TABS.forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
@@ -6607,6 +6666,7 @@ function showTab(t) {
   if(t==='stats')    renderStats();
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
   if(t==='codage')   initCodageTab();
+  if(t==='mail')     initMailTab();
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -6952,6 +7012,356 @@ async function confirmSendCodageEmail() {
 
 function showCodageSendStatus(type, msg) {
   var el = $('codage-send-status');
+  el.style.display = 'block';
+  el.style.background = type === 'success' ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)';
+  el.style.color = type === 'success' ? 'var(--green)' : 'var(--red)';
+  el.style.border = '1px solid ' + (type === 'success' ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)');
+  el.textContent = msg;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MAIL — envoi email libre à un client (documents/photos/vidéos
+//  liés + modèles prédéfinis), via la fonction générique envoyerEmail.
+// ══════════════════════════════════════════════════════════════
+var _mailClient = null;
+
+function vehLabelShort(v) {
+  if (!v) return '';
+  return [v.vm, v.vmo, v.van ? '(' + v.van + ')' : ''].filter(Boolean).join(' ');
+}
+function mailSalutation(cl) {
+  var prenom = ((cl && cl.nom) || '').trim().split(/\s+/)[0] || '';
+  return 'Bonjour' + (prenom ? ' ' + prenom : '') + ',';
+}
+function mailSignature(tpl) {
+  var contact = [tpl.tel, tpl.web].filter(Boolean).join(' · ');
+  return 'Cordialement,\n' + (tpl.nom || 'AREPROG') + (contact ? '\n' + contact : '');
+}
+
+// Modèles de message prédéfinis : chaque entrée génère objet + corps à
+// partir du client / véhicule sélectionné et des coordonnées de l'atelier
+// (onglet Template). Reste modifiable avant l'envoi.
+var MAIL_TEMPLATES = [
+  {
+    id: 'documents', label: '📎 Envoi de documents / photos',
+    subject: function(cl, veh, tpl) { return (tpl.nom || 'AREPROG') + ' — Documents' + (veh ? ' — ' + vehLabelShort(veh) : ''); },
+    message: function(cl, veh, tpl) {
+      return mailSalutation(cl) + '\n\n'
+        + 'Vous trouverez ci-joint les documents' + (veh ? ' concernant votre ' + vehLabelShort(veh) : '') + '.\n\n'
+        + 'N\'hésitez pas à revenir vers nous pour toute question.\n\n'
+        + mailSignature(tpl);
+    }
+  },
+  {
+    id: 'diagnostic', label: '🔍 Photos/vidéos du diagnostic',
+    subject: function(cl, veh, tpl) { return (tpl.nom || 'AREPROG') + ' — Diagnostic' + (veh ? ' — ' + vehLabelShort(veh) : ''); },
+    message: function(cl, veh, tpl) {
+      return mailSalutation(cl) + '\n\n'
+        + 'Suite à notre intervention sur votre' + (veh ? ' ' + vehLabelShort(veh) : ' véhicule') + ', vous trouverez ci-joint les photos/vidéos de l\'anomalie constatée.\n\n'
+        + 'N\'hésitez pas à nous contacter pour toute question ou pour convenir d\'un rendez-vous.\n\n'
+        + mailSignature(tpl);
+    }
+  },
+  {
+    id: 'relance', label: '📄 Relance devis',
+    subject: function(cl, veh, tpl) { return (tpl.nom || 'AREPROG') + ' — Suivi de votre devis'; },
+    message: function(cl, veh, tpl) {
+      return mailSalutation(cl) + '\n\n'
+        + 'Nous revenons vers vous concernant le devis que nous vous avons transmis' + (veh ? ' pour votre ' + vehLabelShort(veh) : '') + '.\n\n'
+        + 'N\'hésitez pas à nous contacter si vous avez des questions, ou pour convenir ensemble d\'un créneau à l\'atelier.\n\n'
+        + mailSignature(tpl);
+    }
+  },
+  {
+    id: 'rappel-rdv', label: '📅 Rappel de rendez-vous',
+    subject: function(cl, veh, tpl) { return (tpl.nom || 'AREPROG') + ' — Rappel de votre rendez-vous'; },
+    message: function(cl, veh, tpl) {
+      return mailSalutation(cl) + '\n\n'
+        + 'Nous vous confirmons votre rendez-vous à l\'atelier' + (veh ? ' pour votre ' + vehLabelShort(veh) : '') + '.\n\n'
+        + 'Merci de nous prévenir au plus vite en cas d\'empêchement.\n\n'
+        + mailSignature(tpl);
+    }
+  },
+  {
+    id: 'merci', label: '🙏 Merci pour votre visite',
+    subject: function(cl, veh, tpl) { return (tpl.nom || 'AREPROG') + ' — Merci pour votre visite'; },
+    message: function(cl, veh, tpl) {
+      return mailSalutation(cl) + '\n\n'
+        + 'Merci pour votre confiance suite à l\'intervention réalisée sur votre' + (veh ? ' ' + vehLabelShort(veh) : ' véhicule') + '.\n\n'
+        + 'N\'hésitez pas à revenir vers nous pour toute question, nous restons à votre disposition.\n\n'
+        + mailSignature(tpl);
+    }
+  },
+  {
+    id: 'suivi-repro', label: '⚙️ Suivi après reprogrammation',
+    subject: function(cl, veh, tpl) { return (tpl.nom || 'AREPROG') + ' — Suivi de votre reprogrammation'; },
+    message: function(cl, veh, tpl) {
+      return mailSalutation(cl) + '\n\n'
+        + 'Nous espérons que votre' + (veh ? ' ' + vehLabelShort(veh) : ' véhicule') + ' vous donne pleinement satisfaction depuis la reprogrammation réalisée à l\'atelier.\n\n'
+        + 'N\'hésitez pas à nous faire un retour ou à nous contacter en cas de besoin.\n\n'
+        + mailSignature(tpl);
+    }
+  },
+];
+
+function initMailTab() {
+  var sel = $('mail-template-select');
+  if (sel && !sel.options.length) {
+    sel.innerHTML = '<option value="">— Message personnalisé —</option>' + MAIL_TEMPLATES.map(function(t) {
+      return '<option value="' + t.id + '">' + escHtml(t.label) + '</option>';
+    }).join('');
+  }
+}
+
+function renderMailClientResults() {
+  var q = normCodageStr($('mail-client-search').value);
+  var box = $('mail-client-results');
+  if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  var matches = loadClients().filter(function(c) {
+    var hay = normCodageStr([c.nom, c.tel, c.email, c.vm, c.vmo, c.vim].join(' '));
+    return hay.indexOf(q) >= 0;
+  }).slice(0, 15);
+  box.style.display = 'block';
+  box.innerHTML = matches.length ? matches.map(function(c) {
+    var veh = (c.vehs && c.vehs[0]) ? (c.vehs[0].vm + ' ' + c.vehs[0].vmo) : (c.vm ? (c.vm + ' ' + c.vmo) : '');
+    return '<div class="search-result-item" onclick="pickMailClient(' + c.id + ')">'
+      + '<div style="font-weight:600;font-size:13px">' + escHtml(c.nom) + '</div>'
+      + '<div style="font-size:12px;color:var(--text-dim)">' + escHtml(veh || 'Aucun véhicule enregistré') + (c.email ? ' · ' + escHtml(c.email) : '') + '</div>'
+      + '</div>';
+  }).join('') : '<div style="padding:12px;font-size:12.5px;color:var(--text-muted)">Aucun client trouvé.</div>';
+}
+
+function mailVehs() {
+  var cl = _mailClient;
+  if (!cl) return [];
+  return (cl.vehs && cl.vehs.length) ? cl.vehs
+    : (cl.vm ? [{ vm: cl.vm, vmo: cl.vmo || '', van: cl.van || '', photos: cl.photos || [], videos: cl.videos || [] }] : []);
+}
+
+function pickMailClient(id) {
+  var cl = loadClients().find(function(c) { return c.id === id; });
+  if (!cl) return;
+  _mailClient = cl;
+  $('mail-client-results').style.display = 'none';
+  $('mail-client-search').value = '';
+  $('mail-client-picked').style.display = 'block';
+  $('mail-client-picked-name').textContent = cl.nom + (cl.email ? ' — ' + cl.email : '');
+
+  var lastInfo = $('mail-last-info');
+  if (cl.lastEmailAt) {
+    lastInfo.textContent = '✉️ Dernier email envoyé le ' + new Date(cl.lastEmailAt).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' à ' + (cl.lastEmailTo || '');
+    lastInfo.style.display = 'block';
+  } else {
+    lastInfo.style.display = 'none';
+  }
+
+  $('mail-files-card').style.display = 'block';
+  $('mail-msg-card').style.display = 'block';
+  renderMailVehSelect();
+  renderMailFiles();
+  $('mail-to-email').value = cl.email || '';
+  $('mail-template-select').value = '';
+  $('mail-subject').value = '';
+  $('mail-message').value = '';
+  $('mail-send-status').style.display = 'none';
+  $('mail-send-btn').disabled = false;
+  $('mail-send-btn').textContent = '📧 Envoyer';
+}
+
+function resetMailClient() {
+  _mailClient = null;
+  $('mail-client-picked').style.display = 'none';
+  $('mail-files-card').style.display = 'none';
+  $('mail-msg-card').style.display = 'none';
+  $('mail-client-search').value = '';
+  $('mail-client-search').focus();
+}
+
+function renderMailVehSelect() {
+  var vehs = mailVehs();
+  var row = $('mail-veh-row'), sel = $('mail-veh-select');
+  if (vehs.length > 1) {
+    sel.innerHTML = '<option value="">— Aucun véhicule spécifique —</option>' + vehs.map(function(v, i) {
+      return '<option value="' + i + '">' + escHtml(vehLabelShort(v) || ('Véhicule ' + (i + 1))) + '</option>';
+    }).join('');
+    row.style.display = 'block';
+  } else {
+    row.style.display = 'none';
+    sel.innerHTML = '';
+  }
+}
+
+function mailSelectedVeh() {
+  var vehs = mailVehs();
+  if (!vehs.length) return null;
+  if (vehs.length === 1) return vehs[0];
+  var sel = $('mail-veh-select');
+  var i = sel && sel.value !== '' ? Number(sel.value) : -1;
+  return i >= 0 ? vehs[i] : null;
+}
+
+function applyMailTemplate() {
+  var id = $('mail-template-select').value;
+  if (!id || !_mailClient) return;
+  var t = MAIL_TEMPLATES.find(function(m) { return m.id === id; });
+  if (!t) return;
+  var tpl = loadTemplate();
+  var veh = mailSelectedVeh();
+  $('mail-subject').value = t.subject(_mailClient, veh, tpl);
+  $('mail-message').value = t.message(_mailClient, veh, tpl);
+}
+
+// Liste des fichiers rattachés au client (documents divers + photos/vidéos
+// de chacun de ses véhicules) avec une case à cocher par fichier — mêmes
+// URLs Firebase Storage que dans l'historique client (showClientHistory).
+function renderMailFiles() {
+  var cl = _mailClient;
+  var box = $('mail-files-list');
+  var empty = $('mail-files-empty');
+  var html = '';
+
+  if (cl.documents && cl.documents.length) {
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin:0 0 8px">📎 Documents du client</div>';
+    html += cl.documents.map(function(d) {
+      var isPdf = String(d.name || '').toLowerCase().endsWith('.pdf');
+      return '<label class="veh-doc" style="cursor:pointer">'
+        + '<input type="checkbox" class="mail-file-cb" data-url="' + escHtml(d.url) + '" data-name="' + escHtml(d.name || 'document') + '" style="margin:0"/>'
+        + '<span>' + (isPdf ? '📄' : '🖼️') + '</span>'
+        + '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(d.name || 'fichier') + '</span>'
+        + '<span style="color:var(--text-muted);font-size:11px">' + escHtml(CLIENT_DOC_TYPES[d.type] || 'Autre') + '</span>'
+        + '</label>';
+    }).join('');
+  }
+
+  mailVehs().forEach(function(v, vi) {
+    var hasMedia = (v.photos && v.photos.length) || (v.videos && v.videos.length);
+    if (!hasMedia) return;
+    var label = vehLabelShort(v) || ('Véhicule ' + (vi + 1));
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin:16px 0 8px">🚗 ' + escHtml(label) + '</div>';
+    if (v.photos && v.photos.length) {
+      html += '<div class="veh-media" style="margin-bottom:8px">' + v.photos.map(function(p) {
+        return '<label style="position:relative;display:inline-block;width:78px;height:58px;border-radius:6px;overflow:hidden;border:1px solid var(--border);cursor:pointer;background:var(--bg3) center/cover no-repeat;background-image:url(\'' + escHtml(p.url) + '\')" title="' + escHtml(p.name || '') + '">'
+          + '<input type="checkbox" class="mail-file-cb" data-url="' + escHtml(p.url) + '" data-name="' + escHtml(p.name || 'photo.jpg') + '" style="position:absolute;top:4px;left:4px;width:16px;height:16px;margin:0"/>'
+          + '</label>';
+      }).join('') + '</div>';
+    }
+    if (v.videos && v.videos.length) {
+      html += v.videos.map(function(vd) {
+        return '<label class="veh-doc" style="cursor:pointer">'
+          + '<input type="checkbox" class="mail-file-cb" data-url="' + escHtml(vd.url) + '" data-name="' + escHtml(vd.name || 'video.mp4') + '" style="margin:0"/>'
+          + '<span>🎥</span>'
+          + '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(vd.name || 'vidéo') + '</span>'
+          + '</label>';
+      }).join('');
+    }
+  });
+
+  box.innerHTML = html;
+  empty.style.display = html ? 'none' : 'block';
+}
+
+function setAllMailFileChecks(val) {
+  document.querySelectorAll('#mail-files-list .mail-file-cb').forEach(function(cb) { cb.checked = val; });
+}
+
+// Nom de pièce jointe compatible avec le filtre du serveur (send-email.js :
+// lettres/chiffres/espaces/._- uniquement) — même nettoyage que pour les
+// uploads (safeUploadName), en conservant l'extension d'origine du fichier.
+function safeAttachName(name) {
+  var m = /\.([a-zA-Z0-9]{1,5})$/.exec(name || '');
+  var ext = m ? m[1].toLowerCase() : 'bin';
+  return safeUploadName(name, ext);
+}
+
+function buildMailHtml(cl, tpl, message) {
+  var color = /^#[0-9a-fA-F]{6}$/.test(tpl.color) ? tpl.color : '#2196F3';
+  return '<div style="background:#f4f5f7;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">'
+    + '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb">'
+      + '<div style="background:' + color + ';padding:22px 28px">'
+        + '<div style="color:#fff;font-size:20px;font-weight:700;letter-spacing:.3px">' + escHtml(tpl.nom || 'AREPROG') + '</div>'
+        + (tpl.activite ? '<div style="color:rgba(255,255,255,.85);font-size:12px;margin-top:2px">' + escHtml(tpl.activite) + '</div>' : '')
+      + '</div>'
+      + '<div style="padding:26px 28px">'
+        + '<p style="margin:0;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
+      + '</div>'
+      + '<div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">'
+        + escHtml(tpl.footer || '').replace(/\n/g, '<br>')
+      + '</div>'
+    + '</div>'
+  + '</div>';
+}
+
+async function confirmSendMail() {
+  var cl = _mailClient;
+  if (!cl) return;
+  var toEmail = $('mail-to-email').value.trim();
+  if (!toEmail || !toEmail.includes('@')) { showMailStatus('error', 'Email invalide.'); return; }
+  var subject = $('mail-subject').value.trim();
+  if (!subject) { showMailStatus('error', 'L\'objet du mail est obligatoire.'); return; }
+  var message = $('mail-message').value.trim();
+  if (!message) { showMailStatus('error', 'Le message ne peut pas être vide.'); return; }
+
+  var checked = Array.prototype.slice.call(document.querySelectorAll('#mail-files-list .mail-file-cb:checked'));
+  var MAX_FILES = 8;
+  if (checked.length > MAX_FILES) {
+    showMailStatus('error', 'Maximum ' + MAX_FILES + ' fichiers par envoi. Décoche-en ' + (checked.length - MAX_FILES) + '.');
+    return;
+  }
+
+  var btn = $('mail-send-btn');
+  btn.disabled = true;
+  btn.textContent = checked.length ? 'Préparation des fichiers…' : 'Envoi en cours…';
+
+  try {
+    var attachments = [];
+    var MAX_ATTACH_B64 = 4 * 1024 * 1024;
+    for (var i = 0; i < checked.length; i++) {
+      var cb = checked[i];
+      btn.textContent = 'Préparation ' + (i + 1) + '/' + checked.length + '…';
+      var content = await urlToBase64(cb.dataset.url);
+      if (content.length > MAX_ATTACH_B64) {
+        throw new Error('Le fichier « ' + cb.dataset.name + ' » est trop volumineux pour être joint par email (~3 Mo max).');
+      }
+      attachments.push({ filename: safeAttachName(cb.dataset.name), content: content });
+    }
+    var MAX_TOTAL_B64 = 5 * 1024 * 1024;
+    var total = attachments.reduce(function(s, a) { return s + a.content.length; }, 0);
+    if (total > MAX_TOTAL_B64) {
+      throw new Error('Les fichiers sélectionnés dépassent la taille maximale autorisée pour un envoi (~5 Mo au total). Décoche-en quelques-uns.');
+    }
+
+    btn.textContent = 'Envoi en cours…';
+    var tpl = loadTemplate();
+    var html = buildMailHtml(cl, tpl, message);
+    await envoyerEmail(toEmail, subject, html, NOTIF_EMAIL, attachments);
+
+    var clients = loadClients();
+    var idx = clients.findIndex(function(c) { return c.id === cl.id; });
+    if (idx >= 0) {
+      clients[idx].lastEmailAt = new Date().toISOString();
+      clients[idx].lastEmailTo = toEmail;
+      saveClients(clients);
+      _mailClient = clients[idx];
+    }
+
+    showMailStatus('success', 'Email envoyé à ' + toEmail + ' ✓');
+    btn.textContent = '✓ Envoyé !';
+    showNotifBanner('📧', 'Email envoyé !', cl.nom + ' → ' + toEmail);
+    setTimeout(function() { btn.disabled = false; btn.textContent = '📧 Envoyer'; }, 2000);
+  } catch (e) {
+    console.error('Envoi mail client:', e);
+    var msg = (e && (e.text || e.message)) || 'Réessayez.';
+    if (/load failed|failed to fetch|networkerror/i.test(msg)) {
+      msg = 'Connexion au serveur interrompue pendant l\'envoi (souvent : fichiers trop volumineux, ou coupure réseau). Réessayez avec moins de pièces jointes si ça persiste.';
+    }
+    showMailStatus('error', 'Erreur : ' + msg);
+    btn.disabled = false;
+    btn.textContent = '📧 Envoyer';
+  }
+}
+
+function showMailStatus(type, msg) {
+  var el = $('mail-send-status');
   el.style.display = 'block';
   el.style.background = type === 'success' ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)';
   el.style.color = type === 'success' ? 'var(--green)' : 'var(--red)';
