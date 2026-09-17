@@ -1156,6 +1156,9 @@ select option{background:var(--bg2);color:var(--text)}
       <div id="dash-search-results" style="display:none"></div>
 
       <!-- Stats -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+        <button class="btn-s" id="ca-toggle-btn" style="font-size:11px;padding:5px 10px" onclick="toggleCaVisibility()">🙈 Masquer le CA</button>
+      </div>
       <div class="stats-row" id="stats"></div>
 
       <!-- Actions rapides -->
@@ -1207,6 +1210,7 @@ select option{background:var(--bg2);color:var(--text)}
           <button class="btn-s" onclick="newDoc()">↺ Réinitialiser</button>
           <button class="btn-s" onclick="openPreview()">👁 Aperçu</button>
           <button class="btn-s" onclick="openAcompteModal()">💶 Acompte</button>
+          <button class="btn-s" id="form-facturer-btn" style="display:none" onclick="devisToFacture(editId)">🧾 Transformer en facture</button>
           <button class="btn-p" onclick="printDoc()">🖨 Imprimer / PDF</button>
           <button class="btn-g" onclick="saveDoc()">💾 Enregistrer</button>
         </div>
@@ -1430,6 +1434,26 @@ select option{background:var(--bg2);color:var(--text)}
         <div class="chart-card">
           <div class="chart-card-title">Taux conversion devis → facture</div>
           <div id="chart-conversion" style="padding-top:10px"></div>
+        </div>
+      </div>
+      <div class="stats-chart-row">
+        <div class="chart-card">
+          <div class="chart-card-title">Répartition par statut</div>
+          <div class="bar-chart" id="chart-statuts"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Top clients (CA)</div>
+          <div id="chart-clients"></div>
+        </div>
+      </div>
+      <div class="stats-chart-row">
+        <div class="chart-card">
+          <div class="chart-card-title">CA par marque de véhicule</div>
+          <div id="chart-marques"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Parc auto</div>
+          <div id="chart-parc"></div>
         </div>
       </div>
     </div>
@@ -3085,6 +3109,7 @@ function resetForm(goToForm) {
   applyRemiseGlobaleFromDoc(null);
   $('f-notes').value = 'Prestation réalisée en atelier. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
   $('form-h').textContent = 'Nouveau devis';
+  if ($('form-facturer-btn')) $('form-facturer-btn').style.display = 'none';
   currentGains = null;
   currentAcompte = null;
   renderGainsBar();
@@ -3112,6 +3137,8 @@ function onTypeChange() {
   }
   var odrFields = document.getElementById('odr-fields');
   if (odrFields) odrFields.style.display = t === 'ordre' ? '' : 'none';
+  var facturerBtn = $('form-facturer-btn');
+  if (facturerBtn) facturerBtn.style.display = (editId && t === 'devis') ? '' : 'none';
   var echLabel = document.querySelector('label[for="f-ech"]') || (function(){ var el = $('f-ech'); return el ? el.previousElementSibling : null; })();
   var echRow = $('f-ech') ? $('f-ech').closest ? $('f-ech').closest('.fr') : null : null;
   if (echRow) { var lbl = echRow.querySelector('label'); if (lbl) lbl.textContent = t === 'ordre' ? 'Date prévue de restitution' : (t === 'devis' ? 'Validité / Échéance' : 'Validité / Échéance'); }
@@ -4037,20 +4064,40 @@ function printDoc() {
 // ============================================================
 //  DASHBOARD
 // ============================================================
+// Masquer le CA sur le dashboard (page d'accueil) — utile quand l'écran est
+// visible d'un client, sans perdre l'accès au chiffre pour soi-même.
+function isCaHidden() {
+  try { return localStorage.getItem('ar_hide_ca') === '1'; } catch(e) { return false; }
+}
+function toggleCaVisibility() {
+  var hidden = !isCaHidden();
+  try { localStorage.setItem('ar_hide_ca', hidden ? '1' : '0'); } catch(e) {}
+  renderDash();
+}
+
 function renderDash() {
   var docs = loadDocs();
   var devis = docs.filter(function(d){ return d.type === 'devis'; }).length;
   var factures = docs.filter(function(d){ return d.type === 'facture'; }).length;
   var ordres = docs.filter(function(d){ return d.type === 'ordre'; }).length;
-  var caEnc = docs.filter(function(d){ return d.type === 'facture' && d.statut === 'payé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
-  var caAtt = docs.filter(function(d){ return d.type === 'facture' && d.statut !== 'payé' && d.statut !== 'annulé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+  var caHidden = isCaHidden();
+  var caTiles;
+  if (caHidden) {
+    caTiles = '<div class="sc"><div class="sc-label">Chiffre d\'affaires</div><div class="sc-val" style="color:var(--text-muted)">••••</div><div class="sc-sub">Masqué — <a href="#" onclick="toggleCaVisibility();return false" style="color:var(--blue)">afficher</a></div></div>';
+  } else {
+    var caEnc = docs.filter(function(d){ return d.type === 'facture' && d.statut === 'payé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+    var caAtt = docs.filter(function(d){ return d.type === 'facture' && d.statut !== 'payé' && d.statut !== 'annulé'; }).reduce(function(s,d){ return s+(d.ttc||0); }, 0);
+    caTiles = '<div class="sc"><div class="sc-label">CA encaissé</div><div class="sc-val green">'+fmt(caEnc)+'</div><div class="sc-sub">Factures payées</div></div>' +
+      '<div class="sc"><div class="sc-label">En attente</div><div class="sc-val orange">'+fmt(caAtt)+'</div><div class="sc-sub">À encaisser</div></div>';
+  }
+  var caBtn = $('ca-toggle-btn');
+  if (caBtn) caBtn.textContent = caHidden ? '👁 Afficher le CA' : '🙈 Masquer le CA';
 
   $('stats').innerHTML =
     '<div class="sc"><div class="sc-label">Devis créés</div><div class="sc-val blue">'+devis+'</div><div class="sc-sub">Total</div></div>' +
     '<div class="sc"><div class="sc-label">Factures</div><div class="sc-val">'+factures+'</div><div class="sc-sub">Émises</div></div>' +
     '<div class="sc"><div class="sc-label">OdR en cours</div><div class="sc-val" style="color:#ea580c">'+ordres+'</div><div class="sc-sub">Ordres de réparation</div></div>' +
-    '<div class="sc"><div class="sc-label">CA encaissé</div><div class="sc-val green">'+fmt(caEnc)+'</div><div class="sc-sub">Factures payées</div></div>' +
-    '<div class="sc"><div class="sc-label">En attente</div><div class="sc-val orange">'+fmt(caAtt)+'</div><div class="sc-sub">À encaisser</div></div>';
+    caTiles;
 
   var filterStatut = $('dash-filter-statut') ? $('dash-filter-statut').value : '';
   var filtered = filterStatut ? docs.filter(function(d){ return d.statut === filterStatut; }) : docs;
@@ -4113,6 +4160,9 @@ function buildTable(docs, withDelete) {
     var avisBtn = (d.type === 'facture' && d.statut === 'payé' && d.ce)
       ? '<button class="btn-s btn-sm" onclick="openAvisModal('+d.id+')" title="'+(d.avisEmailAt ? 'Déjà demandé le '+escHtml(new Date(d.avisEmailAt).toLocaleDateString('fr-FR')) : 'Demander un avis Google')+'">⭐'+(d.avisEmailAt ? '' : ' Avis')+'</button>'
       : '';
+    var factureBtn = d.type === 'devis'
+      ? '<button class="btn-s btn-sm" onclick="devisToFacture('+d.id+')" title="Transformer en facture">🧾 Facturer</button>'
+      : '';
     return '<tr>'
       + '<td><span class="doc-num">'+(escHtml(d.num)||'—')+'</span></td>'
       + '<td>'+typeBadge+'</td>'
@@ -4123,6 +4173,7 @@ function buildTable(docs, withDelete) {
       + '<td><div class="act-cell">'
         + '<button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button>'
         + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'
+        + factureBtn
         + avisBtn
         + delBtn
       + '</div></td>'
@@ -6356,11 +6407,18 @@ function devisToFacture(docId) {
   var devis = docs.find(function(d){ return d.id === docId; });
   if (!devis) return;
   if (!confirm('Convertir ce devis en facture ? Le devis sera conservé.')) return;
+  var dateEmission = prompt('Date d\'émission de la facture (AAAA-MM-JJ) :', today());
+  if (dateEmission === null) return; // annulé
+  dateEmission = dateEmission.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateEmission) || isNaN(new Date(dateEmission).getTime())) {
+    alert('Date invalide, utilisez le format AAAA-MM-JJ.');
+    return;
+  }
   var facture = JSON.parse(JSON.stringify(devis));
   facture.id = Date.now();
   facture.type = 'facture';
   facture.num = genNum('FAC');
-  facture.date = today();
+  facture.date = dateEmission;
   facture.statut = 'créé';
   facture.refDevis = devis.num; // référence au devis d'origine
   docs.unshift(facture);
@@ -6559,6 +6617,10 @@ function renderStats() {
   var nbDeclare  = docs.filter(function(d){ return d.declare !== false; }).length;
   var nbNonDecl  = docs.filter(function(d){ return d.declare === false; }).length;
 
+  var nbClients = loadClients().length;
+  var rdvAVenir = loadRdvs().filter(function(r){ return r.date >= today(); }).length;
+  var impayees = factures.filter(function(d){ return d.statut!=='payé' && d.statut!=='annulé'; }).length;
+
   var kpis = $('stats-kpis');
   if (kpis) kpis.innerHTML = [
     { val: fmt(caTotal),     lbl: 'CA encaissé' },
@@ -6568,6 +6630,9 @@ function renderStats() {
     { val: nbDeclare + '',   lbl: 'Déclarés', color: 'var(--green)' },
     { val: nbNonDecl + '',   lbl: 'Non déclarés', color: nbNonDecl > 0 ? 'var(--orange)' : 'var(--text-dim)' },
     { val: fmt(caTotal * 0.226), lbl: 'Cotis. estimées (22,6%)' },
+    { val: nbClients + '',   lbl: 'Clients au carnet' },
+    { val: impayees + '',    lbl: 'Factures impayées', color: impayees > 0 ? 'var(--orange)' : 'var(--text-dim)' },
+    { val: rdvAVenir + '',   lbl: 'RDV à venir' },
   ].map(function(k) {
     return '<div class="kpi-item"><div class="kpi-val" style="color:'+(k.color||'var(--blue)')+'">'+k.val+'</div><div class="kpi-lbl">'+k.lbl+'</div></div>';
   }).join('');
@@ -6629,6 +6694,57 @@ function renderStats() {
     + '<div style="font-family:var(--fh);font-size:48px;font-weight:700;color:' + (convRate>=50?'var(--green)':'var(--orange)') + '">' + convRate + '%</div>'
     + '<div style="color:var(--text-dim);font-size:13px;margin-top:4px">' + devis.length + ' devis → ' + factures.length + ' factures</div>'
     + '<div style="margin-top:16px;height:8px;background:var(--bg3);border-radius:4px"><div style="height:100%;width:'+Math.min(convRate,100)+'%;background:' + (convRate>=50?'var(--green)':'var(--orange)') + ';border-radius:4px"></div></div>'
+  + '</div>';
+
+  // Répartition par statut
+  var statutsList = ['créé','envoyé','accepté','payé','annulé'];
+  var statutColors = { 'créé':'var(--text-dim)', 'envoyé':'var(--blue)', 'accepté':'#8b5cf6', 'payé':'var(--green)', 'annulé':'#ef4444' };
+  var statutCounts = statutsList.map(function(s){ return { s: s, n: docs.filter(function(d){ return d.statut === s; }).length }; });
+  var maxStatut = Math.max.apply(null, statutCounts.map(function(x){ return x.n; }).concat([1]));
+  var chartStatuts = $('chart-statuts');
+  if (chartStatuts) chartStatuts.innerHTML = statutCounts.map(function(x) {
+    var h = Math.max(4, Math.round((x.n / maxStatut) * 90));
+    return '<div class="bar-col"><div class="bar-val">' + (x.n>0?x.n:'') + '</div><div class="bar-fill" style="height:'+h+'px;background:'+(statutColors[x.s]||'var(--blue)')+'"></div><div class="bar-label">' + x.s + '</div></div>';
+  }).join('');
+
+  // Top clients (CA)
+  var caParClient = {};
+  payees.forEach(function(d) { var cn = d.cn || 'Inconnu'; caParClient[cn] = (caParClient[cn]||0) + (d.ttc||0); });
+  var topClients = Object.keys(caParClient).sort(function(a,b){ return caParClient[b]-caParClient[a]; }).slice(0,6);
+  var maxClient = topClients.length ? caParClient[topClients[0]] : 1;
+  var chartClients = $('chart-clients');
+  if (chartClients) chartClients.innerHTML = topClients.length ? topClients.map(function(cn) {
+    var pct = Math.round((caParClient[cn]/maxClient)*100);
+    return '<div style="margin-bottom:10px">'
+      + '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--text)">' + escHtml(cn) + '</span><span style="color:var(--text-dim)">' + fmt(caParClient[cn]) + '</span></div>'
+      + '<div style="height:6px;background:var(--bg3);border-radius:3px"><div style="height:100%;width:'+pct+'%;background:var(--green);border-radius:3px"></div></div>'
+    + '</div>';
+  }).join('') : '<div style="color:var(--text-muted);font-size:13px">Pas encore de données.</div>';
+
+  // CA par marque de véhicule
+  var caParMarque = {};
+  payees.forEach(function(d) { var vm = d.vm || 'Non renseigné'; caParMarque[vm] = (caParMarque[vm]||0) + (d.ttc||0); });
+  var topMarques = Object.keys(caParMarque).sort(function(a,b){ return caParMarque[b]-caParMarque[a]; }).slice(0,6);
+  var maxMarque = topMarques.length ? caParMarque[topMarques[0]] : 1;
+  var chartMarques = $('chart-marques');
+  if (chartMarques) chartMarques.innerHTML = topMarques.length ? topMarques.map(function(vm) {
+    var pct = Math.round((caParMarque[vm]/maxMarque)*100);
+    return '<div style="margin-bottom:10px">'
+      + '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--text)">' + escHtml(vm) + '</span><span style="color:var(--text-dim)">' + fmt(caParMarque[vm]) + '</span></div>'
+      + '<div style="height:6px;background:var(--bg3);border-radius:3px"><div style="height:100%;width:'+pct+'%;background:var(--blue);border-radius:3px"></div></div>'
+    + '</div>';
+  }).join('') : '<div style="color:var(--text-muted);font-size:13px">Pas encore de données.</div>';
+
+  // Parc auto (indépendant de la période sélectionnée)
+  var allVehs = loadVehicules();
+  var vendus = allVehs.filter(function(v){ return v.status === 'vendu'; });
+  var enStock = allVehs.length - vendus.length;
+  var margeTotale = vendus.reduce(function(s,v){ return s + (vehMarge(v)||0); }, 0);
+  var chartParc = $('chart-parc');
+  if (chartParc) chartParc.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:center">'
+    + '<div><div style="font-family:var(--fh);font-size:28px;font-weight:700;color:var(--blue)">' + enStock + '</div><div style="color:var(--text-dim);font-size:12px">En cours (stock/répa/à vendre)</div></div>'
+    + '<div><div style="font-family:var(--fh);font-size:28px;font-weight:700;color:var(--text-dim)">' + vendus.length + '</div><div style="color:var(--text-dim);font-size:12px">Vendus</div></div>'
+    + '<div style="grid-column:1/3"><div style="font-family:var(--fh);font-size:28px;font-weight:700;color:' + (margeTotale>=0?'var(--green)':'#ef4444') + '">' + fmt(margeTotale) + '</div><div style="color:var(--text-dim);font-size:12px">Marge totale (véhicules vendus)</div></div>'
   + '</div>';
 }
 
