@@ -24,11 +24,12 @@ Allow: /desactivation-adblue
 Allow: /tarifs
 Allow: /faq
 Allow: /guide-reprogrammation-moteur
+Allow: /blog
+Allow: /blog/
 
 # Pages privées — accès refusé
 Disallow: /simulateur
 Disallow: /gestion
-Disallow: /confirmation
 Disallow: /crm
 Disallow: /dossiers
 Disallow: /clients

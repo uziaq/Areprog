@@ -3,14 +3,14 @@
 
   <!-- ════════════════════════════════════════════════════
        AREPROG — sitemap.xml
-       Mis à jour : juillet 2026
+       Mis à jour : octobre 2026
        URLs propres (sans .html) — servies par Netlify
   ════════════════════════════════════════════════════ -->
 
   <!-- Page d'accueil -->
   <url>
     <loc>https://areprog.fr/</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -23,79 +23,79 @@
   <!-- ── Pages services principales ──────────────────── -->
   <url>
     <loc>https://areprog.fr/stage1</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://areprog.fr/conversion-e85</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://areprog.fr/stage2</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/desactivation-egr</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/desactivation-fap</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/desactivation-adblue</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/optimisation-consommation</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://areprog.fr/diagnostic</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://areprog.fr/diagnostic-vag</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/diagnostic-bmw</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation-boite-vitesse</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/vidange-boite-automatique</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
@@ -103,44 +103,44 @@
   <!-- ── Pages informatives et conversion ─────────────── -->
   <url>
     <loc>https://areprog.fr/tarifs</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/guide-reprogrammation-moteur</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/faq</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://areprog.fr/contact</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
   <url>
     <loc>https://areprog.fr/rdv</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
   <url>
     <loc>https://areprog.fr/simulateur</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
 
   <url>
     <loc>https://areprog.fr/about</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.55</priority>
   </url>
@@ -154,4 +154,52 @@
        politique-confidentialite → noindex dans le HTML
   ─────────────────────────────────────────────────────── -->
 
+  <url>
+    <loc>https://areprog.fr/blog</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/blog/reprogrammation-ou-boitier-additionnel</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/blog/conversion-e85-rentabilite</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/blog/voyant-moteur-allume</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/blog/fap-encrasse-symptomes-solutions</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/blog/reprogrammation-assurance</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/mentions-legales</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/politique-confidentialite</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
 </urlset>

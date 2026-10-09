@@ -15,7 +15,7 @@
 /* CONTENT */
 .guide-body { display: grid; grid-template-columns: 1fr 300px; gap: 5rem; padding: 5rem; align-items: start; }
 .guide-content { min-width: 0; }
-.guide-section { margin-bottom: 4rem; scroll-margin-top: calc(var(--nav-h,64px) + 2rem); }
+.guide-section { padding: 0; margin-bottom: 4rem; scroll-margin-top: calc(var(--nav-h,64px) + 2rem); }
 .guide-section h2 { font-family: var(--font-display,'Barlow Condensed'),sans-serif; font-weight: 800; font-size: clamp(1.6rem,3vw,2.2rem); text-transform: uppercase; line-height: 1.05; margin-bottom: 1.2rem; padding-bottom: .8rem; border-bottom: 2px solid var(--blue); }
 .guide-section h2 em { font-style: italic; font-weight: 300; color: var(--blue-light,#42A5F5); }
 .guide-section h3 { font-family: var(--font-display,'Barlow Condensed'),sans-serif; font-weight: 700; font-size: 1.2rem; text-transform: uppercase; color: var(--text); margin: 2rem 0 .8rem; }

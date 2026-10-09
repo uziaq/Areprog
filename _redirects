@@ -43,6 +43,13 @@
 /politique-confidentialite          /politique-confidentialite.html     200
 /sitemap-visuel                     /sitemap-visuel.html                200
 
+# ── Blog ────────────────────────────────────────────────
+/blog                               /blog/index.html                    200
+/blog/reprogrammation-ou-boitier-additionnel   /blog/reprogrammation-ou-boitier-additionnel.html  200
+/blog/conversion-e85-rentabilite               /blog/conversion-e85-rentabilite.html  200
+/blog/voyant-moteur-allume                     /blog/voyant-moteur-allume.html  200
+/blog/fap-encrasse-symptomes-solutions         /blog/fap-encrasse-symptomes-solutions.html  200
+/blog/reprogrammation-assurance                /blog/reprogrammation-assurance.html  200
 # Pages locales retirées (oct. 2026) : AREPROG n'intervient plus à domicile,
 # tout se fait à l'atelier de Biarritz. 301 vers l'accueil pour garder le jus SEO.
 /reprogrammation-moteur-bayonne          /                                             301

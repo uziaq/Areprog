@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
+  <title>Conversion E85 : est-ce rentable ? Le calcul pas à pas | AREPROG</title>
+  <meta name="description" content="Surconsommation, prix au litre, coût de la conversion : comment calculer en 5 minutes si l&#x27;E85 est rentable pour votre voiture, avec un exemple chiffré."/>
+  <link rel="canonical" href="https://areprog.fr/blog/conversion-e85-rentabilite"/>
+  <meta property="og:title" content="Conversion E85 : est-ce rentable ? Le calcul pas à pas | AREPROG"/>
+  <meta property="og:description" content="Surconsommation, prix au litre, coût de la conversion : comment calculer en 5 minutes si l&#x27;E85 est rentable pour votre voiture, avec un exemple chiffré."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://areprog.fr/blog/conversion-e85-rentabilite"/>
+  <meta property="og:image" content="https://areprog.fr/og-image.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:locale" content="fr_FR"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Conversion E85 : est-ce rentable ? Le calcul pas à pas | AREPROG"/>
+  <meta name="twitter:description" content="Surconsommation, prix au litre, coût de la conversion : comment calculer en 5 minutes si l&#x27;E85 est rentable pour votre voiture, avec un exemple chiffré."/>
+  <meta name="twitter:image" content="https://areprog.fr/og-image.jpg"/>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Conversion E85 : est-ce vraiment rentable ? Le calcul pas à pas", "description": "Surconsommation, prix au litre, coût de la conversion : comment calculer en 5 minutes si l'E85 est rentable pour votre voiture, avec un exemple chiffré.", "image": "https://areprog.fr/og-image.jpg", "inLanguage": "fr-FR", "mainEntityOfPage": "https://areprog.fr/blog/conversion-e85-rentabilite", "author": {"@type": "Organization", "name": "AREPROG", "url": "https://areprog.fr"}, "publisher": {"@type": "Organization", "name": "AREPROG", "url": "https://areprog.fr", "logo": {"@type": "ImageObject", "url": "https://areprog.fr/favicon-512.png"}}, "datePublished": "2026-10-09", "dateModified": "2026-10-09"}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://areprog.fr/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://areprog.fr/blog"}, {"@type": "ListItem", "position": 3, "name": "Conversion E85 : est-ce vraiment rentable ? Le calcul pas à pas", "item": "https://areprog.fr/blog/conversion-e85-rentabilite"}]}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
+  <link rel="stylesheet" href="/shared.css?v=20261009"/>
+  <link rel="stylesheet" href="/guide-reprogrammation-moteur.css?v=20261009"/>
+  <link rel="stylesheet" href="/blog.css?v=20261009"/>
+</head>
+<body data-page="blog">
+  <div id="nav-container"></div>
+  <div class="page-wrap">
+
+    <div class="blog-breadcrumb" role="navigation" aria-label="Fil d'Ariane">
+      <a href="/">Accueil</a> <span aria-hidden="true">›</span> <a href="/blog">Blog</a> <span aria-hidden="true">›</span> <span>E85</span>
+    </div>
+
+    <header class="guide-header">
+      <div class="section-tag">E85</div>
+      <h1 class="section-title">Conversion E85&nbsp;:<br><em>vraiment rentable ?</em></h1>
+      <p>L'E85 coûte bien moins cher à la pompe que le SP95, mais un moteur consomme davantage de bioéthanol. Toute la question est de savoir si l'écart de prix compense la surconsommation, et en combien de temps la conversion est remboursée. Voici la méthode de calcul, avec un exemple.</p>
+      <div class="guide-meta">
+        <span class="guide-meta-item">📅 Octobre 2026</span>
+        <span class="guide-meta-item">⏱ 7 min de lecture</span>
+        <span class="guide-meta-item">✍ AREPROG · Atelier de Biarritz</span>
+      </div>
+    </header>
+
+    <div class="guide-toc">
+      <div class="toc-title">Sommaire</div>
+      <div class="toc-list">
+        <a href="#surconsommation" class="toc-link">Pourquoi on consomme plus en E85</a>
+        <a href="#calcul" class="toc-link">La méthode de calcul</a>
+        <a href="#exemple" class="toc-link">Un exemple chiffré</a>
+        <a href="#vigilance" class="toc-link">Les points de vigilance</a>
+      </div>
+    </div>
+
+    <div class="guide-body">
+      <article class="guide-content">
+
+        <section class="guide-section" id="surconsommation">
+          <h2>Pourquoi on consomme<br><em>plus en E85</em></h2>
+<p>Le bioéthanol contient moins d'énergie par litre que l'essence. Pour produire la même puissance, le moteur doit donc en injecter davantage. Selon le moteur, la saison et le style de conduite, la <strong>surconsommation se situe le plus souvent entre 15 et 30 %</strong>.</p>
+<p>En contrepartie, l'E85 a un indice d'octane très élevé (environ 102 RON), ce qui le rend résistant au cliquetis. Sur un moteur turbo bien calibré, cela permet de conserver, voire d'améliorer légèrement, les performances.</p>
+        </section>
+
+        <section class="guide-section" id="calcul">
+          <h2>La méthode<br><em>de calcul</em></h2>
+<p>Il vous faut quatre chiffres : votre kilométrage annuel, votre consommation actuelle, le prix de l'E85 et celui du SP95-E10 dans vos stations habituelles. Les prix à jour sont publiés sur <strong>prix-carburants.gouv.fr</strong>.</p>
+<ol>
+<li><strong>Budget SP95 annuel</strong> = km/an × conso (L/100) ÷ 100 × prix SP95</li>
+<li><strong>Budget E85 annuel</strong> = km/an × conso × 1,25 ÷ 100 × prix E85 <em>(1,25 = 25 % de surconsommation, à ajuster)</em></li>
+<li><strong>Économie annuelle</strong> = budget SP95 − budget E85</li>
+<li><strong>Délai de remboursement</strong> = prix de la conversion ÷ économie mensuelle</li>
+</ol>
+        </section>
+
+        <section class="guide-section" id="exemple">
+          <h2>Un exemple<br><em>chiffré</em></h2>
+<p>Hypothèses : 15 000 km par an, 7 L/100 km en SP95, SP95-E10 à 1,90 €/L, E85 à 0,90 €/L, 25 % de surconsommation. Ces prix sont une hypothèse de calcul, pas un relevé : remplacez-les par ceux de vos stations.</p>
+<table class="gains-table">
+<thead><tr><th>Poste</th><th>SP95-E10</th><th>E85</th></tr></thead>
+<tbody>
+<tr><td>Consommation</td><td>7 L/100</td><td>8,75 L/100</td></tr>
+<tr><td>Litres par an</td><td>1 050 L</td><td>1 312 L</td></tr>
+<tr><td>Budget carburant annuel</td><td>≈ 1 995 €</td><td class="highlight">≈ 1 181 €</td></tr>
+<tr><td>Économie annuelle</td><td colspan="2" class="highlight">≈ 814 €, soit environ 68 € par mois</td></tr>
+</tbody>
+</table>
+<p>Avec une conversion autour de 300 à 380 €, le remboursement intervient dans cet exemple en <strong>4 à 6 mois</strong>. Avec 30 % de surconsommation, l'économie descend vers 765 € par an : le calcul reste favorable. En revanche, avec 5 000 km par an seulement, il faudra compter 13 à 17 mois.</p>
+<div class="info-box"><p><strong>À retenir :</strong> plus vous roulez, plus l'E85 est intéressant. Au-delà de 10 000 km par an sur une essence, la conversion se rembourse généralement en moins d'un an.</p></div>
+        </section>
+
+        <section class="guide-section" id="vigilance">
+          <h2>Les points<br><em>de vigilance</em></h2>
+<ul>
+<li><strong>Compatibilité du moteur</strong> : la plupart des essences turbo récents acceptent l'E85, mais l'état des injecteurs, des bougies et de la pompe doit être vérifié. Un <a href="/diagnostic">diagnostic</a> préalable s'impose.</li>
+<li><strong>Démarrages à froid</strong> : l'éthanol s'enflamme moins bien par temps froid. Un calibrage soigné (et la possibilité de rouler en mélange E85/SP95) règle la question au Pays Basque, où les hivers sont doux.</li>
+<li><strong>Homologation</strong> : seuls les boîtiers E85 <em>homologués</em> permettent d'obtenir la mention FE sur la carte grise. Une conversion par reprogrammation n'est pas homologuée ; parlez-en à votre assureur (voir notre article sur <a href="/blog/reprogrammation-assurance">la reprogrammation et l'assurance</a>).</li>
+<li><strong>Disponibilité</strong> : vérifiez qu'au moins une ou deux stations proposent de l'E85 sur vos trajets habituels.</li>
+</ul>
+        </section>
+
+      </article>
+
+      <aside class="guide-sidebar">
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Une question ?</div>
+          <p class="blog-sidebar-text">Interventions dans notre atelier de Biarritz, sur rendez-vous. Devis gratuit sous 24h.</p>
+          <a href="/contact" class="sidebar-cta-btn">Demander un devis →</a>
+          <a href="tel:+33667924630" class="sidebar-cta-btn outline">06 67 92 46 30</a>
+        </div>
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Prestations liées</div>
+          <a href="/conversion-e85" class="sidebar-link">Conversion E85 <span>→</span></a>
+          <a href="/simulateur" class="sidebar-link">Simulateur de gains <span>→</span></a>
+          <a href="/tarifs" class="sidebar-link">Tarifs 2026 <span>→</span></a>
+        </div>
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Le blog</div>
+          <a href="/blog" class="sidebar-link">Tous les articles <span>→</span></a>
+          <a href="/guide-reprogrammation-moteur" class="sidebar-link">Guide reprogrammation <span>→</span></a>
+        </div>
+      </aside>
+    </div>
+
+    <section class="blog-related">
+      <div class="section-tag">À lire aussi</div>
+      <div class="blog-grid">
+      <a href="/blog/reprogrammation-ou-boitier-additionnel" class="blog-card">
+        <span class="blog-card-cat">Reprogrammation</span>
+        <span class="blog-card-title">Reprogrammation moteur ou boîtier additionnel : que choisir ?</span>
+        <span class="blog-card-desc">Boîtier additionnel ou reprogrammation du calculateur : fonctionnement, gains, fiabilité, prix. Les vraies différences pour faire le bon choix.</span>
+        <span class="blog-card-meta">⏱ 6 min de lecture · Lire l'article →</span>
+      </a>
+      <a href="/blog/reprogrammation-assurance" class="blog-card">
+        <span class="blog-card-cat">Réglementation</span>
+        <span class="blog-card-title">Reprogrammation moteur : faut-il prévenir son assureur ?</span>
+        <span class="blog-card-desc">Reprogrammation, Stage 1, conversion E85 : ce que dit le Code des assurances, les risques d&#x27;une non-déclaration et comment en parler à votre assureur.</span>
+        <span class="blog-card-meta">⏱ 5 min de lecture · Lire l'article →</span>
+      </a>
+      </div>
+    </section>
+
+  </div>
+  <div id="footer-container"></div>
+  <script src="/nav.js?v=20261009"></script>
+  <script src="/whatsapp-widget.js?v=20261009"></script>
+</body>
+</html>
