@@ -4,7 +4,8 @@
 // Réservée aux utilisateurs authentifiés (gestion.html) : rappels RDV,
 // alertes factures impayées, envoi de devis/factures aux clients (avec le
 // PDF en pièce jointe). La clé Resend ne doit jamais être exposée côté
-// navigateur, d'où ce proxy.
+// navigateur, d'où ce proxy. Chaque envoi réussi est archivé dans la
+// collection Firestore `emailsEnvoyes` (historique de l'onglet Mail).
 //
 // Env vars (Netlify dashboard) :
 //   FIREBASE_SERVICE_ACCOUNT : JSON du service account Firebase   (requis)
@@ -144,7 +145,30 @@ exports.handler = async function (event) {
       return { statusCode: 502, headers: cors, body: JSON.stringify({ error: "L'envoi a échoué." }) };
     }
 
-    return { statusCode: 200, headers: cors, body: JSON.stringify({ ok: true }) };
+    // Archive durable de l'envoi (onglet Mail → Emails envoyés, voir
+    // emails-envoyes.js). Un échec d'archivage ne doit jamais faire croire
+    // à un échec d'envoi : l'email est déjà parti.
+    const sent = await res.json().catch(function () { return {}; });
+    if (sent && sent.id) {
+      try {
+        await admin.firestore().collection('emailsEnvoyes').doc(String(sent.id)).set({
+          id: String(sent.id),
+          to: [to],
+          from: payload.from,
+          subject: subject,
+          html: html,
+          createdAt: new Date().toISOString(),
+          lastEvent: 'sent',
+          attachments: attachments.map(function (a) { return a.filename; }),
+          source: 'gestion',
+          sentBy: caller.email || caller.uid,
+        }, { merge: true });
+      } catch (e) {
+        console.warn('send-email: archivage —', e.message);
+      }
+    }
+
+    return { statusCode: 200, headers: cors, body: JSON.stringify({ ok: true, id: sent && sent.id }) };
   } catch (e) {
     console.error('send-email error:', e);
     return { statusCode: 500, headers: cors, body: JSON.stringify({ error: "L'envoi a échoué." }) };

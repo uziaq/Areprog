@@ -1770,6 +1770,18 @@ select option{background:var(--bg2);color:var(--text)}
           <button class="btn-g" id="mail-send-btn" onclick="confirmSendMail()">📧 Envoyer</button>
         </div>
       </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="sh" style="margin-bottom:10px">
+          <div class="card-title" style="margin:0">📤 Emails envoyés</div>
+          <div class="sh-actions" style="display:flex;gap:8px">
+            <button class="btn-s btn-sm" id="sent-mails-refresh" onclick="loadSentMails(true)">↻ Actualiser</button>
+          </div>
+        </div>
+        <div class="fr"><input id="sent-mails-search" type="text" placeholder="Filtrer par destinataire ou objet…" autocomplete="off" oninput="renderSentMails()"/></div>
+        <div id="sent-mails-status" style="display:none;font-size:12px;color:var(--text-muted);margin-bottom:8px"></div>
+        <div id="sent-mails-list" style="max-height:480px;overflow-y:auto"></div>
+      </div>
     </div>
 
     <!-- ══ DEMANDES WEB ═══════════════════════════════════ -->
@@ -2152,6 +2164,17 @@ select option{background:var(--bg2);color:var(--text)}
 </div>
 
 <!-- MODAL ENVOI EMAIL -->
+<div class="rdv-modal" id="sent-mail-modal" onclick="if(event.target===this)$('sent-mail-modal').classList.remove('open')" style="z-index:330;align-items:flex-start;overflow-y:auto">
+  <div class="rdv-box rdv-box-wide" style="margin:20px auto">
+    <div class="rdv-box-title" id="sent-mail-subject">Email</div>
+    <div id="sent-mail-meta" style="font-size:12.5px;color:var(--text-dim);margin-bottom:12px;line-height:1.6"></div>
+    <iframe id="sent-mail-frame" sandbox="" title="Contenu de l'email" style="width:100%;height:60vh;border:1px solid var(--border);border-radius:8px;background:#fff"></iframe>
+    <div style="display:flex;justify-content:flex-end;margin-top:14px">
+      <button class="btn-s" onclick="$('sent-mail-modal').classList.remove('open')">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <div class="rdv-modal" id="send-email-modal" onclick="if(event.target===this)$('send-email-modal').classList.remove('open')" style="z-index:330;align-items:flex-start;overflow-y:auto">
   <div class="rdv-box" style="max-width:520px;margin:20px auto">
     <div class="rdv-box-title">📧 Envoyer par email</div>
@@ -5547,6 +5570,10 @@ function envoyerEmail(to, subject, html, replyTo, attachments) {
     if (!res.ok) return res.json().catch(function(){ return {}; }).then(function(j) {
       throw { status: res.status, text: j.error || ('HTTP ' + res.status) };
     });
+    // Historique « Emails envoyés » périmé : rechargé à la prochaine ouverture
+    // de l'onglet Mail, ou tout de suite s'il est affiché.
+    _sentMails = null;
+    if ($('t-mail').classList.contains('on')) loadSentMails(true);
   });
 }
 
@@ -7343,6 +7370,120 @@ function initMailTab() {
       return '<option value="' + t.id + '">' + escHtml(t.label) + '</option>';
     }).join('');
   }
+  if (!_sentMails) loadSentMails(false);
+}
+
+// ── Historique des emails envoyés (Resend → Firestore, fonction emails-envoyes) ──
+// Couvre tout ce qui part via Resend : envois depuis la gestion, rappels RDV
+// automatiques, notifications de demandes. L'archive Firestore garde les
+// emails au-delà de la durée de conservation de Resend.
+var _sentMails = null;
+var _sentMailsLoading = false;
+var SENT_MAIL_STATUS = {
+  sent:             ['Envoyé',     '#64748b'],
+  delivered:        ['Délivré',    '#16a34a'],
+  opened:           ['Ouvert',     '#0d5baf'],
+  clicked:          ['Cliqué',     '#0d5baf'],
+  bounced:          ['Rejeté',     '#dc2626'],
+  complained:       ['Spam',       '#dc2626'],
+  failed:           ['Échec',      '#dc2626'],
+  delivery_delayed: ['Retardé',    '#d97706'],
+  queued:           ['En attente', '#64748b'],
+  scheduled:        ['Programmé',  '#64748b'],
+  canceled:         ['Annulé',     '#64748b'],
+};
+
+function fmtSentMailDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function loadSentMails(force) {
+  if (_sentMailsLoading) return;
+  if (_sentMails && !force) { renderSentMails(); return; }
+  _sentMailsLoading = true;
+  var btn = $('sent-mails-refresh');
+  btn.disabled = true;
+  var status = $('sent-mails-status');
+  status.style.display = 'block';
+  status.textContent = 'Chargement de l\u2019historique…';
+  authedFetch('/.netlify/functions/emails-envoyes')
+    .then(function(res) {
+      return res.json().catch(function(){ return {}; }).then(function(j) {
+        if (!res.ok) throw new Error(j.error || ('HTTP ' + res.status));
+        return j;
+      });
+    })
+    .then(function(j) {
+      _sentMails = j.emails || [];
+      status.textContent = j.syncError || '';
+      status.style.display = j.syncError ? 'block' : 'none';
+      renderSentMails();
+    })
+    .catch(function(e) {
+      status.style.display = 'block';
+      status.textContent = '⚠️ ' + (e.message || 'Chargement impossible.');
+    })
+    .then(function() { _sentMailsLoading = false; btn.disabled = false; });
+}
+
+function renderSentMails() {
+  var box = $('sent-mails-list');
+  if (!_sentMails) { box.innerHTML = ''; return; }
+  var q = normCodageStr($('sent-mails-search').value);
+  var list = _sentMails.filter(function(m) {
+    return !q || normCodageStr([m.subject, (m.to || []).join(' ')].join(' ')).indexOf(q) >= 0;
+  });
+  if (!list.length) {
+    box.innerHTML = '<div style="font-size:12.5px;color:var(--text-muted);padding:10px 0">' + (_sentMails.length ? 'Aucun email ne correspond.' : 'Aucun email envoyé pour l\u2019instant.') + '</div>';
+    return;
+  }
+  box.innerHTML = list.map(function(m) {
+    var st = SENT_MAIL_STATUS[m.lastEvent] || [m.lastEvent || '—', '#64748b'];
+    var pj = (m.attachments && m.attachments.length) ? ' · 📎 ' + m.attachments.length : '';
+    return '<div class="search-result-item" onclick="openSentMail(\'' + escHtml(m.id) + '\')" style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between">'
+      + '<div style="min-width:0">'
+      +   '<div style="font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(m.subject || '(sans objet)') + '</div>'
+      +   '<div style="font-size:12px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">À ' + escHtml((m.to || []).join(', ')) + pj + '</div>'
+      + '</div>'
+      + '<div style="text-align:right;flex-shrink:0">'
+      +   '<div style="font-size:11.5px;color:var(--text-muted)">' + escHtml(fmtSentMailDate(m.createdAt)) + '</div>'
+      +   '<span style="display:inline-block;margin-top:3px;font-size:11px;font-weight:600;color:#fff;background:' + st[1] + ';border-radius:10px;padding:1px 8px">' + escHtml(st[0]) + '</span>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function openSentMail(id) {
+  var m = (_sentMails || []).find(function(x){ return x.id === id; }) || { id: id };
+  $('sent-mail-subject').textContent = m.subject || '(sans objet)';
+  var meta = function(e) {
+    var st = SENT_MAIL_STATUS[e.lastEvent] || [e.lastEvent || '—'];
+    return '<div><b>À :</b> ' + escHtml((e.to || []).join(', ')) + '</div>'
+      + (e.from ? '<div><b>De :</b> ' + escHtml(e.from) + '</div>' : '')
+      + '<div><b>Date :</b> ' + escHtml(fmtSentMailDate(e.createdAt)) + ' · <b>Statut :</b> ' + escHtml(st[0]) + '</div>'
+      + ((e.attachments && e.attachments.length) ? '<div><b>Pièces jointes :</b> ' + escHtml(e.attachments.join(', ')) + '</div>' : '');
+  };
+  $('sent-mail-meta').innerHTML = meta(m);
+  var frame = $('sent-mail-frame');
+  frame.srcdoc = '<p style="font-family:sans-serif;color:#64748b">Chargement…</p>';
+  $('sent-mail-modal').classList.add('open');
+  authedFetch('/.netlify/functions/emails-envoyes?id=' + encodeURIComponent(id))
+    .then(function(res) {
+      return res.json().catch(function(){ return {}; }).then(function(j) {
+        if (!res.ok) throw new Error(j.error || ('HTTP ' + res.status));
+        return j.email;
+      });
+    })
+    .then(function(e) {
+      $('sent-mail-meta').innerHTML = meta(Object.assign({}, m, e));
+      frame.srcdoc = e.html
+        || (e.text ? '<pre style="white-space:pre-wrap;font-family:sans-serif">' + escHtml(e.text) + '</pre>'
+                   : '<p style="font-family:sans-serif;color:#64748b">Contenu non disponible (plus conservé par Resend).</p>');
+    })
+    .catch(function(err) {
+      frame.srcdoc = '<p style="font-family:sans-serif;color:#dc2626">' + escHtml(err.message || 'Chargement impossible.') + '</p>';
+    });
 }
 
 function renderMailClientResults() {
