@@ -32,6 +32,7 @@ Functions with their own subdirectory:
 - `netlify/function/upload-vehicule/` — photo/document/video upload for the vehicle stock module, for per-vehicle client records, and for generic files attached directly to a client record (Firebase Storage, `vehicules/<id>/{photos,documents,videos}/…` or, when the request body sets `entity: 'client'`, `clients/<id>/documents/…`); videos capped at 4 MB (base64 JSON body must stay under Netlify's ~6 MB function payload limit), photos/PDFs at 8 MB
 - `netlify/function/lead-capture/` — records contact form / simulateur leads to Firestore `leads`, auto-builds a draft quote (`devisDraft`) by matching requested prestations against the price catalogue (`config/catalogue`), and notifies via Resend; honeypot + rate-limited
 - `netlify/function/send-email/` — authenticated (Firebase idToken) proxy to the Resend API; used by `gestion.html` for RDV reminders, unpaid-invoice alerts, sending devis/factures to clients (PDF + up to 7 optional photo attachments, fully editable subject/message and toggleable content blocks from the send modal), and Google-review requests (keeps the Resend API key server-side). Attachments capped at 4 MB each and 5 MB combined (base64 JSON body must stay under Netlify's ~6 MB function payload limit).
+- `netlify/function/emails-envoyes/` — authenticated (Firebase idToken), backs the "📤 Emails envoyés" history card in `gestion.html`'s Mail tab. GET lists sent emails: each call first copies recent emails from Resend's `GET /emails` list API (everything sent via Resend: gestion, rdv-rappels, lead-capture) into the Firestore `emailsEnvoyes` collection — the durable archive, since Resend only keeps logs for a limited time — paging back until a page has nothing new (max 8 pages, spaced for Resend's ~2 req/s limit). `GET ?id=<resendId>` returns one email's HTML (cached into Firestore on first view). `send-email` also writes each successful send (HTML, attachment names) to `emailsEnvoyes` directly.
 - `netlify/function/perf-check/` — internal tool backing `/perf`: proxies Google PageSpeed Insights, `path` param restricted to a hardcoded allowlist of the site's own public routes (never an arbitrary URL, to avoid an open-proxy scanning vector)
 - `netlify/function/devis-ia/` — authenticated (Firebase idToken): turns a free-text message pasted in `gestion.html`'s devis form into devis line items via Claude (Anthropic API). Official AREPROG catalogue prestations are returned at their exact price; anything else (mechanical parts, labour) gets an `aValider: true` estimate the admin must check before sending — the function has no live supplier-pricing access. Rate-limited via `_lib/rate-limit.js`.
 - `netlify/function/_lib/rate-limit.js` — shared Firestore-backed per-IP rate limiter (`rateLimits` collection), not a standalone function; required by `lead-capture`, `rdv-booking` and `devis-ia`
@@ -43,7 +44,7 @@ All functions use `exports.handler` (CommonJS) and include CORS headers for `htt
 
 ### Firebase
 
-Firebase config is hardcoded in `gestion.html` (public, gated by Firebase security rules) for the admin app's own Auth/Firestore access. Server-side admin access uses `FIREBASE_SERVICE_ACCOUNT` env var in Netlify functions. Collections: `rdvs`, `config`, `docs`, `clients`, `vehicules`.
+Firebase config is hardcoded in `gestion.html` (public, gated by Firebase security rules) for the admin app's own Auth/Firestore access. Server-side admin access uses `FIREBASE_SERVICE_ACCOUNT` env var in Netlify functions. Collections: `rdvs`, `config`, `docs`, `clients`, `vehicules`, `emailsEnvoyes` (server-side only).
 
 ## CSS Conventions
 
@@ -90,8 +91,8 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 
 | Variable | Used by |
 |---|---|
-| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-vehicule, lead-capture, send-email |
-| `RESEND_API_KEY` | rdv-rappels, lead-capture, send-email |
+| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-vehicule, lead-capture, send-email, emails-envoyes |
+| `RESEND_API_KEY` | rdv-rappels, lead-capture, send-email, emails-envoyes |
 | `RESEND_FROM` | rdv-rappels, lead-capture, send-email (optional — all three now default to the same hardcoded `AREPROG <contact@areprog.fr>` sender, kept in sync manually since each function hardcodes its own copy) |
 | `ANTHROPIC_API_KEY` | devis-ia |
 | `PAGESPEED_API_KEY` | perf-check — **required in practice**: verified live (2026-08-11) that Google's keyless PageSpeed Insights quota is 0/day (always returns HTTP 429), not just "more limited" as the API docs imply. Free key, 25,000 requests/day: https://developers.google.com/speed/docs/insights/v5/get-started |
