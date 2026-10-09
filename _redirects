@@ -3,6 +3,17 @@
 #  À placer à la RACINE du repo
 # ============================================================
 
+# ── Fichiers internes servis par la racine du dépôt (publish=".") ─────
+#    Code source des fonctions, docs et config : jamais exposés au public.
+#    Le « ! » force la règle même si le fichier existe sur le disque.
+/netlify/*                          /404.html                           404!
+/CLAUDE.md                          /404.html                           404!
+/SETUP.md                           /404.html                           404!
+/AUDIT.md                           /404.html                           404!
+/package.json                       /404.html                           404!
+/package-lock.json                  /404.html                           404!
+/netlify.toml                       /404.html                           404!
+
 # ── Admin (anciennement Netlify Identity — migré vers Firebase Auth) ─────
 /admin                              /gestion.html                       301
 /perf                                /perf.html                          200
@@ -32,12 +43,18 @@
 /politique-confidentialite          /politique-confidentialite.html     200
 /sitemap-visuel                     /sitemap-visuel.html                200
 
-# Pages locales
-/reprogrammation-moteur-bayonne          /reprogrammation-moteur-bayonne.html          200
-/reprogrammation-moteur-biarritz         /reprogrammation-moteur-biarritz.html         200
-/reprogrammation-moteur-anglet           /reprogrammation-moteur-anglet.html           200
-/reprogrammation-moteur-hendaye          /reprogrammation-moteur-hendaye.html          200
-/reprogrammation-moteur-saint-jean-de-luz /reprogrammation-moteur-saint-jean-de-luz.html 200
+# Pages locales retirées (oct. 2026) : AREPROG n'intervient plus à domicile,
+# tout se fait à l'atelier de Biarritz. 301 vers l'accueil pour garder le jus SEO.
+/reprogrammation-moteur-bayonne          /                                             301
+/reprogrammation-moteur-biarritz         /                                             301
+/reprogrammation-moteur-anglet           /                                             301
+/reprogrammation-moteur-hendaye          /                                             301
+/reprogrammation-moteur-saint-jean-de-luz /                                            301
+/reprogrammation-moteur-bayonne.html     /                                             301
+/reprogrammation-moteur-biarritz.html    /                                             301
+/reprogrammation-moteur-anglet.html      /                                             301
+/reprogrammation-moteur-hendaye.html     /                                             301
+/reprogrammation-moteur-saint-jean-de-luz.html /                                       301
 # Pages retirées : la cible /reprogrammation-moteur n'a jamais existé, ces trois
 # redirections aboutissaient donc en 404.
 /reprogrammation-moteur-pau              /reprogrammation                              301

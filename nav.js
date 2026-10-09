@@ -51,17 +51,7 @@ const NAV_HTML = `
  <li><a href="/reprogrammation-boite-vitesse">Reprog Boîte (TCU) <span class="nav-badge" style="color:#FCD34D;border-color:rgba(245,158,11,.4)">NEW</span></a></li>
  </ul>
  </li>
- <li class="nav-dropdown">
- <a href="#" class="nav-dropdown-toggle" data-page="zones">Zones ▾</a>
- <ul class="nav-dropdown-menu">
- <li class="dropdown-group-label">Pays Basque</li>
- <li><a href="/reprogrammation-moteur-bayonne">Bayonne</a></li>
- <li><a href="/reprogrammation-moteur-biarritz">Biarritz</a></li>
- <li><a href="/reprogrammation-moteur-anglet">Anglet</a></li>
- <li><a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a></li>
- <li><a href="/reprogrammation-moteur-hendaye">Hendaye</a></li>
- </ul>
- </li>
+ <li><a href="/blog" data-page="blog">Blog</a></li>
  <li><a href="/simulateur" data-page="simulateur">Simulateur</a></li>
  <li><a href="/tarifs" data-page="tarifs">Tarifs</a></li>
  <li><a href="/about" data-page="about">À propos</a></li>
@@ -76,14 +66,6 @@ const NAV_HTML = `
 </nav>
 <div class="nav-mobile" id="navMobile">
  <a href="/" data-page="index">Accueil</a>
- <div class="nav-mobile-group">
- <div class="nav-mobile-group-label">Zones desservies</div>
- <a href="/reprogrammation-moteur-bayonne" class="nav-mobile-sub">Bayonne</a>
- <a href="/reprogrammation-moteur-biarritz" class="nav-mobile-sub">Biarritz</a>
- <a href="/reprogrammation-moteur-anglet" class="nav-mobile-sub">Anglet</a>
- <a href="/reprogrammation-moteur-saint-jean-de-luz" class="nav-mobile-sub">Saint-Jean-de-Luz</a>
- <a href="/reprogrammation-moteur-hendaye" class="nav-mobile-sub">Hendaye</a>
- </div>
  <div class="nav-mobile-group">
  <div class="nav-mobile-group-label">Diagnostic</div>
  <a href="/diagnostic" class="nav-mobile-sub" data-page="diagnostic">Diagnostic multimarque</a>
@@ -138,12 +120,10 @@ const FOOTER_HTML = `
  <a href="/reprogrammation-boite-vitesse">Reprogrammation Boîte (TCU)</a>
  </div>
  <div class="footer-col">
- <div class="footer-col-title">Zones</div>
- <a href="/reprogrammation-moteur-bayonne">Bayonne</a>
- <a href="/reprogrammation-moteur-biarritz">Biarritz</a>
- <a href="/reprogrammation-moteur-anglet">Anglet</a>
- <a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a>
- <a href="/reprogrammation-moteur-hendaye">Hendaye</a>
+ <div class="footer-col-title">Atelier</div>
+ <a href="/rdv">Biarritz · Pays Basque</a>
+ <a href="/rdv">Sur rendez-vous, lun.–sam.</a>
+ <a href="/blog">Blog &amp; conseils</a>
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Navigation</div>

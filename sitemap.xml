@@ -16,39 +16,9 @@
   </url>
 
   <!-- ── Pages locales (priorité max — SEO géo) ──────── -->
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-bayonne</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-biarritz</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-anglet</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-saint-jean-de-luz</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
 
 
   <!-- ── Pages locales supplémentaires ───────────────── -->
-  <url>
-    <loc>https://areprog.fr/reprogrammation-moteur-hendaye</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
 
   <!-- ── Pages services principales ──────────────────── -->
   <url>

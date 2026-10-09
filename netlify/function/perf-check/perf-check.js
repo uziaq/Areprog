@@ -43,11 +43,6 @@ const ALLOWED_PATHS = [
   '/guide-reprogrammation-moteur',
   '/mentions-legales',
   '/politique-confidentialite',
-  '/reprogrammation-moteur-bayonne',
-  '/reprogrammation-moteur-biarritz',
-  '/reprogrammation-moteur-anglet',
-  '/reprogrammation-moteur-saint-jean-de-luz',
-  '/reprogrammation-moteur-hendaye',
 ];
 
 const AUDITS_OF_INTEREST = [

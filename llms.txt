@@ -8,7 +8,7 @@ Allow: /
 # Site : https://areprog.fr
 # Domaine : Reprogrammation moteur, chip tuning, conversion E85, diagnostic multimarque
 # Langue : Français
-# Zone géographique : Pays Basque, Pyrénées-Atlantiques, Yonne (France)
+# Zone géographique : Biarritz, Pays Basque (France)
 
 # Pages autorisées à l'indexation IA
 Allow: /diagnostic

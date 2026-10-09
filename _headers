@@ -62,9 +62,6 @@
   Cache-Control: no-cache
 
 # ── Pas d'indexation sur les pages privées et utilitaires ───
-/confirmation.html
-  X-Robots-Tag: noindex, nofollow
-
 /sitemap-visuel.html
   X-Robots-Tag: noindex, follow
 
