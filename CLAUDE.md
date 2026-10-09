@@ -12,6 +12,12 @@ The site is organized into two separate service "universes", each with its own h
 
 `index.html` remains the main SEO-loaded homepage and funnels visitors into these two hubs via a two-card split (`.universe-grid`/`.universe-card` in `home.css`).
 
+**All work happens in the Biarritz workshop (atelier) — AREPROG no longer works at the customer's home, and the old Yonne zone is gone.** Never reintroduce "à domicile" / "on se déplace" wording or per-city landing pages; the five former city pages (`/reprogrammation-moteur-{bayonne,biarritz,anglet,saint-jean-de-luz,hendaye}`) were deleted and 301 to `/`.
+
+The EGR/FAP/AdBlue pages carry a `.legal-notice` block (styled in `services.css`): removing an antipollution device on a road vehicle is illegal in France (art. L318-3 Code de la route — which also covers advertising it), so those pages must never contain tips about passing the contrôle technique.
+
+**Blog** (`/blog`): `blog/index.html` + one `blog/<slug>.html` per article, each needing an explicit rewrite in `_redirects` (`/blog/<slug> /blog/<slug>.html 200`) and a `sitemap.xml` entry. Article pages reuse `guide-reprogrammation-moteur.css` plus `blog.css`, and — because they live one directory deep — reference every asset with an **absolute** path (`/shared.css?v=…`, `/nav.js?v=…`).
+
 ## Architecture
 
 **No build step.** This is a static site deployed via Netlify with its root as the publish directory (`publish = "."`). Pushing to GitHub triggers automatic Netlify deployment.
@@ -21,6 +27,8 @@ netlify.toml        → build config (publish=".", functions dir)
 *.html              → one file per page/route (no SPA, ~40 pages)
 nav.js              → shared navigation (Diagnostic ▾ / Reprogrammation ▾ dropdowns), footer, WhatsApp widget (injected on all pages)
 shared.css          → design system (CSS custom properties, light theme, utility classes)
+gestion.html        → admin back-office markup; its styles live in gestion.css and its logic in gestion.js (one classic script, global scope — inline onclick handlers rely on that)
+blog/               → blog hub + articles
 netlify/function/   → Netlify serverless functions (Node.js/CommonJS)
 ```
 
@@ -70,9 +78,11 @@ python3 - <<'EOF'
 import re, glob
 VERSION = "YYYYMMDD"  # today
 ASSETS = ["shared.css", "nav.js", "contact.css", "diagnostic-bmw.css", "diagnostic-vag.css",
-          "diagnostic.css", "home.css", "rdv.css", "reprogrammation.css", "seo-local.css",
-          "services.css", "tarifs.css", "whatsapp-widget.js"]
-for path in glob.glob("*.html"):
+          "diagnostic.css", "home.css", "rdv.css", "reprogrammation.css",
+          "services.css", "tarifs.css", "whatsapp-widget.js", "about.css", "faq.css",
+          "simulateur.css", "guide-reprogrammation-moteur.css", "blog.css",
+          "gestion.css", "gestion.js", "codages-data.js"]
+for path in glob.glob("*.html") + glob.glob("blog/*.html"):
     content = original = open(path, encoding="utf-8").read()
     for asset in ASSETS:
         content = re.sub(r'(href|src)="(/?)' + re.escape(asset) + r'(\?v=\d+)?"',
@@ -85,6 +95,8 @@ EOF
 ## Routing & URLs
 
 Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.html` suffixes — avoid deploying there. The `_redirects` and `_headers` files handle Netlify-specific HTTP rules.
+
+Because the repo root is the publish directory, internal files (`/netlify/*`, `*.md`, `package*.json`, `netlify.toml`) are forced to 404 at the top of `_redirects` (`404!`). Add any new internal file there too.
 
 ## Required Environment Variables (Netlify Dashboard)
 
@@ -101,7 +113,7 @@ Netlify serves clean URLs (no `.html` extension). GitHub Pages would require `.h
 - All pages share the same nav/footer by calling `nav.js` which injects HTML dynamically via `document.write` equivalents or DOM insertion.
 - Page-specific JS is either inline `<script>` in the HTML file or a dedicated `.js` file loaded at the bottom of `<body>`.
 - Schema.org JSON-LD, Open Graph, and Twitter Card meta tags are included in every page `<head>` for SEO.
-- The `gestion.html` admin page manages appointments (RDVs) and requires Firebase Authentication.
+- The `gestion.html` admin page manages appointments (RDVs) and requires Firebase Authentication. Its code is in `gestion.js`/`gestion.css`; `sw.js` caches them network-first for offline use — bump `CACHE_NAME` when changing the SW strategy.
 - The "Parc auto" tab in `gestion.html` tracks vehicle buy/resell: each vehicle carries its expenses, photos and documents inline, mirrored in `localStorage.ar_vehicules` and the Firestore `vehicules` collection (same offline-first + `onSnapshot` pattern as `docs`/`clients`/`rdvs`). Cost price = purchase price + expenses; margin = sale price − cost price.
 - Each vehicle inside a client's `vehs[]` array (carnet clients, add/edit client modal) can also carry its own `notes` (free text), `photos` and `videos` (uploaded via the same `upload-vehicule` function, keyed by a per-vehicle `id` generated client-side, e.g. `cv<timestamp>`). Shown read-only in the client history modal (`showClientHistory`).
 - A client record itself (not tied to any specific vehicle) can also carry `documents[]` — arbitrary files (ID, carte grise, signed quote, invoice, contract, other), uploaded from the add/edit client modal via `upload-vehicule` with `entity: 'client'` (stored under `clients/<id>/documents/…`, PDF or image, 8 MB max). The storage id is generated once when the modal opens (`acDraftId`) and reused as the client's real `id` on save, so files uploaded before the first save stay attached to the right client. Shown read-only in the client history modal.

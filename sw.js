@@ -3,10 +3,13 @@
 
 // Incrémenter à chaque changement de stratégie : l'activation purge les
 // anciens caches, y compris les réponses erronées qu'ils contenaient.
-var CACHE_NAME = 'areprog-v3';
+var CACHE_NAME = 'areprog-v4';
 var OFFLINE_URLS = [
   '/gestion',
   '/gestion.html',
+  '/gestion.css',
+  '/gestion.js',
+  '/codages-data.js',
   '/favicon-32x32.png',
   '/favicon-512.png',
   '/logo-nav.png',
@@ -57,6 +60,28 @@ self.addEventListener('fetch', function(e) {
       url.hostname.includes('netlify') ||
       url.hostname.includes('jsdelivr') ||
       url.hostname.includes('cloudflare')) {
+    return;
+  }
+
+  // Back-office (/gestion, sa feuille de style, ses scripts) : Network First,
+  // fallback cache. Les fichiers portent un ?v= : le fallback l'ignore.
+  var GESTION_ASSETS = ['/gestion.css', '/gestion.js', '/codages-data.js'];
+  if (GESTION_ASSETS.indexOf(url.pathname) !== -1) {
+    e.respondWith(
+      fetch(e.request)
+        .then(function(response) {
+          if (response && response.ok) {
+            var clone = response.clone();
+            caches.open(CACHE_NAME).then(function(cache) {
+              cache.put(e.request, clone);
+            });
+          }
+          return response;
+        })
+        .catch(function() {
+          return caches.match(e.request, { ignoreSearch: true });
+        })
+    );
     return;
   }
 
