@@ -1133,6 +1133,7 @@ select option{background:var(--bg2);color:var(--text)}
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
       <button class="nb" onclick="showTab('codage')">🔧 Options codage</button>
       <button class="nb" onclick="showTab('mail')">✉️ Mail</button>
+      <button class="nb" onclick="showTab('envoyes')">📤 Envoyés</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -1771,17 +1772,19 @@ select option{background:var(--bg2);color:var(--text)}
         </div>
       </div>
 
-      <div class="card" style="margin-top:16px">
-        <div class="sh" style="margin-bottom:10px">
-          <div class="card-title" style="margin:0">📤 Emails envoyés</div>
-          <div class="sh-actions" style="display:flex;gap:8px">
-            <button class="btn-s btn-sm" id="sent-mails-refresh" onclick="loadSentMails(true)">↻ Actualiser</button>
-          </div>
+    </div>
+
+    <!-- ══ EMAILS ENVOYÉS ═══════════════════════════════════ -->
+    <div class="tc" id="t-envoyes">
+      <div class="sh">
+        <div class="sh-title">📤 Emails envoyés</div>
+        <div class="sh-actions" style="display:flex;gap:8px">
+          <button class="btn-s" id="sent-mails-refresh" onclick="loadSentMails(true)">↻ Actualiser</button>
         </div>
-        <div class="fr"><input id="sent-mails-search" type="text" placeholder="Filtrer par destinataire ou objet…" autocomplete="off" oninput="renderSentMails()"/></div>
-        <div id="sent-mails-status" style="display:none;font-size:12px;color:var(--text-muted);margin-bottom:8px"></div>
-        <div id="sent-mails-list" style="max-height:480px;overflow-y:auto"></div>
       </div>
+      <div class="fr"><input id="sent-mails-search" type="text" placeholder="Filtrer par destinataire ou objet…" autocomplete="off" oninput="renderSentMails()"/></div>
+      <div id="sent-mails-status" style="display:none;font-size:12px;color:var(--text-muted);margin-bottom:8px"></div>
+      <div class="card"><div id="sent-mails-list"></div></div>
     </div>
 
     <!-- ══ DEMANDES WEB ═══════════════════════════════════ -->
@@ -5573,7 +5576,7 @@ function envoyerEmail(to, subject, html, replyTo, attachments) {
     // Historique « Emails envoyés » périmé : rechargé à la prochaine ouverture
     // de l'onglet Mail, ou tout de suite s'il est affiché.
     _sentMails = null;
-    if ($('t-mail').classList.contains('on')) loadSentMails(true);
+    if ($('t-envoyes').classList.contains('on')) loadSentMails(true);
   });
 }
 
@@ -6903,7 +6906,7 @@ function exportCSV() {
 // au i-ème bouton .nb de la barre. L'index 2 ('form') est le bouton
 // « + Nouveau », qui n'ouvre pas d'onglet mais partage la position.
 // Ajouter un onglet impose de le déclarer ici ET au bon rang dans .tb-nav.
-var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','codage','mail'];
+var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','codage','mail','envoyes'];
 
 function showTab(t) {
   TABS.forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
@@ -6920,6 +6923,7 @@ function showTab(t) {
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
   if(t==='codage')   initCodageTab();
   if(t==='mail')     initMailTab();
+  if(t==='envoyes')  loadSentMails(false);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -7370,10 +7374,9 @@ function initMailTab() {
       return '<option value="' + t.id + '">' + escHtml(t.label) + '</option>';
     }).join('');
   }
-  if (!_sentMails) loadSentMails(false);
 }
 
-// ── Historique des emails envoyés (Resend → Firestore, fonction emails-envoyes) ──
+// ── Onglet « Envoyés » : historique des emails (Resend → Firestore, fonction emails-envoyes) ──
 // Couvre tout ce qui part via Resend : envois depuis la gestion, rappels RDV
 // automatiques, notifications de demandes. L'archive Firestore garde les
 // emails au-delà de la durée de conservation de Resend.
