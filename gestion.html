@@ -3741,6 +3741,9 @@ function buildObj() {
     motif: $('f-motif') ? $('f-motif').value : '',
     delai: $('f-delai') ? $('f-delai').value : '',
     sigclient: $('f-sigclient') ? $('f-sigclient').checked : false,
+    // Demande ("collection:id") dont ce devis est issu — permet de le retrouver
+    // localement sans dépendre du lien devisId écrit sur la demande.
+    demandeRef: _demandeActuelle || null,
   };
 }
 
@@ -3785,13 +3788,16 @@ function lierDevisALaDemande(ref, doc) {
     total: doc.ht,
     aTarifer: (doc.lines || []).filter(function(l){ return !l.pu; }).length
   };
+  // Mise à jour locale immédiate : un nouveau clic sur la demande avant la
+  // réponse de Firestore doit déjà rouvrir ce devis, pas en créer un second.
+  d.devisId = doc.id;
+  d.devisDraft = draft;
+  paintDemandes();
   db.collection(d.collection).doc(d.id).update({ devisId: doc.id, devisDraft: draft })
-    .then(function() {
-      d.devisId = doc.id;
-      d.devisDraft = draft;
-      paintDemandes();
-    })
-    .catch(function(e){ console.warn('Lien devis→demande :', e); });
+    .catch(function(e){
+      console.warn('Lien devis→demande :', e);
+      showNotifBanner('⚠️', 'Lien devis → demande non enregistré', e.message || String(e));
+    });
 }
 
 // Charger un objet doc directement dans le formulaire (draft restore)
@@ -3842,7 +3848,7 @@ function loadDoc(docId) {
   var doc = loadDocs().find(function(d) { return d.id === docId; });
   if (!doc) return;
   editId = doc.id;
-  _demandeActuelle = null;
+  _demandeActuelle = doc.demandeRef || null;
   loadedType = doc.type;
   loadedNum = doc.num;
   $('f-type').value = doc.type;
@@ -8295,14 +8301,16 @@ function demandeVersDevis(ref) {
   // Un devis a déjà été enregistré pour cette demande : on continue de
   // l'éditer (sinon "Modifier le devis" recréerait un devis en double à
   // chaque clic, et la demande n'aurait jamais connaissance des modifs).
-  if (d.devisId) {
-    var existant = loadDocs().find(function(doc){ return doc.id === d.devisId; });
-    if (existant) {
-      loadDoc(existant.id);
-      _demandeActuelle = ref;
-      if (d.statut === 'nouveau') marquerDemande(ref, 'traite');
-      return;
-    }
+  // Recherche aussi par demandeRef, posé sur le devis lui-même : couvre le
+  // cas où le lien devisId n'a pas (encore) été écrit côté Firestore.
+  var existant = loadDocs().find(function(doc){
+    return (d.devisId && doc.id === d.devisId) || doc.demandeRef === ref;
+  });
+  if (existant) {
+    loadDoc(existant.id);
+    _demandeActuelle = ref;
+    if (d.statut === 'nouveau') marquerDemande(ref, 'traite');
+    return;
   }
   resetForm(false);
   _demandeActuelle = ref;
