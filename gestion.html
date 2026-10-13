@@ -3783,6 +3783,17 @@ function saveDoc() {
     if (confirm('Enregistrer "' + cn + '" dans le carnet clients ?')) {
       saveCurrentClientToCarnet();
     }
+  } else if (exists) {
+    // Client connu : proposer d'ajouter à sa fiche le véhicule saisi sur le
+    // devis s'il n'y figure pas encore (ex. devis pour un 2e véhicule).
+    var cl = clients.find(function(c){ return c.nom.toLowerCase() === cn.toLowerCase(); });
+    var vf = vehiculeDuForm();
+    if (vf && !clientAVehicule(cl, vf)
+        && confirm('Ajouter le véhicule « ' + libelleVehicule(vf) + ' » aux véhicules de ' + cl.nom + ' ?')) {
+      ajouterVehiculeAuClient(cl, vf);
+      saveClients(clients);
+      if ($('t-carnet') && $('t-carnet').classList.contains('on')) renderCarnet();
+    }
   }
   alert('Document enregistré ✓');
 }
@@ -4464,6 +4475,43 @@ function selectClientAndGo(cid) {
 }
 
 // Enregistrer client depuis le formulaire courant
+// Véhicule saisi dans le formulaire de document (null si vide).
+function vehiculeDuForm() {
+  var v = { vm: $('f-vm').value.trim(), vmo: $('f-vmo').value.trim(), vmot: $('f-vmot').value.trim(),
+            van: $('f-van').value.trim(), vim: $('f-vim').value.trim() };
+  return (v.vm || v.vmo || v.vim) ? v : null;
+}
+
+function libelleVehicule(v) {
+  return [v.vm, v.vmo, v.vim ? '(' + v.vim.toUpperCase() + ')' : ''].filter(Boolean).join(' ');
+}
+
+// Véhicules d'une fiche client, y compris l'ancien format à véhicule unique.
+function vehiculesDuClient(cl) {
+  return cl.vehs && cl.vehs.length ? cl.vehs
+    : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
+}
+
+// Même véhicule = même immat (normalisée) ; sans immat, même marque + modèle.
+function clientAVehicule(cl, v) {
+  var norm = function(x){ return (x || '').toUpperCase().replace(/[\s-]/g, ''); };
+  var low = function(x){ return (x || '').trim().toLowerCase(); };
+  return vehiculesDuClient(cl).some(function(e) {
+    if (norm(v.vim) || norm(e.vim)) return norm(v.vim) === norm(e.vim);
+    return low(e.vm) === low(v.vm) && low(e.vmo) === low(v.vmo);
+  });
+}
+
+function ajouterVehiculeAuClient(cl, v) {
+  var vehs = vehiculesDuClient(cl).slice();
+  vehs.push({ id: 'cv' + Date.now(), vm: v.vm, vmo: v.vmo, vmot: v.vmot, van: v.van, vim: v.vim, notes: '', photos: [], videos: [] });
+  cl.vehs = vehs;
+  // Compatibilité rétro : les champs plats reflètent le premier véhicule.
+  var first = vehs[0];
+  cl.vm = first.vm || ''; cl.vmo = first.vmo || ''; cl.vmot = first.vmot || '';
+  cl.van = first.van || ''; cl.vim = first.vim || '';
+}
+
 function saveCurrentClientToCarnet() {
   var nom = $('f-cnom').value.trim();
   if (!nom) { alert('Renseignez le nom du client d\'abord.'); return; }
@@ -4471,19 +4519,26 @@ function saveCurrentClientToCarnet() {
   // Chercher si déjà existant (même nom)
   var existing = clients.find(function(c){ return c.nom.toLowerCase() === nom.toLowerCase(); });
   if (existing && !confirm('Un client "' + nom + '" existe déjà. Mettre à jour ?')) return;
-  var cl = {
-    id: existing ? existing.id : Date.now(),
-    nom: nom, tel: $('f-ctel').value, email: $('f-cemail').value,
-    adr: $('f-cadr').value, ville: $('f-cville').value,
-    type: ($('f-csiret').value.trim() || $('f-ctva').value.trim()) ? 'pro' : ((existing && existing.type) || 'particulier'),
-    siret: $('f-csiret').value.trim(), tvaIntra: $('f-ctva').value.trim(),
-    vm: $('f-vm').value, vmo: $('f-vmo').value, vmot: $('f-vmot').value,
-    van: $('f-van').value, vim: $('f-vim').value,
-  };
+  var siret = $('f-csiret').value.trim(), tva = $('f-ctva').value.trim();
+  var vf = vehiculeDuForm();
   if (existing) {
-    var i = clients.indexOf(existing);
-    clients[i] = cl;
+    // Fusion : on met à jour les coordonnées sans perdre véhicules, fichiers, etc.
+    existing.tel = $('f-ctel').value; existing.email = $('f-cemail').value;
+    existing.adr = $('f-cadr').value; existing.ville = $('f-cville').value;
+    if (siret) existing.siret = siret;
+    if (tva) existing.tvaIntra = tva;
+    if (siret || tva) existing.type = 'pro';
+    if (vf && !clientAVehicule(existing, vf)) ajouterVehiculeAuClient(existing, vf);
   } else {
+    var cl = {
+      id: Date.now(),
+      nom: nom, tel: $('f-ctel').value, email: $('f-cemail').value,
+      adr: $('f-cadr').value, ville: $('f-cville').value,
+      type: (siret || tva) ? 'pro' : 'particulier',
+      siret: siret, tvaIntra: tva,
+      vehs: [], documents: [],
+    };
+    if (vf) ajouterVehiculeAuClient(cl, vf);
     clients.unshift(cl);
   }
   saveClients(clients);
