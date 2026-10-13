@@ -4474,7 +4474,6 @@ function selectClientAndGo(cid) {
   showTab('form');
 }
 
-// Enregistrer client depuis le formulaire courant
 // Véhicule saisi dans le formulaire de document (null si vide).
 function vehiculeDuForm() {
   var v = { vm: $('f-vm').value.trim(), vmo: $('f-vmo').value.trim(), vmot: $('f-vmot').value.trim(),
@@ -4512,6 +4511,7 @@ function ajouterVehiculeAuClient(cl, v) {
   cl.van = first.van || ''; cl.vim = first.vim || '';
 }
 
+// Enregistrer client depuis le formulaire courant
 function saveCurrentClientToCarnet() {
   var nom = $('f-cnom').value.trim();
   if (!nom) { alert('Renseignez le nom du client d\'abord.'); return; }
@@ -5311,11 +5311,45 @@ function renderSideEvents(d) {
       + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
       + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
         + '<button class="btn-s btn-sm" onclick="openRdvModal(\''+r.id+'\',null)">✏️ Modifier</button>'
-        + (r.clientId ? '<button class="btn-s btn-sm" onclick="selectClientAndGo('+r.clientId+')">📄 Devis</button>' : '')
+        + ((r.docId || r.clientId) ? '<button class="btn-s btn-sm" onclick="ouvrirDevisDuRdv(\''+escHtml(r.id)+'\')">📄 ' + escHtml(libelleDevisDuRdv(r)) + '</button>' : '')
         + '<button class="rdv-confirm-btn" onclick="copyConfirmMsg(\''+r.id+'\')">📋 Copier confirmation</button>'
       + '</div>'
     + '</div>';
   }).join('');
+}
+
+// Document lié à un RDV (champ "Devis lié" de la modale), s'il existe encore.
+function docDuRdv(r) {
+  return r.docId ? loadDocs().find(function(d){ return d.id === r.docId; }) : null;
+}
+
+function libelleDevisDuRdv(r) {
+  var doc = docDuRdv(r);
+  if (!doc) return 'Nouveau devis';
+  return doc.type === 'facture' ? 'Ouvrir la facture' : doc.type === 'ordre' ? 'Ouvrir l\'OR' : 'Ouvrir le devis';
+}
+
+// Ouvre le devis lié au RDV ; à défaut, un nouveau devis pré-rempli avec le
+// client et le véhicule du RDV.
+function ouvrirDevisDuRdv(rdvId) {
+  var r = loadRdvs().find(function(x){ return String(x.id) === String(rdvId); });
+  if (!r) return;
+  var doc = docDuRdv(r);
+  if (doc) { loadDoc(doc.id); return; }
+  resetForm(false);
+  if (r.clientId) {
+    var cl = loadClients().find(function(c){ return c.id === r.clientId; });
+    if (cl) {
+      $('f-cnom').value = cl.nom || ''; $('f-ctel').value = cl.tel || '';
+      $('f-cemail').value = cl.email || ''; $('f-cadr').value = cl.adr || '';
+      $('f-cville').value = cl.ville || '';
+      $('f-csiret').value = cl.siret || ''; $('f-ctva').value = cl.tvaIntra || '';
+      var vehs = vehiculesDuClient(cl);
+      var v = (r.vehIdx !== null && r.vehIdx !== undefined && vehs[r.vehIdx]) ? vehs[r.vehIdx] : (vehs.length === 1 ? vehs[0] : null);
+      if (v) applyVehicle(v);
+    }
+  }
+  showTab('form');
 }
 
 function renderAutoAlerts() {
