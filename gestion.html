@@ -257,13 +257,13 @@ select option{background:var(--bg2);color:var(--text)}
 .d-annexe-head{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}
 .d-annexe-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#111}
 .d-annexe-ref{font-size:10px;color:#888;margin-top:1px}
-.d-annexe-gar{font-size:10.5px;color:#166534;font-weight:600;margin-top:5px}
-.d-fiches{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-bottom:8px}
-.d-fiche{border:1px solid #e5e7eb;border-radius:6px;padding:6px 9px;break-inside:avoid;page-break-inside:avoid}
-.d-fiche-title{font-size:10.5px;font-weight:700;color:#111;margin-bottom:2px}
-.d-fiche-line{font-size:9px;color:#444;line-height:1.35}
+.d-annexe-gar{font-size:11.5px;color:#166534;font-weight:600;margin-top:5px}
+.d-fiches{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:10px}
+.d-fiche{border:1px solid #e5e7eb;border-radius:6px;padding:9px 12px;break-inside:avoid;page-break-inside:avoid}
+.d-fiche-title{font-size:12px;font-weight:700;color:#111;margin-bottom:3px}
+.d-fiche-line{font-size:10.5px;color:#444;line-height:1.45;margin-bottom:1px}
 .d-fiche-line b{color:#1d4ed8;font-weight:700}
-.d-decharge{border:1px solid #fed7aa;background:#fff7ed;border-radius:6px;padding:6px 9px;margin-bottom:8px;font-size:8.5px;color:#444;line-height:1.35;break-inside:avoid;page-break-inside:avoid}
+.d-decharge{border:1px solid #fed7aa;background:#fff7ed;border-radius:6px;padding:6px 9px;margin-bottom:8px;font-size:10px;color:#444;line-height:1.45;break-inside:avoid;page-break-inside:avoid}
 .d-decharge b{color:#c2410c}
 .d-accord-ok{font-size:10px;color:#16a34a;font-weight:700;margin-top:3px}
 .d-sign{display:flex;gap:30px;font-size:9px;color:#888;margin-top:4px}
@@ -1608,7 +1608,7 @@ select option{background:var(--bg2);color:var(--text)}
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-footer" checked/> Afficher le pied de page</label></div>
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-legal" checked/> Afficher les mentions légales</label></div>
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-annexe" checked onchange="livePreview()"/> Annexe « Détail des prestations &amp; garanties » (devis et factures)</label></div>
-            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-cgv" checked onchange="livePreview()"/> Conditions générales de vente et de réparation (devis et factures)</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-cgv" onchange="livePreview()"/> Ajouter aussi les conditions générales de vente et de réparation sur la page 2 (désactivé par défaut)</label></div>
             <div class="fr"><label>Texte des conditions générales <span style="font-weight:400;color:var(--text-muted)">— « ## » titre, « ### » sous-titre, ligne vide = nouveau paragraphe, {validite} = validité du devis</span></label>
               <textarea id="tpl-cgv" rows="10" style="font-size:12px" oninput="livePreview()"></textarea>
               <div style="margin-top:6px"><button type="button" class="btn-s" style="font-size:11px;padding:4px 10px" onclick="$('tpl-cgv').value=CGV_DEFAULT;livePreview()">↺ Texte par défaut</button></div>
@@ -3273,7 +3273,7 @@ function renderCgvHTML(text, tpl) {
 function buildAnnexeHTML(doc, tpl) {
   if (doc.type !== 'devis' && doc.type !== 'facture') return '';
   var fiches = tpl.showAnnexe !== false ? getFichesForLines(doc.lines) : [];
-  var showCgv = tpl.showCgv !== false;
+  var showCgv = tpl.showCgv === true;
   if (!fiches.length && !showCgv) return '';
   var isDevis = doc.type === 'devis';
   var vehStr = [doc.vm, doc.vmo, doc.vmot].filter(Boolean).join(' ') + (doc.vim ? ' · ' + doc.vim.toUpperCase() : '');
@@ -5352,7 +5352,7 @@ var TPL_DEFAULT = {
   footer:'AREPROG — Reprogrammation moteur en atelier · Pays Basque (64) · Landes (40) · Yonne (89)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
   color:'#1E90FF', titleColor:'#111111', logoStyle:'split',
   showGains:true, showVeh:true, showFooter:true, showLegal:true,
-  showAnnexe:true, showCgv:true, cgv:'',
+  showAnnexe:true, showCgv:false, cgv:'',
   validite:30,
 };
 
@@ -5394,7 +5394,7 @@ function readTplForm() {
     logoStyle:v('tpl-logo-style','split'),
     showGains:ck('tpl-show-gains',true), showVeh:ck('tpl-show-veh',true),
     showFooter:ck('tpl-show-footer',true), showLegal:ck('tpl-show-legal',true),
-    showAnnexe:ck('tpl-show-annexe',true), showCgv:ck('tpl-show-cgv',true),
+    showAnnexe:ck('tpl-show-annexe',true), showCgv:ck('tpl-show-cgv',false),
     // Vide = texte par défaut (CGV_DEFAULT), pour profiter de ses mises à jour
     cgv:(function(){ var t=($('tpl-cgv')?$('tpl-cgv').value:'').trim(); return t===CGV_DEFAULT.trim()?'':t; })(),
     validite:parseInt(v('tpl-validite','30'))||30,
@@ -5419,7 +5419,7 @@ function fillTplForm(tpl) {
   if($('tpl-show-footer')) $('tpl-show-footer').checked = tpl.showFooter!==false;
   if($('tpl-show-legal'))  $('tpl-show-legal').checked  = tpl.showLegal!==false;
   if($('tpl-show-annexe')) $('tpl-show-annexe').checked = tpl.showAnnexe!==false;
-  if($('tpl-show-cgv'))    $('tpl-show-cgv').checked    = tpl.showCgv!==false;
+  if($('tpl-show-cgv'))    $('tpl-show-cgv').checked    = tpl.showCgv===true;
   if($('tpl-cgv'))         $('tpl-cgv').value           = tpl.cgv || CGV_DEFAULT;
 }
 function syncColorInput(){ var v=$('tpl-color-pick').value; $('tpl-color-hex').value=v; if($('tpl2-color-pick'))$('tpl2-color-pick').value=v; if($('tpl2-color-hex'))$('tpl2-color-hex').value=v; livePreview(); }
