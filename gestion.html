@@ -5260,6 +5260,9 @@ function renderAutoAlerts() {
 }
 
 // ── Modal RDV ────────────────────────────────────────────────
+// Lieu pré-rempli pour tout nouveau rendez-vous (modifiable dans le formulaire).
+var ADRESSE_GARAGE = '9 boulevard Marcel Dassault, 64200 Biarritz';
+
 function openRdvModal(rdvId) {
   editingRdvId = rdvId;
   fillRdvClientSelect();
@@ -5301,7 +5304,7 @@ function openRdvModal(rdvId) {
     refreshRdvClientPicked();
     fillRdvDocSelect();
     $('rdv-doc').value = '';
-    $('rdv-lieu').value = '';
+    $('rdv-lieu').value = ADRESSE_GARAGE;
     $('rdv-notes').value = '';
     $('rdv-delete-btn').style.display = 'none';
     $('rdv-copy-btn').style.display = 'none';
