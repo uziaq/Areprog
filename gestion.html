@@ -253,33 +253,26 @@ select option{background:var(--bg2);color:var(--text)}
 .d-notes strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:6px}
 .d-notes p{font-size:12px;color:#555;line-height:1.65}
 .d-footer{border-top:1px solid #e5e7eb;padding-top:14px;font-size:10px;color:#aaa;text-align:center;line-height:1.7}
-.d-annexe,.d-cgv{margin-top:36px;padding-top:18px;border-top:2px dashed #e5e7eb}
-.d-annexe-head{margin-bottom:14px}
-.d-annexe-title,.d-cgv-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#111}
-.d-cgv-title{text-align:center}
-.d-annexe-ref{font-size:11px;color:#888;margin-top:2px}
-.d-fiche{border:1px solid #e5e7eb;border-radius:8px;padding:12px 14px;margin-bottom:10px;break-inside:avoid;page-break-inside:avoid}
-.d-fiche-title{font-size:13px;font-weight:700;color:#111;margin-bottom:8px}
-.d-fiche-cols{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:14px}
-.d-fiche-cols-2{grid-template-columns:1fr 1fr}
-.d-fiche-h{font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;font-weight:700;margin-bottom:5px}
-.d-fiche ul{margin:0;padding:0;list-style:none}
-.d-fiche li{font-size:11px;color:#444;line-height:1.45;padding-left:12px;position:relative;margin-bottom:3px}
-.d-fiche li::before{content:"✓";position:absolute;left:0;color:#16a34a;font-weight:700}
-.d-fiche ul.d-ko li::before{content:"✗";color:#dc2626}
-.d-fiche-empty{font-size:11px;color:#bbb}
-.d-fiche-note{font-size:10.5px;color:#777;margin-top:8px;font-style:italic}
-.d-garantie-gen{background:#f0fdf4;border-color:#bbf7d0}
-.d-decharge{border:1px solid #fed7aa;background:#fff7ed;border-radius:8px;padding:12px 14px;margin-top:4px;break-inside:avoid;page-break-inside:avoid}
-.d-decharge .d-fiche-h{color:#c2410c}
-.d-decharge p{font-size:11px;color:#444;line-height:1.5;margin:0 0 10px}
-.d-accord-ok{font-size:12px;color:#16a34a;font-weight:600}
-.d-sign{display:flex;gap:40px;font-size:11px;color:#888}
-.d-sign div{flex:1;border-bottom:1px solid #ccc;padding-bottom:28px}
-.d-cgv-body{column-count:2;column-gap:22px;font-size:10px;line-height:1.4;color:#333;text-align:justify}
-.d-cgv-body h4{font-size:11.5px;font-weight:700;text-transform:uppercase;margin:0 0 4px;color:#111;break-after:avoid}
-.d-cgv-body h5{font-size:10.5px;font-weight:700;margin:6px 0 3px;color:#111;break-after:avoid}
-.d-cgv-body p{margin:0 0 4px}
+.d-annexe{margin-top:36px;padding-top:18px;border-top:2px dashed #e5e7eb}
+.d-annexe-head{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}
+.d-annexe-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#111}
+.d-annexe-ref{font-size:10px;color:#888;margin-top:1px}
+.d-annexe-gar{font-size:10.5px;color:#166534;font-weight:600;margin-top:5px}
+.d-fiches{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-bottom:8px}
+.d-fiche{border:1px solid #e5e7eb;border-radius:6px;padding:6px 9px;break-inside:avoid;page-break-inside:avoid}
+.d-fiche-title{font-size:10.5px;font-weight:700;color:#111;margin-bottom:2px}
+.d-fiche-line{font-size:9px;color:#444;line-height:1.35}
+.d-fiche-line b{color:#1d4ed8;font-weight:700}
+.d-decharge{border:1px solid #fed7aa;background:#fff7ed;border-radius:6px;padding:6px 9px;margin-bottom:8px;font-size:8.5px;color:#444;line-height:1.35;break-inside:avoid;page-break-inside:avoid}
+.d-decharge b{color:#c2410c}
+.d-accord-ok{font-size:10px;color:#16a34a;font-weight:700;margin-top:3px}
+.d-sign{display:flex;gap:30px;font-size:9px;color:#888;margin-top:4px}
+.d-sign div{flex:1;border-bottom:1px solid #ccc;padding-bottom:18px}
+.d-cgv-body{column-count:3;column-gap:14px;font-size:7.5px;line-height:1.3;color:#333;text-align:justify;border-top:1px solid #e5e7eb;padding-top:6px}
+.d-cgv-body h4{font-size:8.5px;font-weight:700;text-transform:uppercase;margin:0 0 2px;color:#111;break-after:avoid}
+.d-cgv-body h4.d-cgv-h{column-span:all;text-align:center;font-size:10px;margin-bottom:5px}
+.d-cgv-body h5{font-size:8px;font-weight:700;margin:3px 0 2px;color:#111;break-after:avoid}
+.d-cgv-body p{margin:0 0 2px}
 
 /* EMPTY */
 .empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
@@ -3140,57 +3133,57 @@ function getGains(lines) {
 // remplace la fiche par défaut (cf. getFichesForLines).
 var PRESTA_FICHES = [
   { key: 'stage1', titre: 'Stage 1 — Reprogrammation moteur', match: /stage\s*1\b/,
-    realise: ['Lecture complète des codes défaut et contrôle de l\'état du moteur avant intervention', 'Lecture et sauvegarde du fichier d\'origine du calculateur', 'Optimisation des cartographies d\'usine (injection, suralimentation, allumage, limiteurs de couple) sans modification mécanique', 'Essai routier avec enregistrement des données (pressions, températures, courbes) avant validation finale'],
-    inclus: ['Contrôle avant intervention', 'Conservation du fichier d\'origine', 'Ajustements après essai', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
-    garantie: ['Garantie 2 ans sur la cartographie installée', 'Réinstallation offerte après une mise à jour concessionnaire', '100 % réversible'] },
-  { key: 'stage2', titre: 'Stage 2 — Reprogrammation haute performance', match: /stage\s*2\b/,
-    realise: ['Contrôle du véhicule et des modifications mécaniques installées (admission, échappement, échangeur…)', 'Lecture et sauvegarde du fichier d\'origine', 'Cartographie sur mesure adaptée aux pièces montées', 'Essai routier avec enregistrement des données et ajustements fins'],
-    inclus: ['Suivi personnalisé et ajustements', 'Conservation du fichier d\'origine', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
-    garantie: ['Garantie 2 ans sur la cartographie installée', 'Les pièces mécaniques restent couvertes par la garantie de leur fabricant / installateur'] },
-  { key: 'e85', titre: 'Conversion E85 — Bioéthanol', match: /\be85\b|ethanol/,
-    realise: ['Contrôle des injecteurs, de la pompe et du circuit carburant (certains véhicules nécessitent une mise à niveau préalable)', 'Lecture et sauvegarde du fichier d\'origine', 'Adaptation du calculateur pour un fonctionnement natif au E85 (sans boîtier externe)', 'Premier essai au bioéthanol : contrôle des richesses, températures et consommation'],
-    inclus: ['Contrôle du circuit carburant', 'Conservation du fichier d\'origine', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
-    garantie: ['Garantie 2 ans sur la cartographie installée', 'Fonctionnement garanti avec E85, SP95 et SP98 en toutes proportions'] },
+    realise: ['Lecture des défauts et contrôle moteur', 'Sauvegarde du fichier d\'origine', 'Optimisation de la cartographie (injection, turbo, allumage)', 'Essai routier avec relevé des données'],
+    inclus: ['Ajustements après essai', 'Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Réinstallation après mise à jour concessionnaire'] },
+  { key: 'stage2', titre: 'Stage 2 — Haute performance', match: /stage\s*2\b/,
+    realise: ['Contrôle des pièces mécaniques montées', 'Sauvegarde du fichier d\'origine', 'Cartographie sur mesure', 'Essai routier et ajustements fins'],
+    inclus: ['Suivi personnalisé', 'Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Pièces mécaniques : garantie de leur fabricant'] },
+  { key: 'e85', titre: 'Conversion E85', match: /\be85\b|ethanol/,
+    realise: ['Contrôle injecteurs, pompe et circuit carburant', 'Sauvegarde du fichier d\'origine', 'Adaptation native du calculateur (sans boîtier)', 'Essai au bioéthanol (richesse, températures)'],
+    inclus: ['Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Fonctionne en E85, SP95 et SP98 en tout mélange'] },
   { key: 'conso', titre: 'Optimisation consommation', match: /optimisation\s+(de\s+la\s+)?conso|eco\s*(tuning|drive)/,
-    realise: ['Contrôle de l\'état du moteur et lecture des codes défaut', 'Lecture et sauvegarde du fichier d\'origine', 'Optimisation des cartographies orientée rendement et couple à bas régime', 'Essai routier et validation'],
-    inclus: ['Conservation du fichier d\'origine', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
-    garantie: ['Garantie 2 ans sur la cartographie installée', 'Le gain de consommation dépend de la conduite et de l\'usage du véhicule'] },
+    realise: ['Contrôle moteur et lecture des défauts', 'Sauvegarde du fichier d\'origine', 'Cartographie orientée rendement et couple bas régime', 'Essai routier'],
+    inclus: ['Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Gain selon conduite et usage'] },
   { key: 'tcu', titre: 'Reprogrammation boîte de vitesses (TCU)', match: /\btcu\b|reprog\w*\s+(de\s+)?(la\s+)?boite/,
-    realise: ['Lecture des codes défaut boîte, contrôle des adaptations et identification du calculateur de transmission', 'Lecture et sauvegarde du logiciel d\'origine', 'Recalibrage du calculateur de boîte (passages, limiteurs de couple, pressions)', 'Essai routier et validation'],
-    inclus: ['Diagnostic boîte', 'Conservation du logiciel d\'origine', 'Retour à l\'origine gratuit pendant 2 ans'],
-    garantie: ['Garantie 2 ans sur le logiciel installé'] },
+    realise: ['Diagnostic boîte et contrôle des adaptations', 'Sauvegarde du logiciel d\'origine', 'Recalibrage (passages, limiteurs de couple, pressions)', 'Essai routier'],
+    inclus: ['Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur le logiciel installé'] },
   { key: 'origine', titre: 'Retour à l\'origine', match: /retour\s+a\s+l.?origine|fichier\s+constructeur|remise\s+(au|en)\s+(stock|origine)/,
-    realise: ['Réécriture du fichier d\'origine constructeur dans le calculateur', 'Effacement des codes défaut et contrôle de fonctionnement'],
-    inclus: ['Offert si la reprogrammation a été réalisée par AREPROG (pendant la durée de garantie)'],
-    garantie: ['Le véhicule retrouve son logiciel constructeur d\'origine'] },
+    realise: ['Réécriture du fichier constructeur', 'Effacement des défauts et contrôle'],
+    inclus: ['Offert si reprogrammation AREPROG sous garantie'],
+    garantie: ['Logiciel constructeur d\'origine restauré'] },
   { key: 'egr', titre: 'Désactivation EGR', match: /\begr\b/, decharge: true,
-    realise: ['Lecture de l\'état de la vanne EGR et des codes défaut', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la boucle EGR (la vanne reste en place, non pilotée)', 'Effacement des codes défaut et essai'],
-    inclus: ['Diagnostic du système', 'Aucune modification physique', 'Retour à l\'origine possible à tout moment'],
-    garantie: ['Garantie 2 ans sur le logiciel installé (absence de voyant / mode dégradé lié à l\'EGR)'] },
+    realise: ['Contrôle de la vanne et lecture des défauts', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle (vanne laissée en place)', 'Effacement des défauts et essai'],
+    inclus: ['Aucune modification physique', 'Retour à l\'origine possible'],
+    garantie: ['2 ans : pas de voyant ni mode dégradé lié à l\'EGR'] },
   { key: 'fap', titre: 'Désactivation FAP / DPF', match: /\bfap\b|\bdpf\b/, decharge: true,
-    realise: ['Lecture du taux de colmatage, des capteurs de pression et de l\'état du système', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion FAP (régénérations, capteurs) et adaptation des tables d\'injection', 'Effacement des codes défaut et essai'],
-    inclus: ['Diagnostic du système', 'Retour à l\'origine possible (après remise en place d\'un filtre)'],
-    garantie: ['Garantie 2 ans sur le logiciel installé (absence de voyant / mode dégradé lié au FAP)', 'Le retrait physique du filtre n\'est pas compris sauf mention sur une ligne du document'] },
+    realise: ['Contrôle colmatage et capteurs de pression', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion FAP', 'Effacement des défauts et essai'],
+    inclus: ['Diagnostic du système', 'Retrait physique du filtre seulement si indiqué au document'],
+    garantie: ['2 ans : pas de voyant ni mode dégradé lié au FAP'] },
   { key: 'adblue', titre: 'Désactivation AdBlue / SCR', match: /adblue|\bscr\b/, decharge: true,
-    realise: ['Lecture des défauts liés au système AdBlue et évaluation du module SCR', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion SCR / AdBlue', 'Effacement des codes défaut et essai'],
-    inclus: ['Diagnostic du système', 'Aucune modification physique', 'Retour à l\'origine possible à tout moment'],
-    garantie: ['Garantie 2 ans sur le logiciel installé (absence de compte à rebours / blocage démarrage lié à l\'AdBlue)'] },
+    realise: ['Lecture des défauts AdBlue / SCR', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion SCR', 'Effacement des défauts et essai'],
+    inclus: ['Aucune modification physique', 'Retour à l\'origine possible'],
+    garantie: ['2 ans : pas de compte à rebours ni blocage démarrage'] },
   { key: 'swirl', titre: 'Désactivation volets d\'admission (Swirl)', match: /swirl|volets?\s+d.?admission/,
-    realise: ['Lecture des codes défaut et contrôle des volets', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion des volets d\'admission', 'Effacement des codes défaut et essai'],
-    inclus: ['Retour à l\'origine possible à tout moment'],
-    garantie: ['Garantie 2 ans sur le logiciel installé'] },
+    realise: ['Contrôle des volets et lecture des défauts', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle des volets', 'Essai'],
+    inclus: ['Retour à l\'origine possible'],
+    garantie: ['2 ans sur le logiciel installé'] },
   { key: 'vidange-bva', titre: 'Vidange de boîte automatique', match: /vidange\s+(de\s+)?(la\s+)?(boite|bva|dsg)|boite\s+auto\w*.*vidange/,
-    realise: ['Lecture OBD des codes défaut boîte, contrôle des adaptations et de la température', 'Identification de la boîte et du fluide homologué constructeur', 'Vidange, remplacement du filtre / joint si prévu au document, remplissage et contrôle du niveau à chaud', 'Réinitialisation des adaptations et essai routier'],
-    inclus: ['Diagnostic OBD', 'Fluide homologué constructeur (quantité indiquée au document)', 'Réinitialisation des adaptations'],
-    garantie: ['Garantie 2 ans sur la main-d\'œuvre', 'Pièces et fluides couverts par la garantie de leur fabricant'] },
+    realise: ['Diagnostic OBD de la boîte', 'Vidange et remplissage au fluide homologué', 'Contrôle du niveau à chaud', 'Réinitialisation des adaptations et essai'],
+    inclus: ['Fluide constructeur (quantité au document)', 'Filtre / joint si indiqué au document'],
+    garantie: ['2 ans sur la main-d\'œuvre', 'Pièces et fluides : garantie fabricant'] },
   { key: 'diag', titre: 'Diagnostic électronique', match: /diagnostic|\bodis\b|\bista\b|codes?\s+defaut/,
-    realise: ['Connexion à la prise diagnostic et lecture des calculateurs du véhicule', 'Analyse des codes défaut et des valeurs en temps réel', 'Tests complémentaires selon le symptôme (électrique, antipollution…)', 'Compte rendu au client et, si besoin, proposition de réparation'],
-    inclus: ['Effacement des codes défaut après intervention', 'Codages / calibrations constructeur si indiqués au document'],
-    garantie: ['Le diagnostic identifie les défauts présents le jour de l\'intervention ; il ne constitue pas une garantie contre des pannes ultérieures'] },
+    realise: ['Lecture de tous les calculateurs', 'Analyse des défauts et valeurs en temps réel', 'Tests selon le symptôme', 'Compte rendu au client'],
+    inclus: ['Effacement des défauts', 'Codages / calibrations si indiqués au document'],
+    garantie: ['Constat des défauts présents le jour de l\'intervention'] },
   { key: 'options', titre: 'Options logicielles', match: /pop\s*(&|and|et)?\s*bang|popcorn|dsg\s*farts|crepitement|launch\s*control|octane|exhaust\s*flaps|clapets|start\s*(&|and|et)?\s*stop|vmax|driving\s*mode|sport\s*display/,
-    realise: ['Lecture et sauvegarde du fichier d\'origine', 'Activation / désactivation de la fonction logicielle demandée', 'Essai et validation du fonctionnement'],
-    inclus: ['Réglage selon les préférences du client', 'Retour à l\'origine possible'],
-    garantie: ['Garantie 2 ans sur le logiciel installé', 'Les effets sonores (Pop & Bang, crépitements) sollicitent davantage l\'échappement : usage à la discrétion du client'] },
+    realise: ['Sauvegarde du fichier d\'origine', 'Activation de la fonction demandée', 'Essai et validation'],
+    inclus: ['Réglage selon préférences', 'Retour à l\'origine possible'],
+    garantie: ['2 ans sur le logiciel installé', 'Effets sonores : sollicitent davantage l\'échappement'] },
 ];
 
 var DECHARGE_TEXTE = 'Prestation(s) de désactivation (EGR / FAP / AdBlue) : le client déclare avoir été informé que la désactivation d\'un dispositif antipollution rend le véhicule non conforme à son homologation pour la circulation sur la voie publique. Cette prestation est réalisée à sa demande, pour un usage hors voie publique (circuit, compétition, export). Le client en assume seul l\'utilisation et les conséquences réglementaires, et dégage AREPROG de toute responsabilité à ce titre.';
@@ -3241,8 +3234,7 @@ var CGV_DEFAULT = [
   '2 – Le devis accepté par le client (signature, ou « bon pour accord » transmis par écrit, e-mail ou SMS) vaut commande. Si, au cours de l\'intervention, des travaux ou fournitures non prévus s\'avéraient nécessaires, AREPROG s\'engage à n\'y procéder qu\'après accord préalable du client sur un devis complémentaire.',
   '3 – Avant toute reprogrammation, un contrôle du véhicule (lecture des codes défaut, état général) est réalisé. AREPROG peut refuser ou reporter l\'intervention si l\'état du véhicule ne permet pas de la réaliser dans de bonnes conditions ; seul le diagnostic éventuellement réalisé est alors facturé, après information du client.',
   '4 – Aucun acompte n\'est demandé pour les interventions standard : le règlement intervient après l\'intervention et la validation des résultats. Un acompte peut être demandé pour les prestations sur mesure ou nécessitant une commande de pièces ; il est alors indiqué sur le devis.',
-  '5 – Les gains de puissance, de couple et de consommation communiqués sont des estimations constatées sur des motorisations similaires. Les résultats réels dépendent de l\'état du moteur, de son entretien et du carburant utilisé. AREPROG s\'engage sur une amélioration mesurable et perceptible ; à défaut, un ajustement ou un retour au fichier d\'origine est réalisé sans frais.',
-  '6 – Le fichier d\'origine du calculateur est lu et sauvegardé avant toute modification, puis conservé par AREPROG.',
+  '5 – Les gains de puissance, de couple et de consommation communiqués sont des estimations constatées sur des motorisations similaires. Les résultats réels dépendent de l\'état du moteur, de son entretien et du carburant utilisé. AREPROG s\'engage sur une amélioration mesurable et perceptible ; à défaut, un ajustement ou un retour au fichier d\'origine est réalisé sans frais. Le fichier d\'origine du calculateur est sauvegardé avant toute modification et conservé par AREPROG.',
   '## II – Garanties',
   '### A – Garantie contractuelle AREPROG',
   '1 – Indépendamment de la garantie contractuelle, AREPROG reste tenu, le cas échéant, de la garantie légale de conformité (articles L.217-3 à L.217-20 et L.224-25-1 à L.224-25-31 du Code de la consommation) et de la garantie des vices cachés (articles 1641 à 1649 et 2232 du Code civil).',
@@ -3258,7 +3250,7 @@ var CGV_DEFAULT = [
   'Conformément aux articles D.211-2 et D.211-3 du Code de la consommation, il est rappelé au client agissant en qualité de consommateur que :',
   '• Le consommateur dispose d\'un délai de deux ans à compter de la délivrance du bien (ou de la fourniture du contenu ou service numérique) pour obtenir la mise en œuvre de la garantie légale de conformité en cas d\'apparition d\'un défaut de conformité. Durant ce délai (un an pour un contenu ou service numérique fourni de manière ponctuelle), le consommateur n\'est tenu d\'établir que l\'existence du défaut de conformité et non la date d\'apparition de celui-ci.',
   '• La garantie légale de conformité donne au consommateur droit à la réparation ou au remplacement du bien (ou à la mise en conformité du contenu numérique) dans un délai de trente jours suivant sa demande, sans frais et sans inconvénient majeur pour lui. Si le bien est réparé dans ce cadre, le consommateur bénéficie d\'une extension de six mois de la garantie initiale.',
-  '• Le consommateur peut obtenir une réduction du prix en conservant le bien ou mettre fin au contrat en se faisant rembourser intégralement, si : 1° le professionnel refuse de réparer, de remplacer ou de mettre en conformité ; 2° la réparation ou le remplacement intervient après un délai de trente jours ; 3° la mise en conformité occasionne un inconvénient majeur pour le consommateur ; 4° la non-conformité persiste en dépit de la tentative de mise en conformité restée infructueuse. Il y a également droit lorsque le défaut est si grave qu\'il justifie une réduction de prix ou la résolution immédiate. Le consommateur n\'a pas droit à la résolution si le défaut de conformité est mineur.',
+  '• Le consommateur peut obtenir une réduction du prix ou mettre fin au contrat contre remboursement intégral si le professionnel refuse la mise en conformité, si celle-ci intervient après trente jours ou occasionne un inconvénient majeur, si la non-conformité persiste, ou si le défaut est si grave qu\'il justifie une réduction de prix ou la résolution immédiate. La résolution est exclue si le défaut de conformité est mineur.',
   '• Toute période d\'immobilisation du bien en vue de sa réparation suspend la garantie qui restait à courir jusqu\'à la délivrance du bien remis en état.',
   '• Ces droits résultent de l\'application des articles L.217-1 à L.217-32 et L.224-25-1 à L.224-25-31 du Code de la consommation. Le professionnel qui fait obstacle de mauvaise foi à la mise en œuvre de la garantie légale de conformité encourt une amende civile d\'un montant maximal de 300 000 euros, qui peut être porté jusqu\'à 10 % du chiffre d\'affaires moyen annuel (articles L.241-5 et L.242-18-1 du Code de la consommation).',
   '• Le consommateur bénéficie également de la garantie légale des vices cachés en application des articles 1641 à 1649 du Code civil, pendant une durée de deux ans à compter de la découverte du défaut. Cette garantie donne droit à une réduction de prix si le bien est conservé, ou à un remboursement intégral contre restitution du bien.',
@@ -3275,7 +3267,8 @@ function renderCgvHTML(text, tpl) {
   }).join('');
 }
 
-// Annexe imprimée après le document (devis et factures uniquement). Chaque
+// Annexe imprimée après le document (devis et factures uniquement), sur une
+// seule page : fiches compactes, mention d'usage, puis CGV en texte dense. Le
 // bloc .pdf-newpage commence sur une nouvelle page (impression et PDF mail).
 function buildAnnexeHTML(doc, tpl) {
   if (doc.type !== 'devis' && doc.type !== 'facture') return '';
@@ -3286,40 +3279,35 @@ function buildAnnexeHTML(doc, tpl) {
   var vehStr = [doc.vm, doc.vmo, doc.vmot].filter(Boolean).join(' ') + (doc.vim ? ' · ' + doc.vim.toUpperCase() : '');
   var ref = 'Annexe ' + (isDevis ? 'au devis' : 'à la facture') + ' n° ' + escHtml(doc.num || '—') + ' du ' + fmtDate(doc.date)
     + (doc.cn ? ' · ' + escHtml(doc.cn) : '') + (vehStr.trim() ? ' · ' + escHtml(vehStr) : '');
-  function list(arr, cls) {
-    return arr && arr.length ? '<ul class="' + (cls || '') + '">' + arr.map(function(x) { return '<li>' + escHtml(x) + '</li>'; }).join('') + '</ul>' : '<div class="d-fiche-empty">—</div>';
+  function line(lbl, arr) {
+    return arr && arr.length ? '<div class="d-fiche-line"><b>' + lbl + ' :</b> ' + arr.map(escHtml).join(' · ') + '</div>' : '';
   }
-  var html = '';
+  var titre = fiches.length && showCgv ? 'Prestations, garanties &amp; conditions générales'
+    : fiches.length ? 'Détail des prestations &amp; garanties' : 'Conditions générales de vente et de réparation';
+  var html = '<div class="d-annexe pdf-newpage">'
+    + '<div class="d-annexe-head"><div class="d-annexe-title">' + titre + '</div><div class="d-annexe-ref">' + ref + '</div>'
+    + '<div class="d-annexe-gar">✓ Garantie AREPROG 2 ans sur chaque prestation, sans limite de kilométrage — fichier d\'origine conservé, retour à l\'origine gratuit'
+    + (showCgv ? ' (détail : article II des conditions ci-dessous)' : '') + '</div></div>';
   if (fiches.length) {
-    html += '<div class="d-annexe pdf-newpage">'
-      + '<div class="d-annexe-head"><div class="d-annexe-title">Détail des prestations &amp; garanties</div><div class="d-annexe-ref">' + ref + '</div></div>'
-      + fiches.map(function(f) {
-        return '<div class="d-fiche"><div class="d-fiche-title">' + escHtml(f.titre) + '</div><div class="d-fiche-cols">'
-          + '<div><div class="d-fiche-h">Ce qui est réalisé</div>' + list(f.realise) + '</div>'
-          + '<div><div class="d-fiche-h">Inclus / pris en charge</div>' + list(f.inclus) + '</div>'
-          + '<div><div class="d-fiche-h">Garantie</div>' + list(f.garantie) + '</div>'
-          + '</div></div>';
-      }).join('')
-      + '<div class="d-fiche d-garantie-gen"><div class="d-fiche-title">Garantie AREPROG — 2 ans</div>'
-      + '<div class="d-fiche-cols d-fiche-cols-2"><div><div class="d-fiche-h">Couvert</div>' + list(['La cartographie / le logiciel installé et la main-d\'œuvre', 'La réinstallation après une mise à jour concessionnaire', 'Les ajustements fins après intervention', 'Le retour au fichier d\'origine, gratuit, sur simple demande']) + '</div>'
-      + '<div><div class="d-fiche-h">Non couvert</div>' + list(['Les pannes mécaniques ou électriques préexistantes', 'L\'usure normale des pièces', 'Une modification du calculateur réalisée par un tiers', 'Le non-respect de l\'entretien constructeur'], 'd-ko') + '</div></div>'
-      + '<div class="d-fiche-note">Garantie valable 2 ans à compter de la date d\'intervention figurant sur la facture, sans limite de kilométrage. Détail complet dans les conditions générales ci-après.</div></div>';
+    html += '<div class="d-fiches">' + fiches.map(function(f) {
+      return '<div class="d-fiche"><div class="d-fiche-title">' + escHtml(f.titre) + '</div>'
+        + line('Réalisé', f.realise) + line('Inclus', f.inclus) + line('Garantie', f.garantie) + '</div>';
+    }).join('') + '</div>';
     if (fiches.some(function(f) { return f.decharge; })) {
       var ac = doc.accordUsage || {};
-      html += '<div class="d-decharge"><div class="d-fiche-h">Mention d\'usage — information du client</div><p>' + escHtml(DECHARGE_TEXTE) + '</p>'
+      html += '<div class="d-decharge"><b>Mention d\'usage — </b>' + escHtml(DECHARGE_TEXTE)
         + (ac.ok
           ? '<div class="d-accord-ok">✓ Accord du client enregistré' + (ac.date ? ' le ' + fmtDate(ac.date) : '') + (ac.mode ? ' — ' + escHtml(ac.mode) : '') + '</div>'
-          : '<div class="d-sign"><div>Lu et approuvé — Date : ____________</div><div>Signature du client :</div></div>')
+          : '<div class="d-sign"><div>Lu et approuvé — Date :</div><div>Signature du client :</div></div>')
         + '</div>';
     }
-    html += '</div>';
   }
   if (showCgv) {
-    html += '<div class="d-cgv pdf-newpage"><div class="d-cgv-title">Conditions générales de vente et de réparation</div>'
-      + '<div class="d-annexe-ref" style="text-align:center;margin-bottom:10px">' + ref + '</div>'
-      + '<div class="d-cgv-body">' + renderCgvHTML(tpl.cgv || CGV_DEFAULT, tpl) + '</div></div>';
+    html += '<div class="d-cgv-body">'
+      + (fiches.length ? '<h4 class="d-cgv-h">Conditions générales de vente et de réparation</h4>' : '')
+      + renderCgvHTML(tpl.cgv || CGV_DEFAULT, tpl) + '</div>';
   }
-  return html;
+  return html + '</div>';
 }
 
 // ============================================================
@@ -6680,6 +6668,17 @@ async function generatePdfBase64(elId, opts) {
     var pxPerCss = canvas.height / cssH;
     var pxPerMm = canvas.width / imgW;
     cuts = cuts.map(function(c) { return Math.round(c * pxPerCss); }).sort(function(a, b) { return a - b; });
+
+    // Section qui déborde de peu (≤ 25 %) : on la réduit pour la garder sur une
+    // seule page (annexe garanties + CGV) plutôt que d'ajouter une page presque vide.
+    var fullPage = Math.floor(pageH * pxPerMm);
+    if (canvas.height > fullPage && canvas.height <= fullPage * 1.25) {
+      var k = fullPage / canvas.height;
+      if (!firstPage) pdf.addPage();
+      firstPage = false;
+      pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'JPEG', imgW * (1 - k) / 2, 0, imgW * k, pageH);
+      continue;
+    }
 
     // Découpe en pages, en coupant au dernier bloc qui tient entièrement
     var pos = 0, pageOfSection = 0;
