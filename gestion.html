@@ -253,6 +253,33 @@ select option{background:var(--bg2);color:var(--text)}
 .d-notes strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:6px}
 .d-notes p{font-size:12px;color:#555;line-height:1.65}
 .d-footer{border-top:1px solid #e5e7eb;padding-top:14px;font-size:10px;color:#aaa;text-align:center;line-height:1.7}
+.d-annexe,.d-cgv{margin-top:36px;padding-top:18px;border-top:2px dashed #e5e7eb}
+.d-annexe-head{margin-bottom:14px}
+.d-annexe-title,.d-cgv-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#111}
+.d-cgv-title{text-align:center}
+.d-annexe-ref{font-size:11px;color:#888;margin-top:2px}
+.d-fiche{border:1px solid #e5e7eb;border-radius:8px;padding:12px 14px;margin-bottom:10px;break-inside:avoid;page-break-inside:avoid}
+.d-fiche-title{font-size:13px;font-weight:700;color:#111;margin-bottom:8px}
+.d-fiche-cols{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:14px}
+.d-fiche-cols-2{grid-template-columns:1fr 1fr}
+.d-fiche-h{font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;font-weight:700;margin-bottom:5px}
+.d-fiche ul{margin:0;padding:0;list-style:none}
+.d-fiche li{font-size:11px;color:#444;line-height:1.45;padding-left:12px;position:relative;margin-bottom:3px}
+.d-fiche li::before{content:"✓";position:absolute;left:0;color:#16a34a;font-weight:700}
+.d-fiche ul.d-ko li::before{content:"✗";color:#dc2626}
+.d-fiche-empty{font-size:11px;color:#bbb}
+.d-fiche-note{font-size:10.5px;color:#777;margin-top:8px;font-style:italic}
+.d-garantie-gen{background:#f0fdf4;border-color:#bbf7d0}
+.d-decharge{border:1px solid #fed7aa;background:#fff7ed;border-radius:8px;padding:12px 14px;margin-top:4px;break-inside:avoid;page-break-inside:avoid}
+.d-decharge .d-fiche-h{color:#c2410c}
+.d-decharge p{font-size:11px;color:#444;line-height:1.5;margin:0 0 10px}
+.d-accord-ok{font-size:12px;color:#16a34a;font-weight:600}
+.d-sign{display:flex;gap:40px;font-size:11px;color:#888}
+.d-sign div{flex:1;border-bottom:1px solid #ccc;padding-bottom:28px}
+.d-cgv-body{column-count:2;column-gap:22px;font-size:10px;line-height:1.4;color:#333;text-align:justify}
+.d-cgv-body h4{font-size:11.5px;font-weight:700;text-transform:uppercase;margin:0 0 4px;color:#111;break-after:avoid}
+.d-cgv-body h5{font-size:10.5px;font-weight:700;margin:6px 0 3px;color:#111;break-after:avoid}
+.d-cgv-body p{margin:0 0 4px}
 
 /* EMPTY */
 .empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
@@ -1090,6 +1117,7 @@ select option{background:var(--bg2);color:var(--text)}
   .modal-wrap{display:block!important}
   .modal-toolbar{display:none!important}
   .modal-inner{box-shadow:none!important;border-radius:0!important;width:100%!important}
+  .pdf-newpage{break-before:page;page-break-before:always;margin-top:0;border-top:none;padding-top:44px}
 }
 </style>
 </head>
@@ -1348,6 +1376,20 @@ select option{background:var(--bg2);color:var(--text)}
           <div class="fr"><label>Notes internes (non imprimées)</label>
             <textarea id="f-nint" rows="2" placeholder="Mémo interne..."></textarea>
           </div>
+          <div class="fr" style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
+            <label>Accord client — désactivation EGR / FAP / AdBlue</label>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0"><input type="checkbox" id="f-accord" style="width:18px;height:18px" onchange="onAccordChange()"/> Le client a accepté la mention d'usage</label>
+              <select id="f-accord-mode" style="width:auto" onchange="onFormChange()">
+                <option value="sur place">sur place</option>
+                <option value="par e-mail">par e-mail</option>
+                <option value="par SMS">par SMS</option>
+                <option value="par téléphone">par téléphone</option>
+              </select>
+              <input type="date" id="f-accord-date" style="width:auto" onchange="onFormChange()"/>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Imprimé dans l'annexe uniquement si le document contient une désactivation EGR, FAP ou AdBlue. Sans accord coché, une zone « Lu et approuvé / Signature » est imprimée à la place.</div>
+          </div>
         </div>
         <div class="card" style="margin-top:16px">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
@@ -1572,6 +1614,12 @@ select option{background:var(--bg2);color:var(--text)}
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-veh" checked/> Afficher le véhicule chez le client</label></div>
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-footer" checked/> Afficher le pied de page</label></div>
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-legal" checked/> Afficher les mentions légales</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-annexe" checked onchange="livePreview()"/> Annexe « Détail des prestations &amp; garanties » (devis et factures)</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-cgv" checked onchange="livePreview()"/> Conditions générales de vente et de réparation (devis et factures)</label></div>
+            <div class="fr"><label>Texte des conditions générales <span style="font-weight:400;color:var(--text-muted)">— « ## » titre, « ### » sous-titre, ligne vide = nouveau paragraphe, {validite} = validité du devis</span></label>
+              <textarea id="tpl-cgv" rows="10" style="font-size:12px" oninput="livePreview()"></textarea>
+              <div style="margin-top:6px"><button type="button" class="btn-s" style="font-size:11px;padding:4px 10px" onclick="$('tpl-cgv').value=CGV_DEFAULT;livePreview()">↺ Texte par défaut</button></div>
+            </div>
             <div class="fr"><label>Validité devis (jours)</label>
               <input type="number" id="tpl-validite" value="30" min="1" max="365" placeholder="30"/>
             </div>
@@ -2038,6 +2086,13 @@ select option{background:var(--bg2);color:var(--text)}
       <label>Gains / bénéfices (un par ligne — affichés sur le devis)</label>
       <textarea id="cat-item-gains" rows="4" placeholder="Ex :&#10;Meilleure réactivité moteur&#10;100% réversible&#10;Agrément de conduite amélioré"></textarea>
       <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Ces gains apparaîtront dans l'encart bleu sur le devis/facture PDF</div>
+    </div>
+    <div class="fr">
+      <label>Annexe « Détail des prestations &amp; garanties » (optionnel — un point par ligne)</label>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Laisser vide pour utiliser la fiche standard (Stage 1, E85, EGR, FAP, diagnostic…). Si rempli, remplace la fiche standard pour cette prestation.</div>
+      <textarea id="cat-item-realise" rows="3" placeholder="Ce qui est réalisé&#10;Ex : Lecture et sauvegarde du fichier d'origine"></textarea>
+      <textarea id="cat-item-inclus" rows="3" style="margin-top:6px" placeholder="Inclus / pris en charge&#10;Ex : Retour au fichier d'origine gratuit"></textarea>
+      <textarea id="cat-item-garantie" rows="3" style="margin-top:6px" placeholder="Garantie&#10;Ex : Garantie 2 ans sur la cartographie"></textarea>
     </div>
     <div class="fr"><label>Catégorie</label>
       <select id="cat-item-group"></select>
@@ -3076,6 +3131,198 @@ function getGains(lines) {
 }
 
 // ============================================================
+//  ANNEXE — Détail des prestations & garanties (devis / factures)
+// ============================================================
+// Fiches par défaut, reconnues par mot-clé dans le libellé de la ligne (le
+// catalogue réel vit dans localStorage/Firestore et les libellés viennent aussi
+// de devis-ia / lead-capture, d'où un match souple plutôt qu'exact). Une
+// prestation du catalogue dont les champs realise/inclus/garantie sont remplis
+// remplace la fiche par défaut (cf. getFichesForLines).
+var PRESTA_FICHES = [
+  { key: 'stage1', titre: 'Stage 1 — Reprogrammation moteur', match: /stage\s*1\b/,
+    realise: ['Lecture complète des codes défaut et contrôle de l\'état du moteur avant intervention', 'Lecture et sauvegarde du fichier d\'origine du calculateur', 'Optimisation des cartographies d\'usine (injection, suralimentation, allumage, limiteurs de couple) sans modification mécanique', 'Essai routier avec enregistrement des données (pressions, températures, courbes) avant validation finale'],
+    inclus: ['Contrôle avant intervention', 'Conservation du fichier d\'origine', 'Ajustements après essai', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
+    garantie: ['Garantie 2 ans sur la cartographie installée', 'Réinstallation offerte après une mise à jour concessionnaire', '100 % réversible'] },
+  { key: 'stage2', titre: 'Stage 2 — Reprogrammation haute performance', match: /stage\s*2\b/,
+    realise: ['Contrôle du véhicule et des modifications mécaniques installées (admission, échappement, échangeur…)', 'Lecture et sauvegarde du fichier d\'origine', 'Cartographie sur mesure adaptée aux pièces montées', 'Essai routier avec enregistrement des données et ajustements fins'],
+    inclus: ['Suivi personnalisé et ajustements', 'Conservation du fichier d\'origine', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
+    garantie: ['Garantie 2 ans sur la cartographie installée', 'Les pièces mécaniques restent couvertes par la garantie de leur fabricant / installateur'] },
+  { key: 'e85', titre: 'Conversion E85 — Bioéthanol', match: /\be85\b|ethanol/,
+    realise: ['Contrôle des injecteurs, de la pompe et du circuit carburant (certains véhicules nécessitent une mise à niveau préalable)', 'Lecture et sauvegarde du fichier d\'origine', 'Adaptation du calculateur pour un fonctionnement natif au E85 (sans boîtier externe)', 'Premier essai au bioéthanol : contrôle des richesses, températures et consommation'],
+    inclus: ['Contrôle du circuit carburant', 'Conservation du fichier d\'origine', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
+    garantie: ['Garantie 2 ans sur la cartographie installée', 'Fonctionnement garanti avec E85, SP95 et SP98 en toutes proportions'] },
+  { key: 'conso', titre: 'Optimisation consommation', match: /optimisation\s+(de\s+la\s+)?conso|eco\s*(tuning|drive)/,
+    realise: ['Contrôle de l\'état du moteur et lecture des codes défaut', 'Lecture et sauvegarde du fichier d\'origine', 'Optimisation des cartographies orientée rendement et couple à bas régime', 'Essai routier et validation'],
+    inclus: ['Conservation du fichier d\'origine', 'Retour au fichier d\'origine gratuit pendant 2 ans'],
+    garantie: ['Garantie 2 ans sur la cartographie installée', 'Le gain de consommation dépend de la conduite et de l\'usage du véhicule'] },
+  { key: 'tcu', titre: 'Reprogrammation boîte de vitesses (TCU)', match: /\btcu\b|reprog\w*\s+(de\s+)?(la\s+)?boite/,
+    realise: ['Lecture des codes défaut boîte, contrôle des adaptations et identification du calculateur de transmission', 'Lecture et sauvegarde du logiciel d\'origine', 'Recalibrage du calculateur de boîte (passages, limiteurs de couple, pressions)', 'Essai routier et validation'],
+    inclus: ['Diagnostic boîte', 'Conservation du logiciel d\'origine', 'Retour à l\'origine gratuit pendant 2 ans'],
+    garantie: ['Garantie 2 ans sur le logiciel installé'] },
+  { key: 'origine', titre: 'Retour à l\'origine', match: /retour\s+a\s+l.?origine|fichier\s+constructeur|remise\s+(au|en)\s+(stock|origine)/,
+    realise: ['Réécriture du fichier d\'origine constructeur dans le calculateur', 'Effacement des codes défaut et contrôle de fonctionnement'],
+    inclus: ['Offert si la reprogrammation a été réalisée par AREPROG (pendant la durée de garantie)'],
+    garantie: ['Le véhicule retrouve son logiciel constructeur d\'origine'] },
+  { key: 'egr', titre: 'Désactivation EGR', match: /\begr\b/, decharge: true,
+    realise: ['Lecture de l\'état de la vanne EGR et des codes défaut', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la boucle EGR (la vanne reste en place, non pilotée)', 'Effacement des codes défaut et essai'],
+    inclus: ['Diagnostic du système', 'Aucune modification physique', 'Retour à l\'origine possible à tout moment'],
+    garantie: ['Garantie 2 ans sur le logiciel installé (absence de voyant / mode dégradé lié à l\'EGR)'] },
+  { key: 'fap', titre: 'Désactivation FAP / DPF', match: /\bfap\b|\bdpf\b/, decharge: true,
+    realise: ['Lecture du taux de colmatage, des capteurs de pression et de l\'état du système', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion FAP (régénérations, capteurs) et adaptation des tables d\'injection', 'Effacement des codes défaut et essai'],
+    inclus: ['Diagnostic du système', 'Retour à l\'origine possible (après remise en place d\'un filtre)'],
+    garantie: ['Garantie 2 ans sur le logiciel installé (absence de voyant / mode dégradé lié au FAP)', 'Le retrait physique du filtre n\'est pas compris sauf mention sur une ligne du document'] },
+  { key: 'adblue', titre: 'Désactivation AdBlue / SCR', match: /adblue|\bscr\b/, decharge: true,
+    realise: ['Lecture des défauts liés au système AdBlue et évaluation du module SCR', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion SCR / AdBlue', 'Effacement des codes défaut et essai'],
+    inclus: ['Diagnostic du système', 'Aucune modification physique', 'Retour à l\'origine possible à tout moment'],
+    garantie: ['Garantie 2 ans sur le logiciel installé (absence de compte à rebours / blocage démarrage lié à l\'AdBlue)'] },
+  { key: 'swirl', titre: 'Désactivation volets d\'admission (Swirl)', match: /swirl|volets?\s+d.?admission/,
+    realise: ['Lecture des codes défaut et contrôle des volets', 'Lecture et sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion des volets d\'admission', 'Effacement des codes défaut et essai'],
+    inclus: ['Retour à l\'origine possible à tout moment'],
+    garantie: ['Garantie 2 ans sur le logiciel installé'] },
+  { key: 'vidange-bva', titre: 'Vidange de boîte automatique', match: /vidange\s+(de\s+)?(la\s+)?(boite|bva|dsg)|boite\s+auto\w*.*vidange/,
+    realise: ['Lecture OBD des codes défaut boîte, contrôle des adaptations et de la température', 'Identification de la boîte et du fluide homologué constructeur', 'Vidange, remplacement du filtre / joint si prévu au document, remplissage et contrôle du niveau à chaud', 'Réinitialisation des adaptations et essai routier'],
+    inclus: ['Diagnostic OBD', 'Fluide homologué constructeur (quantité indiquée au document)', 'Réinitialisation des adaptations'],
+    garantie: ['Garantie 2 ans sur la main-d\'œuvre', 'Pièces et fluides couverts par la garantie de leur fabricant'] },
+  { key: 'diag', titre: 'Diagnostic électronique', match: /diagnostic|\bodis\b|\bista\b|codes?\s+defaut/,
+    realise: ['Connexion à la prise diagnostic et lecture des calculateurs du véhicule', 'Analyse des codes défaut et des valeurs en temps réel', 'Tests complémentaires selon le symptôme (électrique, antipollution…)', 'Compte rendu au client et, si besoin, proposition de réparation'],
+    inclus: ['Effacement des codes défaut après intervention', 'Codages / calibrations constructeur si indiqués au document'],
+    garantie: ['Le diagnostic identifie les défauts présents le jour de l\'intervention ; il ne constitue pas une garantie contre des pannes ultérieures'] },
+  { key: 'options', titre: 'Options logicielles', match: /pop\s*(&|and|et)?\s*bang|popcorn|dsg\s*farts|crepitement|launch\s*control|octane|exhaust\s*flaps|clapets|start\s*(&|and|et)?\s*stop|vmax|driving\s*mode|sport\s*display/,
+    realise: ['Lecture et sauvegarde du fichier d\'origine', 'Activation / désactivation de la fonction logicielle demandée', 'Essai et validation du fonctionnement'],
+    inclus: ['Réglage selon les préférences du client', 'Retour à l\'origine possible'],
+    garantie: ['Garantie 2 ans sur le logiciel installé', 'Les effets sonores (Pop & Bang, crépitements) sollicitent davantage l\'échappement : usage à la discrétion du client'] },
+];
+
+var DECHARGE_TEXTE = 'Prestation(s) de désactivation (EGR / FAP / AdBlue) : le client déclare avoir été informé que la désactivation d\'un dispositif antipollution rend le véhicule non conforme à son homologation pour la circulation sur la voie publique. Cette prestation est réalisée à sa demande, pour un usage hors voie publique (circuit, compétition, export). Le client en assume seul l\'utilisation et les conséquences réglementaires, et dégage AREPROG de toute responsabilité à ce titre.';
+
+function _normLabel(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+// Fiches à imprimer pour les lignes du document, dédoublonnées (un pack
+// « Stage 1 + EGR + FAP » donne les fiches Stage 1, EGR et FAP une seule fois).
+function getFichesForLines(lines) {
+  var cat = loadCat();
+  var out = [], seen = {};
+  (lines || []).forEach(function(l) {
+    if (!l.label) return;
+    var norm = _normLabel(l.label);
+    var custom = null;
+    for (var gi = 0; gi < cat.length && !custom; gi++) {
+      for (var ii = 0; ii < cat[gi].items.length; ii++) {
+        var it = cat[gi].items[ii];
+        if (it.l === l.label && ((it.realise && it.realise.length) || (it.inclus && it.inclus.length) || (it.garantie && it.garantie.length))) { custom = it; break; }
+      }
+    }
+    var matched = PRESTA_FICHES.filter(function(f) { return f.match.test(norm); });
+    var decharge = matched.some(function(f) { return f.decharge; });
+    if (custom) {
+      var k = 'cat:' + custom.l;
+      if (seen[k]) return;
+      seen[k] = true;
+      out.push({ key: k, titre: custom.l.split(' — ')[0], realise: custom.realise || [], inclus: custom.inclus || [], garantie: custom.garantie || [], decharge: decharge });
+      return;
+    }
+    matched.forEach(function(f) {
+      if (seen[f.key]) return;
+      seen[f.key] = true;
+      out.push(f);
+    });
+  });
+  return out;
+}
+
+// Conditions générales imprimées en fin d'annexe (texte modifiable dans
+// Modèle de document). Syntaxe : "## Titre", "### Sous-titre", une ligne vide
+// sépare les paragraphes, "{validite}" = durée de validité du devis.
+var CGV_DEFAULT = [
+  '## I – Devis et ordre de réparation',
+  '1 – À la demande du client, AREPROG établit un devis gratuit détaillant les prestations à réaliser sur son véhicule. Sauf mention contraire, le devis est valable {validite} jours à compter de sa date d\'émission.',
+  '2 – Le devis accepté par le client (signature, ou « bon pour accord » transmis par écrit, e-mail ou SMS) vaut commande. Si, au cours de l\'intervention, des travaux ou fournitures non prévus s\'avéraient nécessaires, AREPROG s\'engage à n\'y procéder qu\'après accord préalable du client sur un devis complémentaire.',
+  '3 – Avant toute reprogrammation, un contrôle du véhicule (lecture des codes défaut, état général) est réalisé. AREPROG peut refuser ou reporter l\'intervention si l\'état du véhicule ne permet pas de la réaliser dans de bonnes conditions ; seul le diagnostic éventuellement réalisé est alors facturé, après information du client.',
+  '4 – Aucun acompte n\'est demandé pour les interventions standard : le règlement intervient après l\'intervention et la validation des résultats. Un acompte peut être demandé pour les prestations sur mesure ou nécessitant une commande de pièces ; il est alors indiqué sur le devis.',
+  '5 – Les gains de puissance, de couple et de consommation communiqués sont des estimations constatées sur des motorisations similaires. Les résultats réels dépendent de l\'état du moteur, de son entretien et du carburant utilisé. AREPROG s\'engage sur une amélioration mesurable et perceptible ; à défaut, un ajustement ou un retour au fichier d\'origine est réalisé sans frais.',
+  '6 – Le fichier d\'origine du calculateur est lu et sauvegardé avant toute modification, puis conservé par AREPROG.',
+  '## II – Garanties',
+  '### A – Garantie contractuelle AREPROG',
+  '1 – Indépendamment de la garantie contractuelle, AREPROG reste tenu, le cas échéant, de la garantie légale de conformité (articles L.217-3 à L.217-20 et L.224-25-1 à L.224-25-31 du Code de la consommation) et de la garantie des vices cachés (articles 1641 à 1649 et 2232 du Code civil).',
+  '2 – Durée : la garantie contractuelle est de deux (2) ans à compter de la date d\'intervention indiquée sur la facture, sans limitation de kilométrage.',
+  '3 – Objet : sont garantis le logiciel (cartographie) installé par AREPROG et la main-d\'œuvre de l\'intervention. La garantie comprend la correction ou l\'ajustement de la cartographie, sa réinstallation après une mise à jour réalisée par un concessionnaire, et le retour au fichier d\'origine sur simple demande, sans frais. Les pièces fournies par AREPROG sont couvertes par la garantie de leur fabricant.',
+  '4 – Mise en œuvre : la demande doit être adressée à AREPROG dès la constatation du défaut, accompagnée de la facture acquittée. L\'intervention sous garantie est réalisée en atelier AREPROG.',
+  '5 – Avant toute intervention chez un concessionnaire ou au titre de la garantie constructeur, le client peut demander la remise du véhicule au fichier d\'origine : cette opération est incluse dans la garantie.',
+  '6 – La garantie consiste en la reprise, la correction ou la réinstallation du logiciel concerné, ou en un retour à l\'origine. Une intervention réalisée au titre de la garantie ne prolonge pas sa durée et ne fait pas courir une nouvelle garantie.',
+  '7 – La garantie ne s\'applique pas : aux pannes mécaniques, électriques ou électroniques préexistantes ou étrangères à l\'intervention ; à l\'usure normale des pièces ; lorsque le calculateur a été lu, modifié ou reprogrammé par un tiers après l\'intervention d\'AREPROG ; en cas de non-respect du plan d\'entretien constructeur ou d\'utilisation d\'un carburant inadapté ; en cas d\'utilisation en compétition, sauf prestation prévue à cet effet.',
+  '8 – Le diagnostic identifie les défauts présents au jour de l\'intervention ; il ne garantit pas l\'absence de pannes ultérieures ni le résultat d\'une réparation réalisée par un tiers.',
+  '9 – Pendant la durée de l\'intervention, AREPROG est responsable du véhicule confié ainsi que des accessoires et équipements qui y sont fixés.',
+  '### B – Garantie légale',
+  'Conformément aux articles D.211-2 et D.211-3 du Code de la consommation, il est rappelé au client agissant en qualité de consommateur que :',
+  '• Le consommateur dispose d\'un délai de deux ans à compter de la délivrance du bien (ou de la fourniture du contenu ou service numérique) pour obtenir la mise en œuvre de la garantie légale de conformité en cas d\'apparition d\'un défaut de conformité. Durant ce délai (un an pour un contenu ou service numérique fourni de manière ponctuelle), le consommateur n\'est tenu d\'établir que l\'existence du défaut de conformité et non la date d\'apparition de celui-ci.',
+  '• La garantie légale de conformité donne au consommateur droit à la réparation ou au remplacement du bien (ou à la mise en conformité du contenu numérique) dans un délai de trente jours suivant sa demande, sans frais et sans inconvénient majeur pour lui. Si le bien est réparé dans ce cadre, le consommateur bénéficie d\'une extension de six mois de la garantie initiale.',
+  '• Le consommateur peut obtenir une réduction du prix en conservant le bien ou mettre fin au contrat en se faisant rembourser intégralement, si : 1° le professionnel refuse de réparer, de remplacer ou de mettre en conformité ; 2° la réparation ou le remplacement intervient après un délai de trente jours ; 3° la mise en conformité occasionne un inconvénient majeur pour le consommateur ; 4° la non-conformité persiste en dépit de la tentative de mise en conformité restée infructueuse. Il y a également droit lorsque le défaut est si grave qu\'il justifie une réduction de prix ou la résolution immédiate. Le consommateur n\'a pas droit à la résolution si le défaut de conformité est mineur.',
+  '• Toute période d\'immobilisation du bien en vue de sa réparation suspend la garantie qui restait à courir jusqu\'à la délivrance du bien remis en état.',
+  '• Ces droits résultent de l\'application des articles L.217-1 à L.217-32 et L.224-25-1 à L.224-25-31 du Code de la consommation. Le professionnel qui fait obstacle de mauvaise foi à la mise en œuvre de la garantie légale de conformité encourt une amende civile d\'un montant maximal de 300 000 euros, qui peut être porté jusqu\'à 10 % du chiffre d\'affaires moyen annuel (articles L.241-5 et L.242-18-1 du Code de la consommation).',
+  '• Le consommateur bénéficie également de la garantie légale des vices cachés en application des articles 1641 à 1649 du Code civil, pendant une durée de deux ans à compter de la découverte du défaut. Cette garantie donne droit à une réduction de prix si le bien est conservé, ou à un remboursement intégral contre restitution du bien.',
+].join('\n\n');
+
+function renderCgvHTML(text, tpl) {
+  var src = String(text || '').replace(/\{validite\}/g, String(tpl.validite || 30));
+  return src.split(/\n\s*\n/).map(function(p) {
+    p = p.trim();
+    if (!p) return '';
+    if (p.indexOf('### ') === 0) return '<h5>' + escHtml(p.slice(4)) + '</h5>';
+    if (p.indexOf('## ') === 0) return '<h4>' + escHtml(p.slice(3)) + '</h4>';
+    return '<p>' + escHtml(p).replace(/\n/g, '<br>') + '</p>';
+  }).join('');
+}
+
+// Annexe imprimée après le document (devis et factures uniquement). Chaque
+// bloc .pdf-newpage commence sur une nouvelle page (impression et PDF mail).
+function buildAnnexeHTML(doc, tpl) {
+  if (doc.type !== 'devis' && doc.type !== 'facture') return '';
+  var fiches = tpl.showAnnexe !== false ? getFichesForLines(doc.lines) : [];
+  var showCgv = tpl.showCgv !== false;
+  if (!fiches.length && !showCgv) return '';
+  var isDevis = doc.type === 'devis';
+  var vehStr = [doc.vm, doc.vmo, doc.vmot].filter(Boolean).join(' ') + (doc.vim ? ' · ' + doc.vim.toUpperCase() : '');
+  var ref = 'Annexe ' + (isDevis ? 'au devis' : 'à la facture') + ' n° ' + escHtml(doc.num || '—') + ' du ' + fmtDate(doc.date)
+    + (doc.cn ? ' · ' + escHtml(doc.cn) : '') + (vehStr.trim() ? ' · ' + escHtml(vehStr) : '');
+  function list(arr, cls) {
+    return arr && arr.length ? '<ul class="' + (cls || '') + '">' + arr.map(function(x) { return '<li>' + escHtml(x) + '</li>'; }).join('') + '</ul>' : '<div class="d-fiche-empty">—</div>';
+  }
+  var html = '';
+  if (fiches.length) {
+    html += '<div class="d-annexe pdf-newpage">'
+      + '<div class="d-annexe-head"><div class="d-annexe-title">Détail des prestations &amp; garanties</div><div class="d-annexe-ref">' + ref + '</div></div>'
+      + fiches.map(function(f) {
+        return '<div class="d-fiche"><div class="d-fiche-title">' + escHtml(f.titre) + '</div><div class="d-fiche-cols">'
+          + '<div><div class="d-fiche-h">Ce qui est réalisé</div>' + list(f.realise) + '</div>'
+          + '<div><div class="d-fiche-h">Inclus / pris en charge</div>' + list(f.inclus) + '</div>'
+          + '<div><div class="d-fiche-h">Garantie</div>' + list(f.garantie) + '</div>'
+          + '</div></div>';
+      }).join('')
+      + '<div class="d-fiche d-garantie-gen"><div class="d-fiche-title">Garantie AREPROG — 2 ans</div>'
+      + '<div class="d-fiche-cols d-fiche-cols-2"><div><div class="d-fiche-h">Couvert</div>' + list(['La cartographie / le logiciel installé et la main-d\'œuvre', 'La réinstallation après une mise à jour concessionnaire', 'Les ajustements fins après intervention', 'Le retour au fichier d\'origine, gratuit, sur simple demande']) + '</div>'
+      + '<div><div class="d-fiche-h">Non couvert</div>' + list(['Les pannes mécaniques ou électriques préexistantes', 'L\'usure normale des pièces', 'Une modification du calculateur réalisée par un tiers', 'Le non-respect de l\'entretien constructeur'], 'd-ko') + '</div></div>'
+      + '<div class="d-fiche-note">Garantie valable 2 ans à compter de la date d\'intervention figurant sur la facture, sans limite de kilométrage. Détail complet dans les conditions générales ci-après.</div></div>';
+    if (fiches.some(function(f) { return f.decharge; })) {
+      var ac = doc.accordUsage || {};
+      html += '<div class="d-decharge"><div class="d-fiche-h">Mention d\'usage — information du client</div><p>' + escHtml(DECHARGE_TEXTE) + '</p>'
+        + (ac.ok
+          ? '<div class="d-accord-ok">✓ Accord du client enregistré' + (ac.date ? ' le ' + fmtDate(ac.date) : '') + (ac.mode ? ' — ' + escHtml(ac.mode) : '') + '</div>'
+          : '<div class="d-sign"><div>Lu et approuvé — Date : ____________</div><div>Signature du client :</div></div>')
+        + '</div>';
+    }
+    html += '</div>';
+  }
+  if (showCgv) {
+    html += '<div class="d-cgv pdf-newpage"><div class="d-cgv-title">Conditions générales de vente et de réparation</div>'
+      + '<div class="d-annexe-ref" style="text-align:center;margin-bottom:10px">' + ref + '</div>'
+      + '<div class="d-cgv-body">' + renderCgvHTML(tpl.cgv || CGV_DEFAULT, tpl) + '</div></div>';
+  }
+  return html;
+}
+
+// ============================================================
 //  HELPERS
 // ============================================================
 function fmt(n) { return n.toFixed(2).replace('.', ',') + ' \u20ac'; }
@@ -3160,11 +3407,28 @@ function resetForm(goToForm) {
   renderGainsBar();
   if ($('f-gains')) { $('f-gains').value = ''; previewGainsBadge(); }
   resetDeclaration();
+  setAccordUsage(null);
   addLine();
   if (goToForm) showTab('form');
 }
 
 function newDoc() { resetForm(true); }
+
+// Accord du client sur la mention d'usage des désactivations (annexe du document)
+function getAccordUsage() {
+  if (!$('f-accord') || !$('f-accord').checked) return null;
+  return { ok: true, mode: $('f-accord-mode').value, date: $('f-accord-date').value || today() };
+}
+function setAccordUsage(ac) {
+  if (!$('f-accord')) return;
+  $('f-accord').checked = !!(ac && ac.ok);
+  $('f-accord-mode').value = (ac && ac.mode) || 'sur place';
+  $('f-accord-date').value = (ac && ac.date) || '';
+}
+function onAccordChange() {
+  if ($('f-accord').checked && !$('f-accord-date').value) $('f-accord-date').value = today();
+  onFormChange();
+}
 
 function onTypeChange() {
   var t = $('f-type').value;
@@ -3755,6 +4019,7 @@ function buildObj() {
     motif: $('f-motif') ? $('f-motif').value : '',
     delai: $('f-delai') ? $('f-delai').value : '',
     sigclient: $('f-sigclient') ? $('f-sigclient').checked : false,
+    accordUsage: getAccordUsage(),
     // Demande ("collection:id") dont ce devis est issu — permet de le retrouver
     // localement sans dépendre du lien devisId écrit sur la demande.
     demandeRef: _demandeActuelle || null,
@@ -3862,6 +4127,7 @@ function loadDocData(doc) {
   if ($('f-motif')) $('f-motif').value = doc.motif || '';
   if ($('f-delai')) $('f-delai').value = doc.delai || '';
   if ($('f-sigclient')) $('f-sigclient').checked = doc.sigclient || false;
+  setAccordUsage(doc.accordUsage);
   onTypeChange();
   applyRemiseGlobaleFromDoc(doc);
   renderLines();
@@ -3920,6 +4186,7 @@ function loadDoc(docId) {
   if ($('f-motif')) $('f-motif').value = doc.motif || '';
   if ($('f-delai')) $('f-delai').value = doc.delai || '';
   if ($('f-sigclient')) $('f-sigclient').checked = doc.sigclient || false;
+  setAccordUsage(doc.accordUsage);
   onTypeChange();
   showTab('form');
 }
@@ -4072,7 +4339,8 @@ function renderDocHTML(doc, tplOverride) {
       + '</div>'
       + '<div style="flex:1"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:12px">Signature du technicien</div><div style="border-bottom:1px solid #ccc;height:40px"></div></div>'
       + '</div>' : '')
-    + (tpl.showFooter !== false ? '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
+    + (tpl.showFooter !== false ? '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '')
+    + buildAnnexeHTML(doc, tpl);
 }
 
 // Construit le nom de fichier PDF : AREPROG_TYPE_NUMERO_CLIENT
@@ -4780,6 +5048,9 @@ function openCatModal(gi, ii) {
     $('cat-item-type').value = it.type || 'service';
     $('cat-item-ref').value = it.ref || '';
     $('cat-item-desc').value = it.desc || '';
+    $('cat-item-realise').value = (it.realise || []).join('\n');
+    $('cat-item-inclus').value = (it.inclus || []).join('\n');
+    $('cat-item-garantie').value = (it.garantie || []).join('\n');
   } else {
     $('cat-item-label').value = '';
     $('cat-item-price').value = '';
@@ -4787,6 +5058,9 @@ function openCatModal(gi, ii) {
     $('cat-item-type').value = 'service';
     $('cat-item-ref').value = '';
     $('cat-item-desc').value = '';
+    $('cat-item-realise').value = '';
+    $('cat-item-inclus').value = '';
+    $('cat-item-garantie').value = '';
   }
   $('cat-item-modal').classList.add('open');
   setTimeout(function(){ $('cat-item-label').focus(); }, 100);
@@ -4808,7 +5082,9 @@ function saveCatItem() {
   var type = $('cat-item-type').value || 'service';
   var ref = $('cat-item-ref').value.trim();
   var desc = $('cat-item-desc').value.trim();
-  var item = { l: label, p: price, gains: gainsRaw, type: type, ref: ref, desc: desc };
+  function lignes(id) { return ($(id).value || '').split('\n').map(function(g){ return g.trim(); }).filter(Boolean); }
+  var item = { l: label, p: price, gains: gainsRaw, type: type, ref: ref, desc: desc,
+    realise: lignes('cat-item-realise'), inclus: lignes('cat-item-inclus'), garantie: lignes('cat-item-garantie') };
 
   if (catEditingItem === null) {
     // Nouveau
@@ -5088,6 +5364,7 @@ var TPL_DEFAULT = {
   footer:'AREPROG — Reprogrammation moteur en atelier · Pays Basque (64) · Landes (40) · Yonne (89)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
   color:'#1E90FF', titleColor:'#111111', logoStyle:'split',
   showGains:true, showVeh:true, showFooter:true, showLegal:true,
+  showAnnexe:true, showCgv:true, cgv:'',
   validite:30,
 };
 
@@ -5129,6 +5406,9 @@ function readTplForm() {
     logoStyle:v('tpl-logo-style','split'),
     showGains:ck('tpl-show-gains',true), showVeh:ck('tpl-show-veh',true),
     showFooter:ck('tpl-show-footer',true), showLegal:ck('tpl-show-legal',true),
+    showAnnexe:ck('tpl-show-annexe',true), showCgv:ck('tpl-show-cgv',true),
+    // Vide = texte par défaut (CGV_DEFAULT), pour profiter de ses mises à jour
+    cgv:(function(){ var t=($('tpl-cgv')?$('tpl-cgv').value:'').trim(); return t===CGV_DEFAULT.trim()?'':t; })(),
     validite:parseInt(v('tpl-validite','30'))||30,
   };
 }
@@ -5150,6 +5430,9 @@ function fillTplForm(tpl) {
   if($('tpl-show-veh'))    $('tpl-show-veh').checked    = tpl.showVeh!==false;
   if($('tpl-show-footer')) $('tpl-show-footer').checked = tpl.showFooter!==false;
   if($('tpl-show-legal'))  $('tpl-show-legal').checked  = tpl.showLegal!==false;
+  if($('tpl-show-annexe')) $('tpl-show-annexe').checked = tpl.showAnnexe!==false;
+  if($('tpl-show-cgv'))    $('tpl-show-cgv').checked    = tpl.showCgv!==false;
+  if($('tpl-cgv'))         $('tpl-cgv').value           = tpl.cgv || CGV_DEFAULT;
 }
 function syncColorInput(){ var v=$('tpl-color-pick').value; $('tpl-color-hex').value=v; if($('tpl2-color-pick'))$('tpl2-color-pick').value=v; if($('tpl2-color-hex'))$('tpl2-color-hex').value=v; livePreview(); }
 function syncColorPicker(){ var v=$('tpl-color-hex').value; if(/^#[0-9a-fA-F]{6}$/.test(v)){$('tpl-color-pick').value=v; if($('tpl2-color-pick'))$('tpl2-color-pick').value=v; if($('tpl2-color-hex'))$('tpl2-color-hex').value=v;} livePreview(); }
@@ -6342,43 +6625,86 @@ async function generatePdfBase64(elId, opts) {
 
   // Le #preview affiché à l'écran suit .modal-inner{max-width:100%}, donc sur
   // mobile / fenêtre étroite il est rétréci (colonnes tassées, texte coupé).
-  // On clone le contenu dans un conteneur hors-écran à largeur fixe "desktop"
+  // On clone le contenu dans des conteneurs hors-écran à largeur fixe "desktop"
   // pour que le PDF soit toujours généré avec la mise en page complète.
-  var clone = original.cloneNode(true);
-  clone.removeAttribute('id');
-  clone.style.width = '780px';
-  clone.style.maxWidth = 'none';
-  clone.style.padding = '44px 52px';
-
-  var wrap = document.createElement('div');
-  wrap.style.cssText = 'position:fixed;top:0;left:-99999px;width:780px;background:#fff';
-  wrap.appendChild(clone);
-  document.body.appendChild(wrap);
-
-  var canvas;
-  try {
-    canvas = await html2canvas(clone, {
-      scale: scale,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      logging: false,
-    });
-  } finally {
-    document.body.removeChild(wrap);
-  }
+  // Chaque enfant .pdf-newpage (annexe prestations, CGV) ouvre une nouvelle
+  // section, capturée à part pour commencer en haut d'une nouvelle page.
+  var sections = [[]];
+  Array.prototype.forEach.call(original.cloneNode(true).childNodes, function(n) {
+    if (n.nodeType === 1 && n.classList.contains('pdf-newpage') && sections[sections.length - 1].length) sections.push([]);
+    sections[sections.length - 1].push(n);
+  });
 
   var { jsPDF } = window.jspdf;
   var pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   var imgW = 210; // A4 width mm
-  var imgH = (canvas.height * imgW) / canvas.width;
   var pageH = 297; // A4 height mm
-  var pos = 0;
+  var contMargin = 12; // marge haute (mm) des pages de suite d'une section
+  var firstPage = true;
 
-  // Gestion multi-pages si le doc est long
-  while (pos < imgH) {
-    if (pos > 0) pdf.addPage();
-    pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'JPEG', 0, -pos, imgW, imgH);
-    pos += pageH;
+  for (var si = 0; si < sections.length; si++) {
+    var clone = document.createElement('div');
+    clone.className = original.className;
+    clone.style.width = '780px';
+    clone.style.maxWidth = 'none';
+    clone.style.padding = '44px 52px';
+    sections[si].forEach(function(n) { clone.appendChild(n); });
+    var first = clone.firstElementChild;
+    if (first && first.classList.contains('pdf-newpage')) { first.style.marginTop = '0'; first.style.borderTop = 'none'; first.style.paddingTop = '0'; }
+
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;top:0;left:-99999px;width:780px;background:#fff';
+    wrap.appendChild(clone);
+    document.body.appendChild(wrap);
+
+    var canvas, cuts = [];
+    try {
+      // Positions (px CSS) où l'on peut couper sans trancher une ligne de texte :
+      // entre deux blocs, deux lignes de tableau ou deux fiches prestation.
+      var top0 = clone.getBoundingClientRect().top;
+      clone.querySelectorAll(':scope > *, tr, .d-fiche, .d-decharge, .d-annexe-head').forEach(function(el) {
+        var r = el.getBoundingClientRect();
+        cuts.push(r.top - top0, r.bottom - top0);
+      });
+      var cssH = clone.offsetHeight;
+      canvas = await html2canvas(clone, {
+        scale: scale,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+    } finally {
+      document.body.removeChild(wrap);
+    }
+
+    var pxPerCss = canvas.height / cssH;
+    var pxPerMm = canvas.width / imgW;
+    cuts = cuts.map(function(c) { return Math.round(c * pxPerCss); }).sort(function(a, b) { return a - b; });
+
+    // Découpe en pages, en coupant au dernier bloc qui tient entièrement
+    var pos = 0, pageOfSection = 0;
+    while (pos < canvas.height - 2) {
+      var marginMm = pageOfSection ? contMargin : 0;
+      var avail = Math.floor((pageH - marginMm) * pxPerMm);
+      var end = Math.min(canvas.height, pos + avail);
+      if (end < canvas.height) {
+        var best = 0;
+        cuts.forEach(function(c) { if (c > pos + avail * 0.3 && c <= end) best = c; });
+        if (best) end = best;
+      }
+      var slice = document.createElement('canvas');
+      slice.width = canvas.width;
+      slice.height = end - pos;
+      var ctx = slice.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, slice.width, slice.height);
+      ctx.drawImage(canvas, 0, pos, canvas.width, end - pos, 0, 0, canvas.width, end - pos);
+      if (!firstPage) pdf.addPage();
+      firstPage = false;
+      pdf.addImage(slice.toDataURL('image/jpeg', quality), 'JPEG', 0, marginMm, imgW, (end - pos) / pxPerMm);
+      pos = end;
+      pageOfSection++;
+    }
   }
 
   // Retourner en base64 sans le prefixe data:
