@@ -2864,12 +2864,14 @@ function buildLogoHTML(tpl) {
 //  TEMPLATE — Modèle de document
 // ============================================================
 var TPL_KEY = 'ar_template';
+// Mentions obligatoires sur devis/factures (Kbis du 01/10/2026).
+var TPL_LEGAL_DEFAULT = 'AREPROG SASU au capital de 500 € · Siège : 47 rue Vivienne 75002 Paris · RCS Paris 130 785 355 · SIRET 130 785 355 00012 · TVA intracom. FR01 130 785 355';
 var TPL_DEFAULT = {
   nom:'AREPROG', activite:'Reprogrammation moteur en atelier',
-  zones:'Pays Basque (64) · Landes (40) · Yonne (89)',
+  zones:'Pays Basque (64) · Landes (40)',
   tel:'06 67 92 46 30', email:'contact@areprog.fr', web:'areprog.fr',
-  adresse:'', legal:'',
-  footer:'AREPROG — Reprogrammation moteur en atelier · Pays Basque (64) · Landes (40) · Yonne (89)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
+  adresse:'Atelier : Biarritz (64)', legal:TPL_LEGAL_DEFAULT,
+  footer:'AREPROG — Reprogrammation moteur en atelier · Biarritz · Pays Basque (64) · Landes (40)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
   color:'#1E90FF', titleColor:'#111111', logoStyle:'split',
   showGains:true, showVeh:true, showFooter:true, showLegal:true,
   showAnnexe:true, showCgv:true, cgv:'',
@@ -2879,7 +2881,10 @@ var TPL_DEFAULT = {
 function loadTemplate() {
   try {
     var raw = localStorage.getItem(TPL_KEY);
-    return raw ? Object.assign({},TPL_DEFAULT,JSON.parse(raw)) : Object.assign({},TPL_DEFAULT);
+    var tpl = raw ? Object.assign({},TPL_DEFAULT,JSON.parse(raw)) : Object.assign({},TPL_DEFAULT);
+    // Mention légale vide = celle par défaut (décocher « Afficher les mentions légales » pour la masquer)
+    if (!tpl.legal) tpl.legal = TPL_LEGAL_DEFAULT;
+    return tpl;
   } catch(e) { return Object.assign({},TPL_DEFAULT); }
 }
 function saveTemplate() {
