@@ -129,3 +129,21 @@
       .benefits-grid { grid-template-columns: 1fr; }
       .sv-stats-card { grid-template-columns: 1fr; }
     }
+
+/* ── Avertissement légal (pages EGR / FAP / AdBlue) ── */
+.legal-notice {
+  display: flex; gap: 1rem; align-items: flex-start;
+  margin: 0 5rem 2.5rem; padding: 1.25rem 1.5rem;
+  background: #fff7ed; border: 1px solid #fdba74; border-left: 4px solid #c2410c;
+  border-radius: var(--radius-lg, 8px); color: var(--text, #1a1c1f);
+  font-size: .92rem; line-height: 1.6;
+}
+.legal-notice p { margin: 0 0 .5rem; }
+.legal-notice p:last-child { margin-bottom: 0; }
+.legal-notice a { color: #9a3412; font-weight: 600; }
+.legal-notice-icon { font-size: 1.4rem; line-height: 1; }
+.legal-notice-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+  font-size: 1.05rem; text-transform: uppercase; letter-spacing: .04em; color: #9a3412;
+}
+@media (max-width: 900px) { .legal-notice { margin: 0 1rem 2rem; } }

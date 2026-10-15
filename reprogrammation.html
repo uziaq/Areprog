@@ -31,7 +31,7 @@
     "name": "Reprogrammation moteur — Stage 1, Stage 2, E85, désactivations",
     "provider": {"@type": "LocalBusiness", "name": "AREPROG", "telephone": "+33667924630", "url": "https://areprog.fr"},
     "description": "Reprogrammation moteur en atelier : Stage 1, Stage 2, conversion E85, désactivations EGR/FAP/AdBlue, reprogrammation de boîte de vitesses (TCU), optimisation de la consommation.",
-    "areaServed": ["Pyrénées-Atlantiques", "Pays Basque", "Yonne"]
+    "areaServed": ["Biarritz", "Pays Basque", "Pyrénées-Atlantiques"]
   }
   </script>
   <script type="application/ld+json">
@@ -49,8 +49,8 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
-  <link rel="stylesheet" href="shared.css?v=20260812"/>
-  <link rel="stylesheet" href="reprogrammation.css?v=20260812"/>
+  <link rel="stylesheet" href="shared.css?v=20261015"/>
+  <link rel="stylesheet" href="reprogrammation.css?v=20261015"/>
 </head>
 <body data-page="reprogrammation">
   <div id="nav-container"></div>
@@ -242,6 +242,16 @@
           <div class="process-time">✓ Garanti 2 ans</div>
         </div>
       </div>
+      <figure class="atelier-photo">
+        <picture>
+          <source srcset="calculateur-bosch-flash-banc.webp" type="image/webp"/>
+          <img src="calculateur-bosch-flash-banc.jpg" alt="Calculateur moteur Bosch câblé sur l'établi de l'atelier AREPROG pour une lecture en mode Bench, interfaces de flash et ordinateur en arrière-plan" loading="lazy" width="900" height="1200"/>
+        </picture>
+        <figcaption>
+          <strong>Lecture sur table, à l'atelier</strong>
+          Certains calculateurs récents sont verrouillés et ne se lisent plus par la prise OBD. On les dépose et on les lit directement sur l'établi, en mode Boot ou Bench, avec une alimentation stabilisée. La cartographie d'origine est sauvegardée avant toute modification : un retour au fichier stock reste toujours possible.
+        </figcaption>
+      </figure>
     </section>
 
     <!-- BANDE DIAGNOSTIC -->
@@ -255,16 +265,6 @@
         </div>
       </div>
       <a href="/diagnostic" class="reprog-diag-band-link">Voir le diagnostic →</a>
-    </div>
-
-    <!-- ZONES (compact) -->
-    <div class="reprog-zones">
-      <span class="reprog-zones-label">Zones :</span>
-      <a href="/reprogrammation-moteur-bayonne">Bayonne</a>
-      <a href="/reprogrammation-moteur-biarritz">Biarritz</a>
-      <a href="/reprogrammation-moteur-anglet">Anglet</a>
-      <a href="/reprogrammation-moteur-saint-jean-de-luz">Saint-Jean-de-Luz</a>
-      <a href="/reprogrammation-moteur-hendaye">Hendaye</a>
     </div>
 
     <!-- CTA FINAL -->
@@ -294,8 +294,8 @@
     <span>06 67 92 46 30<span class="mobile-call-bar-sub">Devis gratuit · Réponse sous 24h</span></span>
   </a>
 
-  <script src="nav.js?v=20261015"></script>
-  <script src="whatsapp-widget.js?v=20260812"></script>
+  <script src="nav.js?v=20261016"></script>
+  <script src="whatsapp-widget.js?v=20261015"></script>
   <script>
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
