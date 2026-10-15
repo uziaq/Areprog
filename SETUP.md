@@ -25,7 +25,7 @@ Dans votre nouveau repo :
 1. Cliquez **uploading an existing file** (ou **Add file → Upload files**)
 2. Glissez-déposez **tous vos fichiers** :
    - `index.html`, `about.html`, `contact.html`, `faq.html`
-   - `boutique.html`, `produit.html`, `confirmation.html`
+   - toutes les autres pages `.html`, `blog/`
    - `products.js`, `nav.js`, `shared.css`, `whatsapp-widget.js`
    - Toutes les autres pages `.html`
 3. Cliquez **Commit changes**
@@ -130,7 +130,6 @@ github.com/votre-username/areprog/
 ├── products.js         ← Mis à jour automatiquement par l'admin
 ├── nav.js
 ├── shared.css
-├── confirmation.html
 └── ... (toutes les autres pages)
 ```
 

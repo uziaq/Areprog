@@ -1,0 +1,34 @@
+/* ── Blog : liste d'articles, cartes, fil d'Ariane ──
+   La mise en page des articles réutilise guide-reprogrammation-moteur.css. */
+.blog-breadcrumb { padding: 1.2rem 5rem 0; font-size: .8rem; color: var(--muted); }
+.blog-breadcrumb a { color: var(--muted); text-decoration: none; }
+.blog-breadcrumb a:hover { color: var(--blue); }
+.blog-breadcrumb span[aria-hidden] { margin: 0 .35rem; }
+
+.blog-list { padding: 4rem 5rem; }
+.blog-related { padding: 3.5rem 5rem 4.5rem; border-top: 1px solid var(--border); background: var(--bg-warm, var(--bg)); }
+.blog-related .section-tag { margin-bottom: 1.5rem; }
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.2rem; }
+
+.blog-card {
+  display: flex; flex-direction: column; gap: .6rem; padding: 1.6rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  text-decoration: none; color: var(--text); transition: border-color .15s, transform .15s, box-shadow .15s;
+}
+.blog-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(13,91,175,.08); }
+.blog-card-cat {
+  font-family: 'Barlow Condensed', sans-serif; font-size: .68rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--blue);
+}
+.blog-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+.blog-card-desc { font-size: .9rem; color: var(--muted); line-height: 1.6; flex: 1; }
+.blog-card-meta { font-size: .78rem; font-weight: 600; color: var(--blue); }
+
+.blog-sidebar-text { font-size: .82rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+.guide-content ol { padding-left: 1.3rem; margin: 1rem 0 1.5rem; }
+.guide-content ol li { margin-bottom: .6rem; line-height: 1.7; }
+
+@media (max-width: 900px) {
+  .blog-breadcrumb { padding: 1rem 1.4rem 0; }
+  .blog-list, .blog-related { padding-left: 1.4rem; padding-right: 1.4rem; }
+}
