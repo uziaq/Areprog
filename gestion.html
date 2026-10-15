@@ -23,7 +23,7 @@
 <script src="codages-data.js?v=20260824"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
-<link rel="stylesheet" href="/gestion.css?v=20261009"/>
+<link rel="stylesheet" href="/gestion.css?v=20261015"/>
 </head>
 <body>
 
@@ -65,6 +65,7 @@
       <button class="nb" onclick="showTab('search')">🔍 Recherche</button>
       <button class="nb" onclick="showTab('codage')">🔧 Options codage</button>
       <button class="nb" onclick="showTab('mail')">✉️ Mail</button>
+      <button class="nb" onclick="showTab('envoyes')">📤 Envoyés</button>
     </div>
   </div>
   <!-- Barre statut sync Firebase -->
@@ -198,6 +199,8 @@
           <div class="fr"><label>Ville + Code postal</label><input id="f-cville" type="text" placeholder="64100 Bayonne"/></div>
           <div class="fr"><label>Téléphone</label><input id="f-ctel" type="text" placeholder="06 XX XX XX XX"/></div>
           <div class="fr"><label>Email</label><input id="f-cemail" type="email" placeholder="client@email.fr"/></div>
+          <div class="fr"><label>SIRET (client pro)</label><input id="f-csiret" type="text" placeholder="Facultatif"/></div>
+          <div class="fr"><label>N° TVA intracom. (client pro)</label><input id="f-ctva" type="text" placeholder="Facultatif"/></div>
         </div>
         <div class="card">
           <div class="card-title">Véhicule</div>
@@ -276,6 +279,20 @@
           </div>
           <div class="fr"><label>Notes internes (non imprimées)</label>
             <textarea id="f-nint" rows="2" placeholder="Mémo interne..."></textarea>
+          </div>
+          <div class="fr" style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
+            <label>Accord client — désactivation EGR / FAP / AdBlue</label>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0"><input type="checkbox" id="f-accord" style="width:18px;height:18px" onchange="onAccordChange()"/> Le client a accepté la mention d'usage</label>
+              <select id="f-accord-mode" style="width:auto" onchange="onFormChange()">
+                <option value="sur place">sur place</option>
+                <option value="par e-mail">par e-mail</option>
+                <option value="par SMS">par SMS</option>
+                <option value="par téléphone">par téléphone</option>
+              </select>
+              <input type="date" id="f-accord-date" style="width:auto" onchange="onFormChange()"/>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Imprimé dans l'annexe uniquement si le document contient une désactivation EGR, FAP ou AdBlue. Sans accord coché, une zone « Lu et approuvé / Signature » est imprimée à la place.</div>
           </div>
         </div>
         <div class="card" style="margin-top:16px">
@@ -501,6 +518,12 @@
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-veh" checked/> Afficher le véhicule chez le client</label></div>
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-footer" checked/> Afficher le pied de page</label></div>
             <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-legal" checked/> Afficher les mentions légales</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-annexe" checked onchange="livePreview()"/> Annexe « Détail des prestations &amp; garanties » (devis et factures)</label></div>
+            <div class="fr"><label class="tpl-toggle"><input type="checkbox" id="tpl-show-cgv" checked onchange="livePreview()"/> Conditions générales de vente et de réparation (devis et factures)</label></div>
+            <div class="fr"><label>Texte des conditions générales <span style="font-weight:400;color:var(--text-muted)">— « ## » titre, « ### » sous-titre, ligne vide = nouveau paragraphe, {validite} = validité du devis</span></label>
+              <textarea id="tpl-cgv" rows="10" style="font-size:12px" oninput="livePreview()"></textarea>
+              <div style="margin-top:6px"><button type="button" class="btn-s" style="font-size:11px;padding:4px 10px" onclick="$('tpl-cgv').value=CGV_DEFAULT;livePreview()">↺ Texte par défaut</button></div>
+            </div>
             <div class="fr"><label>Validité devis (jours)</label>
               <input type="number" id="tpl-validite" value="30" min="1" max="365" placeholder="30"/>
             </div>
@@ -702,6 +725,20 @@
           <button class="btn-g" id="mail-send-btn" onclick="confirmSendMail()">📧 Envoyer</button>
         </div>
       </div>
+
+    </div>
+
+    <!-- ══ EMAILS ENVOYÉS ═══════════════════════════════════ -->
+    <div class="tc" id="t-envoyes">
+      <div class="sh">
+        <div class="sh-title">📤 Emails envoyés</div>
+        <div class="sh-actions" style="display:flex;gap:8px">
+          <button class="btn-s" id="sent-mails-refresh" onclick="loadSentMails(true)">↻ Actualiser</button>
+        </div>
+      </div>
+      <div class="fr"><input id="sent-mails-search" type="text" placeholder="Filtrer par destinataire ou objet…" autocomplete="off" oninput="renderSentMails()"/></div>
+      <div id="sent-mails-status" style="display:none;font-size:12px;color:var(--text-muted);margin-bottom:8px"></div>
+      <div class="card"><div id="sent-mails-list"></div></div>
     </div>
 
     <!-- ══ DEMANDES WEB ═══════════════════════════════════ -->
@@ -769,7 +806,17 @@
     <div class="carnet-box-title" id="add-client-title">Nouveau client</div>
     <div class="fg2" style="margin-bottom:0">
       <div>
-        <div class="fr"><label>Nom / Société</label><input id="ac-nom" type="text" placeholder="Prénom NOM"/></div>
+        <div class="fr"><label>Type de client</label>
+          <select id="ac-type" onchange="toggleAcPro()">
+            <option value="particulier">Particulier</option>
+            <option value="pro">Professionnel</option>
+          </select>
+        </div>
+        <div class="fr"><label id="ac-nom-label">Nom / Société</label><input id="ac-nom" type="text" placeholder="Prénom NOM"/></div>
+        <div id="ac-pro-fields" style="display:none">
+          <div class="fr"><label>SIRET</label><input id="ac-siret" type="text" placeholder="123 456 789 00012"/></div>
+          <div class="fr"><label>N° TVA intracommunautaire</label><input id="ac-tva" type="text" placeholder="FR12 123456789"/></div>
+        </div>
         <div class="fr"><label>Téléphone</label><input id="ac-tel" type="text" placeholder="06 XX XX XX XX"/></div>
         <div class="fr"><label>Email</label><input id="ac-email" type="email" placeholder="client@email.fr"/></div>
         <div class="fr"><label>Adresse</label><input id="ac-adr" type="text" placeholder="10 rue des Lilas"/></div>
@@ -944,6 +991,13 @@
       <textarea id="cat-item-gains" rows="4" placeholder="Ex :&#10;Meilleure réactivité moteur&#10;100% réversible&#10;Agrément de conduite amélioré"></textarea>
       <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Ces gains apparaîtront dans l'encart bleu sur le devis/facture PDF</div>
     </div>
+    <div class="fr">
+      <label>Annexe « Détail des prestations &amp; garanties » (optionnel — un point par ligne)</label>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Laisser vide pour utiliser la fiche standard (Stage 1, E85, EGR, FAP, diagnostic…). Si rempli, remplace la fiche standard pour cette prestation.</div>
+      <textarea id="cat-item-realise" rows="3" placeholder="Ce qui est réalisé&#10;Ex : Lecture et sauvegarde du fichier d'origine"></textarea>
+      <textarea id="cat-item-inclus" rows="3" style="margin-top:6px" placeholder="Inclus / pris en charge&#10;Ex : Retour au fichier d'origine gratuit"></textarea>
+      <textarea id="cat-item-garantie" rows="3" style="margin-top:6px" placeholder="Garantie&#10;Ex : Garantie 2 ans sur la cartographie"></textarea>
+    </div>
     <div class="fr"><label>Catégorie</label>
       <select id="cat-item-group"></select>
     </div>
@@ -1084,6 +1138,17 @@
 </div>
 
 <!-- MODAL ENVOI EMAIL -->
+<div class="rdv-modal" id="sent-mail-modal" onclick="if(event.target===this)$('sent-mail-modal').classList.remove('open')" style="z-index:330;align-items:flex-start;overflow-y:auto">
+  <div class="rdv-box rdv-box-wide" style="margin:20px auto">
+    <div class="rdv-box-title" id="sent-mail-subject">Email</div>
+    <div id="sent-mail-meta" style="font-size:12.5px;color:var(--text-dim);margin-bottom:12px;line-height:1.6"></div>
+    <iframe id="sent-mail-frame" sandbox="" title="Contenu de l'email" style="width:100%;height:60vh;border:1px solid var(--border);border-radius:8px;background:#fff"></iframe>
+    <div style="display:flex;justify-content:flex-end;margin-top:14px">
+      <button class="btn-s" onclick="$('sent-mail-modal').classList.remove('open')">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <div class="rdv-modal" id="send-email-modal" onclick="if(event.target===this)$('send-email-modal').classList.remove('open')" style="z-index:330;align-items:flex-start;overflow-y:auto">
   <div class="rdv-box" style="max-width:520px;margin:20px auto">
     <div class="rdv-box-title">📧 Envoyer par email</div>
@@ -1323,7 +1388,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<script src="/gestion.js?v=20261009"></script>
+<script src="/gestion.js?v=20261015"></script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
 if ('serviceWorker' in navigator) {

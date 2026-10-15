@@ -170,11 +170,52 @@
     .odis-cta p { max-width: 480px; margin: 1.5rem auto; color: var(--muted); line-height: 1.7; }
     .odis-cta .cta-row { display: flex; gap: 1.2rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
 
+
+    /* REALISATION */
+    .odis-real { padding: 6rem; }
+    .odis-real-grid {
+      display: grid; grid-template-columns: 1fr 1.3fr;
+      gap: 4rem; margin-top: 4rem; align-items: start;
+    }
+    .odis-real-car {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1.2rem;
+    }
+    .odis-real-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1.2rem; font-size: .95rem; }
+    .odis-real-text strong { color: var(--text); font-weight: 500; }
+    .odis-real-list { list-style: none; margin: 1.5rem 0 2rem; padding: 0; }
+    .odis-real-list li {
+      position: relative; padding: .55rem 0 .55rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .88rem; color: var(--muted);
+    }
+    .odis-real-list li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+    .odis-real-photos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .odis-real-fig { margin: 0; background: var(--surface); border: 1px solid var(--border); }
+    .odis-real-fig img { display: block; width: 100%; height: auto; }
+    .odis-real-fig figcaption {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .7rem .9rem; font-size: .8rem; color: var(--muted);
+    }
+    .odis-real-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .66rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: #fff; background: var(--green); padding: .15rem .5rem;
+    }
+    .odis-real-tag.is-before { background: var(--muted2); }
+
     @media (max-width: 900px) {
       .odis-hero { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 1.5rem; }
-      .odis-what, .odis-adv, .odis-vs, .odis-cta { padding: 5rem 1.5rem; }
+      .odis-what, .odis-adv, .odis-vs, .odis-real, .odis-cta { padding: 5rem 1.5rem; }
+      .odis-real-grid { grid-template-columns: 1fr; gap: 3rem; }
       .odis-what-grid { grid-template-columns: 1fr; gap: 3rem; }
       .odis-adv-grid { grid-template-columns: 1fr; }
       .vs-table { font-size: .78rem; }
       .vs-table th, .vs-table td { padding: .8rem 1rem; }
+    }
+    @media (max-width: 520px) {
+      .odis-real-photos { grid-template-columns: 1fr; }
     }

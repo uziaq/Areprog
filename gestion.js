@@ -644,6 +644,193 @@ function getGains(lines) {
 }
 
 // ============================================================
+//  ANNEXE — Détail des prestations & garanties (devis / factures)
+// ============================================================
+// Fiches par défaut, reconnues par mot-clé dans le libellé de la ligne (le
+// catalogue réel vit dans localStorage/Firestore et les libellés viennent aussi
+// de devis-ia / lead-capture, d'où un match souple plutôt qu'exact). Une
+// prestation du catalogue dont les champs realise/inclus/garantie sont remplis
+// remplace la fiche par défaut (cf. getFichesForLines).
+var PRESTA_FICHES = [
+  { key: 'stage1', titre: 'Stage 1 — Reprogrammation moteur', match: /stage\s*1\b/,
+    realise: ['Lecture des défauts et contrôle moteur', 'Sauvegarde du fichier d\'origine', 'Optimisation de la cartographie (injection, turbo, allumage)', 'Essai routier avec relevé des données'],
+    inclus: ['Ajustements après essai', 'Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Réinstallation après mise à jour concessionnaire'] },
+  { key: 'stage2', titre: 'Stage 2 — Haute performance', match: /stage\s*2\b/,
+    realise: ['Contrôle des pièces mécaniques montées', 'Sauvegarde du fichier d\'origine', 'Cartographie sur mesure', 'Essai routier et ajustements fins'],
+    inclus: ['Suivi personnalisé', 'Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Pièces mécaniques : garantie de leur fabricant'] },
+  { key: 'e85', titre: 'Conversion E85', match: /\be85\b|ethanol/,
+    realise: ['Contrôle injecteurs, pompe et circuit carburant', 'Sauvegarde du fichier d\'origine', 'Adaptation native du calculateur (sans boîtier)', 'Essai au bioéthanol (richesse, températures)'],
+    inclus: ['Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Fonctionne en E85, SP95 et SP98 en tout mélange'] },
+  { key: 'conso', titre: 'Optimisation consommation', match: /optimisation\s+(de\s+la\s+)?conso|eco\s*(tuning|drive)/,
+    realise: ['Contrôle moteur et lecture des défauts', 'Sauvegarde du fichier d\'origine', 'Cartographie orientée rendement et couple bas régime', 'Essai routier'],
+    inclus: ['Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur la cartographie', 'Gain selon conduite et usage'] },
+  { key: 'tcu', titre: 'Reprogrammation boîte de vitesses (TCU)', match: /\btcu\b|reprog\w*\s+(de\s+)?(la\s+)?boite/,
+    realise: ['Diagnostic boîte et contrôle des adaptations', 'Sauvegarde du logiciel d\'origine', 'Recalibrage (passages, limiteurs de couple, pressions)', 'Essai routier'],
+    inclus: ['Retour à l\'origine gratuit 2 ans'],
+    garantie: ['2 ans sur le logiciel installé'] },
+  { key: 'origine', titre: 'Retour à l\'origine', match: /retour\s+a\s+l.?origine|fichier\s+constructeur|remise\s+(au|en)\s+(stock|origine)/,
+    realise: ['Réécriture du fichier constructeur', 'Effacement des défauts et contrôle'],
+    inclus: ['Offert si reprogrammation AREPROG sous garantie'],
+    garantie: ['Logiciel constructeur d\'origine restauré'] },
+  { key: 'egr', titre: 'Désactivation EGR', match: /\begr\b/, decharge: true,
+    realise: ['Contrôle de la vanne et lecture des défauts', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle (vanne laissée en place)', 'Effacement des défauts et essai'],
+    inclus: ['Aucune modification physique', 'Retour à l\'origine possible'],
+    garantie: ['2 ans : pas de voyant ni mode dégradé lié à l\'EGR'] },
+  { key: 'fap', titre: 'Désactivation FAP / DPF', match: /\bfap\b|\bdpf\b/, decharge: true,
+    realise: ['Contrôle colmatage et capteurs de pression', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion FAP', 'Effacement des défauts et essai'],
+    inclus: ['Diagnostic du système', 'Retrait physique du filtre seulement si indiqué au document'],
+    garantie: ['2 ans : pas de voyant ni mode dégradé lié au FAP'] },
+  { key: 'adblue', titre: 'Désactivation AdBlue / SCR', match: /adblue|\bscr\b/, decharge: true,
+    realise: ['Lecture des défauts AdBlue / SCR', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle de la gestion SCR', 'Effacement des défauts et essai'],
+    inclus: ['Aucune modification physique', 'Retour à l\'origine possible'],
+    garantie: ['2 ans : pas de compte à rebours ni blocage démarrage'] },
+  { key: 'swirl', titre: 'Désactivation volets d\'admission (Swirl)', match: /swirl|volets?\s+d.?admission/,
+    realise: ['Contrôle des volets et lecture des défauts', 'Sauvegarde du fichier d\'origine', 'Désactivation logicielle des volets', 'Essai'],
+    inclus: ['Retour à l\'origine possible'],
+    garantie: ['2 ans sur le logiciel installé'] },
+  { key: 'vidange-bva', titre: 'Vidange de boîte automatique', match: /vidange\s+(de\s+)?(la\s+)?(boite|bva|dsg)|boite\s+auto\w*.*vidange/,
+    realise: ['Diagnostic OBD de la boîte', 'Vidange et remplissage au fluide homologué', 'Contrôle du niveau à chaud', 'Réinitialisation des adaptations et essai'],
+    inclus: ['Fluide constructeur (quantité au document)', 'Filtre / joint si indiqué au document'],
+    garantie: ['2 ans sur la main-d\'œuvre', 'Pièces et fluides : garantie fabricant'] },
+  { key: 'diag', titre: 'Diagnostic électronique', match: /diagnostic|\bodis\b|\bista\b|codes?\s+defaut/,
+    realise: ['Lecture de tous les calculateurs', 'Analyse des défauts et valeurs en temps réel', 'Tests selon le symptôme', 'Compte rendu au client'],
+    inclus: ['Effacement des défauts', 'Codages / calibrations si indiqués au document'],
+    garantie: ['Constat des défauts présents le jour de l\'intervention'] },
+  { key: 'options', titre: 'Options logicielles', match: /pop\s*(&|and|et)?\s*bang|popcorn|dsg\s*farts|crepitement|launch\s*control|octane|exhaust\s*flaps|clapets|start\s*(&|and|et)?\s*stop|vmax|driving\s*mode|sport\s*display/,
+    realise: ['Sauvegarde du fichier d\'origine', 'Activation de la fonction demandée', 'Essai et validation'],
+    inclus: ['Réglage selon préférences', 'Retour à l\'origine possible'],
+    garantie: ['2 ans sur le logiciel installé', 'Effets sonores : sollicitent davantage l\'échappement'] },
+];
+
+var DECHARGE_TEXTE = 'Prestation(s) de désactivation (EGR / FAP / AdBlue) : le client déclare avoir été informé que la désactivation d\'un dispositif antipollution rend le véhicule non conforme à son homologation pour la circulation sur la voie publique. Cette prestation est réalisée à sa demande, pour un usage hors voie publique (circuit, compétition, export). Le client en assume seul l\'utilisation et les conséquences réglementaires, et dégage AREPROG de toute responsabilité à ce titre.';
+
+function _normLabel(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+// Fiches à imprimer pour les lignes du document, dédoublonnées (un pack
+// « Stage 1 + EGR + FAP » donne les fiches Stage 1, EGR et FAP une seule fois).
+function getFichesForLines(lines) {
+  var cat = loadCat();
+  var out = [], seen = {};
+  (lines || []).forEach(function(l) {
+    if (!l.label) return;
+    var norm = _normLabel(l.label);
+    var custom = null;
+    for (var gi = 0; gi < cat.length && !custom; gi++) {
+      for (var ii = 0; ii < cat[gi].items.length; ii++) {
+        var it = cat[gi].items[ii];
+        if (it.l === l.label && ((it.realise && it.realise.length) || (it.inclus && it.inclus.length) || (it.garantie && it.garantie.length))) { custom = it; break; }
+      }
+    }
+    var matched = PRESTA_FICHES.filter(function(f) { return f.match.test(norm); });
+    var decharge = matched.some(function(f) { return f.decharge; });
+    if (custom) {
+      var k = 'cat:' + custom.l;
+      if (seen[k]) return;
+      seen[k] = true;
+      out.push({ key: k, titre: custom.l.split(' — ')[0], realise: custom.realise || [], inclus: custom.inclus || [], garantie: custom.garantie || [], decharge: decharge });
+      return;
+    }
+    matched.forEach(function(f) {
+      if (seen[f.key]) return;
+      seen[f.key] = true;
+      out.push(f);
+    });
+  });
+  return out;
+}
+
+// Conditions générales imprimées en fin d'annexe (texte modifiable dans
+// Modèle de document). Syntaxe : "## Titre", "### Sous-titre", une ligne vide
+// sépare les paragraphes, "{validite}" = durée de validité du devis.
+var CGV_DEFAULT = [
+  '## I – Devis et ordre de réparation',
+  '1 – À la demande du client, AREPROG établit un devis gratuit détaillant les prestations à réaliser sur son véhicule. Sauf mention contraire, le devis est valable {validite} jours à compter de sa date d\'émission.',
+  '2 – Le devis accepté par le client (signature, ou « bon pour accord » transmis par écrit, e-mail ou SMS) vaut commande. Si, au cours de l\'intervention, des travaux ou fournitures non prévus s\'avéraient nécessaires, AREPROG s\'engage à n\'y procéder qu\'après accord préalable du client sur un devis complémentaire.',
+  '3 – Avant toute reprogrammation, un contrôle du véhicule (lecture des codes défaut, état général) est réalisé. AREPROG peut refuser ou reporter l\'intervention si l\'état du véhicule ne permet pas de la réaliser dans de bonnes conditions ; seul le diagnostic éventuellement réalisé est alors facturé, après information du client.',
+  '4 – Aucun acompte n\'est demandé pour les interventions standard : le règlement intervient après l\'intervention et la validation des résultats. Un acompte peut être demandé pour les prestations sur mesure ou nécessitant une commande de pièces ; il est alors indiqué sur le devis.',
+  '5 – Les gains de puissance, de couple et de consommation communiqués sont des estimations constatées sur des motorisations similaires. Les résultats réels dépendent de l\'état du moteur, de son entretien et du carburant utilisé. AREPROG s\'engage sur une amélioration mesurable et perceptible ; à défaut, un ajustement ou un retour au fichier d\'origine est réalisé sans frais. Le fichier d\'origine du calculateur est sauvegardé avant toute modification et conservé par AREPROG.',
+  '## II – Garanties',
+  '### A – Garantie contractuelle AREPROG',
+  '1 – Indépendamment de la garantie contractuelle, AREPROG reste tenu, le cas échéant, de la garantie légale de conformité (articles L.217-3 à L.217-20 et L.224-25-1 à L.224-25-31 du Code de la consommation) et de la garantie des vices cachés (articles 1641 à 1649 et 2232 du Code civil).',
+  '2 – Durée : la garantie contractuelle est de deux (2) ans à compter de la date d\'intervention indiquée sur la facture, sans limitation de kilométrage.',
+  '3 – Objet : sont garantis le logiciel (cartographie) installé par AREPROG et la main-d\'œuvre de l\'intervention. La garantie comprend la correction ou l\'ajustement de la cartographie, sa réinstallation après une mise à jour réalisée par un concessionnaire, et le retour au fichier d\'origine sur simple demande, sans frais. Les pièces fournies par AREPROG sont couvertes par la garantie de leur fabricant.',
+  '4 – Mise en œuvre : la demande doit être adressée à AREPROG dès la constatation du défaut, accompagnée de la facture acquittée. L\'intervention sous garantie est réalisée en atelier AREPROG.',
+  '5 – Avant toute intervention chez un concessionnaire ou au titre de la garantie constructeur, le client peut demander la remise du véhicule au fichier d\'origine : cette opération est incluse dans la garantie.',
+  '6 – La garantie consiste en la reprise, la correction ou la réinstallation du logiciel concerné, ou en un retour à l\'origine. Une intervention réalisée au titre de la garantie ne prolonge pas sa durée et ne fait pas courir une nouvelle garantie.',
+  '7 – La garantie ne s\'applique pas : aux pannes mécaniques, électriques ou électroniques préexistantes ou étrangères à l\'intervention ; à l\'usure normale des pièces ; lorsque le calculateur a été lu, modifié ou reprogrammé par un tiers après l\'intervention d\'AREPROG ; en cas de non-respect du plan d\'entretien constructeur ou d\'utilisation d\'un carburant inadapté ; en cas d\'utilisation en compétition, sauf prestation prévue à cet effet.',
+  '8 – Le diagnostic identifie les défauts présents au jour de l\'intervention ; il ne garantit pas l\'absence de pannes ultérieures ni le résultat d\'une réparation réalisée par un tiers.',
+  '9 – Pendant la durée de l\'intervention, AREPROG est responsable du véhicule confié ainsi que des accessoires et équipements qui y sont fixés.',
+  '### B – Garantie légale',
+  'Conformément aux articles D.211-2 et D.211-3 du Code de la consommation, il est rappelé au client agissant en qualité de consommateur que :',
+  '• Le consommateur dispose d\'un délai de deux ans à compter de la délivrance du bien (ou de la fourniture du contenu ou service numérique) pour obtenir la mise en œuvre de la garantie légale de conformité en cas d\'apparition d\'un défaut de conformité. Durant ce délai (un an pour un contenu ou service numérique fourni de manière ponctuelle), le consommateur n\'est tenu d\'établir que l\'existence du défaut de conformité et non la date d\'apparition de celui-ci.',
+  '• La garantie légale de conformité donne au consommateur droit à la réparation ou au remplacement du bien (ou à la mise en conformité du contenu numérique) dans un délai de trente jours suivant sa demande, sans frais et sans inconvénient majeur pour lui. Si le bien est réparé dans ce cadre, le consommateur bénéficie d\'une extension de six mois de la garantie initiale.',
+  '• Le consommateur peut obtenir une réduction du prix ou mettre fin au contrat contre remboursement intégral si le professionnel refuse la mise en conformité, si celle-ci intervient après trente jours ou occasionne un inconvénient majeur, si la non-conformité persiste, ou si le défaut est si grave qu\'il justifie une réduction de prix ou la résolution immédiate. La résolution est exclue si le défaut de conformité est mineur.',
+  '• Toute période d\'immobilisation du bien en vue de sa réparation suspend la garantie qui restait à courir jusqu\'à la délivrance du bien remis en état.',
+  '• Ces droits résultent de l\'application des articles L.217-1 à L.217-32 et L.224-25-1 à L.224-25-31 du Code de la consommation. Le professionnel qui fait obstacle de mauvaise foi à la mise en œuvre de la garantie légale de conformité encourt une amende civile d\'un montant maximal de 300 000 euros, qui peut être porté jusqu\'à 10 % du chiffre d\'affaires moyen annuel (articles L.241-5 et L.242-18-1 du Code de la consommation).',
+  '• Le consommateur bénéficie également de la garantie légale des vices cachés en application des articles 1641 à 1649 du Code civil, pendant une durée de deux ans à compter de la découverte du défaut. Cette garantie donne droit à une réduction de prix si le bien est conservé, ou à un remboursement intégral contre restitution du bien.',
+].join('\n\n');
+
+function renderCgvHTML(text, tpl) {
+  var src = String(text || '').replace(/\{validite\}/g, String(tpl.validite || 30));
+  return src.split(/\n\s*\n/).map(function(p) {
+    p = p.trim();
+    if (!p) return '';
+    if (p.indexOf('### ') === 0) return '<h5>' + escHtml(p.slice(4)) + '</h5>';
+    if (p.indexOf('## ') === 0) return '<h4>' + escHtml(p.slice(3)) + '</h4>';
+    return '<p>' + escHtml(p).replace(/\n/g, '<br>') + '</p>';
+  }).join('');
+}
+
+// Annexe imprimée après le document (devis et factures uniquement), sur une
+// seule page : fiches compactes, mention d'usage, puis CGV en texte dense. Le
+// bloc .pdf-newpage commence sur une nouvelle page (impression et PDF mail).
+function buildAnnexeHTML(doc, tpl) {
+  if (doc.type !== 'devis' && doc.type !== 'facture') return '';
+  var fiches = tpl.showAnnexe !== false ? getFichesForLines(doc.lines) : [];
+  var showCgv = tpl.showCgv !== false;
+  if (!fiches.length && !showCgv) return '';
+  var isDevis = doc.type === 'devis';
+  var vehStr = [doc.vm, doc.vmo, doc.vmot].filter(Boolean).join(' ') + (doc.vim ? ' · ' + doc.vim.toUpperCase() : '');
+  var ref = 'Annexe ' + (isDevis ? 'au devis' : 'à la facture') + ' n° ' + escHtml(doc.num || '—') + ' du ' + fmtDate(doc.date)
+    + (doc.cn ? ' · ' + escHtml(doc.cn) : '') + (vehStr.trim() ? ' · ' + escHtml(vehStr) : '');
+  function line(lbl, arr) {
+    return arr && arr.length ? '<div class="d-fiche-line"><b>' + lbl + ' :</b> ' + arr.map(escHtml).join(' · ') + '</div>' : '';
+  }
+  var titre = fiches.length && showCgv ? 'Prestations, garanties &amp; conditions générales'
+    : fiches.length ? 'Détail des prestations &amp; garanties' : 'Conditions générales de vente et de réparation';
+  var html = '<div class="d-annexe pdf-newpage">'
+    + '<div class="d-annexe-head"><div class="d-annexe-title">' + titre + '</div><div class="d-annexe-ref">' + ref + '</div>'
+    + '<div class="d-annexe-gar">✓ Garantie AREPROG 2 ans sur chaque prestation, sans limite de kilométrage — fichier d\'origine conservé, retour à l\'origine gratuit'
+    + (showCgv ? ' (détail : article II des conditions ci-dessous)' : '') + '</div></div>';
+  if (fiches.length) {
+    html += '<div class="d-fiches">' + fiches.map(function(f) {
+      return '<div class="d-fiche"><div class="d-fiche-title">' + escHtml(f.titre) + '</div>'
+        + line('Réalisé', f.realise) + line('Inclus', f.inclus) + line('Garantie', f.garantie) + '</div>';
+    }).join('') + '</div>';
+    if (fiches.some(function(f) { return f.decharge; })) {
+      var ac = doc.accordUsage || {};
+      html += '<div class="d-decharge"><b>Mention d\'usage — </b>' + escHtml(DECHARGE_TEXTE)
+        + (ac.ok
+          ? '<div class="d-accord-ok">✓ Accord du client enregistré' + (ac.date ? ' le ' + fmtDate(ac.date) : '') + (ac.mode ? ' — ' + escHtml(ac.mode) : '') + '</div>'
+          : '<div class="d-sign"><div>Lu et approuvé — Date :</div><div>Signature du client :</div></div>')
+        + '</div>';
+    }
+  }
+  if (showCgv) {
+    html += '<div class="d-cgv-body">'
+      + (fiches.length ? '<h4 class="d-cgv-h">Conditions générales de vente et de réparation</h4>' : '')
+      + renderCgvHTML(tpl.cgv || CGV_DEFAULT, tpl) + '</div>';
+  }
+  return html + '</div>';
+}
+
+// ============================================================
 //  HELPERS
 // ============================================================
 function fmt(n) { return n.toFixed(2).replace('.', ',') + ' \u20ac'; }
@@ -716,7 +903,7 @@ function resetForm(goToForm) {
   $('f-date').value = today();
   $('f-ech').value = plusDays(30);
   $('f-statut').value = 'créé';
-  ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-vm','f-vmo','f-vmot','f-van','f-vim','f-vkm','f-nint'].forEach(function(i) { $(i).value = ''; });
+  ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-csiret','f-ctva','f-vm','f-vmo','f-vmot','f-van','f-vim','f-vkm','f-nint'].forEach(function(i) { $(i).value = ''; });
   if ($('f-cnom-results')) { $('f-cnom-results').style.display = 'none'; $('f-cnom-results').innerHTML = ''; }
   $('f-tva').value = '0';
   applyRemiseGlobaleFromDoc(null);
@@ -728,11 +915,28 @@ function resetForm(goToForm) {
   renderGainsBar();
   if ($('f-gains')) { $('f-gains').value = ''; previewGainsBadge(); }
   resetDeclaration();
+  setAccordUsage(null);
   addLine();
   if (goToForm) showTab('form');
 }
 
 function newDoc() { resetForm(true); }
+
+// Accord du client sur la mention d'usage des désactivations (annexe du document)
+function getAccordUsage() {
+  if (!$('f-accord') || !$('f-accord').checked) return null;
+  return { ok: true, mode: $('f-accord-mode').value, date: $('f-accord-date').value || today() };
+}
+function setAccordUsage(ac) {
+  if (!$('f-accord')) return;
+  $('f-accord').checked = !!(ac && ac.ok);
+  $('f-accord-mode').value = (ac && ac.mode) || 'sur place';
+  $('f-accord-date').value = (ac && ac.date) || '';
+}
+function onAccordChange() {
+  if ($('f-accord').checked && !$('f-accord-date').value) $('f-accord-date').value = today();
+  onFormChange();
+}
 
 function onTypeChange() {
   var t = $('f-type').value;
@@ -1230,7 +1434,7 @@ function renderAcompteHTML(doc, ac) {
       + '<div><div class="apl">Prestataire</div><div class="apn">'+escHtml(tpl.nom||'AREPROG')+'</div>'
         + '<div class="api">'+escHtml(tpl.activite||'')+(tpl.adresse?'<br>'+escHtml(tpl.adresse):'')+(tpl.tel?'<br>'+escHtml(tpl.tel):'')+(tpl.email?'<br>'+escHtml(tpl.email):'')+(tpl.legal?'<br><small style="color:#aaa">'+escHtml(tpl.legal)+'</small>':'')+'</div></div>'
       + '<div><div class="apl">Client</div><div class="apn">'+escHtml(doc.cn||'—')+'</div>'
-        + '<div class="api">'+(doc.ca?escHtml(doc.ca)+'<br>':'')+escHtml(doc.cv||'')+(doc.ct?'<br>'+escHtml(doc.ct):'')+(doc.ce?'<br>'+escHtml(doc.ce):'')+(vehStr?'<br><br><strong>V\u00e9hicule\u00a0:</strong> '+vehStr:'')+(doc.vim?'<br>Immat.\u00a0: <strong>'+escHtml(doc.vim.toUpperCase())+'</strong>':'')+'</div></div>'
+        + '<div class="api">'+(doc.ca?escHtml(doc.ca)+'<br>':'')+escHtml(doc.cv||'')+(doc.ct?'<br>'+escHtml(doc.ct):'')+(doc.ce?'<br>'+escHtml(doc.ce):'')+(doc.csiret?'<br>SIRET\u00a0: '+escHtml(doc.csiret):'')+(doc.ctva?'<br>TVA intracom.\u00a0: '+escHtml(doc.ctva):'')+(vehStr?'<br><br><strong>V\u00e9hicule\u00a0:</strong> '+vehStr:'')+(doc.vim?'<br>Immat.\u00a0: <strong>'+escHtml(doc.vim.toUpperCase())+'</strong>':'')+'</div></div>'
     + '</div>'
     + (linesHTML?'<table class="adt"><thead><tr><th>D\u00e9signation</th><th style="text-align:center">Qt\u00e9</th><th style="text-align:right">PU\u00a0HT</th><th style="text-align:right">Remise</th><th style="text-align:right">Total\u00a0HT</th></tr></thead><tbody>'+linesHTML+'</tbody></table>':'')
     + '<div class="abox"><div class="abox-t">D\u00e9tail de l\u2019acompte</div>'
@@ -1297,6 +1501,8 @@ function buildObj() {
     cv: $('f-cville').value,
     ct: $('f-ctel').value,
     ce: $('f-cemail').value,
+    csiret: $('f-csiret') ? $('f-csiret').value.trim() : '',
+    ctva: $('f-ctva') ? $('f-ctva').value.trim() : '',
     vm: $('f-vm').value,
     vmo: $('f-vmo').value,
     vmot: $('f-vmot').value,
@@ -1321,6 +1527,10 @@ function buildObj() {
     motif: $('f-motif') ? $('f-motif').value : '',
     delai: $('f-delai') ? $('f-delai').value : '',
     sigclient: $('f-sigclient') ? $('f-sigclient').checked : false,
+    accordUsage: getAccordUsage(),
+    // Demande ("collection:id") dont ce devis est issu — permet de le retrouver
+    // localement sans dépendre du lien devisId écrit sur la demande.
+    demandeRef: _demandeActuelle || null,
   };
 }
 
@@ -1346,6 +1556,17 @@ function saveDoc() {
     if (confirm('Enregistrer "' + cn + '" dans le carnet clients ?')) {
       saveCurrentClientToCarnet();
     }
+  } else if (exists) {
+    // Client connu : proposer d'ajouter à sa fiche le véhicule saisi sur le
+    // devis s'il n'y figure pas encore (ex. devis pour un 2e véhicule).
+    var cl = clients.find(function(c){ return c.nom.toLowerCase() === cn.toLowerCase(); });
+    var vf = vehiculeDuForm();
+    if (vf && !clientAVehicule(cl, vf)
+        && confirm('Ajouter le véhicule « ' + libelleVehicule(vf) + ' » aux véhicules de ' + cl.nom + ' ?')) {
+      ajouterVehiculeAuClient(cl, vf);
+      saveClients(clients);
+      if ($('t-carnet') && $('t-carnet').classList.contains('on')) renderCarnet();
+    }
   }
   alert('Document enregistré ✓');
 }
@@ -1365,13 +1586,16 @@ function lierDevisALaDemande(ref, doc) {
     total: doc.ht,
     aTarifer: (doc.lines || []).filter(function(l){ return !l.pu; }).length
   };
+  // Mise à jour locale immédiate : un nouveau clic sur la demande avant la
+  // réponse de Firestore doit déjà rouvrir ce devis, pas en créer un second.
+  d.devisId = doc.id;
+  d.devisDraft = draft;
+  paintDemandes();
   db.collection(d.collection).doc(d.id).update({ devisId: doc.id, devisDraft: draft })
-    .then(function() {
-      d.devisId = doc.id;
-      d.devisDraft = draft;
-      paintDemandes();
-    })
-    .catch(function(e){ console.warn('Lien devis→demande :', e); });
+    .catch(function(e){
+      console.warn('Lien devis→demande :', e);
+      showNotifBanner('⚠️', 'Lien devis → demande non enregistré', e.message || String(e));
+    });
 }
 
 // Charger un objet doc directement dans le formulaire (draft restore)
@@ -1390,6 +1614,8 @@ function loadDocData(doc) {
   $('f-cville').value= doc.cv    || '';
   $('f-ctel').value  = doc.ct    || '';
   $('f-cemail').value= doc.ce    || '';
+  $('f-csiret').value= doc.csiret || '';
+  $('f-ctva').value  = doc.ctva   || '';
   $('f-vm').value    = doc.vm    || '';
   $('f-vmo').value   = doc.vmo   || '';
   $('f-vmot').value  = doc.vmot  || '';
@@ -1409,6 +1635,7 @@ function loadDocData(doc) {
   if ($('f-motif')) $('f-motif').value = doc.motif || '';
   if ($('f-delai')) $('f-delai').value = doc.delai || '';
   if ($('f-sigclient')) $('f-sigclient').checked = doc.sigclient || false;
+  setAccordUsage(doc.accordUsage);
   onTypeChange();
   applyRemiseGlobaleFromDoc(doc);
   renderLines();
@@ -1422,7 +1649,7 @@ function loadDoc(docId) {
   var doc = loadDocs().find(function(d) { return d.id === docId; });
   if (!doc) return;
   editId = doc.id;
-  _demandeActuelle = null;
+  _demandeActuelle = doc.demandeRef || null;
   loadedType = doc.type;
   loadedNum = doc.num;
   $('f-type').value = doc.type;
@@ -1435,6 +1662,8 @@ function loadDoc(docId) {
   $('f-cville').value = doc.cv || '';
   $('f-ctel').value = doc.ct || '';
   $('f-cemail').value = doc.ce || '';
+  $('f-csiret').value = doc.csiret || '';
+  $('f-ctva').value = doc.ctva || '';
   $('f-vm').value = doc.vm || '';
   $('f-vmo').value = doc.vmo || '';
   $('f-vmot').value = doc.vmot || '';
@@ -1465,6 +1694,7 @@ function loadDoc(docId) {
   if ($('f-motif')) $('f-motif').value = doc.motif || '';
   if ($('f-delai')) $('f-delai').value = doc.delai || '';
   if ($('f-sigclient')) $('f-sigclient').checked = doc.sigclient || false;
+  setAccordUsage(doc.accordUsage);
   onTypeChange();
   showTab('form');
 }
@@ -1584,6 +1814,8 @@ function renderDocHTML(doc, tplOverride) {
     + (doc.ca ? escHtml(doc.ca) + '<br>' : '') + escHtml(doc.cv || '')
     + (doc.ct ? '<br>' + escHtml(doc.ct) : '')
     + (doc.ce ? '<br>' + escHtml(doc.ce) : '')
+    + (doc.csiret ? '<br>SIRET : ' + escHtml(doc.csiret) : '')
+    + (doc.ctva ? '<br>TVA intracom. : ' + escHtml(doc.ctva) : '')
     + (vehStr ? '<br><br><strong>Véhicule :</strong> ' + vehStr : '')
     + (doc.vim ? '<br>Immatriculation : <strong>' + escHtml(doc.vim.toUpperCase()) + '</strong>' : '')
     + (doc.vkm ? '<br>Kilométrage : <strong>' + escHtml(doc.vkm) + '</strong>' : '')
@@ -1615,7 +1847,8 @@ function renderDocHTML(doc, tplOverride) {
       + '</div>'
       + '<div style="flex:1"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:12px">Signature du technicien</div><div style="border-bottom:1px solid #ccc;height:40px"></div></div>'
       + '</div>' : '')
-    + (tpl.showFooter !== false ? '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '');
+    + (tpl.showFooter !== false ? '<div class="d-footer">' + escHtml(tpl.footer||'').replace(/\n/g,'<br>') + '</div>' : '')
+    + buildAnnexeHTML(doc, tpl);
 }
 
 // Construit le nom de fichier PDF : AREPROG_TYPE_NUMERO_CLIENT
@@ -1839,7 +2072,9 @@ function clientCard(cl, selectable) {
   }).filter(Boolean).join('');
   return '<div class="carnet-card" ' + onclick + '>'
     + '<button class="carnet-card-del" onclick="event.stopPropagation();deleteClient(' + cl.id + ')" title="Supprimer">×</button>'
-    + '<div class="carnet-card-name">' + escHtml(cl.nom || '—') + '</div>'
+    + '<div class="carnet-card-name">' + escHtml(cl.nom || '—')
+      + (cl.type === 'pro' ? ' <span style="font-size:10px;font-weight:700;color:var(--blue);border:1px solid var(--border-blue);border-radius:4px;padding:1px 5px;vertical-align:middle">PRO</span>' : '')
+    + '</div>'
     + vehsHTML
     + (cl.tel ? '<div class="carnet-card-tel">📞 ' + escHtml(cl.tel) + '</div>' : '')
     + (!selectable ? '<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><button class="btn-s btn-sm" onclick="editClient(' + cl.id + ')">✏️ Modifier</button><button class="btn-s btn-sm" onclick="showClientHistory(' + cl.id + ')">📋 Historique</button><button class="btn-p btn-sm" onclick="selectClientAndGo(' + cl.id + ')">→ Devis</button></div>' : '')
@@ -1862,7 +2097,9 @@ function openAddClientModal(fromCarnet) {
   acDraftId = Date.now();
   acDocs = [];
   $('add-client-title').textContent = 'Nouveau client';
-  ['ac-nom','ac-tel','ac-email','ac-adr','ac-ville'].forEach(function(i){ $(i).value=''; });
+  ['ac-nom','ac-tel','ac-email','ac-adr','ac-ville','ac-siret','ac-tva'].forEach(function(i){ $(i).value=''; });
+  $('ac-type').value = 'particulier';
+  toggleAcPro();
   var vl = $('ac-veh-list'); if(vl) vl.innerHTML = '';
   addVehicleRow();
   renderAcDocs();
@@ -1871,6 +2108,14 @@ function openAddClientModal(fromCarnet) {
   $('add-client-modal').classList.add('open');
 }
 function closeAddClientModal() { $('add-client-modal').classList.remove('open'); }
+
+// Client professionnel : affiche SIRET / TVA intracom. (repris sur les devis/factures).
+function toggleAcPro() {
+  var pro = $('ac-type').value === 'pro';
+  $('ac-pro-fields').style.display = pro ? '' : 'none';
+  $('ac-nom-label').textContent = pro ? 'Raison sociale' : 'Nom / Société';
+  $('ac-nom').placeholder = pro ? 'Garage Dupont SARL' : 'Prénom NOM';
+}
 
 function editClient(cid) {
   var cl = loadClients().find(function(c){ return c.id === cid; });
@@ -1884,6 +2129,10 @@ function editClient(cid) {
   $('ac-email').value = cl.email || '';
   $('ac-adr').value = cl.adr || '';
   $('ac-ville').value = cl.ville || '';
+  $('ac-siret').value = cl.siret || '';
+  $('ac-tva').value = cl.tvaIntra || '';
+  $('ac-type').value = cl.type === 'pro' ? 'pro' : 'particulier';
+  toggleAcPro();
   // Charger les véhicules multiples
   var vehList = $('ac-veh-list');
   if (vehList) {
@@ -1919,6 +2168,9 @@ function saveClient() {
     id: editClientId || acDraftId || Date.now(),
     nom: nom, tel: $('ac-tel').value, email: $('ac-email').value,
     adr: $('ac-adr').value, ville: $('ac-ville').value,
+    type: $('ac-type').value === 'pro' ? 'pro' : 'particulier',
+    siret: $('ac-type').value === 'pro' ? $('ac-siret').value.trim() : '',
+    tvaIntra: $('ac-type').value === 'pro' ? $('ac-tva').value.trim() : '',
     vm: firstVeh.vm||'', vmo: firstVeh.vmo||'', vmot: firstVeh.vmot||'',
     van: firstVeh.van||'', vim: firstVeh.vim||'',
     vehs: vehs,
@@ -1980,6 +2232,8 @@ function selectClient(cid) {
   $('f-cemail').value = cl.email || '';
   $('f-cadr').value  = cl.adr   || '';
   $('f-cville').value = cl.ville || '';
+  $('f-csiret').value = cl.siret || '';
+  $('f-ctva').value = cl.tvaIntra || '';
   closeCarnetModal();
   // Si plusieurs véhicules → afficher le sélecteur
   var vehs = cl.vehs && cl.vehs.length ? cl.vehs
@@ -1996,6 +2250,43 @@ function selectClientAndGo(cid) {
   showTab('form');
 }
 
+// Véhicule saisi dans le formulaire de document (null si vide).
+function vehiculeDuForm() {
+  var v = { vm: $('f-vm').value.trim(), vmo: $('f-vmo').value.trim(), vmot: $('f-vmot').value.trim(),
+            van: $('f-van').value.trim(), vim: $('f-vim').value.trim() };
+  return (v.vm || v.vmo || v.vim) ? v : null;
+}
+
+function libelleVehicule(v) {
+  return [v.vm, v.vmo, v.vim ? '(' + v.vim.toUpperCase() + ')' : ''].filter(Boolean).join(' ');
+}
+
+// Véhicules d'une fiche client, y compris l'ancien format à véhicule unique.
+function vehiculesDuClient(cl) {
+  return cl.vehs && cl.vehs.length ? cl.vehs
+    : (cl.vm ? [{ vm:cl.vm, vmo:cl.vmo||'', vmot:cl.vmot||'', van:cl.van||'', vim:cl.vim||'' }] : []);
+}
+
+// Même véhicule = même immat (normalisée) ; sans immat, même marque + modèle.
+function clientAVehicule(cl, v) {
+  var norm = function(x){ return (x || '').toUpperCase().replace(/[\s-]/g, ''); };
+  var low = function(x){ return (x || '').trim().toLowerCase(); };
+  return vehiculesDuClient(cl).some(function(e) {
+    if (norm(v.vim) || norm(e.vim)) return norm(v.vim) === norm(e.vim);
+    return low(e.vm) === low(v.vm) && low(e.vmo) === low(v.vmo);
+  });
+}
+
+function ajouterVehiculeAuClient(cl, v) {
+  var vehs = vehiculesDuClient(cl).slice();
+  vehs.push({ id: 'cv' + Date.now(), vm: v.vm, vmo: v.vmo, vmot: v.vmot, van: v.van, vim: v.vim, notes: '', photos: [], videos: [] });
+  cl.vehs = vehs;
+  // Compatibilité rétro : les champs plats reflètent le premier véhicule.
+  var first = vehs[0];
+  cl.vm = first.vm || ''; cl.vmo = first.vmo || ''; cl.vmot = first.vmot || '';
+  cl.van = first.van || ''; cl.vim = first.vim || '';
+}
+
 // Enregistrer client depuis le formulaire courant
 function saveCurrentClientToCarnet() {
   var nom = $('f-cnom').value.trim();
@@ -2004,17 +2295,26 @@ function saveCurrentClientToCarnet() {
   // Chercher si déjà existant (même nom)
   var existing = clients.find(function(c){ return c.nom.toLowerCase() === nom.toLowerCase(); });
   if (existing && !confirm('Un client "' + nom + '" existe déjà. Mettre à jour ?')) return;
-  var cl = {
-    id: existing ? existing.id : Date.now(),
-    nom: nom, tel: $('f-ctel').value, email: $('f-cemail').value,
-    adr: $('f-cadr').value, ville: $('f-cville').value,
-    vm: $('f-vm').value, vmo: $('f-vmo').value, vmot: $('f-vmot').value,
-    van: $('f-van').value, vim: $('f-vim').value,
-  };
+  var siret = $('f-csiret').value.trim(), tva = $('f-ctva').value.trim();
+  var vf = vehiculeDuForm();
   if (existing) {
-    var i = clients.indexOf(existing);
-    clients[i] = cl;
+    // Fusion : on met à jour les coordonnées sans perdre véhicules, fichiers, etc.
+    existing.tel = $('f-ctel').value; existing.email = $('f-cemail').value;
+    existing.adr = $('f-cadr').value; existing.ville = $('f-cville').value;
+    if (siret) existing.siret = siret;
+    if (tva) existing.tvaIntra = tva;
+    if (siret || tva) existing.type = 'pro';
+    if (vf && !clientAVehicule(existing, vf)) ajouterVehiculeAuClient(existing, vf);
   } else {
+    var cl = {
+      id: Date.now(),
+      nom: nom, tel: $('f-ctel').value, email: $('f-cemail').value,
+      adr: $('f-cadr').value, ville: $('f-cville').value,
+      type: (siret || tva) ? 'pro' : 'particulier',
+      siret: siret, tvaIntra: tva,
+      vehs: [], documents: [],
+    };
+    if (vf) ajouterVehiculeAuClient(cl, vf);
     clients.unshift(cl);
   }
   saveClients(clients);
@@ -2256,6 +2556,9 @@ function openCatModal(gi, ii) {
     $('cat-item-type').value = it.type || 'service';
     $('cat-item-ref').value = it.ref || '';
     $('cat-item-desc').value = it.desc || '';
+    $('cat-item-realise').value = (it.realise || []).join('\n');
+    $('cat-item-inclus').value = (it.inclus || []).join('\n');
+    $('cat-item-garantie').value = (it.garantie || []).join('\n');
   } else {
     $('cat-item-label').value = '';
     $('cat-item-price').value = '';
@@ -2263,6 +2566,9 @@ function openCatModal(gi, ii) {
     $('cat-item-type').value = 'service';
     $('cat-item-ref').value = '';
     $('cat-item-desc').value = '';
+    $('cat-item-realise').value = '';
+    $('cat-item-inclus').value = '';
+    $('cat-item-garantie').value = '';
   }
   $('cat-item-modal').classList.add('open');
   setTimeout(function(){ $('cat-item-label').focus(); }, 100);
@@ -2284,7 +2590,9 @@ function saveCatItem() {
   var type = $('cat-item-type').value || 'service';
   var ref = $('cat-item-ref').value.trim();
   var desc = $('cat-item-desc').value.trim();
-  var item = { l: label, p: price, gains: gainsRaw, type: type, ref: ref, desc: desc };
+  function lignes(id) { return ($(id).value || '').split('\n').map(function(g){ return g.trim(); }).filter(Boolean); }
+  var item = { l: label, p: price, gains: gainsRaw, type: type, ref: ref, desc: desc,
+    realise: lignes('cat-item-realise'), inclus: lignes('cat-item-inclus'), garantie: lignes('cat-item-garantie') };
 
   if (catEditingItem === null) {
     // Nouveau
@@ -2564,6 +2872,7 @@ var TPL_DEFAULT = {
   footer:'AREPROG — Reprogrammation moteur en atelier · Pays Basque (64) · Landes (40) · Yonne (89)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
   color:'#1E90FF', titleColor:'#111111', logoStyle:'split',
   showGains:true, showVeh:true, showFooter:true, showLegal:true,
+  showAnnexe:true, showCgv:true, cgv:'',
   validite:30,
 };
 
@@ -2605,6 +2914,9 @@ function readTplForm() {
     logoStyle:v('tpl-logo-style','split'),
     showGains:ck('tpl-show-gains',true), showVeh:ck('tpl-show-veh',true),
     showFooter:ck('tpl-show-footer',true), showLegal:ck('tpl-show-legal',true),
+    showAnnexe:ck('tpl-show-annexe',true), showCgv:ck('tpl-show-cgv',true),
+    // Vide = texte par défaut (CGV_DEFAULT), pour profiter de ses mises à jour
+    cgv:(function(){ var t=($('tpl-cgv')?$('tpl-cgv').value:'').trim(); return t===CGV_DEFAULT.trim()?'':t; })(),
     validite:parseInt(v('tpl-validite','30'))||30,
   };
 }
@@ -2626,6 +2938,9 @@ function fillTplForm(tpl) {
   if($('tpl-show-veh'))    $('tpl-show-veh').checked    = tpl.showVeh!==false;
   if($('tpl-show-footer')) $('tpl-show-footer').checked = tpl.showFooter!==false;
   if($('tpl-show-legal'))  $('tpl-show-legal').checked  = tpl.showLegal!==false;
+  if($('tpl-show-annexe')) $('tpl-show-annexe').checked = tpl.showAnnexe!==false;
+  if($('tpl-show-cgv'))    $('tpl-show-cgv').checked    = tpl.showCgv!==false;
+  if($('tpl-cgv'))         $('tpl-cgv').value           = tpl.cgv || CGV_DEFAULT;
 }
 function syncColorInput(){ var v=$('tpl-color-pick').value; $('tpl-color-hex').value=v; if($('tpl2-color-pick'))$('tpl2-color-pick').value=v; if($('tpl2-color-hex'))$('tpl2-color-hex').value=v; livePreview(); }
 function syncColorPicker(){ var v=$('tpl-color-hex').value; if(/^#[0-9a-fA-F]{6}$/.test(v)){$('tpl-color-pick').value=v; if($('tpl2-color-pick'))$('tpl2-color-pick').value=v; if($('tpl2-color-hex'))$('tpl2-color-hex').value=v;} livePreview(); }
@@ -2787,11 +3102,45 @@ function renderSideEvents(d) {
       + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
       + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
         + '<button class="btn-s btn-sm" onclick="openRdvModal(\''+r.id+'\',null)">✏️ Modifier</button>'
-        + (r.clientId ? '<button class="btn-s btn-sm" onclick="selectClientAndGo('+r.clientId+')">📄 Devis</button>' : '')
+        + ((r.docId || r.clientId) ? '<button class="btn-s btn-sm" onclick="ouvrirDevisDuRdv(\''+escHtml(r.id)+'\')">📄 ' + escHtml(libelleDevisDuRdv(r)) + '</button>' : '')
         + '<button class="rdv-confirm-btn" onclick="copyConfirmMsg(\''+r.id+'\')">📋 Copier confirmation</button>'
       + '</div>'
     + '</div>';
   }).join('');
+}
+
+// Document lié à un RDV (champ "Devis lié" de la modale), s'il existe encore.
+function docDuRdv(r) {
+  return r.docId ? loadDocs().find(function(d){ return d.id === r.docId; }) : null;
+}
+
+function libelleDevisDuRdv(r) {
+  var doc = docDuRdv(r);
+  if (!doc) return 'Nouveau devis';
+  return doc.type === 'facture' ? 'Ouvrir la facture' : doc.type === 'ordre' ? 'Ouvrir l\'OR' : 'Ouvrir le devis';
+}
+
+// Ouvre le devis lié au RDV ; à défaut, un nouveau devis pré-rempli avec le
+// client et le véhicule du RDV.
+function ouvrirDevisDuRdv(rdvId) {
+  var r = loadRdvs().find(function(x){ return String(x.id) === String(rdvId); });
+  if (!r) return;
+  var doc = docDuRdv(r);
+  if (doc) { loadDoc(doc.id); return; }
+  resetForm(false);
+  if (r.clientId) {
+    var cl = loadClients().find(function(c){ return c.id === r.clientId; });
+    if (cl) {
+      $('f-cnom').value = cl.nom || ''; $('f-ctel').value = cl.tel || '';
+      $('f-cemail').value = cl.email || ''; $('f-cadr').value = cl.adr || '';
+      $('f-cville').value = cl.ville || '';
+      $('f-csiret').value = cl.siret || ''; $('f-ctva').value = cl.tvaIntra || '';
+      var vehs = vehiculesDuClient(cl);
+      var v = (r.vehIdx !== null && r.vehIdx !== undefined && vehs[r.vehIdx]) ? vehs[r.vehIdx] : (vehs.length === 1 ? vehs[0] : null);
+      if (v) applyVehicle(v);
+    }
+  }
+  showTab('form');
 }
 
 function renderAutoAlerts() {
@@ -2834,6 +3183,9 @@ function renderAutoAlerts() {
 }
 
 // ── Modal RDV ────────────────────────────────────────────────
+// Lieu pré-rempli pour tout nouveau rendez-vous (modifiable dans le formulaire).
+var ADRESSE_GARAGE = '9 boulevard Marcel Dassault, 64200 Biarritz';
+
 function openRdvModal(rdvId) {
   editingRdvId = rdvId;
   fillRdvClientSelect();
@@ -2875,7 +3227,7 @@ function openRdvModal(rdvId) {
     refreshRdvClientPicked();
     fillRdvDocSelect();
     $('rdv-doc').value = '';
-    $('rdv-lieu').value = '';
+    $('rdv-lieu').value = ADRESSE_GARAGE;
     $('rdv-notes').value = '';
     $('rdv-delete-btn').style.display = 'none';
     $('rdv-copy-btn').style.display = 'none';
@@ -3153,6 +3505,10 @@ function envoyerEmail(to, subject, html, replyTo, attachments) {
     if (!res.ok) return res.json().catch(function(){ return {}; }).then(function(j) {
       throw { status: res.status, text: j.error || ('HTTP ' + res.status) };
     });
+    // Historique « Emails envoyés » périmé : rechargé à la prochaine ouverture
+    // de l'onglet Mail, ou tout de suite s'il est affiché.
+    _sentMails = null;
+    if ($('t-envoyes').classList.contains('on')) loadSentMails(true);
   });
 }
 
@@ -3777,43 +4133,97 @@ async function generatePdfBase64(elId, opts) {
 
   // Le #preview affiché à l'écran suit .modal-inner{max-width:100%}, donc sur
   // mobile / fenêtre étroite il est rétréci (colonnes tassées, texte coupé).
-  // On clone le contenu dans un conteneur hors-écran à largeur fixe "desktop"
+  // On clone le contenu dans des conteneurs hors-écran à largeur fixe "desktop"
   // pour que le PDF soit toujours généré avec la mise en page complète.
-  var clone = original.cloneNode(true);
-  clone.removeAttribute('id');
-  clone.style.width = '780px';
-  clone.style.maxWidth = 'none';
-  clone.style.padding = '44px 52px';
-
-  var wrap = document.createElement('div');
-  wrap.style.cssText = 'position:fixed;top:0;left:-99999px;width:780px;background:#fff';
-  wrap.appendChild(clone);
-  document.body.appendChild(wrap);
-
-  var canvas;
-  try {
-    canvas = await html2canvas(clone, {
-      scale: scale,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      logging: false,
-    });
-  } finally {
-    document.body.removeChild(wrap);
-  }
+  // Chaque enfant .pdf-newpage (annexe prestations, CGV) ouvre une nouvelle
+  // section, capturée à part pour commencer en haut d'une nouvelle page.
+  var sections = [[]];
+  Array.prototype.forEach.call(original.cloneNode(true).childNodes, function(n) {
+    if (n.nodeType === 1 && n.classList.contains('pdf-newpage') && sections[sections.length - 1].length) sections.push([]);
+    sections[sections.length - 1].push(n);
+  });
 
   var { jsPDF } = window.jspdf;
   var pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   var imgW = 210; // A4 width mm
-  var imgH = (canvas.height * imgW) / canvas.width;
   var pageH = 297; // A4 height mm
-  var pos = 0;
+  var contMargin = 12; // marge haute (mm) des pages de suite d'une section
+  var firstPage = true;
 
-  // Gestion multi-pages si le doc est long
-  while (pos < imgH) {
-    if (pos > 0) pdf.addPage();
-    pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'JPEG', 0, -pos, imgW, imgH);
-    pos += pageH;
+  for (var si = 0; si < sections.length; si++) {
+    var clone = document.createElement('div');
+    clone.className = original.className;
+    clone.style.width = '780px';
+    clone.style.maxWidth = 'none';
+    clone.style.padding = '44px 52px';
+    sections[si].forEach(function(n) { clone.appendChild(n); });
+    var first = clone.firstElementChild;
+    if (first && first.classList.contains('pdf-newpage')) { first.style.marginTop = '0'; first.style.borderTop = 'none'; first.style.paddingTop = '0'; }
+
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;top:0;left:-99999px;width:780px;background:#fff';
+    wrap.appendChild(clone);
+    document.body.appendChild(wrap);
+
+    var canvas, cuts = [];
+    try {
+      // Positions (px CSS) où l'on peut couper sans trancher une ligne de texte :
+      // entre deux blocs, deux lignes de tableau ou deux fiches prestation.
+      var top0 = clone.getBoundingClientRect().top;
+      clone.querySelectorAll(':scope > *, tr, .d-fiche, .d-decharge, .d-annexe-head').forEach(function(el) {
+        var r = el.getBoundingClientRect();
+        cuts.push(r.top - top0, r.bottom - top0);
+      });
+      var cssH = clone.offsetHeight;
+      canvas = await html2canvas(clone, {
+        scale: scale,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+    } finally {
+      document.body.removeChild(wrap);
+    }
+
+    var pxPerCss = canvas.height / cssH;
+    var pxPerMm = canvas.width / imgW;
+    cuts = cuts.map(function(c) { return Math.round(c * pxPerCss); }).sort(function(a, b) { return a - b; });
+
+    // Section qui déborde de peu (≤ 25 %) : on la réduit pour la garder sur une
+    // seule page (annexe garanties + CGV) plutôt que d'ajouter une page presque vide.
+    var fullPage = Math.floor(pageH * pxPerMm);
+    if (canvas.height > fullPage && canvas.height <= fullPage * 1.25) {
+      var k = fullPage / canvas.height;
+      if (!firstPage) pdf.addPage();
+      firstPage = false;
+      pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'JPEG', imgW * (1 - k) / 2, 0, imgW * k, pageH);
+      continue;
+    }
+
+    // Découpe en pages, en coupant au dernier bloc qui tient entièrement
+    var pos = 0, pageOfSection = 0;
+    while (pos < canvas.height - 2) {
+      var marginMm = pageOfSection ? contMargin : 0;
+      var avail = Math.floor((pageH - marginMm) * pxPerMm);
+      var end = Math.min(canvas.height, pos + avail);
+      if (end < canvas.height) {
+        var best = 0;
+        cuts.forEach(function(c) { if (c > pos + avail * 0.3 && c <= end) best = c; });
+        if (best) end = best;
+      }
+      var slice = document.createElement('canvas');
+      slice.width = canvas.width;
+      slice.height = end - pos;
+      var ctx = slice.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, slice.width, slice.height);
+      ctx.drawImage(canvas, 0, pos, canvas.width, end - pos, 0, 0, canvas.width, end - pos);
+      if (!firstPage) pdf.addPage();
+      firstPage = false;
+      pdf.addImage(slice.toDataURL('image/jpeg', quality), 'JPEG', 0, marginMm, imgW, (end - pos) / pxPerMm);
+      pos = end;
+      pageOfSection++;
+    }
   }
 
   // Retourner en base64 sans le prefixe data:
@@ -4482,7 +4892,7 @@ function exportCSV() {
 // au i-ème bouton .nb de la barre. L'index 2 ('form') est le bouton
 // « + Nouveau », qui n'ouvre pas d'onglet mais partage la position.
 // Ajouter un onglet impose de le déclarer ici ET au bon rang dans .tb-nav.
-var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','codage','mail'];
+var TABS = ['dash','demandes','form','liste','carnet','template','services','agenda','parc','stats','search','codage','mail','envoyes'];
 
 function showTab(t) {
   TABS.forEach(function(x){ var el=$('t-'+x); if(el) el.classList.toggle('on',x===t); });
@@ -4499,6 +4909,7 @@ function showTab(t) {
   if(t==='search')   { $('global-search').value=''; $('search-results').innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:30px">Tape pour rechercher…</div>'; setTimeout(function(){ $('global-search').focus(); }, 100); }
   if(t==='codage')   initCodageTab();
   if(t==='mail')     initMailTab();
+  if(t==='envoyes')  loadSentMails(false);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -4949,6 +5360,119 @@ function initMailTab() {
       return '<option value="' + t.id + '">' + escHtml(t.label) + '</option>';
     }).join('');
   }
+}
+
+// ── Onglet « Envoyés » : historique des emails (Resend → Firestore, fonction emails-envoyes) ──
+// Couvre tout ce qui part via Resend : envois depuis la gestion, rappels RDV
+// automatiques, notifications de demandes. L'archive Firestore garde les
+// emails au-delà de la durée de conservation de Resend.
+var _sentMails = null;
+var _sentMailsLoading = false;
+var SENT_MAIL_STATUS = {
+  sent:             ['Envoyé',     '#64748b'],
+  delivered:        ['Délivré',    '#16a34a'],
+  opened:           ['Ouvert',     '#0d5baf'],
+  clicked:          ['Cliqué',     '#0d5baf'],
+  bounced:          ['Rejeté',     '#dc2626'],
+  complained:       ['Spam',       '#dc2626'],
+  failed:           ['Échec',      '#dc2626'],
+  delivery_delayed: ['Retardé',    '#d97706'],
+  queued:           ['En attente', '#64748b'],
+  scheduled:        ['Programmé',  '#64748b'],
+  canceled:         ['Annulé',     '#64748b'],
+};
+
+function fmtSentMailDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function loadSentMails(force) {
+  if (_sentMailsLoading) return;
+  if (_sentMails && !force) { renderSentMails(); return; }
+  _sentMailsLoading = true;
+  var btn = $('sent-mails-refresh');
+  btn.disabled = true;
+  var status = $('sent-mails-status');
+  status.style.display = 'block';
+  status.textContent = 'Chargement de l\u2019historique…';
+  authedFetch('/.netlify/functions/emails-envoyes')
+    .then(function(res) {
+      return res.json().catch(function(){ return {}; }).then(function(j) {
+        if (!res.ok) throw new Error(j.error || ('HTTP ' + res.status));
+        return j;
+      });
+    })
+    .then(function(j) {
+      _sentMails = j.emails || [];
+      status.textContent = j.syncError || '';
+      status.style.display = j.syncError ? 'block' : 'none';
+      renderSentMails();
+    })
+    .catch(function(e) {
+      status.style.display = 'block';
+      status.textContent = '⚠️ ' + (e.message || 'Chargement impossible.');
+    })
+    .then(function() { _sentMailsLoading = false; btn.disabled = false; });
+}
+
+function renderSentMails() {
+  var box = $('sent-mails-list');
+  if (!_sentMails) { box.innerHTML = ''; return; }
+  var q = normCodageStr($('sent-mails-search').value);
+  var list = _sentMails.filter(function(m) {
+    return !q || normCodageStr([m.subject, (m.to || []).join(' ')].join(' ')).indexOf(q) >= 0;
+  });
+  if (!list.length) {
+    box.innerHTML = '<div style="font-size:12.5px;color:var(--text-muted);padding:10px 0">' + (_sentMails.length ? 'Aucun email ne correspond.' : 'Aucun email envoyé pour l\u2019instant.') + '</div>';
+    return;
+  }
+  box.innerHTML = list.map(function(m) {
+    var st = SENT_MAIL_STATUS[m.lastEvent] || [m.lastEvent || '—', '#64748b'];
+    var pj = (m.attachments && m.attachments.length) ? ' · 📎 ' + m.attachments.length : '';
+    return '<div class="search-result-item" onclick="openSentMail(\'' + escHtml(m.id) + '\')" style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between">'
+      + '<div style="min-width:0">'
+      +   '<div style="font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(m.subject || '(sans objet)') + '</div>'
+      +   '<div style="font-size:12px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">À ' + escHtml((m.to || []).join(', ')) + pj + '</div>'
+      + '</div>'
+      + '<div style="text-align:right;flex-shrink:0">'
+      +   '<div style="font-size:11.5px;color:var(--text-muted)">' + escHtml(fmtSentMailDate(m.createdAt)) + '</div>'
+      +   '<span style="display:inline-block;margin-top:3px;font-size:11px;font-weight:600;color:#fff;background:' + st[1] + ';border-radius:10px;padding:1px 8px">' + escHtml(st[0]) + '</span>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function openSentMail(id) {
+  var m = (_sentMails || []).find(function(x){ return x.id === id; }) || { id: id };
+  $('sent-mail-subject').textContent = m.subject || '(sans objet)';
+  var meta = function(e) {
+    var st = SENT_MAIL_STATUS[e.lastEvent] || [e.lastEvent || '—'];
+    return '<div><b>À :</b> ' + escHtml((e.to || []).join(', ')) + '</div>'
+      + (e.from ? '<div><b>De :</b> ' + escHtml(e.from) + '</div>' : '')
+      + '<div><b>Date :</b> ' + escHtml(fmtSentMailDate(e.createdAt)) + ' · <b>Statut :</b> ' + escHtml(st[0]) + '</div>'
+      + ((e.attachments && e.attachments.length) ? '<div><b>Pièces jointes :</b> ' + escHtml(e.attachments.join(', ')) + '</div>' : '');
+  };
+  $('sent-mail-meta').innerHTML = meta(m);
+  var frame = $('sent-mail-frame');
+  frame.srcdoc = '<p style="font-family:sans-serif;color:#64748b">Chargement…</p>';
+  $('sent-mail-modal').classList.add('open');
+  authedFetch('/.netlify/functions/emails-envoyes?id=' + encodeURIComponent(id))
+    .then(function(res) {
+      return res.json().catch(function(){ return {}; }).then(function(j) {
+        if (!res.ok) throw new Error(j.error || ('HTTP ' + res.status));
+        return j.email;
+      });
+    })
+    .then(function(e) {
+      $('sent-mail-meta').innerHTML = meta(Object.assign({}, m, e));
+      frame.srcdoc = e.html
+        || (e.text ? '<pre style="white-space:pre-wrap;font-family:sans-serif">' + escHtml(e.text) + '</pre>'
+                   : '<p style="font-family:sans-serif;color:#64748b">Contenu non disponible (plus conservé par Resend).</p>');
+    })
+    .catch(function(err) {
+      frame.srcdoc = '<p style="font-family:sans-serif;color:#dc2626">' + escHtml(err.message || 'Chargement impossible.') + '</p>';
+    });
 }
 
 function renderMailClientResults() {
@@ -5757,14 +6281,16 @@ function demandeVersDevis(ref) {
   // Un devis a déjà été enregistré pour cette demande : on continue de
   // l'éditer (sinon "Modifier le devis" recréerait un devis en double à
   // chaque clic, et la demande n'aurait jamais connaissance des modifs).
-  if (d.devisId) {
-    var existant = loadDocs().find(function(doc){ return doc.id === d.devisId; });
-    if (existant) {
-      loadDoc(existant.id);
-      _demandeActuelle = ref;
-      if (d.statut === 'nouveau') marquerDemande(ref, 'traite');
-      return;
-    }
+  // Recherche aussi par demandeRef, posé sur le devis lui-même : couvre le
+  // cas où le lien devisId n'a pas (encore) été écrit côté Firestore.
+  var existant = loadDocs().find(function(doc){
+    return (d.devisId && doc.id === d.devisId) || doc.demandeRef === ref;
+  });
+  if (existant) {
+    loadDoc(existant.id);
+    _demandeActuelle = ref;
+    if (d.statut === 'nouveau') marquerDemande(ref, 'traite');
+    return;
   }
   resetForm(false);
   _demandeActuelle = ref;

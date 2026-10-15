@@ -227,6 +227,26 @@ select option{background:var(--bg2);color:var(--text)}
 .d-notes strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:6px}
 .d-notes p{font-size:12px;color:#555;line-height:1.65}
 .d-footer{border-top:1px solid #e5e7eb;padding-top:14px;font-size:10px;color:#aaa;text-align:center;line-height:1.7}
+.d-annexe{margin-top:36px;padding-top:18px;border-top:2px dashed #e5e7eb}
+.d-annexe-head{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}
+.d-annexe-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#111}
+.d-annexe-ref{font-size:10px;color:#888;margin-top:1px}
+.d-annexe-gar{font-size:10.5px;color:#166534;font-weight:600;margin-top:5px}
+.d-fiches{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-bottom:8px}
+.d-fiche{border:1px solid #e5e7eb;border-radius:6px;padding:6px 9px;break-inside:avoid;page-break-inside:avoid}
+.d-fiche-title{font-size:10.5px;font-weight:700;color:#111;margin-bottom:2px}
+.d-fiche-line{font-size:9px;color:#444;line-height:1.35}
+.d-fiche-line b{color:#1d4ed8;font-weight:700}
+.d-decharge{border:1px solid #fed7aa;background:#fff7ed;border-radius:6px;padding:6px 9px;margin-bottom:8px;font-size:8.5px;color:#444;line-height:1.35;break-inside:avoid;page-break-inside:avoid}
+.d-decharge b{color:#c2410c}
+.d-accord-ok{font-size:10px;color:#16a34a;font-weight:700;margin-top:3px}
+.d-sign{display:flex;gap:30px;font-size:9px;color:#888;margin-top:4px}
+.d-sign div{flex:1;border-bottom:1px solid #ccc;padding-bottom:18px}
+.d-cgv-body{column-count:3;column-gap:14px;font-size:7.5px;line-height:1.3;color:#333;text-align:justify;border-top:1px solid #e5e7eb;padding-top:6px}
+.d-cgv-body h4{font-size:8.5px;font-weight:700;text-transform:uppercase;margin:0 0 2px;color:#111;break-after:avoid}
+.d-cgv-body h4.d-cgv-h{column-span:all;text-align:center;font-size:10px;margin-bottom:5px}
+.d-cgv-body h5{font-size:8px;font-weight:700;margin:3px 0 2px;color:#111;break-after:avoid}
+.d-cgv-body p{margin:0 0 2px}
 
 /* EMPTY */
 .empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
@@ -1064,4 +1084,5 @@ select option{background:var(--bg2);color:var(--text)}
   .modal-wrap{display:block!important}
   .modal-toolbar{display:none!important}
   .modal-inner{box-shadow:none!important;border-radius:0!important;width:100%!important}
+  .pdf-newpage{break-before:page;page-break-before:always;margin-top:0;border-top:none;padding-top:44px}
 }
