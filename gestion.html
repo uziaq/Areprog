@@ -199,6 +199,8 @@ select option{background:var(--bg2);color:var(--text)}
 .b-paye{background:rgba(34,197,94,.15);color:var(--green)}
 .b-annule{background:rgba(239,68,68,.1);color:var(--red)}
 .b-acompte{background:rgba(168,85,247,.15);color:#a855f7}
+.b-pdp{background:rgba(13,91,175,.1);color:var(--blue)}
+.b-pdp.err{background:rgba(239,68,68,.12);color:var(--red)}
 .b-ordre{background:rgba(234,88,12,.15);color:#ea580c}
 .b-cree{background:rgba(148,163,184,.15);color:var(--text-dim)}
 .doc-num{font-family:var(--fm);font-size:12px;color:var(--text-dim)}
@@ -2469,6 +2471,7 @@ Cordialement, AREPROG"></textarea>
     <div class="modal-toolbar">
       <button class="btn-p" onclick="printFromModal()">🖨️ Imprimer / PDF</button>
       <button class="btn-p" id="send-email-btn" onclick="sendDocByEmail()" style="background:#25d366">📧 Envoyer par email</button>
+      <button class="btn-s" id="pdp-send-btn" onclick="envoyerFactureElectronique()" style="display:none" title="Transmettre la facture électronique (Factur-X) via SUPER PDP">📡 Facture électronique</button>
       <button class="btn-s" onclick="closeModal()">✕ Fermer</button>
     </div>
     <div class="modal-inner">
@@ -3859,7 +3862,7 @@ function validerAcompteRecu() {
   var docs = loadDocs();
   if (editId) {
     var i = docs.findIndex(function(d) { return d.id === editId; });
-    if (i >= 0) docs[i] = doc; else docs.unshift(doc);
+    if (i >= 0) { if (docs[i].pdp) doc.pdp = docs[i].pdp; docs[i] = doc; } else docs.unshift(doc);
   } else { docs.unshift(doc); editId = doc.id; }
   saveDocs(docs);
   closeAcompteModal();
@@ -4020,12 +4023,20 @@ function saveDoc() {
   var docs = loadDocs();
   if (editId) {
     var i = docs.findIndex(function(d) { return d.id === editId; });
+    if (i >= 0 && docs[i].pdp) {
+      // Une facture électronique transmise ne se modifie plus : la plateforme
+      // et l'administration en ont déjà la version déposée (corriger = avoir).
+      if (pdpChangementsBloquants(docs[i], doc)
+          && !confirm('Cette facture a déjà été transmise en facture électronique : la modification ne sera PAS retransmise (une correction passe par un avoir). Enregistrer quand même ?')) return;
+      doc.pdp = docs[i].pdp;
+    }
     if (i >= 0) docs[i] = doc; else docs.unshift(doc);
   } else {
     docs.unshift(doc);
   }
   editId = doc.id;
   saveDocs(docs);
+  syncEncaissementPdp(doc.id);
   if (_demandeActuelle) lierDevisALaDemande(_demandeActuelle, doc);
   renderDash();
   // Proposer d'enregistrer le client dans le carnet si nouveau
@@ -4354,6 +4365,7 @@ function openPreview() {
   $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
   $('modal').dataset.printTitle = buildPdfTitle(doc);
+  refreshPdpBtn();
 }
 function previewDoc(docId) {
   var doc = loadDocs().find(function(d){ return d.id === docId; });
@@ -4362,6 +4374,7 @@ function previewDoc(docId) {
   $('preview').innerHTML = renderDocHTML(doc);
   $('modal').classList.add('open');
   $('modal').dataset.printTitle = buildPdfTitle(doc);
+  refreshPdpBtn();
 }
 function closeModal() {
   $('modal').classList.remove('open');
@@ -4385,6 +4398,154 @@ function printDoc() {
     window.print();
     setTimeout(restoreTitle, 2000);
   }, 250);
+}
+
+// ============================================================
+//  FACTURATION ÉLECTRONIQUE — SUPER PDP (fonction facture-electronique)
+// ============================================================
+// Une facture enregistrée peut être transmise en Factur-X (le PDF de l'aperçu
+// + les données structurées EN16931). Client avec SIRET → facture B2B
+// acheminée à sa plateforme ; sinon B2C, déclarée à l'administration
+// (e-reporting) sans être envoyée au particulier. Le suivi est gardé sur la
+// facture : doc.pdp = { id, env, b2b, envoyeLe, code, statut, encaisseLe }.
+var PDP_FN = '/.netlify/functions/facture-electronique';
+var PDP_STATUTS = {
+  'api:uploaded': 'Déposée', 'api:invalid': 'Invalide', 'api:validated': 'Validée', 'api:sent': 'Transmise',
+  'api:rejected': 'Rejetée', 'api:received': 'Reçue', 'api:acknowledged': 'Reçue', 'api:accepted': 'Acceptée',
+  'fr:200': 'Déposée', 'fr:201': 'Émise', 'fr:202': 'Reçue', 'fr:203': 'Mise à disposition',
+  'fr:204': 'Prise en charge', 'fr:205': 'Approuvée', 'fr:206': 'Approuvée partiellement', 'fr:207': 'En litige',
+  'fr:208': 'Suspendue', 'fr:209': 'Complétée', 'fr:210': 'Refusée', 'fr:211': 'Paiement transmis',
+  'fr:212': 'Encaissée', 'fr:213': 'Rejetée', 'fr:501': 'Irrecevable'
+};
+var PDP_STATUTS_ERREUR = ['api:invalid', 'api:rejected', 'fr:207', 'fr:208', 'fr:210', 'fr:213', 'fr:501'];
+
+async function pdpCall(payload) {
+  var r = await authedFetch(PDP_FN, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+  });
+  var data = await r.json().catch(function(){ return {}; });
+  if (!r.ok) throw new Error(data.error || ('Erreur ' + r.status));
+  return data;
+}
+
+function pdpBadge(d) {
+  if (!d.pdp || !d.pdp.id) return '';
+  var err = PDP_STATUTS_ERREUR.indexOf(d.pdp.code) >= 0;
+  var titre = 'Facture électronique n° ' + d.pdp.id + (d.pdp.env === 'sandbox' ? ' (bac à sable)' : '')
+    + ' — transmise le ' + new Date(d.pdp.envoyeLe).toLocaleDateString('fr-FR')
+    + (d.pdp.encaisseLe ? ' — encaissement déclaré le ' + new Date(d.pdp.encaisseLe).toLocaleDateString('fr-FR') : '');
+  return '<br><span class="badge b-pdp' + (err ? ' err' : '') + '" style="margin-top:3px;cursor:help" title="' + escHtml(titre) + '">📡 '
+    + escHtml(d.pdp.statut || 'Déposée') + (d.pdp.env === 'sandbox' ? ' · test' : '') + '</span>';
+}
+
+// Bouton de l'aperçu : seulement pour une facture déjà enregistrée.
+function refreshPdpBtn() {
+  var btn = $('pdp-send-btn');
+  if (!btn) return;
+  var doc = _currentDocForEmail;
+  var saved = doc && doc.type === 'facture' && loadDocs().find(function(d){ return d.id === doc.id; });
+  btn.style.display = saved ? '' : 'none';
+  if (!saved) return;
+  btn.disabled = !!(saved.pdp && saved.pdp.id);
+  btn.textContent = btn.disabled ? '📡 Transmise (' + (saved.pdp.statut || 'Déposée') + ')' : '📡 Facture électronique';
+}
+
+// Champs qui changent le contenu de la facture transmise (le statut, l'envoi
+// par email, etc. ne comptent pas).
+function pdpChangementsBloquants(avant, apres) {
+  var champs = ['num', 'date', 'cn', 'ca', 'cv', 'csiret', 'ctva', 'ht', 'tva', 'ttc', 'tvaRate'];
+  if (champs.some(function(k){ return String(avant[k] == null ? '' : avant[k]) !== String(apres[k] == null ? '' : apres[k]); })) return true;
+  function cle(lines) {
+    return JSON.stringify((lines || []).map(function(l){
+      return [l.label || '', l.desc || '', +l.qte || 0, +l.pu || 0, +l.remise || 0, l.remiseType || '', !!l.offert];
+    }));
+  }
+  return cle(avant.lines) !== cle(apres.lines);
+}
+
+async function envoyerFactureElectronique() {
+  var cur = _currentDocForEmail;
+  var docs = loadDocs();
+  var idx = cur ? docs.findIndex(function(d){ return d.id === cur.id; }) : -1;
+  if (idx < 0) { alert('Enregistre d\'abord la facture.'); return; }
+  var doc = docs[idx];
+  if (doc.pdp && doc.pdp.id) { alert('Cette facture a déjà été transmise.'); return; }
+  if (pdpChangementsBloquants(doc, cur)) { alert('L\'aperçu ne correspond pas à la facture enregistrée : enregistre-la d\'abord.'); return; }
+  var b2b = String(doc.csiret || '').replace(/\D/g, '').length >= 9;
+  var msg = b2b
+    ? 'Transmettre la facture ' + doc.num + ' (' + fmt(doc.ttc || 0) + ') en facture électronique à ' + doc.cn + ' ?\n\nElle sera acheminée à sa plateforme et déclarée à l\'administration fiscale. Une fois transmise, elle ne peut plus être modifiée (correction = avoir).'
+    : 'Déclarer la facture ' + doc.num + ' (' + fmt(doc.ttc || 0) + ', client particulier) à l\'administration fiscale (e-reporting) ?\n\nLe client ne reçoit rien de plus : continue de lui envoyer le PDF par email. Une fois transmise, elle ne peut plus être modifiée.';
+  if (!confirm(msg)) return;
+
+  var btn = $('pdp-send-btn');
+  btn.disabled = true;
+  btn.textContent = 'Génération PDF…';
+  try {
+    var pdf = await generatePdfBase64();
+    if (pdf.length > 4 * 1024 * 1024) throw new Error('Le PDF généré est trop volumineux (~' + Math.round(pdf.length / 1024 / 1024 * 0.75) + ' Mo).');
+    btn.textContent = 'Transmission…';
+    var res = await pdpCall({ action: 'envoyer', doc: doc, pdf: pdf });
+    docs = loadDocs();
+    idx = docs.findIndex(function(d){ return d.id === doc.id; });
+    if (idx >= 0) {
+      docs[idx].pdp = { id: res.id, env: res.env, b2b: res.b2b, envoyeLe: new Date().toISOString(), code: 'api:uploaded', statut: 'Déposée' };
+      saveDocs(docs);
+    }
+    showNotifBanner('📡', 'Facture électronique déposée', doc.num + (res.env === 'sandbox' ? ' (bac à sable)' : '') + ' — n° ' + res.id);
+    // Facture déjà réglée : le statut « Encaissée » suit immédiatement.
+    await syncEncaissementPdp(doc.id);
+    if ($('t-liste').classList.contains('on')) renderListe();
+  } catch (e) {
+    alert('Transmission impossible :\n\n' + e.message);
+  } finally {
+    refreshPdpBtn();
+  }
+}
+
+// Prestations de services → TVA due à l'encaissement : quand une facture
+// transmise passe à « payé », on déclare le statut « Encaissée » (fr:212).
+async function syncEncaissementPdp(docId) {
+  var doc = loadDocs().find(function(d){ return d.id === docId; });
+  if (!doc || !doc.pdp || !doc.pdp.id || doc.pdp.encaisseLe || doc.statut !== 'payé' || !(doc.ttc > 0)) return;
+  try {
+    await pdpCall({ action: 'encaisser', pdpId: doc.pdp.id, date: today(), montant: Math.round(doc.ttc * 100) / 100, taux: doc.tvaRate || 0 });
+    var docs = loadDocs();
+    var idx = docs.findIndex(function(d){ return d.id === docId; });
+    if (idx >= 0 && docs[idx].pdp) {
+      docs[idx].pdp.encaisseLe = new Date().toISOString();
+      docs[idx].pdp.code = 'fr:212';
+      docs[idx].pdp.statut = PDP_STATUTS['fr:212'];
+      saveDocs(docs);
+    }
+    showNotifBanner('📡', 'Encaissement déclaré', doc.num + ' — ' + fmt(doc.ttc));
+    if ($('t-liste').classList.contains('on')) renderListe();
+  } catch (e) {
+    showNotifBanner('⚠️', 'Encaissement non déclaré', doc.num + ' : ' + e.message);
+  }
+}
+
+// Met à jour les statuts des factures transmises (au plus toutes les 10 min,
+// déclenché par l'affichage de la liste).
+var _pdpStatutsAt = 0;
+async function refreshPdpStatuts() {
+  if (Date.now() - _pdpStatutsAt < 10 * 60 * 1000) return;
+  var suivies = loadDocs().filter(function(d){ return d.pdp && d.pdp.id && d.pdp.code !== 'fr:212'; }).slice(0, 50);
+  if (!suivies.length || !firebase.auth().currentUser) return;
+  _pdpStatutsAt = Date.now();
+  try {
+    var res = await pdpCall({ action: 'statuts', pdpIds: suivies.map(function(d){ return d.pdp.id; }) });
+    var docs = loadDocs(), changed = false;
+    docs.forEach(function(d) {
+      var evts = d.pdp && res.statuts[d.pdp.id];
+      if (!evts || !evts.length) return;
+      // Dernier statut connu (les statuts ppf:* sont internes à l'administration).
+      var last = evts.filter(function(e){ return PDP_STATUTS[e.code]; }).pop();
+      if (last && last.code !== d.pdp.code) { d.pdp.code = last.code; d.pdp.statut = PDP_STATUTS[last.code]; changed = true; }
+    });
+    if (changed) { saveDocs(docs); renderListe(); }
+  } catch (e) {
+    console.warn('Statuts facture électronique :', e.message);
+  }
 }
 
 // ============================================================
@@ -4454,6 +4615,7 @@ function renderListe() {
     docs = docs.filter(function(d){ return new Date(d.date).getTime() >= cutoff; });
   }
   updateListeFilterCounts();
+  refreshPdpStatuts();
   var countInfo = docs.length !== all.length
     ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">'+docs.length+' document'+(docs.length>1?'s':'')+' sur '+all.length+'</div>'
     : '';
@@ -4495,7 +4657,7 @@ function buildTable(docs, withDelete) {
       + '<td>'+fmtDate(d.date)+'</td>'
       + '<td><strong>'+(escHtml(d.cn)||'—')+'</strong>'+(veh?'<br><span style="color:var(--text-dim);font-size:11px">'+veh+(d.van?' ('+escHtml(d.van)+')':'')+'</span>':'')+'</td>'
       + '<td style="font-family:var(--fm);color:var(--blue)">'+fmt(d.ttc||0)+'</td>'
-      + '<td>'+statBadge+emailBadge+acompteBadge+'</td>'
+      + '<td>'+statBadge+emailBadge+acompteBadge+pdpBadge(d)+'</td>'
       + '<td><div class="act-cell">'
         + '<button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button>'
         + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'
@@ -6877,6 +7039,7 @@ function quickSetStatus(docId, newStatus) {
   renderDash();
   if ($('t-liste').classList.contains('on')) renderListe();
   showNotifBanner('✅', 'Statut mis à jour', docs[idx].num + ' → ' + newStatus);
+  syncEncaissementPdp(docId);
 }
 
 // ============================================================
