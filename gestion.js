@@ -895,6 +895,7 @@ function initApp() {
 function resetForm(goToForm) {
   editId = null;
   _demandeActuelle = null;
+  _rdvActuel = null;
   loadedType = 'devis';
   loadedNum = null;
   lines = [];
@@ -1547,6 +1548,11 @@ function saveDoc() {
   editId = doc.id;
   saveDocs(docs);
   if (_demandeActuelle) lierDevisALaDemande(_demandeActuelle, doc);
+  if (_rdvActuel && lierDocAuRdv(_rdvActuel, doc.id)) {
+    showNotifBanner('📅', 'Document rattaché au RDV', doc.num || '');
+    renderCalendar();
+    renderSideEvents(calSelected);
+  }
   renderDash();
   // Proposer d'enregistrer le client dans le carnet si nouveau
   var cn = $('f-cnom').value.trim();
@@ -1650,6 +1656,7 @@ function loadDoc(docId) {
   if (!doc) return;
   editId = doc.id;
   _demandeActuelle = doc.demandeRef || null;
+  _rdvActuel = null;
   loadedType = doc.type;
   loadedNum = doc.num;
   $('f-type').value = doc.type;
@@ -3041,6 +3048,7 @@ function renderCalendar() {
   var start = new Date(first); start.setDate(1 - startDow);
 
   var rdvs = loadRdvs();
+  var allDocs = loadDocs();
   var grid = $('cal-grid');
   grid.innerHTML = DOW.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
   var today = new Date(); today.setHours(0,0,0,0);
@@ -3059,6 +3067,8 @@ function renderCalendar() {
       return '<div class="cal-event '+r.type+'" onclick="event.stopPropagation();openRdvModal(\''+r.id+'\',null)" title="'+escHtml(r.title)+'">'+escHtml(r.heure?r.heure+' ':'')+escHtml(r.title)+'</div>';
     }).join('');
     if (dayRdvs.length > 3) evHTML += '<div class="cal-more">+' + (dayRdvs.length-3) + '</div>';
+    var dayCa = dayRdvs.length ? caDesRdvs(dayRdvs, allDocs) : null;
+    if (dayCa && dayCa.nb) evHTML += '<div class="cal-ca" title="CA des documents liés aux RDV du jour">' + fmtEurRond(dayCa.ttc) + '</div>';
 
     var cell = document.createElement('div');
     cell.className = cls;
@@ -3081,7 +3091,16 @@ function renderSideEvents(d) {
   var el = $('side-events');
   if (!rdvs.length) { el.innerHTML = '<div style="color:var(--text-muted);font-size:13px">Aucun événement</div>'; return; }
 
-  el.innerHTML = rdvs.map(function(r) {
+  var allDocs = loadDocs();
+  var jour = caDesRdvs(rdvs, allDocs);
+  var totalHTML = '<div class="rdv-day-total">'
+      + '<div class="rdv-day-total-row"><span>💶 CA de la journée</span><strong>' + fmt(jour.ttc) + '</strong></div>'
+      + '<div class="rdv-day-total-sub">' + rdvs.length + ' RDV · ' + jour.nb + ' document' + (jour.nb > 1 ? 's' : '')
+        + (jour.nb ? ' · ' + fmt(jour.ht) + ' HT' + (jour.paye ? ' · dont ' + fmt(jour.paye) + ' encaissé' : '') : '')
+      + '</div>'
+    + '</div>';
+
+  el.innerHTML = totalHTML + rdvs.map(function(r) {
     var clientName = '';
     var rdvVehLabel = '';
     if (r.clientId) {
@@ -3105,34 +3124,90 @@ function renderSideEvents(d) {
 
       + (r.lieu ? '<div class="rdv-sub">📍 '+escHtml(r.lieu)+'</div>' : '')
       + (r.notes ? '<div class="rdv-sub" style="margin-top:4px;font-style:italic">'+escHtml(r.notes.slice(0,80))+(r.notes.length>80?'…':'')+'</div>' : '')
+      + rdvDocsHTML(r, allDocs)
       + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
         + '<button class="btn-s btn-sm" onclick="openRdvModal(\''+r.id+'\',null)">✏️ Modifier</button>'
-        + ((r.docId || r.clientId) ? '<button class="btn-s btn-sm" onclick="ouvrirDevisDuRdv(\''+escHtml(r.id)+'\')">📄 ' + escHtml(libelleDevisDuRdv(r)) + '</button>' : '')
+        + '<button class="btn-s btn-sm" onclick="ajouterDevisAuRdv(\''+escHtml(r.id)+'\')">＋ Devis</button>'
         + '<button class="rdv-confirm-btn" onclick="copyConfirmMsg(\''+r.id+'\')">📋 Copier confirmation</button>'
       + '</div>'
     + '</div>';
   }).join('');
 }
 
-// Document lié à un RDV (champ "Devis lié" de la modale), s'il existe encore.
-function docDuRdv(r) {
-  return r.docId ? loadDocs().find(function(d){ return d.id === r.docId; }) : null;
+// Documents liés à un RDV. Ancien format : un seul `docId` ; désormais
+// `docIds[]` (plusieurs devis/factures par RDV). `docId` reste écrit (1er doc)
+// pour compatibilité avec les RDV et appareils pas encore migrés.
+function docIdsDuRdv(r) {
+  if (r.docIds && r.docIds.length) return r.docIds.slice();
+  return r.docId ? [r.docId] : [];
 }
 
-function libelleDevisDuRdv(r) {
-  var doc = docDuRdv(r);
-  if (!doc) return 'Nouveau devis';
-  return doc.type === 'facture' ? 'Ouvrir la facture' : doc.type === 'ordre' ? 'Ouvrir l\'OR' : 'Ouvrir le devis';
+function docsDuRdv(r, allDocs) {
+  allDocs = allDocs || loadDocs();
+  return docIdsDuRdv(r).map(function(id){
+    return allDocs.find(function(d){ return d.id === id; });
+  }).filter(Boolean);
 }
 
-// Ouvre le devis lié au RDV ; à défaut, un nouveau devis pré-rempli avec le
-// client et le véhicule du RDV.
-function ouvrirDevisDuRdv(rdvId) {
+// Chiffre d'affaires d'un ensemble de RDV, à partir des documents liés :
+// - un document lié à plusieurs RDV ne compte qu'une fois ;
+// - documents annulés et ordres de réparation exclus (un OR double le devis) ;
+// - un devis déjà converti en facture (refDevis) ne compte que via la facture.
+function caDesRdvs(rdvs, allDocs) {
+  allDocs = allDocs || loadDocs();
+  var vus = {}, docs = [];
+  rdvs.forEach(function(r) {
+    docsDuRdv(r, allDocs).forEach(function(d) {
+      if (vus[d.id]) return;
+      vus[d.id] = true;
+      if (d.statut === 'annulé' || d.type === 'ordre') return;
+      docs.push(d);
+    });
+  });
+  var factures = {};
+  docs.forEach(function(d){ if (d.type === 'facture' && d.refDevis) factures[d.refDevis] = true; });
+  docs = docs.filter(function(d){ return !(d.type === 'devis' && factures[d.num]); });
+  var res = { ttc: 0, ht: 0, paye: 0, nb: docs.length };
+  docs.forEach(function(d) {
+    res.ttc += d.ttc || 0;
+    res.ht  += d.ht  || 0;
+    if (d.type === 'facture' && d.statut === 'payé') res.paye += d.ttc || 0;
+  });
+  return res;
+}
+
+function fmtEurRond(n) {
+  return Math.round(n).toLocaleString('fr-FR') + ' €';
+}
+
+// Liste compacte des documents liés, affichée sur la carte du RDV.
+function rdvDocsHTML(r, allDocs) {
+  var docs = docsDuRdv(r, allDocs);
+  if (!docs.length) return '';
+  var ca = caDesRdvs([r], allDocs);
+  return '<div class="rdv-docs">'
+    + docs.map(function(d) {
+        var off = d.statut === 'annulé' || d.type === 'ordre';
+        return '<div class="rdv-doc-line' + (off ? ' off' : '') + '" onclick="event.stopPropagation();loadDoc(' + d.id + ')" title="Ouvrir">'
+          + '<span>📄 ' + escHtml(RDV_DOC_TYPE_LABEL[d.type] || d.type || '') + ' ' + escHtml(d.num || '') + (d.statut ? ' · ' + escHtml(d.statut) : '') + '</span>'
+          + '<span class="rdv-doc-amt">' + fmt(d.ttc || 0) + '</span>'
+        + '</div>';
+      }).join('')
+    + (docs.length > 1 ? '<div class="rdv-doc-line total"><span>Total RDV</span><span class="rdv-doc-amt">' + fmt(ca.ttc) + '</span></div>' : '')
+  + '</div>';
+}
+
+// RDV auquel rattacher le prochain document enregistré (devis créé depuis
+// le bouton "＋ Devis" d'un RDV). Remis à zéro par resetForm / loadDoc.
+var _rdvActuel = null;
+
+// Nouveau devis pré-rempli avec le client et le véhicule du RDV ; il sera
+// rattaché au RDV à son enregistrement.
+function ajouterDevisAuRdv(rdvId) {
   var r = loadRdvs().find(function(x){ return String(x.id) === String(rdvId); });
   if (!r) return;
-  var doc = docDuRdv(r);
-  if (doc) { loadDoc(doc.id); return; }
   resetForm(false);
+  _rdvActuel = r.id;
   if (r.clientId) {
     var cl = loadClients().find(function(c){ return c.id === r.clientId; });
     if (cl) {
@@ -3146,6 +3221,28 @@ function ouvrirDevisDuRdv(rdvId) {
     }
   }
   showTab('form');
+}
+
+// Ajoute un document aux documents liés d'un RDV (idempotent).
+function lierDocAuRdv(rdvId, docId) {
+  var rdvs = loadRdvs();
+  var r = rdvs.find(function(x){ return String(x.id) === String(rdvId); });
+  if (!r) return false;
+  var ids = docIdsDuRdv(r);
+  if (ids.indexOf(docId) >= 0) return false;
+  ids.push(docId);
+  r.docIds = ids;
+  r.docId = ids[0];
+  localStorage.setItem(RDV_KEY, JSON.stringify(rdvs));
+  saveOneRdv(r);
+  return true;
+}
+
+// Facture créée depuis un devis : on la rattache aux mêmes RDV que le devis.
+function lierFactureAuxRdvsDuDevis(devisId, factureId) {
+  loadRdvs().forEach(function(r) {
+    if (docIdsDuRdv(r).indexOf(devisId) >= 0) lierDocAuRdv(r.id, factureId);
+  });
 }
 
 function renderAutoAlerts() {
@@ -3214,8 +3311,9 @@ function openRdvModal(rdvId) {
     if (rdv.vehIdx !== null && rdv.vehIdx !== undefined && $('rdv-vehicule')) {
       $('rdv-vehicule').value = String(rdv.vehIdx);
     }
+    rdvModalDocIds = docIdsDuRdv(rdv);
     fillRdvDocSelect();
-    $('rdv-doc').value = rdv.docId || '';
+    renderRdvModalDocs();
     $('rdv-lieu').value = rdv.lieu || '';
     $('rdv-notes').value = rdv.notes || '';
     $('rdv-delete-btn').style.display = 'inline-flex';
@@ -3230,8 +3328,9 @@ function openRdvModal(rdvId) {
     $('rdv-client').value = '';
     updateRdvVehSelect();
     refreshRdvClientPicked();
+    rdvModalDocIds = [];
     fillRdvDocSelect();
-    $('rdv-doc').value = '';
+    renderRdvModalDocs();
     $('rdv-lieu').value = ADRESSE_GARAGE;
     $('rdv-notes').value = '';
     $('rdv-delete-btn').style.display = 'none';
@@ -3344,26 +3443,64 @@ function updateRdvVehSelect() {
 
 var RDV_DOC_TYPE_LABEL = { devis: 'Devis', facture: 'Facture', ordre: 'Ordre' };
 
-// Une fois un client sélectionné, on ne propose que SES documents (même
-// rapprochement par nom que showClientHistory, les docs n'ayant pas de
-// clientId) — sinon on retombe sur les 50 derniers documents, tous clients
-// confondus, comme avant.
+// Documents liés au RDV en cours d'édition dans la modale.
+var rdvModalDocIds = [];
+
+// Sélecteur "＋ Ajouter un document" de la modale. Une fois un client
+// sélectionné, on ne propose que SES documents (même rapprochement par nom
+// que showClientHistory, les docs n'ayant pas de clientId) — sinon les 50
+// derniers documents, tous clients confondus. Les documents déjà liés sont
+// masqués.
 function fillRdvDocSelect() {
   var sel = $('rdv-doc');
   if (!sel) return;
-  var cur = sel.value;
   var clientId = $('rdv-client') && $('rdv-client').value ? parseInt($('rdv-client').value) : null;
   var cl = clientId ? loadClients().find(function(c){ return c.id === clientId; }) : null;
   var docs = cl
     ? loadDocs().filter(function(d){ return d.cn && d.cn.trim().toLowerCase() === (cl.nom || '').trim().toLowerCase(); })
     : loadDocs().slice(0, 50);
-  sel.innerHTML = (cl && !docs.length ? '<option value="">— Aucun document pour ce client —</option>' : '<option value="">— Aucun document —</option>')
+  docs = docs.filter(function(d){ return rdvModalDocIds.indexOf(d.id) < 0; });
+  sel.innerHTML = (cl && !docs.length ? '<option value="">— Aucun autre document pour ce client —</option>' : '<option value="">＋ Ajouter un document…</option>')
     + docs.map(function(d){
-        var label = escHtml(d.num) + ' — ' + (RDV_DOC_TYPE_LABEL[d.type] || d.type || '');
+        var label = escHtml(d.num) + ' — ' + (RDV_DOC_TYPE_LABEL[d.type] || d.type || '') + ' — ' + fmt(d.ttc || 0);
         if (!cl) label += ' — ' + escHtml(d.cn || '');
         return '<option value="'+d.id+'">' + label + '</option>';
       }).join('');
-  if (cur) sel.value = cur;
+  sel.value = '';
+}
+
+function ajouterDocRdvModal() {
+  var v = $('rdv-doc').value;
+  if (!v) return;
+  var id = parseInt(v);
+  if (rdvModalDocIds.indexOf(id) < 0) rdvModalDocIds.push(id);
+  fillRdvDocSelect();
+  renderRdvModalDocs();
+}
+
+function retirerDocRdvModal(id) {
+  rdvModalDocIds = rdvModalDocIds.filter(function(x){ return x !== id; });
+  fillRdvDocSelect();
+  renderRdvModalDocs();
+}
+
+function renderRdvModalDocs() {
+  var box = $('rdv-docs-list');
+  if (!box) return;
+  if (!rdvModalDocIds.length) { box.innerHTML = '<div class="rdv-docs-empty">Aucun document lié</div>'; return; }
+  var allDocs = loadDocs();
+  var fake = { docIds: rdvModalDocIds };
+  var ca = caDesRdvs([fake], allDocs);
+  box.innerHTML = rdvModalDocIds.map(function(id) {
+      var d = allDocs.find(function(x){ return x.id === id; });
+      var label = d ? (RDV_DOC_TYPE_LABEL[d.type] || d.type || '') + ' ' + (d.num || '') + ' — ' + (d.cn || '') : 'Document introuvable';
+      return '<div class="rdv-doc-line">'
+        + '<span>📄 ' + escHtml(label) + '</span>'
+        + '<span style="display:flex;align-items:center;gap:8px"><span class="rdv-doc-amt">' + (d ? fmt(d.ttc || 0) : '') + '</span>'
+        + '<button type="button" class="rdv-doc-x" onclick="retirerDocRdvModal(' + id + ')" title="Retirer">×</button></span>'
+      + '</div>';
+    }).join('')
+    + '<div class="rdv-doc-line total"><span>Total RDV</span><span class="rdv-doc-amt">' + fmt(ca.ttc) + '</span></div>';
 }
 
 function saveRdv() {
@@ -3400,7 +3537,8 @@ function saveRdv() {
     clientNom: rdvClient ? rdvClient.nom : '',
     clientTel: rdvClient ? (rdvClient.tel || '') : '',
     vehIdx:    $('rdv-vehicule') && $('rdv-vehicule').value !== '' ? parseInt($('rdv-vehicule').value) : null,
-    docId:     $('rdv-doc').value ? parseInt($('rdv-doc').value) : null,
+    docIds:    rdvModalDocIds.slice(),
+    docId:     rdvModalDocIds.length ? rdvModalDocIds[0] : null,
 
     lieu:      $('rdv-lieu').value,
     notes:     $('rdv-notes').value,
@@ -4454,6 +4592,7 @@ function devisToFacture(docId) {
   var devisIdx = docs.findIndex(function(d){ return d.id === docId; });
   if (devisIdx >= 0 && (docs[devisIdx].statut === 'envoyé' || docs[devisIdx].statut === 'créé')) docs[devisIdx].statut = 'accepté';
   saveDocs(docs);
+  lierFactureAuxRdvsDuDevis(devis.id, facture.id);
   loadDoc(facture.id);
   showNotifBanner('🧾', 'Facture créée', facture.num + ' depuis devis ' + devis.num);
 }
