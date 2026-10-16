@@ -23,7 +23,7 @@
 <script src="codages-data.js?v=20260824"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
-<link rel="stylesheet" href="/gestion.css?v=20261015"/>
+<link rel="stylesheet" href="/gestion.css?v=20261016"/>
 </head>
 <body>
 
@@ -1074,9 +1074,10 @@
             <option value="">— Tous les véhicules —</option>
           </select>
         </div>
-        <div class="fr"><label>Document lié (optionnel)</label>
-          <select id="rdv-doc">
-            <option value="">— Aucun document —</option>
+        <div class="fr"><label>Devis / factures liés</label>
+          <div id="rdv-docs-list" class="rdv-docs"></div>
+          <select id="rdv-doc" onchange="ajouterDocRdvModal()">
+            <option value="">＋ Ajouter un document…</option>
           </select>
         </div>
         <div class="fr"><label>Adresse / Lieu</label>
@@ -1388,7 +1389,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<script src="/gestion.js?v=20261015"></script>
+<script src="/gestion.js?v=20261016"></script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
 if ('serviceWorker' in navigator) {
