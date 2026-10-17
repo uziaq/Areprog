@@ -23,7 +23,7 @@
 <script src="codages-data.js?v=20260824"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
-<link rel="stylesheet" href="/gestion.css?v=20261016"/>
+<link rel="stylesheet" href="/gestion.css?v=20261017"/>
 </head>
 <body>
 
@@ -143,6 +143,7 @@
           <button class="btn-s" onclick="newDoc()">↺ Réinitialiser</button>
           <button class="btn-s" onclick="openPreview()">👁 Aperçu</button>
           <button class="btn-s" onclick="openAcompteModal()">💶 Acompte</button>
+          <button class="btn-s" onclick="openPaiementModalFromForm()">💳 Paiements</button>
           <button class="btn-s" id="form-facturer-btn" style="display:none" onclick="devisToFacture(editId)">🧾 Transformer en facture</button>
           <button class="btn-p" onclick="printDoc()">🖨 Imprimer / PDF</button>
           <button class="btn-g" onclick="saveDoc()">💾 Enregistrer</button>
@@ -557,6 +558,8 @@
         <button class="filter-chip" id="fchip-paye" onclick="setStatutFilter('payé',this)">✅ Payés</button>
         <button class="filter-chip" id="fchip-impaye" onclick="setStatutFilter('impayé',this)">⚠️ Impayés</button>
         <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+        <button class="filter-chip" id="fchip-paiements" onclick="toggleJournalPaiements()" title="Tous les paiements reçus, pour rapprocher le relevé Legal Place">💳 Encaissements</button>
+        <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
         <select id="flt-period" onchange="renderListe()" style="padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px">
           <option value="">Toute période</option>
           <option value="7">7 derniers jours</option>
@@ -899,6 +902,47 @@
       <button class="btn-s" onclick="closeAcompteModal()">Annuler</button>
       <button class="btn-s" onclick="previewAcomptePDF()">👁 Aperçu preuve</button>
       <button class="btn-g" onclick="validerAcompteRecu()">✓ Marquer reçu + PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PAIEMENTS (règlements reçus sur une facture) -->
+<div class="carnet-modal" id="paiement-modal" onclick="if(event.target===this)closePaiementModal()">
+  <div class="carnet-box" style="max-width:480px;width:100%">
+    <div class="carnet-box-title">💳 Paiements reçus</div>
+    <div id="paie-titre" style="font-size:13px;color:var(--text-muted);margin:-6px 0 12px"></div>
+    <div style="background:var(--bg3);border-radius:8px;padding:12px 16px;margin-bottom:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
+      <div><div style="font-size:11px;color:var(--text-muted)">Total TTC</div><div id="paie-ttc" style="font-family:var(--fm);font-weight:700;color:var(--blue)">0,00 €</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted)">Encaissé</div><div id="paie-encaisse" style="font-family:var(--fm);font-weight:700;color:var(--green)">0,00 €</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted)">Reste dû</div><div id="paie-reste" style="font-family:var(--fm);font-weight:700">0,00 €</div></div>
+    </div>
+    <div id="paie-list" style="margin-bottom:14px"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
+      <div class="fr"><label>Date du paiement</label><input type="date" id="paie-date"/></div>
+      <div class="fr"><label>Montant reçu (€)</label><input type="number" id="paie-montant" min="0" step="0.01" style="text-align:right"/></div>
+    </div>
+    <div class="fr">
+      <label>Mode de paiement</label>
+      <select id="paie-mode">
+        <option value="Carte bancaire">Carte bancaire</option>
+        <option value="Virement bancaire">Virement bancaire</option>
+        <option value="Espèces">Espèces</option>
+        <option value="Chèque">Chèque</option>
+        <option value="PayPal">PayPal</option>
+        <option value="Autre">Autre</option>
+      </select>
+    </div>
+    <div class="fr">
+      <label>Référence (libellé du relevé Legal Place, n° de chèque, n° de transaction…)</label>
+      <input type="text" id="paie-ref" placeholder="ex. CB SUMUP 12/10, VIR M. DUPONT, chèque n° 1234567"/>
+    </div>
+    <div class="fr">
+      <label>Note (facultatif)</label>
+      <input type="text" id="paie-note" placeholder="ex. payé par le conjoint, solde après acompte…"/>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap">
+      <button class="btn-s" onclick="closePaiementModal()">Fermer</button>
+      <button class="btn-g" onclick="ajouterPaiement()">✓ Enregistrer le paiement</button>
     </div>
   </div>
 </div>
@@ -1389,7 +1433,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<script src="/gestion.js?v=20261016"></script>
+<script src="/gestion.js?v=20261017"></script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
 if ('serviceWorker' in navigator) {

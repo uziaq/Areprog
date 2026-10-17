@@ -913,6 +913,7 @@ function resetForm(goToForm) {
   if ($('form-facturer-btn')) $('form-facturer-btn').style.display = 'none';
   currentGains = null;
   currentAcompte = null;
+  currentPaiements = [];
   renderGainsBar();
   if ($('f-gains')) { $('f-gains').value = ''; previewGainsBadge(); }
   resetDeclaration();
@@ -1481,6 +1482,254 @@ function calcTotaux() {
 }
 
 // ============================================================
+//  PAIEMENTS (règlements reçus sur une facture)
+// ============================================================
+// Le compte pro est tenu chez Legal Place : chaque encaissement (CB, virement,
+// espèces…) est enregistré sur sa facture dans doc.paiements[] =
+// {id, date, montant, mode, ref, note, pointe} pour pouvoir rapprocher une
+// ligne du relevé bancaire de la facture correspondante (journal des
+// encaissements dans l'onglet Liste, recherche par montant/référence).
+// L'acompte (doc.acompte) compte comme un règlement.
+var currentPaiements = [];
+var _paieDocId = null;
+
+function docReglements(d) {
+  var list = [];
+  if (d.acompte && d.acompte.recu) {
+    list.push({ id: 'acompte', date: d.acompte.date, montant: d.acompte.montant || 0, mode: d.acompte.mode || '', ref: '', note: 'Acompte', pointe: !!d.acompte.pointe, acompte: true });
+  }
+  return list.concat(d.paiements || []);
+}
+
+function docEncaisse(d) {
+  return docReglements(d).reduce(function(s, p) { return s + (p.montant || 0); }, 0);
+}
+
+function docResteDu(d) {
+  return Math.max(0, Math.round(((d.ttc || 0) - docEncaisse(d)) * 100) / 100);
+}
+
+function openPaiementModalFromForm() {
+  if ($('f-type').value !== 'facture') { alert('Les paiements s\'enregistrent sur une facture.'); return; }
+  if (!editId || !loadDocs().some(function(d) { return d.id === editId; })) {
+    alert('Enregistrez d\'abord la facture (💾 Enregistrer).');
+    return;
+  }
+  openPaiementModal(editId);
+}
+
+function openPaiementModal(docId) {
+  var doc = loadDocs().find(function(d) { return d.id === docId; });
+  if (!doc) return;
+  _paieDocId = docId;
+  $('paie-titre').textContent = (doc.num || 'Facture') + ' — ' + (doc.cn || '');
+  $('paie-date').value = today();
+  $('paie-mode').value = 'Carte bancaire';
+  $('paie-ref').value = '';
+  $('paie-note').value = '';
+  renderPaiementModal(doc);
+  $('paie-montant').value = docResteDu(doc).toFixed(2);
+  $('paiement-modal').classList.add('open');
+}
+
+function closePaiementModal() {
+  $('paiement-modal').classList.remove('open');
+  _paieDocId = null;
+}
+
+function renderPaiementModal(doc) {
+  var reste = docResteDu(doc);
+  $('paie-ttc').textContent = fmt(doc.ttc || 0);
+  $('paie-encaisse').textContent = fmt(docEncaisse(doc));
+  $('paie-reste').textContent = fmt(reste);
+  $('paie-reste').style.color = reste > 0.005 ? 'var(--orange)' : 'var(--green)';
+  var regl = docReglements(doc);
+  $('paie-list').innerHTML = regl.length
+    ? regl.map(function(p) {
+        var del = p.acompte ? '<span style="font-size:11px;color:var(--text-dim)">via 💶 Acompte</span>'
+          : '<button class="btn-d btn-sm" onclick="deletePaiement(\'' + escHtml(String(p.id)) + '\')" title="Supprimer ce paiement">🗑</button>';
+        return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">'
+          + '<div><strong style="font-family:var(--fm)">' + fmt(p.montant || 0) + '</strong> · ' + escHtml(p.mode || '') + ' · ' + fmtDate(p.date)
+          + ((p.ref || p.note) ? '<br><span style="font-size:11px;color:var(--text-dim)">' + escHtml([p.ref, p.note].filter(Boolean).join(' — ')) + '</span>' : '')
+          + '</div>' + del + '</div>';
+      }).join('')
+    : '<div style="font-size:12px;color:var(--text-muted);padding:6px 0">Aucun paiement enregistré.</div>';
+}
+
+// Persiste la facture modifiée par la modale et répercute le changement sur
+// le formulaire s'il l'affiche (sinon un 💾 Enregistrer écraserait les
+// paiements avec l'ancienne liste).
+function _savePaiementDoc(docs, idx) {
+  saveDocs(docs);
+  var doc = docs[idx];
+  if (editId === doc.id) {
+    currentPaiements = JSON.parse(JSON.stringify(doc.paiements || []));
+    currentAcompte = doc.acompte || null;
+    $('f-statut').value = doc.statut;
+  }
+  renderPaiementModal(doc);
+  renderDash();
+  if ($('t-liste').classList.contains('on')) renderListe();
+}
+
+function ajouterPaiement() {
+  var montant = Math.round((parseFloat(String($('paie-montant').value).replace(',', '.')) || 0) * 100) / 100;
+  var date = $('paie-date').value;
+  if (montant <= 0) { alert('Saisissez le montant reçu.'); return; }
+  if (!date) { alert('Saisissez la date du paiement.'); return; }
+  var docs = loadDocs();
+  var idx = docs.findIndex(function(d) { return d.id === _paieDocId; });
+  if (idx < 0) return;
+  var doc = docs[idx];
+  doc.paiements = (doc.paiements || []).concat([{
+    id: 'p' + Date.now(),
+    date: date,
+    montant: montant,
+    mode: $('paie-mode').value,
+    ref: $('paie-ref').value.trim(),
+    note: $('paie-note').value.trim(),
+    pointe: false
+  }]);
+  if (doc.statut !== 'annulé' && docResteDu(doc) <= 0.005) doc.statut = 'payé';
+  _savePaiementDoc(docs, idx);
+  $('paie-ref').value = '';
+  $('paie-note').value = '';
+  $('paie-montant').value = docResteDu(doc).toFixed(2);
+  showNotifBanner('💳', 'Paiement enregistré', (doc.num || '') + ' — ' + fmt(montant) + ' (' + $('paie-mode').value + ')'
+    + (doc.statut === 'payé' ? ' · facture réglée' : ' · reste ' + fmt(docResteDu(doc))));
+}
+
+function deletePaiement(pid) {
+  if (!confirm('Supprimer ce paiement ?')) return;
+  var docs = loadDocs();
+  var idx = docs.findIndex(function(d) { return d.id === _paieDocId; });
+  if (idx < 0) return;
+  var doc = docs[idx];
+  doc.paiements = (doc.paiements || []).filter(function(p) { return String(p.id) !== pid; });
+  if (doc.statut === 'payé' && docResteDu(doc) > 0.005) doc.statut = 'envoyé';
+  _savePaiementDoc(docs, idx);
+  $('paie-montant').value = docResteDu(doc).toFixed(2);
+}
+
+// ── Journal des encaissements (onglet Liste) ──
+var _listeVue = 'docs';
+var _jpQuery = '';
+
+function setListeVue(vue) {
+  _listeVue = vue;
+  if ($('fchip-paiements')) $('fchip-paiements').className = 'filter-chip' + (vue === 'paiements' ? ' active-green' : '');
+}
+
+function toggleJournalPaiements() {
+  if (_listeVue === 'paiements') { setListeFilter('', $('fchip-all')); return; }
+  ['all','devis','facture','ordre','cree','envoye','accepte','paye','impaye'].forEach(function(s) {
+    if ($('fchip-'+s)) $('fchip-'+s).className = 'filter-chip';
+  });
+  setListeVue('paiements');
+  renderListe();
+}
+
+function journalPaiements() {
+  var entries = [];
+  loadDocs().forEach(function(d) {
+    if (d.type !== 'facture') return;
+    docReglements(d).forEach(function(p) { entries.push({ p: p, d: d }); });
+  });
+  var fltPeriod = $('flt-period') ? parseInt($('flt-period').value) : 0;
+  if (fltPeriod) {
+    var cutoff = Date.now() - fltPeriod * 86400000;
+    entries = entries.filter(function(e) { return new Date(e.p.date).getTime() >= cutoff; });
+  }
+  return entries.sort(function(a, b) { return String(b.p.date || '').localeCompare(String(a.p.date || '')); });
+}
+
+function renderJournalPaiements() {
+  updateListeFilterCounts();
+  $('liste-body').innerHTML = '<div class="carnet-search" style="margin-bottom:10px">'
+      + '<input id="jp-search" type="text" placeholder="Montant (127,50), référence, client, n° de facture, mode…" value="' + escHtml(_jpQuery) + '" oninput="_jpQuery=this.value;renderJournalRows()"/>'
+    + '</div>'
+    + '<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn-s btn-sm" onclick="exportJournalPaiementsCSV()">⬇ Export CSV</button></div>'
+    + '<div id="jp-rows"></div>';
+  renderJournalRows();
+}
+
+function _journalFiltre() {
+  var q = _jpQuery.toLowerCase().trim().replace(/\s*€$/, '');
+  var entries = journalPaiements();
+  if (!q) return entries;
+  var qNum = q.replace(',', '.');
+  return entries.filter(function(e) {
+    var hay = [e.p.mode, e.p.ref, e.p.note, e.d.num, e.d.cn, e.d.vim, fmtDate(e.p.date)].join(' ').toLowerCase();
+    return hay.indexOf(q) >= 0 || (e.p.montant || 0).toFixed(2).indexOf(qNum) >= 0;
+  });
+}
+
+function renderJournalRows() {
+  var entries = _journalFiltre();
+  var total = entries.reduce(function(s, e) { return s + (e.p.montant || 0); }, 0);
+  var parMode = {};
+  entries.forEach(function(e) { parMode[e.p.mode || '—'] = (parMode[e.p.mode || '—'] || 0) + (e.p.montant || 0); });
+  var nbNonPointes = entries.filter(function(e) { return !e.p.pointe; }).length;
+  var resume = '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">'
+    + entries.length + ' encaissement' + (entries.length > 1 ? 's' : '') + ' · <strong style="color:var(--green)">' + fmt(total) + '</strong>'
+    + (Object.keys(parMode).length ? ' — ' + Object.keys(parMode).map(function(m) { return escHtml(m) + ' ' + fmt(parMode[m]); }).join(' · ') : '')
+    + (nbNonPointes ? ' — <span style="color:var(--orange)">' + nbNonPointes + ' non pointé' + (nbNonPointes > 1 ? 's' : '') + '</span>' : '')
+    + '</div>';
+  if (!entries.length) {
+    $('jp-rows').innerHTML = resume + '<div class="empty"><div class="empty-icon">💳</div><div>Aucun encaissement trouvé. Enregistrez les paiements via le bouton 💳 Paiement d\'une facture.</div></div>';
+    return;
+  }
+  var rows = entries.map(function(e) {
+    var pid = escHtml(String(e.p.id));
+    return '<tr>'
+      + '<td>' + fmtDate(e.p.date) + '</td>'
+      + '<td style="font-family:var(--fm);color:var(--green);font-weight:600">' + fmt(e.p.montant || 0) + '</td>'
+      + '<td>' + escHtml(e.p.mode || '') + '</td>'
+      + '<td style="font-size:12px">' + escHtml([e.p.ref, e.p.note].filter(Boolean).join(' — ')) + '</td>'
+      + '<td><span class="doc-num">' + (escHtml(e.d.num) || '—') + '</span><br><strong style="font-size:12px">' + (escHtml(e.d.cn) || '—') + '</strong></td>'
+      + '<td style="text-align:center"><input type="checkbox" title="Pointé sur le relevé Legal Place"' + (e.p.pointe ? ' checked' : '') + ' onchange="togglePointePaiement(' + e.d.id + ',\'' + pid + '\',this.checked)"/></td>'
+      + '<td><div class="act-cell">'
+        + '<button class="btn-s btn-sm" onclick="previewDoc(' + e.d.id + ')">👁 Facture</button>'
+        + '<button class="btn-s btn-sm" onclick="openPaiementModal(' + e.d.id + ')">💳</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+  $('jp-rows').innerHTML = resume + '<table class="dt"><thead><tr><th>Date</th><th>Montant</th><th>Mode</th><th>Référence / note</th><th>Facture / client</th><th title="Pointé sur le relevé Legal Place">Pointé</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function togglePointePaiement(docId, pid, val) {
+  var docs = loadDocs();
+  var idx = docs.findIndex(function(d) { return d.id === docId; });
+  if (idx < 0) return;
+  var doc = docs[idx];
+  if (pid === 'acompte') { if (doc.acompte) doc.acompte.pointe = val; }
+  else (doc.paiements || []).forEach(function(p) { if (String(p.id) === pid) p.pointe = val; });
+  saveDocs(docs);
+  if (editId === doc.id) {
+    currentPaiements = JSON.parse(JSON.stringify(doc.paiements || []));
+    currentAcompte = doc.acompte || null;
+  }
+  renderJournalRows();
+}
+
+function exportJournalPaiementsCSV() {
+  var entries = _journalFiltre();
+  var rows = [['Date','Montant','Mode','Référence','Note','Facture','Client','Total facture TTC','Pointé']];
+  entries.forEach(function(e) {
+    rows.push([e.p.date || '', (e.p.montant || 0).toFixed(2), e.p.mode || '', e.p.ref || '', e.p.note || '', e.d.num || '', e.d.cn || '', (e.d.ttc || 0).toFixed(2), e.p.pointe ? 'Oui' : 'Non']);
+  });
+  var csv = rows.map(function(r) {
+    return r.map(function(cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(';');
+  }).join('\n');
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'AREPROG_encaissements_' + today() + '.csv';
+  a.click();
+  showNotifBanner('⬇', 'Export CSV', entries.length + ' encaissements exportés');
+}
+
+// ============================================================
 //  SAVE / LOAD
 // ============================================================
 function buildObj() {
@@ -1525,6 +1774,7 @@ function buildObj() {
     notes: $('f-notes').value,
     nint: $('f-nint').value,
     acompte: currentAcompte ? JSON.parse(JSON.stringify(currentAcompte)) : null,
+    paiements: JSON.parse(JSON.stringify(currentPaiements || [])),
     motif: $('f-motif') ? $('f-motif').value : '',
     delai: $('f-delai') ? $('f-delai').value : '',
     sigclient: $('f-sigclient') ? $('f-sigclient').checked : false,
@@ -1633,6 +1883,7 @@ function loadDocData(doc) {
   $('f-nint').value  = doc.nint  || '';
   lines = doc.lines ? JSON.parse(JSON.stringify(doc.lines)) : [];
   currentGains = doc.gains ? JSON.parse(JSON.stringify(doc.gains)) : null;
+  currentPaiements = doc.paiements ? JSON.parse(JSON.stringify(doc.paiements)) : [];
   if ($('f-gains')) {
     $('f-gains').value = (doc.customGains||[]).join('\n');
     previewGainsBadge();
@@ -1683,6 +1934,7 @@ function loadDoc(docId) {
   lines = JSON.parse(JSON.stringify(doc.lines));
   currentGains = doc.gains || null;
   currentAcompte = doc.acompte || null;
+  currentPaiements = doc.paiements ? JSON.parse(JSON.stringify(doc.paiements)) : [];
   renderGainsBar();
   // Restaurer déclaration
   setDeclaration(doc.declare !== false);
@@ -1741,7 +1993,21 @@ function renderDocHTML(doc, tplOverride) {
       + ' via ' + escHtml(doc.acompte.mode||'') + ' le ' + fmtDate(doc.acompte.date)
       + ' \u2014 Solde restant\u00a0: <strong>' + (doc.acompte.solde||0).toFixed(2) + '\u00a0\u20ac</strong></div>'
     : '';
-  var noticeHTML = doc.statut === 'payé'
+  // Règlements enregistrés (voir PAIEMENTS) : ils remplacent la notice
+  // d'acompte, l'acompte figurant déjà dans la liste des règlements.
+  var regl = doc.type === 'facture' && (doc.paiements || []).length ? docReglements(doc) : null;
+  if (regl) acompteNotice = '';
+  var reglStr = regl ? regl.map(function(p) {
+    return '<strong>' + fmt(p.montant || 0) + '</strong> par ' + escHtml(p.mode || '') + ' le ' + fmtDate(p.date);
+  }).join(' · ') : '';
+  var reste = regl ? docResteDu(doc) : 0;
+  var noticeHTML = (regl && reste <= 0.005)
+    ? '<div class="d-notice paye">✓ FACTURE RÉGLÉE — ' + reglStr + '</div>'
+    : regl
+    ? '<div class="d-notice facture">📄 Facture émise le ' + fmtDate(doc.date) + ' — Règlement à réception.</div>'
+      + '<div class="d-notice" style="background:rgba(168,85,247,.12);border-left:3px solid #a855f7;color:#7e22ce">'
+      + '💳\u00a0Règlements reçus\u00a0: ' + reglStr + ' — Reste à payer\u00a0: <strong>' + fmt(reste) + '</strong></div>'
+    : doc.statut === 'payé'
     ? '<div class="d-notice paye">✓ FACTURE RÉGLÉE — Paiement reçu</div>'
     : (isOrdre
       ? '<div class="d-notice" style="background:rgba(234,88,12,.1);border-left:3px solid #ea580c;color:#ea580c;font-size:12px">🔧 Ordre de réparation établi conformément au Décret n°78-993 du 4 octobre 1978 et au Code de la consommation (art. R224-22). Travaux autorisés par le client. Kilométrage enregistré à l\'entrée du véhicule.</div>'
@@ -1963,6 +2229,7 @@ function renderDash() {
 //  LISTE
 // ============================================================
 function renderListe() {
+  if (_listeVue === 'paiements') { renderJournalPaiements(); return; }
   var all = loadDocs();
   var flt        = $('flt') ? $('flt').value : '';
   var fltStatut  = $('flt-statut') ? $('flt-statut').value : '';
@@ -2002,6 +2269,18 @@ function buildTable(docs, withDelete) {
     var acompteBadge = (d.acompte && d.acompte.recu)
       ? '<br><span class="badge b-acompte" style="margin-top:3px">\ud83d\udcb6\u00a0' + fmt(d.acompte.montant) + ' vers\u00e9</span>'
       : '';
+    var paieBadge = '';
+    if (d.type === 'facture' && (d.paiements || []).length) {
+      acompteBadge = '';
+      var resteDu = docResteDu(d);
+      var modes = docReglements(d).map(function(p){ return p.mode; }).filter(function(m, i, a){ return m && a.indexOf(m) === i; }).join(', ');
+      paieBadge = '<br><span class="badge b-acompte" style="margin-top:3px" title="' + escHtml(docReglements(d).map(function(p){ return fmtDate(p.date) + ' · ' + fmt(p.montant || 0) + ' · ' + (p.mode || '') + (p.ref ? ' · ' + p.ref : ''); }).join('\n')) + '">💳\u00a0'
+        + (resteDu > 0.005 ? fmt(docEncaisse(d)) + ' reçu · reste ' + fmt(resteDu) : escHtml(modes))
+        + '</span>';
+    }
+    var paieBtn = d.type === 'facture'
+      ? '<button class="btn-s btn-sm" onclick="openPaiementModal('+d.id+')" title="Enregistrer / voir les paiements reçus">💳 Paiement</button>'
+      : '';
     var emailBadge = d.lastEmailAt
       ? ' <span title="Envoy\u00e9 par email le ' + escHtml(new Date(d.lastEmailAt).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})) + ' \u00e0 ' + escHtml(d.lastEmailTo||'') + '" style="cursor:help;font-size:11px">\u2709\ufe0f</span>'
       : '';
@@ -2022,11 +2301,12 @@ function buildTable(docs, withDelete) {
       + '<td>'+fmtDate(d.date)+'</td>'
       + '<td><strong>'+(escHtml(d.cn)||'—')+'</strong>'+(veh?'<br><span style="color:var(--text-dim);font-size:11px">'+veh+(d.van?' ('+escHtml(d.van)+')':'')+'</span>':'')+'</td>'
       + '<td style="font-family:var(--fm);color:var(--blue)">'+fmt(d.ttc||0)+'</td>'
-      + '<td>'+statBadge+emailBadge+acompteBadge+'</td>'
+      + '<td>'+statBadge+emailBadge+acompteBadge+paieBadge+'</td>'
       + '<td><div class="act-cell">'
         + '<button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button>'
         + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'
         + factureBtn
+        + paieBtn
         + avisBtn
         + delBtn
       + '</div></td>'
@@ -4540,6 +4820,9 @@ function quickSetStatus(docId, newStatus) {
   renderDash();
   if ($('t-liste').classList.contains('on')) renderListe();
   showNotifBanner('✅', 'Statut mis à jour', docs[idx].num + ' → ' + newStatus);
+  // Facture passée « payé » sans règlement enregistré : on ouvre directement
+  // la saisie du paiement pour pouvoir la retrouver ensuite sur le relevé.
+  if (newStatus === 'payé' && docs[idx].type === 'facture' && docResteDu(docs[idx]) > 0.005) openPaiementModal(docId);
 }
 
 // ============================================================
@@ -4555,6 +4838,7 @@ function duplicateDoc(docId) {
   var ech = new Date(); ech.setDate(ech.getDate() + 30);
   copy.ech = ech.toISOString().split('T')[0];
   copy.statut = 'créé';
+  copy.paiements = [];
   // Nouveau numéro
   var prefix = copy.type === 'devis' ? 'DEV' : 'FAC';
   copy.num = genNum(prefix);
@@ -4586,6 +4870,7 @@ function devisToFacture(docId) {
   facture.num = genNum('FAC');
   facture.date = dateEmission;
   facture.statut = 'créé';
+  facture.paiements = [];
   facture.refDevis = devis.num; // référence au devis d'origine
   docs.unshift(facture);
   // Marquer le devis comme accepté
@@ -4613,7 +4898,15 @@ function globalSearch(q) {
   loadDocs().forEach(function(d) {
     var haystack = [d.num,d.cn,d.vm,d.vmo,d.vmot,d.vim,d.cv,d.type,d.statut].join(' ').toLowerCase();
     if (d.lines) d.lines.forEach(function(l){ haystack += ' ' + (l.label||'').toLowerCase(); });
-    if (haystack.includes(q)) {
+    // Montants et références de paiement : retrouver une facture depuis une
+    // ligne du relevé bancaire (« 127,50 », « 127.5 », libellé, n° de chèque…)
+    var amounts = [d.ttc || 0];
+    docReglements(d).forEach(function(p) {
+      amounts.push(p.montant || 0);
+      haystack += ' ' + [p.mode, p.ref, p.note].join(' ').toLowerCase();
+    });
+    amounts.forEach(function(a){ haystack += ' ' + a.toFixed(2) + ' ' + a.toFixed(2).replace('.', ','); });
+    if (haystack.includes(q) || haystack.includes(q.replace(/\s*€$/, ''))) {
       results.push({ type:'doc', icon: d.type==='devis'?'📄':'🧾',
         title: d.num + ' — ' + (d.cn||'—'),
         sub: [d.type, fmtDate(d.date), fmt(d.ttc||0), d.statut].join(' · '),
@@ -5006,7 +5299,7 @@ function renderMonthDetail() {
 // ============================================================
 function exportCSV() {
   var docs = loadDocs();
-  var rows = [['Numéro','Type','Date','Client','Véhicule','Immat','Montant HT','Remise totale','TVA','Montant TTC','Statut','Déclaré','Prestations']];
+  var rows = [['Numéro','Type','Date','Client','Véhicule','Immat','Montant HT','Remise totale','TVA','Montant TTC','Statut','Déclaré','Prestations','Encaissé','Reste dû','Paiements']];
   docs.forEach(function(d) {
     var prests = (d.lines||[]).map(function(l){ return l.label?l.label.split(' — ')[0]:''; }).filter(Boolean).join(' | ');
     rows.push([
@@ -5015,7 +5308,10 @@ function exportCSV() {
       (d.ht||0).toFixed(2), (d.remiseTotale||0).toFixed(2), (d.tva||0).toFixed(2), (d.ttc||0).toFixed(2),
       d.statut||'',
       d.declare === false ? 'Non déclaré' : 'Déclaré',
-      prests
+      prests,
+      d.type === 'facture' ? docEncaisse(d).toFixed(2) : '',
+      d.type === 'facture' ? docResteDu(d).toFixed(2) : '',
+      docReglements(d).map(function(p){ return [p.date, (p.montant||0).toFixed(2), p.mode, p.ref].filter(Boolean).join(' '); }).join(' | ')
     ]);
   });
   var csv = rows.map(function(r){
@@ -6017,6 +6313,7 @@ var _currentListeFilter = '';
 var _currentStatutFilter = '';
 
 function setListeFilter(type, btn) {
+  setListeVue('docs');
   _currentListeFilter = type;
   _currentStatutFilter = '';
   // Reset tous les chips statut
@@ -6035,6 +6332,7 @@ function setListeFilter(type, btn) {
 }
 
 function setStatutFilter(statut, btn) {
+  setListeVue('docs');
   var isActive = _currentStatutFilter === statut;
   _currentStatutFilter = isActive ? '' : statut;
   _currentListeFilter = '';
