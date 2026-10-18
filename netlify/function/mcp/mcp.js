@@ -26,10 +26,19 @@
 //   MCP_OAUTH_SECRET         : chaîne aléatoire ≥ 32 caractères            (requis)
 //   MCP_ALLOWED_EMAILS       : e-mails autorisés, séparés par des virgules (optionnel —
 //                              par défaut tout compte Firebase Auth de gestion.html)
+//   RESEND_API_KEY           : clé API Resend (requise pour envoyer_document)
+//   RESEND_FROM              : adresse d'expédition vérifiée (optionnel)
+//
+// Envoi des devis/factures : jamais sans accord. preparer_envoi_document
+// renvoie le récapitulatif complet et un code de confirmation lié au contenu
+// exact (document + destinataire + objet + message) ; envoyer_document exige
+// ce code et refuse si quoi que ce soit a changé depuis. L'outil d'envoi est
+// marqué destructif pour que Claude demande la validation dans son interface.
 
 const crypto = require('crypto');
 const admin = require('firebase-admin');
 const { checkRateLimit } = require('../_lib/rate-limit');
+const { buildDocPdf } = require('./pdf');
 
 const BASE = 'https://areprog.fr';
 const RESOURCE = BASE + '/mcp';
@@ -42,6 +51,18 @@ const ACCESS_TTL = 60 * 60;            // 1 h
 const REFRESH_TTL = 30 * 24 * 60 * 60; // 30 jours
 const CODE_TTL = 5 * 60;               // 5 min
 
+const RESEND_FROM = 'AREPROG <contact@areprog.fr>';
+const REPLY_TO = 'arthur@areprog.fr'; // = NOTIF_EMAIL de gestion.js
+const GOOGLE_REVIEW_URL = 'https://g.page/r/CQNOwHcSQhflEBM/review'; // = gestion.js
+const ENVOI_TTL = 60 * 60; // validité du code de confirmation : 1 h
+// Repli si gestion.html n'a pas encore recopié son modèle dans config/template.
+const TPL_FALLBACK = {
+  nom: 'AREPROG', activite: 'Reprogrammation moteur en atelier',
+  tel: '06 67 92 46 30', email: 'contact@areprog.fr', web: 'areprog.fr', adresse: 'Atelier : Biarritz (64)',
+  legal: 'AREPROG SASU au capital de 500 € · Siège : 47 rue Vivienne 75002 Paris · RCS Paris 130 785 355 · SIRET 130 785 355 00012 · TVA intracom. FR01 130 785 355',
+  footer: 'AREPROG — Reprogrammation moteur en atelier · Biarritz · Pays Basque (64) · Landes (40)\n06 67 92 46 30 · areprog.fr · Garantie 2 ans sur chaque prestation · 100% réversible',
+  color: '#1E90FF', showVeh: true, showFooter: true, showLegal: true, showCgv: true, cgv: '', validite: 30,
+};
 const DOC_TYPES = ['devis', 'facture', 'ordre'];
 const DOC_PREFIX = { devis: 'DEV', facture: 'FAC', ordre: 'ODR' };
 const DOC_STATUTS = ['créé', 'envoyé', 'accepté', 'payé', 'annulé'];
@@ -478,6 +499,98 @@ function computeTotals(lines, remiseGlobale, tvaRate) {
     tva: ht * rate,
     ttc: ht * (1 + rate),
   };
+}
+
+async function loadTemplate() {
+  const snap = await db().collection('config').doc('template').get();
+  const tpl = Object.assign({}, TPL_FALLBACK, snap.exists ? snap.data() : {});
+  if (!tpl.legal) tpl.legal = TPL_FALLBACK.legal;
+  return { tpl, synchro: snap.exists };
+}
+
+function eur(n) {
+  const v = round2(n).toFixed(2).split('.');
+  return v[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + v[1] + ' €';
+}
+function dateFr(d) { return isDate(d) ? d.split('-').reverse().join('/') : (d || ''); }
+function typeLabel(d) { return d.type === 'facture' ? 'Facture' : d.type === 'ordre' ? 'Ordre de réparation' : 'Devis'; }
+
+// Mêmes textes par défaut que buildDefaultSubject / buildDefaultMessage (gestion.js).
+function defaultSubject(d, tpl) { return (tpl.nom || 'AREPROG') + ' — ' + typeLabel(d) + ' ' + (d.num || '') + ' — ' + eur(d.ttc); }
+function defaultMessage(d, tpl) {
+  const prenom = (d.cn || '').trim().split(/\s+/)[0] || '';
+  const salut = 'Bonjour' + (prenom ? ' ' + prenom : '') + ',';
+  const veh = [d.vm, d.vmo].filter(Boolean).join(' ');
+  const contact = [tpl.tel, tpl.web].filter(Boolean).join(' · ');
+  const sign = 'Cordialement,\n' + (tpl.nom || 'AREPROG') + (contact ? '\n' + contact : '');
+  const type = typeLabel(d);
+  if (type === 'Facture') {
+    return salut + '\n\nMerci pour votre confiance. Vous trouverez ci-joint votre facture ' + (d.num || '')
+      + (veh ? ' pour l\'intervention réalisée sur votre ' + veh : '') + ', d\'un montant de ' + eur(d.ttc) + ' TTC.\n\n'
+      + 'N\'hésitez pas à nous contacter pour toute question concernant cette facture.\n\n' + sign;
+  }
+  if (type === 'Ordre de réparation') {
+    return salut + '\n\nVous trouverez ci-joint l\'ordre de réparation ' + (d.num || '') + (veh ? ' pour votre ' + veh : '') + '.\n\n'
+      + 'Merci de le relire avant votre venue à l\'atelier ; n\'hésitez pas à nous contacter pour toute question.\n\n' + sign;
+  }
+  return salut + '\n\nMerci pour votre demande. Vous trouverez ci-joint votre devis ' + (d.num || '')
+    + (veh ? ' pour votre ' + veh : '') + ', d\'un montant de ' + eur(d.ttc) + ' TTC.' + (d.ech ? ' Il est valable jusqu\'au ' + dateFr(d.ech) + '.' : '') + '\n\n'
+    + 'Pour valider cette intervention, il vous suffit de répondre à cet email ou de nous appeler' + (tpl.tel ? ' au ' + tpl.tel : '')
+    + ' : nous conviendrons ensemble d\'un créneau à l\'atelier.\n\n'
+    + 'N\'hésitez pas à revenir vers nous pour toute question, nous restons à votre disposition.\n\n' + sign;
+}
+
+// Même gabarit que buildDocEmailHtml (gestion.js), blocs récap + PJ (+ avis Google sur facture).
+function docEmailHtml(d, tpl, message) {
+  const color = /^#[0-9a-fA-F]{6}$/.test(tpl.color) ? tpl.color : '#2196F3';
+  const type = typeLabel(d);
+  const row = (label, val, accent) => val ? '<tr><td style="padding:5px 0;color:#6b7280;font-size:13px">' + label + '</td>'
+    + '<td style="padding:5px 0;text-align:right;font-size:13px' + (accent ? ';font-weight:700;color:' + color : ';color:#111') + '">' + val + '</td></tr>' : '';
+  const recap = '<table style="width:100%;border-collapse:collapse">' + row('Référence', escHtml(d.num || '')) + row('Date', dateFr(d.date))
+    + (type === 'Devis' && d.ech ? row('Valable jusqu\'au', dateFr(d.ech)) : '') + row('Montant TTC', eur(d.ttc), true) + '</table>';
+  const article = type === 'Facture' ? 'cette facture' : type === 'Ordre de réparation' ? 'cet ordre de réparation' : 'ce devis';
+  return '<div style="background:#f4f5f7;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">'
+    + '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb">'
+    + '<div style="background:' + color + ';padding:22px 28px"><div style="color:#fff;font-size:20px;font-weight:700;letter-spacing:.3px">' + escHtml(tpl.nom || 'AREPROG') + '</div>'
+    + (tpl.activite ? '<div style="color:rgba(255,255,255,.85);font-size:12px;margin-top:2px">' + escHtml(tpl.activite) + '</div>' : '') + '</div>'
+    + '<div style="padding:26px 28px"><p style="margin:0 0 18px;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
+    + '<div style="background:#f9fafb;border:1px solid #eef0f2;border-radius:8px;padding:14px 18px;margin:0 0 18px">' + recap + '</div>'
+    + '<p style="margin:0' + (type === 'Facture' ? ' 0 22px' : '') + ';font-size:13px;color:#374151">📎 Vous trouverez ' + article + ' en pièce jointe, au format PDF.</p>'
+    + (type === 'Facture' ? '<div style="text-align:center;padding-top:18px;border-top:1px solid #eef0f2"><p style="margin:0 0 12px;font-size:13px;color:#374151">Si vous êtes satisfait(e) de notre intervention, un avis Google nous aiderait beaucoup à nous faire connaître :</p>'
+      + '<a href="' + GOOGLE_REVIEW_URL + '" style="display:inline-block;background:' + color + ';color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:8px">★★★★★ Laisser un avis Google</a></div>' : '')
+    + '</div><div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">' + escHtml(tpl.footer || '').replace(/\n/g, '<br>') + '</div>'
+    + '</div></div>';
+}
+
+function pdfFilename(d) {
+  const type = d.type === 'devis' ? 'Devis' : d.type === 'ordre' ? 'OrdreReparation' : 'Facture';
+  const nom = (d.cn || 'Client').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 _-]/g, '').trim().replace(/\s+/g, '-');
+  return 'AREPROG_' + type + '_' + String(d.num || '').replace(/[^a-zA-Z0-9_-]/g, '-') + '_' + nom + '.pdf';
+}
+
+// Empreinte de tout ce qui part chez le client : si le document ou l'e-mail
+// change après le récapitulatif montré à l'utilisateur, le code ne vaut plus.
+function envoiHash(d, envoi) {
+  const contenu = {
+    d: [d.id, d.type, d.num, d.date, d.ech, d.cn, d.ca, d.cv, d.ct, d.ce, d.vm, d.vmo, d.vmot, d.van, d.vim, d.vkm,
+      d.tvaRate, round2(d.ht), round2(d.ttc), d.notes, d.statut, d.accordUsage,
+      (d.lines || []).map((l) => [l.label, l.qte, l.pu, l.desc, l.remise, l.remiseType, !!l.offert])],
+    e: [envoi.to, envoi.sujet, envoi.message],
+  };
+  return crypto.createHash('sha256').update(JSON.stringify(contenu)).digest('hex');
+}
+
+async function resendSend(payload) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error('RESEND_API_KEY non configurée sur Netlify');
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+    body: JSON.stringify(payload),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error('Resend ' + res.status + ' : ' + (body.message || JSON.stringify(body)).slice(0, 200));
+  return body;
 }
 
 function emailValide(e) { return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e || ''); }
@@ -933,10 +1046,10 @@ const TOOLS = [
   },
   {
     name: 'preparer_envoi_document',
-    description: 'Prépare l\'e-mail d\'envoi d\'un devis/facture/ordre au client (destinataire, objet, message). '
-      + 'N\'ENVOIE RIEN : ce connecteur n\'a aucun moyen d\'envoyer un e-mail. L\'utilisateur valide et envoie lui-même depuis le lien renvoyé '
-      + '(fenêtre d\'envoi de gestion.html pré-remplie, avec le PDF officiel). Montrer d\'abord le message à l\'utilisateur et obtenir son accord avant de préparer. '
-      + 'Sans objet/message, la gestion propose son texte standard.',
+    description: 'ÉTAPE 1/2 de l\'envoi d\'un devis/facture/ordre par e-mail. N\'envoie RIEN. Renvoie le récapitulatif complet '
+      + '(destinataire, objet, message, pièce jointe, lignes et montants) et un code de confirmation. '
+      + 'Tu DOIS présenter ce récapitulatif en entier à l\'utilisateur dans la conversation et lui demander explicitement s\'il valide l\'envoi. '
+      + 'Sans objet/message fournis, le texte standard de la gestion est utilisé.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -946,23 +1059,88 @@ const TOOLS = [
         message: { type: 'string', description: 'Corps du mail en texte brut (le PDF est joint automatiquement)' },
       },
     },
+    annotations: { readOnlyHint: false, destructiveHint: false },
     async run(a) {
       const d = await findDoc(a);
       if (!d) throw new Error('document introuvable');
       if (d.statut === 'annulé') throw new Error('document annulé');
       const to = str(a.destinataire, 120) || d.ce || '';
       if (!emailValide(to)) throw new Error('e-mail du destinataire manquant ou invalide (le préciser dans "destinataire")');
-      const envoiPropose = { to, sujet: str(a.objet, 200), message: str(a.message, 5000), par: 'claude', at: new Date().toISOString() };
-      await db().collection('docs').doc(String(d.id)).update({ envoiPropose });
+      const { tpl, synchro } = await loadTemplate();
+      const envoi = { to, sujet: str(a.objet, 200) || defaultSubject(d, tpl), message: str(a.message, 5000) || defaultMessage(d, tpl) };
+      const h = envoiHash(d, envoi);
+      await db().collection('docs').doc(String(d.id)).update({ envoiPropose: Object.assign({}, envoi, { par: 'claude', at: new Date().toISOString(), h }) });
+      const dejaEnvoye = d.lastEmailAt ? { le: d.lastEmailAt, a: d.lastEmailTo || '' } : null;
       return {
-        ok: true,
         envoye: false,
-        document: resumeDoc(d),
-        destinataire: to,
-        dejaEnvoye: d.lastEmailAt ? { le: d.lastEmailAt, a: d.lastEmailTo || '' } : null,
-        lienValidation: BASE + '/gestion?envoi=' + d.id,
-        aFaire: 'Rien n\'est parti. Ouvrir le lien (ou le bouton « 📧 Envoi à valider » dans la Liste de gestion), vérifier le PDF et le message, puis cliquer sur Envoyer.',
+        aFaire: 'Montrer ce récapitulatif à l\'utilisateur et lui demander « Je l\'envoie ? ». '
+          + 'Appeler envoyer_document avec le code UNIQUEMENT après un oui explicite de sa part pour CET envoi. '
+          + 'Il peut aussi l\'envoyer lui-même depuis lienGestion.',
+        confirmation: sign({ typ: 'envoi', docId: d.id, h }, ENVOI_TTL),
+        recapitulatif: {
+          document: typeLabel(d) + ' ' + d.num + ' du ' + dateFr(d.date) + (d.type === 'devis' && d.ech ? ' (valable jusqu\'au ' + dateFr(d.ech) + ')' : ''),
+          client: d.cn,
+          vehicule: [d.vm, d.vmo, d.vmot].filter(Boolean).join(' ') + (d.vim ? ' — ' + d.vim : ''),
+          lignes: (d.lines || []).map((l) => (l.qte || 1) + ' × ' + l.label + ' — ' + (l.offert ? 'offert' : eur(lineNetHT(l)) + ' HT')),
+          totalHT: eur(d.ht), tva: (d.tvaRate || 0) + ' % (' + eur(d.tva) + ')', totalTTC: eur(d.ttc),
+          destinataire: to,
+          objet: envoi.sujet,
+          message: envoi.message,
+          pieceJointe: pdfFilename(d) + (d.type === 'ordre' ? '' : ' (avec CGV en annexe)'),
+          dejaEnvoye,
+          modeleDocument: synchro ? 'modèle de gestion' : 'modèle par défaut (ouvrir gestion.html une fois pour synchroniser le vôtre)',
+        },
+        lienGestion: BASE + '/gestion?envoi=' + d.id,
       };
+    },
+  },
+  {
+    name: 'envoyer_document',
+    description: 'ÉTAPE 2/2 : envoie réellement au client l\'e-mail préparé par preparer_envoi_document, avec le PDF en pièce jointe. '
+      + 'N\'appeler QUE si l\'utilisateur vient de répondre oui, explicitement, au récapitulatif de CET envoi dans la conversation. '
+      + 'Jamais de sa propre initiative, jamais pour un autre document, jamais en lot. Refusé si le document ou l\'e-mail a changé depuis le récapitulatif.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        confirmation: { type: 'string', description: 'Code renvoyé par preparer_envoi_document' },
+        accordUtilisateur: { type: 'string', description: 'Réponse exacte de l\'utilisateur qui valide l\'envoi (ex. « oui, envoie »)' },
+      },
+      required: ['confirmation', 'accordUtilisateur'],
+    },
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
+    async run(a, user) {
+      if (!str(a.accordUtilisateur)) throw new Error('accord explicite de l\'utilisateur requis');
+      const c = verify(a.confirmation, 'envoi');
+      if (!c) throw new Error('code de confirmation invalide ou expiré : refaire preparer_envoi_document et redemander l\'accord');
+      const d = await findDoc({ id: c.docId });
+      if (!d) throw new Error('document introuvable');
+      const envoi = d.envoiPropose;
+      if (!envoi || envoi.h !== c.h || envoiHash(d, envoi) !== c.h) {
+        throw new Error('le document ou l\'e-mail a changé depuis le récapitulatif (ou il a déjà été envoyé) : refaire preparer_envoi_document et redemander l\'accord');
+      }
+      const { tpl } = await loadTemplate();
+      const pdfB64 = await buildDocPdf(d, tpl);
+      const html = docEmailHtml(d, tpl, envoi.message);
+      const sent = await resendSend({
+        from: process.env.RESEND_FROM || RESEND_FROM,
+        to: [envoi.to],
+        reply_to: REPLY_TO,
+        subject: envoi.sujet,
+        html,
+        attachments: [{ filename: pdfFilename(d), content: pdfB64 }],
+      });
+      const now = new Date().toISOString();
+      const upd = { lastEmailAt: now, lastEmailTo: envoi.to, envoiPropose: null, envoyeParClaude: { at: now, accord: str(a.accordUtilisateur, 300), par: user.email } };
+      if (d.statut === 'créé') upd.statut = 'envoyé';
+      if (d.type === 'facture') { upd.avisEmailAt = now; upd.avisEmailTo = envoi.to; }
+      await db().collection('docs').doc(String(d.id)).update(upd);
+      if (sent.id) {
+        await db().collection('emailsEnvoyes').doc(String(sent.id)).set({
+          id: String(sent.id), to: [envoi.to], from: process.env.RESEND_FROM || RESEND_FROM, subject: envoi.sujet, html,
+          createdAt: now, lastEvent: 'sent', attachments: [pdfFilename(d)], source: 'claude', sentBy: user.email,
+        }, { merge: true }).catch((e) => console.warn('mcp: archivage —', e.message));
+      }
+      return { envoye: true, a: envoi.to, objet: envoi.sujet, document: resumeDoc(Object.assign(d, upd)), resendId: sent.id || null };
     },
   },
   {
@@ -1047,7 +1225,8 @@ const INSTRUCTIONS = 'Outils de gestion de l\'atelier AREPROG (Biarritz) : repro
   + 'Pour un devis : chercher le client (rechercher_clients), reprendre les prix exacts de lister_catalogue pour les prestations AREPROG, '
   + 'puis creer_document. Les documents sont créés au statut "créé". '
   + 'RÈGLE : avant toute création ou modification de devis/facture, et avant de préparer un envoi, montrer le contenu à l\'utilisateur et attendre son accord explicite. '
-  + 'Aucun e-mail ne peut partir d\'ici : preparer_envoi_document prépare l\'envoi, que l\'utilisateur valide lui-même dans gestion.html via le lien fourni. '
+  + 'ENVOI AU CLIENT : toujours en 2 temps. 1) preparer_envoi_document, puis présenter le récapitulatif complet et demander « Je l\'envoie ? ». '
+  + '2) envoyer_document seulement après un oui explicite de l\'utilisateur pour cet envoi précis — jamais de ta propre initiative. '
   + 'Ne jamais suggérer de contourner le contrôle technique pour les prestations EGR/FAP/AdBlue (illégal, art. L318-3 Code de la route).';
 
 // ════════════════════════════════════════════════════════════
@@ -1077,7 +1256,7 @@ async function handleRpc(msg, user) {
       const tool = TOOLS.find((t) => t.name === p.name);
       if (!tool) return err(-32602, 'Outil inconnu : ' + p.name);
       try {
-        const data = await tool.run(p.arguments || {});
+        const data = await tool.run(p.arguments || {}, user);
         console.log('mcp:', user.email, p.name);
         return ok({ content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] });
       } catch (e) {

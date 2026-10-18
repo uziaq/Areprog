@@ -874,6 +874,7 @@ function initApp() {
   setTimeout(function() {
     syncFromFirebase(function() {
       startRealtimeSync();
+      syncTemplateToFirebase();
       ouvrirEnvoiDepuisUrl();
       syncRdvsFromFirebase();
       syncVehiculesFromFirebase();
@@ -3183,6 +3184,7 @@ function loadTemplate() {
 }
 function saveTemplate() {
   localStorage.setItem(TPL_KEY, JSON.stringify(readTplForm()));
+  pushTemplateToFirebase();
   alert('Template enregistré ✓');
 }
 function resetTemplate() {
@@ -3190,6 +3192,26 @@ function resetTemplate() {
   localStorage.removeItem(TPL_KEY);
   fillTplForm(TPL_DEFAULT);
   livePreview();
+  pushTemplateToFirebase();
+}
+
+// Copie du modèle de document dans Firestore (config/template) : le
+// connecteur Claude (netlify/function/mcp) en a besoin pour générer côté
+// serveur le PDF des devis/factures qu'il envoie (en-tête, mentions, CGV).
+function pushTemplateToFirebase() {
+  if (!db || !syncOk) return;
+  var tpl = Object.assign({}, loadTemplate(), { cgvDefault: CGV_DEFAULT, updatedAt: new Date().toISOString() });
+  db.collection('config').doc('template').set(tpl)
+    .catch(function(e){ console.warn('Firebase save template:', e); });
+}
+// Au démarrage : n'écrase pas un modèle déjà enregistré depuis un autre
+// appareil, mais tient le texte des CGV par défaut à jour.
+function syncTemplateToFirebase() {
+  if (!db || !syncOk) return;
+  db.collection('config').doc('template').get().then(function(snap) {
+    if (!snap.exists) pushTemplateToFirebase();
+    else if (snap.data().cgvDefault !== CGV_DEFAULT) snap.ref.update({ cgvDefault: CGV_DEFAULT });
+  }).catch(function(e){ console.warn('Firebase template:', e); });
 }
 function syncTpl(key,val) {
   var map = {
