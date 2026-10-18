@@ -459,6 +459,29 @@ function cleanLines(lignes) {
   })).filter((l) => l.label);
 }
 
+// Totaux d'un document à partir de ses lignes, de sa remise globale et de
+// son taux de TVA — même calcul que buildObj() dans gestion.js.
+function computeTotals(lines, remiseGlobale, tvaRate) {
+  const brut = lines.reduce((s, l) => s + lineGrossHT(l), 0);
+  const net = lines.reduce((s, l) => s + lineNetHT(l), 0);
+  const rg = remiseGlobale || {};
+  const val = Math.max(0, parseFloat(rg.val) || 0);
+  const rgEur = rg.type === 'pct' ? net * Math.min(val, 100) / 100 : rg.type === 'eur' ? Math.min(val, net) : 0;
+  const ht = Math.max(0, net - rgEur);
+  const rate = (parseFloat(tvaRate) || 0) / 100;
+  return {
+    htBrut: brut,
+    remiseLignes: Math.max(0, brut - net),
+    remiseGlobale: { type: rg.type || 'none', val: rg.type === 'pct' || rg.type === 'eur' ? val : 0, montant: rgEur },
+    remiseTotale: Math.max(0, brut - net) + rgEur,
+    ht,
+    tva: ht * rate,
+    ttc: ht * (1 + rate),
+  };
+}
+
+function emailValide(e) { return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e || ''); }
+
 // ════════════════════════════════════════════════════════════
 //  Outils MCP
 // ════════════════════════════════════════════════════════════
@@ -785,8 +808,6 @@ const TOOLS = [
       const cveh = cl ? ((cl.vehs && cl.vehs[0]) || cl) : {};
       const v = a.vehicule || {};
       const tvaRate = a.tvaRate === 20 ? 20 : 0;
-      const brut = lines.reduce((s, l) => s + lineGrossHT(l), 0);
-      const ht = lines.reduce((s, l) => s + lineNetHT(l), 0);
       const docs = await allDocs();
       const doc = {
         id: Date.now(),
@@ -813,13 +834,7 @@ const TOOLS = [
         customGains: [],
         declare: true,
         tvaRate,
-        htBrut: brut,
-        remiseLignes: Math.max(0, brut - ht),
-        remiseGlobale: { type: 'pct', val: 0, montant: 0 },
-        remiseTotale: Math.max(0, brut - ht),
-        ht,
-        tva: ht * tvaRate / 100,
-        ttc: ht * (1 + tvaRate / 100),
+        ...computeTotals(lines, null, tvaRate),
         notes: str(a.notes, 3000),
         nint: str(a.notesInternes, 3000),
         acompte: null,
@@ -844,6 +859,110 @@ const TOOLS = [
         }
       }
       return { ok: true, document: resumeDoc(doc), rdvLie, aRelire: 'Ouvrir dans gestion.html (Liste) pour vérifier, imprimer ou envoyer au client.' };
+    },
+  },
+  {
+    name: 'modifier_document',
+    description: 'Modifie un devis / ordre de réparation (ou une facture encore jamais envoyée) : lignes, client, véhicule, TVA, remise globale, dates, notes. '
+      + 'Seuls les champs fournis changent ; "lignes" remplace toutes les lignes. Montrer d\'abord les changements à l\'utilisateur et obtenir son accord. '
+      + 'Annule une éventuelle proposition d\'envoi en cours (à refaire avec preparer_envoi_document).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: ['number', 'string'] }, num: { type: 'string' },
+        client: { type: 'object', properties: { nom: { type: 'string' }, adresse: { type: 'string' }, ville: { type: 'string' }, tel: { type: 'string' }, email: { type: 'string' } } },
+        vehicule: vehiculeSchema,
+        lignes: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              label: { type: 'string' }, qte: { type: 'number' }, pu: { type: 'number', description: 'Prix unitaire HT en €' },
+              desc: { type: 'string' }, ref: { type: 'string' },
+              remise: { type: 'number' }, remiseType: { type: 'string', enum: ['pct', 'eur'] }, offert: { type: 'boolean' },
+            },
+            required: ['label', 'pu'],
+          },
+        },
+        tvaRate: { type: 'number', enum: [0, 20] },
+        remiseGlobale: { type: 'object', properties: { type: { type: 'string', enum: ['none', 'pct', 'eur'] }, val: { type: 'number' } } },
+        date: S.date, echeance: S.date,
+        notes: { type: 'string' }, notesInternes: { type: 'string' },
+      },
+    },
+    async run(a) {
+      const d = await findDoc(a);
+      if (!d) throw new Error('document introuvable');
+      if (d.statut === 'annulé') throw new Error('document annulé : non modifiable');
+      if (d.type === 'facture' && (d.statut !== 'créé' || d.lastEmailAt || (d.paiements || []).length)) {
+        throw new Error('facture déjà envoyée ou réglée : non modifiable ici (faire un avoir / corriger dans gestion.html)');
+      }
+      const avant = resumeDoc(d);
+      if (a.lignes !== undefined) {
+        const lines = cleanLines(a.lignes);
+        if (!lines.length) throw new Error('au moins une ligne avec un libellé est requise');
+        d.lines = lines;
+      }
+      const c = a.client || {};
+      if (c.nom !== undefined) { if (!str(c.nom)) throw new Error('nom du client vide'); d.cn = str(c.nom, 120); }
+      if (c.adresse !== undefined) d.ca = str(c.adresse, 200);
+      if (c.ville !== undefined) d.cv = str(c.ville, 120);
+      if (c.tel !== undefined) d.ct = str(c.tel, 40);
+      if (c.email !== undefined) d.ce = str(c.email, 120);
+      const v = a.vehicule || {};
+      if (v.marque !== undefined) d.vm = str(v.marque, 60);
+      if (v.modele !== undefined) d.vmo = str(v.modele, 80);
+      if (v.motorisation !== undefined) d.vmot = str(v.motorisation, 80);
+      if (v.annee !== undefined) d.van = str(v.annee, 10);
+      if (v.immat !== undefined) d.vim = str(v.immat, 20).toUpperCase();
+      if (v.km !== undefined) d.vkm = str(v.km, 20);
+      if (a.tvaRate !== undefined) d.tvaRate = a.tvaRate === 20 ? 20 : 0;
+      if (a.date !== undefined) { if (!isDate(a.date)) throw new Error('date invalide'); d.date = a.date; }
+      if (a.echeance !== undefined) { if (!isDate(a.echeance)) throw new Error('échéance invalide'); d.ech = a.echeance; }
+      if (a.notes !== undefined) d.notes = str(a.notes, 3000);
+      if (a.notesInternes !== undefined) d.nint = str(a.notesInternes, 3000);
+      const rg = a.remiseGlobale !== undefined
+        ? { type: ['pct', 'eur'].includes(a.remiseGlobale && a.remiseGlobale.type) ? a.remiseGlobale.type : 'none', val: a.remiseGlobale && a.remiseGlobale.val }
+        : d.remiseGlobale;
+      Object.assign(d, computeTotals(d.lines || [], rg, d.tvaRate));
+      d.envoiPropose = null;
+      d.modifieParClaudeAt = new Date().toISOString();
+      await db().collection('docs').doc(String(d.id)).set(d);
+      return { ok: true, avant, apres: resumeDoc(d) };
+    },
+  },
+  {
+    name: 'preparer_envoi_document',
+    description: 'Prépare l\'e-mail d\'envoi d\'un devis/facture/ordre au client (destinataire, objet, message). '
+      + 'N\'ENVOIE RIEN : ce connecteur n\'a aucun moyen d\'envoyer un e-mail. L\'utilisateur valide et envoie lui-même depuis le lien renvoyé '
+      + '(fenêtre d\'envoi de gestion.html pré-remplie, avec le PDF officiel). Montrer d\'abord le message à l\'utilisateur et obtenir son accord avant de préparer. '
+      + 'Sans objet/message, la gestion propose son texte standard.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: ['number', 'string'] }, num: { type: 'string' },
+        destinataire: { type: 'string', description: 'E-mail du client (défaut : celui du document)' },
+        objet: { type: 'string' },
+        message: { type: 'string', description: 'Corps du mail en texte brut (le PDF est joint automatiquement)' },
+      },
+    },
+    async run(a) {
+      const d = await findDoc(a);
+      if (!d) throw new Error('document introuvable');
+      if (d.statut === 'annulé') throw new Error('document annulé');
+      const to = str(a.destinataire, 120) || d.ce || '';
+      if (!emailValide(to)) throw new Error('e-mail du destinataire manquant ou invalide (le préciser dans "destinataire")');
+      const envoiPropose = { to, sujet: str(a.objet, 200), message: str(a.message, 5000), par: 'claude', at: new Date().toISOString() };
+      await db().collection('docs').doc(String(d.id)).update({ envoiPropose });
+      return {
+        ok: true,
+        envoye: false,
+        document: resumeDoc(d),
+        destinataire: to,
+        dejaEnvoye: d.lastEmailAt ? { le: d.lastEmailAt, a: d.lastEmailTo || '' } : null,
+        lienValidation: BASE + '/gestion?envoi=' + d.id,
+        aFaire: 'Rien n\'est parti. Ouvrir le lien (ou le bouton « 📧 Envoi à valider » dans la Liste de gestion), vérifier le PDF et le message, puis cliquer sur Envoyer.',
+      };
     },
   },
   {
@@ -926,7 +1045,9 @@ const TOOLS = [
 const INSTRUCTIONS = 'Outils de gestion de l\'atelier AREPROG (Biarritz) : reprogrammation moteur et diagnostic. '
   + 'Montants en euros ; TVA 0 % par défaut (non assujetti). Heures en heure de Paris. '
   + 'Pour un devis : chercher le client (rechercher_clients), reprendre les prix exacts de lister_catalogue pour les prestations AREPROG, '
-  + 'puis creer_document. Les documents sont créés au statut "créé" : l\'envoi au client se fait depuis gestion.html. '
+  + 'puis creer_document. Les documents sont créés au statut "créé". '
+  + 'RÈGLE : avant toute création ou modification de devis/facture, et avant de préparer un envoi, montrer le contenu à l\'utilisateur et attendre son accord explicite. '
+  + 'Aucun e-mail ne peut partir d\'ici : preparer_envoi_document prépare l\'envoi, que l\'utilisateur valide lui-même dans gestion.html via le lien fourni. '
   + 'Ne jamais suggérer de contourner le contrôle technique pour les prestations EGR/FAP/AdBlue (illégal, art. L318-3 Code de la route).';
 
 // ════════════════════════════════════════════════════════════
