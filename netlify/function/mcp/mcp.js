@@ -484,6 +484,8 @@ function cleanLines(lignes) {
 
 // Totaux d'un document à partir de ses lignes, de sa remise globale et de
 // son taux de TVA — même calcul que buildObj() dans gestion.js.
+// SASU assujettie : TVA 20 % sur chaque nouveau document (TVA_RATE dans gestion.js).
+const TVA_RATE = 20;
 function computeTotals(lines, remiseGlobale, tvaRate) {
   const brut = lines.reduce((s, l) => s + lineGrossHT(l), 0);
   const net = lines.reduce((s, l) => s + lineNetHT(l), 0);
@@ -928,7 +930,7 @@ const TOOLS = [
   },
   {
     name: 'creer_document',
-    description: 'Crée un devis (par défaut), une facture ou un ordre de réparation, visible aussitôt dans gestion.html (statut "créé", à relire puis envoyer depuis gestion). Utiliser lister_catalogue pour les prix officiels AREPROG. TVA 0 % par défaut (non assujetti).',
+    description: 'Crée un devis (par défaut), une facture ou un ordre de réparation, visible aussitôt dans gestion.html (statut "créé", à relire puis envoyer depuis gestion). Utiliser lister_catalogue pour les prix officiels AREPROG. TVA 20 % appliquée automatiquement (SASU assujettie).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -948,7 +950,6 @@ const TOOLS = [
             required: ['label', 'pu'],
           },
         },
-        tvaRate: { type: 'number', enum: [0, 20] },
         date: S.date, echeance: S.date,
         notes: { type: 'string', description: 'Notes visibles par le client' },
         notesInternes: { type: 'string' },
@@ -967,7 +968,7 @@ const TOOLS = [
       if (!cn) throw new Error('nom du client obligatoire (clientId ou client.nom)');
       const cveh = cl ? ((cl.vehs && cl.vehs[0]) || cl) : {};
       const v = a.vehicule || {};
-      const tvaRate = a.tvaRate === 20 ? 20 : 0;
+      const tvaRate = TVA_RATE;
       const docs = await allDocs();
       const doc = {
         id: Date.now(),
@@ -1023,7 +1024,7 @@ const TOOLS = [
   },
   {
     name: 'modifier_document',
-    description: 'Modifie un devis / ordre de réparation (ou une facture encore jamais envoyée) : lignes, client, véhicule, TVA, remise globale, dates, notes. '
+    description: 'Modifie un devis / ordre de réparation (ou une facture encore jamais envoyée) : lignes, client, véhicule, remise globale, dates, notes. '
       + 'Seuls les champs fournis changent ; "lignes" remplace toutes les lignes. Montrer d\'abord les changements à l\'utilisateur et obtenir son accord. '
       + 'Annule une éventuelle proposition d\'envoi en cours (à refaire avec preparer_envoi_document).',
     inputSchema: {
@@ -1044,7 +1045,6 @@ const TOOLS = [
             required: ['label', 'pu'],
           },
         },
-        tvaRate: { type: 'number', enum: [0, 20] },
         remiseGlobale: { type: 'object', properties: { type: { type: 'string', enum: ['none', 'pct', 'eur'] }, val: { type: 'number' } } },
         date: S.date, echeance: S.date,
         notes: { type: 'string' }, notesInternes: { type: 'string' },
@@ -1076,7 +1076,6 @@ const TOOLS = [
       if (v.annee !== undefined) d.van = str(v.annee, 10);
       if (v.immat !== undefined) d.vim = str(v.immat, 20).toUpperCase();
       if (v.km !== undefined) d.vkm = str(v.km, 20);
-      if (a.tvaRate !== undefined) d.tvaRate = a.tvaRate === 20 ? 20 : 0;
       if (a.date !== undefined) { if (!isDate(a.date)) throw new Error('date invalide'); d.date = a.date; }
       if (a.echeance !== undefined) { if (!isDate(a.echeance)) throw new Error('échéance invalide'); d.ech = a.echeance; }
       if (a.notes !== undefined) d.notes = str(a.notes, 3000);
@@ -1375,7 +1374,7 @@ const TOOLS = [
       Object.assign(c, {
         id: Date.now(), type, num: genNum(DOC_PREFIX[type], docs), date: todayParis(), ech: todayParis(30), statut: 'créé',
         paiements: [], acompte: null, envoiPropose: null, lastEmailAt: null, lastEmailTo: null, avisEmailAt: null, refDevis: null, source: 'claude',
-      });
+      }, computeTotals(c.lines || [], c.remiseGlobale, TVA_RATE), { tvaRate: TVA_RATE });
       await db().collection('docs').doc(String(c.id)).set(c);
       return { ok: true, copie: resumeDoc(c), origine: orig.num };
     },
@@ -1891,7 +1890,7 @@ const TOOLS = [
 ];
 
 const INSTRUCTIONS = 'Outils de gestion de l\'atelier AREPROG (Biarritz) : reprogrammation moteur et diagnostic. '
-  + 'Montants en euros ; TVA 0 % par défaut (non assujetti). Heures en heure de Paris. '
+  + 'Montants en euros ; TVA 20 % sur chaque document (SASU assujettie). Heures en heure de Paris. '
   + 'Pour un devis : chercher le client (rechercher_clients), reprendre les prix exacts de lister_catalogue pour les prestations AREPROG, '
   + 'puis creer_document. Les documents sont créés au statut "créé". '
   + 'RÈGLE : avant toute création ou modification de devis/facture, et avant de préparer un envoi, montrer le contenu à l\'utilisateur et attendre son accord explicite. '

@@ -908,7 +908,7 @@ function resetForm(goToForm) {
   $('f-statut').value = 'créé';
   ['f-cnom','f-cadr','f-cville','f-ctel','f-cemail','f-csiret','f-ctva','f-vm','f-vmo','f-vmot','f-van','f-vim','f-vkm','f-nint'].forEach(function(i) { $(i).value = ''; });
   if ($('f-cnom-results')) { $('f-cnom-results').style.display = 'none'; $('f-cnom-results').innerHTML = ''; }
-  $('f-tva').value = '0';
+  $('f-tva').value = String(TVA_RATE);
   applyRemiseGlobaleFromDoc(null);
   $('f-notes').value = 'Prestation réalisée en atelier. Garantie 2 ans. Reprogrammation 100% réversible. Paiement à réception. Devis valable 30 jours.';
   $('form-h').textContent = 'Nouveau devis';
@@ -1237,6 +1237,9 @@ function lineNetHT(l) {
   return base < 0 ? 0 : base;
 }
 function lineGrossHT(l) { return (!l || l.offert) ? 0 : (parseFloat(l.qte) || 0) * (parseFloat(l.pu) || 0); }
+// SASU assujettie : TVA facturée sur chaque nouveau document (plus d'option 0 %).
+// Un document existant garde le taux avec lequel il a été établi.
+var TVA_RATE = 20;
 function curTvaRate() { return parseFloat(($('f-tva')||{}).value) / 100 || 0; }
 function lineNetTTC(l) { return lineNetHT(l) * (1 + curTvaRate()); }
 
@@ -1479,6 +1482,7 @@ function calcTotaux() {
   if ($('t-remlignes')) $('t-remlignes').textContent = '− ' + fmt(remiseLignes);
   if ($('t-remg-val')) $('t-remg-val').textContent = rg.eur > 0.005 ? '− ' + fmt(rg.eur) : '—';
   $('t-ht').textContent = fmt(ht);
+  if ($('t-tva-lbl')) $('t-tva-lbl').textContent = 'TVA (' + (parseFloat($('f-tva').value) || 0) + ' %)';
   $('t-tva').textContent = fmt(ht * tvaRate);
   $('t-ttc').textContent = fmt(ht * (1 + tvaRate));
 }
@@ -3282,7 +3286,7 @@ function livePreview() {
       {label:'Conversion E85 — Bioéthanol natif ECU',qte:1,pu:330,offert:false},
       {label:'Diagnostic ODIS VAG',qte:1,pu:0,offert:true},
     ],
-    tvaRate:0,ht:660,tva:0,ttc:660,
+    tvaRate:20,ht:660,tva:132,ttc:792,
     notes:'Prestation réalisée en atelier. Garantie 2 ans. 100% réversible.',
     gains:{ch:220,chOrig:180,nm:380,nmOrig:320},
   };
@@ -4898,6 +4902,9 @@ function duplicateDoc(docId) {
   copy.ech = ech.toISOString().split('T')[0];
   copy.statut = 'créé';
   copy.paiements = [];
+  copy.tvaRate = TVA_RATE;
+  copy.tva = (copy.ht || 0) * TVA_RATE / 100;
+  copy.ttc = (copy.ht || 0) + copy.tva;
   // Nouveau numéro
   var prefix = copy.type === 'devis' ? 'DEV' : 'FAC';
   copy.num = genNum(prefix);
