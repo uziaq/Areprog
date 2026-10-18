@@ -874,6 +874,8 @@ function initApp() {
   setTimeout(function() {
     syncFromFirebase(function() {
       startRealtimeSync();
+      syncTemplateToFirebase();
+      ouvrirEnvoiDepuisUrl();
       syncRdvsFromFirebase();
       syncVehiculesFromFirebase();
       setTimeout(function() {
@@ -2292,6 +2294,11 @@ function buildTable(docs, withDelete) {
     var avisBtn = (d.type === 'facture' && d.statut === 'payé' && d.ce)
       ? '<button class="btn-s btn-sm" onclick="openAvisModal('+d.id+')" title="'+(d.avisEmailAt ? 'Déjà demandé le '+escHtml(new Date(d.avisEmailAt).toLocaleDateString('fr-FR')) : 'Demander un avis Google')+'">⭐'+(d.avisEmailAt ? '' : ' Avis')+'</button>'
       : '';
+    // Envoi préparé par Claude (connecteur MCP) : rien n'est parti, il attend
+    // la validation ici — le bouton ouvre la fenêtre d'envoi pré-remplie.
+    var envoiBtn = d.envoiPropose
+      ? '<button class="btn-p btn-sm" onclick="ouvrirEnvoiPropose('+d.id+')" title="Envoi préparé par Claude — à vérifier puis envoyer" style="background:#25d366">📧 Envoi à valider</button>'
+      : '';
     var factureBtn = d.type === 'devis'
       ? '<button class="btn-s btn-sm" onclick="devisToFacture('+d.id+')" title="Transformer en facture">🧾 Facturer</button>'
       : '';
@@ -2305,6 +2312,7 @@ function buildTable(docs, withDelete) {
       + '<td><div class="act-cell">'
         + '<button class="btn-s btn-sm" onclick="previewDoc('+d.id+')">👁 Aperçu</button>'
         + '<button class="btn-s btn-sm" onclick="loadDoc('+d.id+')">✏️ Modifier</button>'
+        + envoiBtn
         + factureBtn
         + paieBtn
         + avisBtn
@@ -3176,6 +3184,7 @@ function loadTemplate() {
 }
 function saveTemplate() {
   localStorage.setItem(TPL_KEY, JSON.stringify(readTplForm()));
+  pushTemplateToFirebase();
   alert('Template enregistré ✓');
 }
 function resetTemplate() {
@@ -3183,6 +3192,26 @@ function resetTemplate() {
   localStorage.removeItem(TPL_KEY);
   fillTplForm(TPL_DEFAULT);
   livePreview();
+  pushTemplateToFirebase();
+}
+
+// Copie du modèle de document dans Firestore (config/template) : le
+// connecteur Claude (netlify/function/mcp) en a besoin pour générer côté
+// serveur le PDF des devis/factures qu'il envoie (en-tête, mentions, CGV).
+function pushTemplateToFirebase() {
+  if (!db || !syncOk) return;
+  var tpl = Object.assign({}, loadTemplate(), { cgvDefault: CGV_DEFAULT, updatedAt: new Date().toISOString() });
+  db.collection('config').doc('template').set(tpl)
+    .catch(function(e){ console.warn('Firebase save template:', e); });
+}
+// Au démarrage : n'écrase pas un modèle déjà enregistré depuis un autre
+// appareil, mais tient le texte des CGV par défaut à jour.
+function syncTemplateToFirebase() {
+  if (!db || !syncOk) return;
+  db.collection('config').doc('template').get().then(function(snap) {
+    if (!snap.exists) pushTemplateToFirebase();
+    else if (snap.data().cgvDefault !== CGV_DEFAULT) snap.ref.update({ cgvDefault: CGV_DEFAULT });
+  }).catch(function(e){ console.warn('Firebase template:', e); });
 }
 function syncTpl(key,val) {
   var map = {
@@ -4176,6 +4205,35 @@ function sendDocByEmail() {
   $('send-email-modal').classList.add('open');
 }
 
+// Ouvre la fenêtre d'envoi pré-remplie avec l'e-mail préparé par Claude
+// (doc.envoiPropose, écrit par netlify/function/mcp). Le connecteur ne peut
+// pas envoyer lui-même : l'envoi ne part qu'au clic sur « Envoyer » ici,
+// avec le PDF officiel généré par la gestion.
+function ouvrirEnvoiPropose(docId) {
+  var doc = loadDocs().find(function(d){ return d.id === docId; });
+  if (!doc) { alert('Document introuvable (synchronisation en cours ?).'); return; }
+  previewDoc(doc.id);
+  sendDocByEmail();
+  var p = doc.envoiPropose;
+  if (!p) return;
+  if (p.to) $('send-to-email').value = p.to;
+  if (p.sujet) $('send-subject').value = p.sujet;
+  if (p.message) $('send-message').value = p.message;
+  var info = $('send-last-info');
+  info.textContent = '🤖 Préparé par Claude le ' + new Date(p.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+    + ' — vérifiez le PDF et le message, puis cliquez sur Envoyer.'
+    + (doc.lastEmailAt ? ' (Déjà envoyé le ' + new Date(doc.lastEmailAt).toLocaleDateString('fr-FR') + ' à ' + (doc.lastEmailTo || '') + ')' : '');
+  info.style.display = 'block';
+}
+
+// Lien direct depuis Claude : /gestion?envoi=<id du document>
+function ouvrirEnvoiDepuisUrl() {
+  var m = /[?&]envoi=(\d+)/.exec(location.search);
+  if (!m) return;
+  history.replaceState(null, '', location.pathname);
+  ouvrirEnvoiPropose(Number(m[1]));
+}
+
 function onSendDocChange() {
   var id = Number($('send-doc-select').value);
   var doc = loadDocs().find(function(d){ return d.id === id; });
@@ -4397,6 +4455,7 @@ async function confirmSendEmail() {
         docs[idx].lastEmailAt = new Date().toISOString();
         docs[idx].lastEmailTo = toEmail;
         if (docs[idx].statut === 'créé') docs[idx].statut = 'envoyé';
+        docs[idx].envoiPropose = null; // proposition de Claude traitée
         // La facture embarque désormais directement le lien d'avis Google
         // (voir buildDocEmailHtml) : on trace la demande comme pour l'envoi
         // manuel, pour que le bouton ⭐ de la liste reflète l'état réel — sauf
