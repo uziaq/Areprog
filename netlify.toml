@@ -3,3 +3,7 @@
 
 [functions]
   directory = "netlify/function"
+
+# Le connecteur MCP lit le catalogue des codages (script navigateur à la racine).
+[functions.mcp]
+  included_files = ["codages-data.js"]

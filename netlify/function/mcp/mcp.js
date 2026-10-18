@@ -67,6 +67,8 @@ const DOC_TYPES = ['devis', 'facture', 'ordre'];
 const DOC_PREFIX = { devis: 'DEV', facture: 'FAC', ordre: 'ODR' };
 const DOC_STATUTS = ['créé', 'envoyé', 'accepté', 'payé', 'annulé'];
 const RDV_TYPES = ['rdv', 'relance', 'impaye', 'perso'];
+const PARC_STATUTS = ['en_stock', 'en_reparation', 'a_vendre', 'vendu']; // = VEH_ST (gestion.js)
+const PARC_FRAIS = ['achat', 'reparation', 'piece', 'carte_grise', 'ct', 'transport', 'carburant', 'esthetique', 'assurance', 'annonce', 'autre']; // = EXP_CATS
 const DEFAULT_DISPO = {
   jours: [1, 2, 3, 4, 5, 6],
   heures: ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
@@ -593,6 +595,50 @@ async function resendSend(payload) {
   return body;
 }
 
+// Gabarit des e-mails libres : même en-tête / pied que docEmailHtml, sans récap ni PJ.
+function mailHtml(tpl, message, avis) {
+  const color = /^#[0-9a-fA-F]{6}$/.test(tpl.color) ? tpl.color : '#2196F3';
+  return '<div style="background:#f4f5f7;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">'
+    + '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb">'
+    + '<div style="background:' + color + ';padding:22px 28px"><div style="color:#fff;font-size:20px;font-weight:700;letter-spacing:.3px">' + escHtml(tpl.nom || 'AREPROG') + '</div>'
+    + (tpl.activite ? '<div style="color:rgba(255,255,255,.85);font-size:12px;margin-top:2px">' + escHtml(tpl.activite) + '</div>' : '') + '</div>'
+    + '<div style="padding:26px 28px"><p style="margin:0;font-size:14px;color:#111;line-height:1.6">' + escHtml(message).replace(/\n/g, '<br>') + '</p>'
+    + (avis ? '<div style="text-align:center;padding-top:18px;margin-top:18px;border-top:1px solid #eef0f2">'
+      + '<a href="' + GOOGLE_REVIEW_URL + '" style="display:inline-block;background:' + color + ';color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:8px">★★★★★ Laisser un avis Google</a></div>' : '')
+    + '</div><div style="background:#f9fafb;border-top:1px solid #eef0f2;padding:16px 28px;font-size:11px;color:#9ca3af;line-height:1.7">' + escHtml(tpl.footer || '').replace(/\n/g, '<br>') + '</div>'
+    + '</div></div>';
+}
+
+// Véhicule du parc auto : prix de revient = achat + frais ; marge = vente − revient (cf. vehRevient / vehMarge).
+function resumeVehParc(v) {
+  const frais = (v.expenses || []).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const revient = (parseFloat(v.purchase_price) || 0) + frais;
+  const vendu = v.sale_price !== null && v.sale_price !== undefined && v.sale_price !== '';
+  return {
+    id: v.id, vehicule: [v.brand, v.model, v.year].filter(Boolean).join(' '), immat: v.plate || '', vin: v.vin || '', km: v.mileage || null,
+    statut: v.status || 'en_stock', achat: { date: v.purchase_date || '', prix: round2(v.purchase_price) },
+    frais: (v.expenses || []).map((e) => ({ categorie: e.category, libelle: e.label, montant: round2(e.amount), date: e.date })), totalFrais: round2(frais),
+    prixRevient: round2(revient), vente: vendu ? { date: v.sale_date || '', prix: round2(v.sale_price) } : null,
+    marge: vendu ? round2((parseFloat(v.sale_price) || 0) - revient) : null, notes: v.notes || '',
+    photos: (v.photos || []).length, documents: (v.documents || []).length,
+  };
+}
+
+// codages-data.js (racine du site, embarqué via netlify.toml included_files)
+// est un script navigateur qui remplit window.CODAGES_CATALOGUE.
+let _codages = null;
+function loadCodages() {
+  if (_codages) return _codages;
+  const fs = require('fs'), path = require('path'), vm = require('vm');
+  const cands = [path.join(process.cwd(), 'codages-data.js'), path.join(__dirname, 'codages-data.js'), path.join(__dirname, '../../../codages-data.js'), path.join(__dirname, '../../codages-data.js')];
+  const file = cands.find((f) => { try { return fs.statSync(f).isFile(); } catch (e) { return false; } });
+  if (!file) throw new Error('catalogue des codages indisponible sur le serveur');
+  const sandbox = { window: {} };
+  vm.runInNewContext(fs.readFileSync(file, 'utf8'), sandbox, { timeout: 2000 });
+  _codages = sandbox.window.CODAGES_CATALOGUE || {};
+  return _codages;
+}
+
 function emailValide(e) { return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e || ''); }
 
 // ════════════════════════════════════════════════════════════
@@ -767,8 +813,9 @@ const TOOLS = [
       const ref = db().collection('rdvs').doc(String(a.id));
       const snap = await ref.get();
       if (!snap.exists) throw new Error('RDV introuvable : ' + a.id);
+      const rdv = snap.data();
       await ref.delete();
-      return { ok: true, supprime: resumeRdv(snap.data()) };
+      return { ok: true, supprime: resumeRdv(rdv) };
     },
   },
   {
@@ -1218,6 +1265,629 @@ const TOOLS = [
       return { nombre: rows.length, demandes: rows.slice(0, lim) };
     },
   },
+  // ── Clients ───────────────────────────────────────────────
+  {
+    name: 'modifier_client',
+    description: 'Modifie la fiche d\'un client du carnet (seuls les champs fournis changent). Pour ajouter un véhicule : ajouter_vehicule_client.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: ['number', 'string'] },
+        nom: { type: 'string' }, tel: { type: 'string' }, email: { type: 'string' },
+        adresse: { type: 'string' }, ville: { type: 'string' },
+        type: { type: 'string', enum: ['particulier', 'pro'] }, siret: { type: 'string' }, tvaIntra: { type: 'string' },
+      },
+      required: ['id'],
+    },
+    async run(a) {
+      const cl = await findClient(a.id);
+      if (!cl) throw new Error('client introuvable : ' + a.id);
+      if (a.nom !== undefined) { if (!str(a.nom)) throw new Error('nom vide'); cl.nom = str(a.nom, 120); }
+      if (a.tel !== undefined) cl.tel = str(a.tel, 40);
+      if (a.email !== undefined) cl.email = str(a.email, 120);
+      if (a.adresse !== undefined) cl.adr = str(a.adresse, 200);
+      if (a.ville !== undefined) cl.ville = str(a.ville, 120);
+      if (a.type !== undefined) cl.type = a.type === 'pro' ? 'pro' : 'particulier';
+      if (a.siret !== undefined) cl.siret = str(a.siret, 20);
+      if (a.tvaIntra !== undefined) cl.tvaIntra = str(a.tvaIntra, 20);
+      if (cl.type !== 'pro') { cl.siret = ''; cl.tvaIntra = ''; }
+      await db().collection('clients').doc(String(cl.id)).set(cl);
+      return { ok: true, client: resumeClient(cl) };
+    },
+  },
+  {
+    name: 'ajouter_vehicule_client',
+    description: 'Ajoute un véhicule à la fiche d\'un client (ou met à jour celui qui a la même immatriculation).',
+    inputSchema: {
+      type: 'object',
+      properties: { id: { type: ['number', 'string'], description: 'id du client' }, vehicule: vehiculeSchema, notes: { type: 'string' } },
+      required: ['id', 'vehicule'],
+    },
+    async run(a) {
+      const cl = await findClient(a.id);
+      if (!cl) throw new Error('client introuvable : ' + a.id);
+      const v = a.vehicule || {};
+      const veh = { vm: str(v.marque, 60), vmo: str(v.modele, 80), vmot: str(v.motorisation, 80), van: str(v.annee, 10), vim: str(v.immat, 20).toUpperCase() };
+      if (!veh.vm && !veh.vmo && !veh.vim) throw new Error('marque, modèle ou immatriculation requis');
+      cl.vehs = Array.isArray(cl.vehs) && cl.vehs.length ? cl.vehs : (cl.vm || cl.vim ? [{ id: 'cv' + Date.now() + 'a', vm: cl.vm || '', vmo: cl.vmo || '', vmot: cl.vmot || '', van: cl.van || '', vim: cl.vim || '', notes: '', photos: [], videos: [] }] : []);
+      const existant = veh.vim && cl.vehs.find((x) => (x.vim || '').toUpperCase() === veh.vim);
+      if (existant) Object.keys(veh).forEach((k) => { if (veh[k]) existant[k] = veh[k]; });
+      else cl.vehs.push(Object.assign({ id: 'cv' + Date.now(), notes: str(a.notes, 2000), photos: [], videos: [] }, veh));
+      if (existant && a.notes !== undefined) existant.notes = str(a.notes, 2000);
+      const first = cl.vehs[0];
+      Object.assign(cl, { vm: first.vm || '', vmo: first.vmo || '', vmot: first.vmot || '', van: first.van || '', vim: first.vim || '' });
+      await db().collection('clients').doc(String(cl.id)).set(cl);
+      return { ok: true, misAJour: !!existant, client: resumeClient(cl) };
+    },
+  },
+  {
+    name: 'supprimer_client',
+    description: 'Supprime définitivement un client du carnet (ses devis/factures sont conservés). Demander confirmation à l\'utilisateur avant.',
+    inputSchema: { type: 'object', properties: { id: { type: ['number', 'string'] } }, required: ['id'] },
+    annotations: { destructiveHint: true },
+    async run(a) {
+      const cl = await findClient(a.id);
+      if (!cl) throw new Error('client introuvable : ' + a.id);
+      await db().collection('clients').doc(String(cl.id)).delete();
+      return { ok: true, supprime: resumeClient(cl) };
+    },
+  },
+
+  // ── Documents ─────────────────────────────────────────────
+  {
+    name: 'convertir_devis_en_facture',
+    description: 'Crée la facture correspondant à un devis (le devis est conservé et passe en "accepté"). La facture est liée aux mêmes RDV que le devis.',
+    inputSchema: { type: 'object', properties: { id: { type: ['number', 'string'] }, num: { type: 'string' }, date: S.date } },
+    async run(a) {
+      const devis = await findDoc(a);
+      if (!devis) throw new Error('devis introuvable');
+      if (devis.type !== 'devis') throw new Error('ce document n\'est pas un devis');
+      if (devis.statut === 'annulé') throw new Error('devis annulé');
+      const docs = await allDocs();
+      const deja = docs.find((d) => d.type === 'facture' && d.refDevis === devis.num && d.statut !== 'annulé');
+      if (deja) throw new Error('une facture existe déjà pour ce devis : ' + deja.num);
+      const f = JSON.parse(JSON.stringify(devis));
+      Object.assign(f, {
+        id: Date.now(), type: 'facture', num: genNum('FAC', docs), date: isDate(a.date) ? a.date : todayParis(),
+        statut: 'créé', paiements: [], refDevis: devis.num, envoiPropose: null, lastEmailAt: null, lastEmailTo: null, source: 'claude',
+      });
+      await db().collection('docs').doc(String(f.id)).set(f);
+      if (['créé', 'envoyé'].includes(devis.statut)) await db().collection('docs').doc(String(devis.id)).update({ statut: 'accepté' });
+      // Comme lierFactureAuxRdvsDuDevis() dans gestion.js
+      const rdvs = (await allRdvs()).filter((r) => (r.docIds || (r.docId ? [r.docId] : [])).map(Number).includes(Number(devis.id)));
+      for (const r of rdvs) {
+        const ids = (r.docIds || (r.docId ? [r.docId] : [])).concat(f.id);
+        await db().collection('rdvs').doc(String(r.id)).update({ docIds: ids, docId: ids[0] });
+      }
+      return { ok: true, facture: resumeDoc(f), devis: devis.num, rdvLies: rdvs.map((r) => r.id) };
+    },
+  },
+  {
+    name: 'dupliquer_document',
+    description: 'Copie un devis/facture/ordre en un nouveau document (nouveau numéro, date du jour, statut "créé"), éventuellement d\'un autre type.',
+    inputSchema: { type: 'object', properties: { id: { type: ['number', 'string'] }, num: { type: 'string' }, type: { type: 'string', enum: DOC_TYPES } } },
+    async run(a) {
+      const orig = await findDoc(a);
+      if (!orig) throw new Error('document introuvable');
+      const docs = await allDocs();
+      const c = JSON.parse(JSON.stringify(orig));
+      const type = DOC_TYPES.includes(a.type) ? a.type : orig.type;
+      Object.assign(c, {
+        id: Date.now(), type, num: genNum(DOC_PREFIX[type], docs), date: todayParis(), ech: todayParis(30), statut: 'créé',
+        paiements: [], acompte: null, envoiPropose: null, lastEmailAt: null, lastEmailTo: null, avisEmailAt: null, refDevis: null, source: 'claude',
+      });
+      await db().collection('docs').doc(String(c.id)).set(c);
+      return { ok: true, copie: resumeDoc(c), origine: orig.num };
+    },
+  },
+  {
+    name: 'supprimer_document',
+    description: 'Supprime définitivement un devis / ordre de réparation, ou une facture jamais envoyée ni réglée (sinon : passer son statut à "annulé"). Demander confirmation avant.',
+    inputSchema: { type: 'object', properties: { id: { type: ['number', 'string'] }, num: { type: 'string' } } },
+    annotations: { destructiveHint: true },
+    async run(a) {
+      const d = await findDoc(a);
+      if (!d) throw new Error('document introuvable');
+      if (d.type === 'facture' && (d.lastEmailAt || (d.paiements || []).length || (d.acompte && d.acompte.recu) || !['créé', 'annulé'].includes(d.statut))) {
+        throw new Error('facture déjà émise (envoyée ou réglée) : la numérotation doit rester continue, utiliser modifier_statut_document → "annulé"');
+      }
+      await db().collection('docs').doc(String(d.id)).delete();
+      const rdvs = (await allRdvs()).filter((r) => (r.docIds || (r.docId ? [r.docId] : [])).map(Number).includes(Number(d.id)));
+      for (const r of rdvs) {
+        const ids = (r.docIds || (r.docId ? [r.docId] : [])).filter((x) => Number(x) !== Number(d.id));
+        await db().collection('rdvs').doc(String(r.id)).update({ docIds: ids, docId: ids[0] || null });
+      }
+      return { ok: true, supprime: resumeDoc(d) };
+    },
+  },
+  {
+    name: 'gerer_paiement',
+    description: 'Supprime un paiement enregistré par erreur sur une facture, ou le marque comme pointé / non pointé (rapprochement bancaire Legal Place).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: ['number', 'string'], description: 'id de la facture' }, num: { type: 'string' },
+        paiementId: { type: ['number', 'string'], description: 'id du paiement (voir obtenir_document)' },
+        action: { type: 'string', enum: ['supprimer', 'pointer', 'depointer'] },
+      },
+      required: ['paiementId', 'action'],
+    },
+    async run(a) {
+      const d = await findDoc(a);
+      if (!d) throw new Error('facture introuvable');
+      const pid = String(a.paiementId);
+      if (pid === 'acompte') {
+        if (!d.acompte) throw new Error('pas d\'acompte sur ce document');
+        if (a.action === 'supprimer') throw new Error('l\'acompte se retire depuis le formulaire du document dans gestion.html');
+        d.acompte.pointe = a.action === 'pointer';
+        await db().collection('docs').doc(String(d.id)).update({ acompte: d.acompte });
+        return { ok: true, facture: resumeDoc(d) };
+      }
+      const p = (d.paiements || []).find((x) => String(x.id) === pid);
+      if (!p) throw new Error('paiement introuvable : ' + pid);
+      const upd = {};
+      if (a.action === 'supprimer') {
+        d.paiements = d.paiements.filter((x) => String(x.id) !== pid);
+        upd.paiements = d.paiements;
+        // Comme gestion.js : une facture "payée" qui ne l'est plus repasse en "envoyé"
+        if (d.statut === 'payé' && docResteDu(d) > 0.005) upd.statut = d.statut = 'envoyé';
+      } else {
+        p.pointe = a.action === 'pointer';
+        upd.paiements = d.paiements;
+      }
+      await db().collection('docs').doc(String(d.id)).update(upd);
+      return { ok: true, action: a.action, paiement: p, facture: resumeDoc(d) };
+    },
+  },
+  {
+    name: 'journal_encaissements',
+    description: 'Journal des paiements reçus sur une période (rapprochement bancaire) : date, montant, mode, référence, facture, client, pointé.',
+    inputSchema: { type: 'object', properties: { du: S.date, au: S.date, nonPointes: { type: 'boolean', description: 'Uniquement les paiements non pointés' } } },
+    annotations: { readOnlyHint: true },
+    async run(a) {
+      const du = isDate(a.du) ? a.du : todayParis().slice(0, 7) + '-01';
+      const au = isDate(a.au) ? a.au : todayParis();
+      const out = [];
+      (await allDocs()).filter((d) => d.type === 'facture').forEach((d) => {
+        const regl = [];
+        if (d.acompte && d.acompte.recu) regl.push({ id: 'acompte', date: d.acompte.date, montant: d.acompte.montant || 0, mode: d.acompte.mode || '', ref: '', note: 'Acompte', pointe: !!d.acompte.pointe });
+        (d.paiements || []).forEach((p) => regl.push(p));
+        regl.forEach((p) => {
+          if ((p.date || '') >= du && (p.date || '') <= au && (!a.nonPointes || !p.pointe)) {
+            out.push({ date: p.date, montant: round2(p.montant), mode: p.mode || '', ref: p.ref || '', note: p.note || '', pointe: !!p.pointe, paiementId: p.id, facture: d.num, factureId: d.id, client: d.cn });
+          }
+        });
+      });
+      out.sort((x, y) => (x.date || '').localeCompare(y.date || ''));
+      return { du, au, nombre: out.length, total: round2(out.reduce((s, p) => s + p.montant, 0)), paiements: out };
+    },
+  },
+  {
+    name: 'alertes',
+    description: 'Ce qui demande une action : devis en attente de réponse depuis 3 jours ou plus, factures échues non réglées, RDV à confirmer, demandes du site non traitées.',
+    inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true },
+    async run() {
+      const [docs, rdvs, leads] = await Promise.all([allDocs(), allRdvs(), db().collection('leads').orderBy('createdAt', 'desc').limit(200).get()]);
+      const auj = todayParis();
+      const jours = (d) => Math.floor((Date.parse(auj) - Date.parse(d)) / 86400000);
+      return {
+        devisSansReponse: docs.filter((d) => d.type === 'devis' && ['envoyé', 'accepté'].includes(d.statut) && d.date && jours(d.date) >= 3)
+          .map((d) => Object.assign(resumeDoc(d), { depuisJours: jours(d.date) })),
+        facturesEchues: docs.filter((d) => d.type === 'facture' && !['payé', 'annulé'].includes(d.statut) && d.ech && d.ech < auj && docResteDu(d) > 0)
+          .map((d) => Object.assign(resumeDoc(d), { echeance: d.ech, retardJours: jours(d.ech) })),
+        rdvAConfirmer: rdvs.filter((r) => r.statut === 'a_confirmer' && r.date >= auj).map(resumeRdv),
+        demandesNonTraitees: leads.docs.map((x) => Object.assign({ id: x.id }, x.data())).filter((l) => (l.status || 'nouveau') === 'nouveau')
+          .map((l) => ({ id: l.id, nom: l.name || '', tel: l.phone || '', prestations: l.prestations || [], message: (l.message || '').slice(0, 200) })),
+      };
+    },
+  },
+
+  // ── Demandes du site ──────────────────────────────────────
+  {
+    name: 'modifier_statut_demande',
+    description: 'Marque une demande du site (lead) comme traitée ou la rouvre.',
+    inputSchema: { type: 'object', properties: { id: { type: 'string' }, statut: { type: 'string', enum: ['traite', 'nouveau'] } }, required: ['id', 'statut'] },
+    async run(a) {
+      const ref = db().collection('leads').doc(String(a.id));
+      const snap = await ref.get();
+      if (!snap.exists) throw new Error('demande introuvable : ' + a.id);
+      await ref.update({ status: a.statut });
+      return { ok: true, id: a.id, statut: a.statut };
+    },
+  },
+  {
+    name: 'creer_devis_depuis_demande',
+    description: 'Crée un devis à partir d\'une demande du site (contact, véhicule, prestations chiffrées au catalogue), ajoute le client au carnet s\'il n\'existe pas, lie le devis à la demande et la marque traitée. '
+      + 'Les lignes peuvent être remplacées via "lignes". Montrer le devis à l\'utilisateur ensuite.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', description: 'id de la demande (lister_demandes)' },
+        lignes: { type: 'array', items: { type: 'object', properties: { label: { type: 'string' }, qte: { type: 'number' }, pu: { type: 'number' }, desc: { type: 'string' } }, required: ['label', 'pu'] } },
+      },
+      required: ['id'],
+    },
+    async run(a) {
+      const ref = db().collection('leads').doc(String(a.id));
+      const snap = await ref.get();
+      if (!snap.exists) throw new Error('demande introuvable : ' + a.id);
+      const l = snap.data();
+      if (l.devisId) throw new Error('un devis existe déjà pour cette demande (id ' + l.devisId + ')');
+      const v = l.vehicle || {};
+      const lignes = Array.isArray(a.lignes) && a.lignes.length ? a.lignes
+        : (l.devisDraft && Array.isArray(l.devisDraft.lignes) ? l.devisDraft.lignes : []);
+      if (!lignes.length) throw new Error('aucune ligne chiffrée sur cette demande : fournir "lignes"');
+      // Client : retrouvé par e-mail / téléphone / nom, sinon ajouté au carnet.
+      const clients = await allClients();
+      const tel = String(l.phone || '').replace(/\D/g, '');
+      let cl = clients.find((c) => (l.email && (c.email || '').toLowerCase() === l.email.toLowerCase()) || (tel.length >= 9 && String(c.tel || '').replace(/\D/g, '').endsWith(tel.slice(-9))) || (l.name && norm(c.nom) === norm(l.name)));
+      let clientCree = false;
+      if (!cl) {
+        cl = { id: Date.now(), nom: str(l.name, 120) || 'Client', tel: str(l.phone, 40), email: str(l.email, 120), adr: '', ville: str(l.city, 120), type: 'particulier', siret: '', tvaIntra: '', vehs: [], documents: [] };
+        const veh = { id: 'cv' + Date.now(), vm: str(v.brand, 60), vmo: str(v.model, 80), vmot: str(v.engine, 80), van: str(String(v.year || ''), 10), vim: str(v.plate, 20).toUpperCase(), notes: '', photos: [], videos: [] };
+        if (veh.vm || veh.vmo || veh.vim) cl.vehs.push(veh);
+        Object.assign(cl, { vm: veh.vm, vmo: veh.vmo, vmot: veh.vmot, van: veh.van, vim: veh.vim });
+        await db().collection('clients').doc(String(cl.id)).set(cl);
+        clientCree = true;
+      }
+      const res = await TOOLS.find((t) => t.name === 'creer_document').run({
+        clientId: cl.id,
+        vehicule: { marque: v.brand || '', modele: v.model || '', motorisation: v.engine || '', annee: String(v.year || ''), immat: v.plate || '', km: String(v.km || '') },
+        lignes: lignes.map((x) => ({ label: x.label, qte: x.qte, pu: x.pu, desc: x.desc, ref: x.ref, remise: x.remise, remiseType: x.remiseType })),
+        notesInternes: l.message ? 'Demande du site : ' + l.message : '',
+      });
+      const doc = res.document;
+      await db().collection('docs').doc(String(doc.id)).update({ demandeRef: 'leads:' + a.id });
+      await ref.update({ devisId: doc.id, status: 'traite' });
+      return { ok: true, devis: doc, client: resumeClient(cl), clientCree, aTarifer: lignes.filter((x) => !x.pu).map((x) => x.label) };
+    },
+  },
+
+  // ── Parc auto (achat / revente) ───────────────────────────
+  {
+    name: 'lister_vehicules_parc',
+    description: 'Véhicules du parc auto (achat-revente) avec prix d\'achat, frais, prix de revient, prix de vente et marge.',
+    inputSchema: { type: 'object', properties: { statut: { type: 'string', enum: PARC_STATUTS } } },
+    annotations: { readOnlyHint: true },
+    async run(a) {
+      const snap = await db().collection('vehicules').get();
+      const vs = snap.docs.map((x) => x.data()).filter((v) => v && v.id && (!a.statut || (v.status || 'en_stock') === a.statut));
+      const list = vs.map(resumeVehParc);
+      const vendus = list.filter((v) => v.marge !== null);
+      return { nombre: list.length, margeTotaleVendus: round2(vendus.reduce((s, v) => s + v.marge, 0)), vehicules: list };
+    },
+  },
+  {
+    name: 'enregistrer_vehicule_parc',
+    description: 'Ajoute un véhicule au parc auto, ou modifie un véhicule existant (avec "id" ; seuls les champs fournis changent). "frais" s\'ajoutent aux frais existants.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', description: 'Absent = nouveau véhicule' },
+        marque: { type: 'string' }, modele: { type: 'string' }, annee: { type: 'number' },
+        immat: { type: 'string' }, vin: { type: 'string' }, kilometrage: { type: 'number' },
+        statut: { type: 'string', enum: PARC_STATUTS },
+        dateAchat: S.date, prixAchat: { type: 'number' },
+        dateVente: S.date, prixVente: { type: ['number', 'null'], description: 'null pour effacer' },
+        notes: { type: 'string' },
+        frais: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { categorie: { type: 'string', enum: PARC_FRAIS }, libelle: { type: 'string' }, montant: { type: 'number' }, date: S.date },
+            required: ['libelle', 'montant'],
+          },
+        },
+      },
+    },
+    async run(a) {
+      let v;
+      if (a.id) {
+        const snap = await db().collection('vehicules').doc(String(a.id)).get();
+        if (!snap.exists) throw new Error('véhicule introuvable : ' + a.id);
+        v = snap.data();
+      } else {
+        if (!str(a.marque) || !str(a.modele)) throw new Error('marque et modèle obligatoires');
+        v = { id: String(Date.now()), brand: '', model: '', year: null, plate: '', vin: '', mileage: null, status: 'en_stock', purchase_date: '', purchase_price: 0, sale_date: '', sale_price: null, notes: '', expenses: [], photos: [], documents: [], created_at: new Date().toISOString() };
+      }
+      if (a.marque !== undefined) v.brand = str(a.marque, 60);
+      if (a.modele !== undefined) v.model = str(a.modele, 80);
+      if (a.annee !== undefined) v.year = parseInt(a.annee, 10) || null;
+      if (a.immat !== undefined) v.plate = str(a.immat, 20).toUpperCase();
+      if (a.vin !== undefined) v.vin = str(a.vin, 30).toUpperCase();
+      if (a.kilometrage !== undefined) v.mileage = parseInt(a.kilometrage, 10) || null;
+      if (a.statut !== undefined && PARC_STATUTS.includes(a.statut)) v.status = a.statut;
+      if (a.dateAchat !== undefined) v.purchase_date = isDate(a.dateAchat) ? a.dateAchat : '';
+      if (a.prixAchat !== undefined) v.purchase_price = round2(a.prixAchat);
+      if (a.prixVente !== undefined) v.sale_price = a.prixVente === null ? null : round2(a.prixVente);
+      if (a.dateVente !== undefined) v.sale_date = isDate(a.dateVente) ? a.dateVente : '';
+      if (a.notes !== undefined) v.notes = str(a.notes, 3000);
+      (Array.isArray(a.frais) ? a.frais : []).forEach((f) => {
+        v.expenses = (v.expenses || []).concat({ category: PARC_FRAIS.includes(f.categorie) ? f.categorie : 'reparation', label: str(f.libelle, 120), amount: round2(f.montant), date: isDate(f.date) ? f.date : todayParis() });
+      });
+      // Comme saveVehFromModal() : un prix de vente sans date prend la date du jour ; "vendu" sans date aussi.
+      if ((v.sale_price !== null && v.sale_price !== undefined || v.status === 'vendu') && !v.sale_date) v.sale_date = todayParis();
+      await db().collection('vehicules').doc(String(v.id)).set(v);
+      return { ok: true, nouveau: !a.id, vehicule: resumeVehParc(v) };
+    },
+  },
+  {
+    name: 'supprimer_vehicule_parc',
+    description: 'Supprime définitivement un véhicule du parc auto avec ses frais, photos et documents. Demander confirmation avant.',
+    inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
+    annotations: { destructiveHint: true },
+    async run(a) {
+      const ref = db().collection('vehicules').doc(String(a.id));
+      const snap = await ref.get();
+      if (!snap.exists) throw new Error('véhicule introuvable : ' + a.id);
+      const v = snap.data();
+      await ref.delete();
+      return { ok: true, supprime: resumeVehParc(v) };
+    },
+  },
+
+  // ── Catalogue & horaires ──────────────────────────────────
+  {
+    name: 'modifier_catalogue',
+    description: 'Ajoute, modifie (prix, libellé, arguments) ou retire une prestation du catalogue officiel (utilisé pour les devis et le chiffrage des demandes du site). Montrer le changement à l\'utilisateur avant.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        action: { type: 'string', enum: ['ajouter', 'modifier', 'supprimer'] },
+        groupe: { type: 'string', description: 'Groupe (ex. "Reprogrammation moteur") — requis pour ajouter ; créé s\'il n\'existe pas' },
+        label: { type: 'string', description: 'Libellé exact de la prestation (modifier / supprimer)' },
+        nouveauLabel: { type: 'string' },
+        prix: { type: 'number', description: 'Prix HT en €' },
+        gains: { type: 'array', items: { type: 'string' }, description: 'Arguments affichés sur le devis' },
+      },
+      required: ['action'],
+    },
+    async run(a) {
+      const ref = db().collection('config').doc('catalogue');
+      const snap = await ref.get();
+      const cat = snap.exists && Array.isArray(snap.data().cat) ? snap.data().cat : null;
+      if (!cat) throw new Error('catalogue absent de Firestore : ouvrir une fois l\'onglet Catalogue de gestion.html');
+      const trouver = () => {
+        for (const g of cat) { const it = (g.items || []).find((x) => x.l === a.label); if (it) return { g, it }; }
+        const cand = [];
+        cat.forEach((g) => (g.items || []).forEach((x) => { if (norm(x.l).includes(norm(a.label))) cand.push(x.l); }));
+        throw new Error('prestation introuvable : "' + a.label + '"' + (cand.length ? ' — libellés proches : ' + cand.slice(0, 5).join(' | ') : ''));
+      };
+      let res;
+      if (a.action === 'ajouter') {
+        if (!str(a.groupe) || !str(a.nouveauLabel || a.label) || !(a.prix >= 0)) throw new Error('groupe, label et prix requis');
+        let g = cat.find((x) => norm(x.g) === norm(a.groupe));
+        if (!g) { g = { g: str(a.groupe, 80), items: [] }; cat.push(g); }
+        const it = { l: str(a.nouveauLabel || a.label, 200), p: round2(a.prix) };
+        if (Array.isArray(a.gains)) it.gains = a.gains.map((x) => str(x, 120)).filter(Boolean);
+        g.items.push(it);
+        res = { groupe: g.g, prestation: { label: it.l, prix: it.p } };
+      } else if (a.action === 'modifier') {
+        const { g, it } = trouver();
+        const avant = { label: it.l, prix: it.p };
+        if (a.nouveauLabel !== undefined && str(a.nouveauLabel)) it.l = str(a.nouveauLabel, 200);
+        if (a.prix !== undefined) it.p = round2(a.prix);
+        if (Array.isArray(a.gains)) it.gains = a.gains.map((x) => str(x, 120)).filter(Boolean);
+        res = { groupe: g.g, avant, apres: { label: it.l, prix: it.p } };
+      } else if (a.action === 'supprimer') {
+        const { g, it } = trouver();
+        g.items = g.items.filter((x) => x !== it);
+        res = { groupe: g.g, supprime: { label: it.l, prix: it.p } };
+      } else throw new Error('action invalide');
+      await ref.set({ cat });
+      return Object.assign({ ok: true, action: a.action, note: 'gestion.html recharge le catalogue à son prochain démarrage' }, res);
+    },
+  },
+  {
+    name: 'horaires_atelier',
+    description: 'Lit ou modifie les créneaux de RDV proposés sur la page publique /rdv : jours ouverts, heures des créneaux, fermetures exceptionnelles (congés, jours fériés).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        jours: { type: 'array', items: { type: 'number' }, description: 'Jours ouverts, 0 = dimanche … 6 = samedi' },
+        heures: { type: 'array', items: { type: 'string' }, description: 'Heures de début des créneaux, HH:MM' },
+        ajouterFermetures: { type: 'array', items: { type: 'object', properties: { date: S.date, label: { type: 'string' } }, required: ['date'] } },
+        retirerFermetures: { type: 'array', items: { type: 'string' }, description: 'Dates YYYY-MM-DD' },
+      },
+    },
+    async run(a) {
+      const ref = db().collection('config').doc('rdvDispo');
+      const snap = await ref.get();
+      const c = snap.exists ? snap.data() : {};
+      const dispo = {
+        jours: Array.isArray(c.jours) && c.jours.length ? c.jours : DEFAULT_DISPO.jours.slice(),
+        heures: Array.isArray(c.heures) && c.heures.length ? c.heures : DEFAULT_DISPO.heures.slice(),
+        fermetures: Array.isArray(c.fermetures) ? c.fermetures : [],
+      };
+      let modifie = false;
+      if (Array.isArray(a.jours)) {
+        const j = [...new Set(a.jours.map(Number).filter((n) => n >= 0 && n <= 6))].sort();
+        if (!j.length) throw new Error('au moins un jour ouvert');
+        dispo.jours = j; modifie = true;
+      }
+      if (Array.isArray(a.heures)) {
+        if (!a.heures.every(isHeure)) throw new Error('heures au format HH:MM');
+        dispo.heures = [...new Set(a.heures)].sort(); modifie = true;
+      }
+      (Array.isArray(a.ajouterFermetures) ? a.ajouterFermetures : []).forEach((f) => {
+        if (!isDate(f.date)) throw new Error('date de fermeture invalide : ' + f.date);
+        dispo.fermetures = dispo.fermetures.filter((x) => x.date !== f.date).concat({ date: f.date, label: str(f.label, 80) });
+        modifie = true;
+      });
+      if (Array.isArray(a.retirerFermetures) && a.retirerFermetures.length) {
+        dispo.fermetures = dispo.fermetures.filter((x) => !a.retirerFermetures.includes(x.date)); modifie = true;
+      }
+      dispo.fermetures.sort((x, y) => x.date.localeCompare(y.date));
+      if (modifie) await ref.set(dispo);
+      const NOMS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+      return { modifie, joursOuverts: dispo.jours.map((j) => NOMS[j]), heures: dispo.heures, fermetures: dispo.fermetures.filter((f) => f.date >= todayParis()) };
+    },
+  },
+
+  // ── Stats, recherche, codages, e-mails ────────────────────
+  {
+    name: 'statistiques',
+    description: 'Statistiques sur une période : CA facturé et encaissé par mois, prestations les plus vendues, meilleurs clients, devis émis / transformés en facture, panier moyen.',
+    inputSchema: { type: 'object', properties: { du: S.date, au: S.date } },
+    annotations: { readOnlyHint: true },
+    async run(a) {
+      const au = isDate(a.au) ? a.au : todayParis();
+      const du = isDate(a.du) ? a.du : (parseInt(au.slice(0, 4), 10) - 1) + au.slice(4, 7) + '-01';
+      const docs = await allDocs();
+      const dans = (d) => (d.date || '') >= du && (d.date || '') <= au;
+      const factures = docs.filter((d) => d.type === 'facture' && d.statut !== 'annulé' && dans(d));
+      const devis = docs.filter((d) => d.type === 'devis' && dans(d));
+      const parMois = {};
+      factures.forEach((d) => { const m = d.date.slice(0, 7); parMois[m] = parMois[m] || { factureTTC: 0, nbFactures: 0, encaisse: 0 }; parMois[m].factureTTC += d.ttc || 0; parMois[m].nbFactures++; });
+      docs.filter((d) => d.type === 'facture' && d.statut !== 'annulé').forEach((d) => docReglements(d).forEach((p) => {
+        if ((p.date || '') >= du && (p.date || '') <= au) { const m = p.date.slice(0, 7); parMois[m] = parMois[m] || { factureTTC: 0, nbFactures: 0, encaisse: 0 }; parMois[m].encaisse += p.montant || 0; }
+      }));
+      const presta = {}, clients = {};
+      factures.forEach((d) => {
+        (d.lines || []).forEach((l) => { const k = (l.label || '').split(' — ')[0].split(' · ')[0].trim(); if (!k) return; presta[k] = presta[k] || { nombre: 0, totalHT: 0 }; presta[k].nombre += parseFloat(l.qte) || 1; presta[k].totalHT += lineNetHT(l); });
+        clients[d.cn] = (clients[d.cn] || 0) + (d.ttc || 0);
+      });
+      const caTTC = factures.reduce((s, d) => s + (d.ttc || 0), 0);
+      const transformes = devis.filter((dv) => dv.statut === 'accepté' || docs.some((f) => f.type === 'facture' && f.refDevis === dv.num)).length;
+      return {
+        du, au,
+        caFactureTTC: round2(caTTC), nbFactures: factures.length, panierMoyenTTC: factures.length ? round2(caTTC / factures.length) : 0,
+        devis: { emis: devis.length, acceptesOuFactures: transformes, tauxTransformation: devis.length ? Math.round(transformes / devis.length * 100) + ' %' : '—' },
+        parMois: Object.keys(parMois).sort().map((m) => ({ mois: m, factureTTC: round2(parMois[m].factureTTC), nbFactures: parMois[m].nbFactures, encaisse: round2(parMois[m].encaisse) })),
+        topPrestations: Object.entries(presta).sort((x, y) => y[1].totalHT - x[1].totalHT).slice(0, 15).map(([k, v]) => ({ prestation: k, nombre: v.nombre, totalHT: round2(v.totalHT) })),
+        topClients: Object.entries(clients).sort((x, y) => y[1] - x[1]).slice(0, 10).map(([k, v]) => ({ client: k, totalTTC: round2(v) })),
+      };
+    },
+  },
+  {
+    name: 'recherche_globale',
+    description: 'Recherche partout à la fois : clients, devis/factures (numéro, client, immat, montant, référence de paiement), RDV, véhicules du parc, demandes du site.',
+    inputSchema: { type: 'object', properties: { q: { type: 'string' } }, required: ['q'] },
+    annotations: { readOnlyHint: true },
+    async run(a) {
+      const q = norm(a.q).trim();
+      if (q.length < 2) throw new Error('au moins 2 caractères');
+      const qc = q.replace(/[\s-]/g, '');
+      const hit = (...vals) => { const h = norm(vals.filter((x) => x != null).join(' ')); return h.includes(q) || h.replace(/[\s-]/g, '').includes(qc); };
+      const [docs, clients, rdvs, vehSnap, leadSnap] = await Promise.all([allDocs(), allClients(), allRdvs(), db().collection('vehicules').get(), db().collection('leads').orderBy('createdAt', 'desc').limit(300).get()]);
+      return {
+        clients: clients.filter((c) => hit(c.nom, c.tel, c.email, c.ville, c.vim, ...(c.vehs || []).map((v) => [v.vm, v.vmo, v.vim].join(' ')))).slice(0, 15).map(resumeClient),
+        documents: docs.filter((d) => hit(d.num, d.cn, d.vim, d.vm, d.vmo, d.ce, d.ct, round2(d.ttc).toFixed(2), ...(d.paiements || []).map((p) => [p.ref, p.montant].join(' ')), ...(d.lines || []).map((l) => l.label))).slice(0, 20).map(resumeDoc),
+        rdvs: rdvs.filter((r) => hit(r.title, r.clientNom, r.clientTel, r.notes)).sort((x, y) => (y.date || '').localeCompare(x.date || '')).slice(0, 15).map(resumeRdv),
+        vehiculesParc: vehSnap.docs.map((x) => x.data()).filter((v) => v && hit(v.brand, v.model, v.plate, v.vin, v.notes)).slice(0, 10).map(resumeVehParc),
+        demandes: leadSnap.docs.map((x) => Object.assign({ id: x.id }, x.data())).filter((l) => hit(l.name, l.phone, l.email, l.message, l.vehicle && l.vehicle.plate)).slice(0, 10)
+          .map((l) => ({ id: l.id, nom: l.name || '', tel: l.phone || '', statut: l.status || 'nouveau' })),
+      };
+    },
+  },
+  {
+    name: 'rechercher_codages',
+    description: 'Options de codage activables (plateforme VAG MQB : Golf 7, Leon 5F, A3 8V, Octavia 3, Passat B8…) et leur faisabilité. Sans paramètre : liste des véhicules couverts. À vérifier par diagnostic avant de les proposer.',
+    inputSchema: { type: 'object', properties: { vehicule: { type: 'string', description: 'ex. "golf 7"' }, option: { type: 'string', description: 'ex. "feux", "aiguilles", "carplay"' } } },
+    annotations: { readOnlyHint: true },
+    async run(a) {
+      const cat = loadCodages();
+      const vehs = Object.entries(cat).map(([k, v]) => ({ id: k, vehicule: v.marque + ' ' + v.modele, periode: v.periode || '' }));
+      if (!a.vehicule && !a.option) return { vehiculesCouverts: vehs };
+      const qv = norm(a.vehicule), qo = norm(a.option);
+      const res = [];
+      Object.entries(cat).forEach(([k, v]) => {
+        if (qv && !norm(k + ' ' + v.marque + ' ' + v.modele + ' ' + (v.sousTitre || '')).replace(/-/g, ' ').includes(qv)) return;
+        (v.categories || []).forEach((c) => (c.items || []).forEach((it) => {
+          if (qo && !norm(c.nom + ' ' + it.option + ' ' + (it.prerequis || '')).includes(qo)) return;
+          res.push({ vehicule: v.marque + ' ' + v.modele, categorie: c.nom, option: it.option, faisabilite: it.faisabilite, prerequis: it.prerequis || '' });
+        }));
+      });
+      return { nombre: res.length, options: res.slice(0, 150), tronque: res.length > 150, legende: 'OUI = activable · COND = sous conditions d\'équipement · ENTRETIEN = calibrage / adaptation' };
+    },
+  },
+  {
+    name: 'lister_emails_envoyes',
+    description: 'Historique des e-mails envoyés (devis, factures, rappels RDV, réponses aux demandes…), les plus récents d\'abord, avec filtre sur destinataire ou objet.',
+    inputSchema: { type: 'object', properties: { recherche: { type: 'string' }, limite: { type: 'number' } } },
+    annotations: { readOnlyHint: true },
+    async run(a) {
+      const lim = Math.min(Math.max(parseInt(a.limite) || 20, 1), 100);
+      const snap = await db().collection('emailsEnvoyes').orderBy('createdAt', 'desc').limit(a.recherche ? 400 : lim).get();
+      const q = norm(a.recherche);
+      const rows = snap.docs.map((x) => x.data())
+        .filter((m) => !q || norm([].concat(m.to || []).join(' ') + ' ' + (m.subject || '')).includes(q))
+        .slice(0, lim)
+        .map((m) => ({ date: m.createdAt, a: [].concat(m.to || []).join(', '), objet: m.subject || '', statut: m.lastEvent || '', piecesJointes: m.attachments || [], source: m.source || '' }));
+      return { nombre: rows.length, emails: rows };
+    },
+  },
+  {
+    name: 'preparer_email_client',
+    description: 'ÉTAPE 1/2 d\'un e-mail libre à un client (relance, réponse, confirmation de RDV, demande d\'avis…), sans PDF de devis — pour un devis/facture utiliser preparer_envoi_document. '
+      + 'N\'envoie RIEN : renvoie le récapitulatif et un code de confirmation. Tu DOIS montrer le message complet à l\'utilisateur et lui demander s\'il valide l\'envoi.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        clientId: { type: ['number', 'string'], description: 'id du carnet (fournit l\'e-mail)' },
+        destinataire: { type: 'string', description: 'E-mail, si pas de clientId ou pour en utiliser un autre' },
+        objet: { type: 'string' },
+        message: { type: 'string', description: 'Texte brut, signature comprise' },
+        boutonAvisGoogle: { type: 'boolean', description: 'Ajoute le bouton « Laisser un avis Google »' },
+      },
+      required: ['objet', 'message'],
+    },
+    async run(a) {
+      const cl = await findClient(a.clientId);
+      if (a.clientId != null && a.clientId !== '' && !cl) throw new Error('client introuvable : ' + a.clientId);
+      const to = str(a.destinataire, 120) || (cl && cl.email) || '';
+      if (!emailValide(to)) throw new Error('e-mail du destinataire manquant ou invalide');
+      if (!str(a.objet) || !str(a.message)) throw new Error('objet et message obligatoires');
+      const envoi = { to, sujet: str(a.objet, 200), message: str(a.message, 8000), avis: !!a.boutonAvisGoogle, clientId: cl ? cl.id : null, at: new Date().toISOString() };
+      const h = crypto.createHash('sha256').update(JSON.stringify([envoi.to, envoi.sujet, envoi.message, envoi.avis])).digest('hex');
+      const ref = db().collection('mcpEnvois').doc();
+      await ref.set(Object.assign({}, envoi, { h, envoye: false }));
+      return {
+        envoye: false,
+        aFaire: 'Montrer ce récapitulatif à l\'utilisateur et lui demander « Je l\'envoie ? ». Appeler envoyer_email_client UNIQUEMENT après un oui explicite pour CET e-mail.',
+        confirmation: sign({ typ: 'mail', eid: ref.id, h }, ENVOI_TTL),
+        recapitulatif: { destinataire: to, client: cl ? cl.nom : null, objet: envoi.sujet, message: envoi.message, boutonAvisGoogle: envoi.avis },
+      };
+    },
+  },
+  {
+    name: 'envoyer_email_client',
+    description: 'ÉTAPE 2/2 : envoie l\'e-mail préparé par preparer_email_client. N\'appeler QUE si l\'utilisateur vient de répondre oui, explicitement, au récapitulatif de CET e-mail. Jamais de ta propre initiative.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        confirmation: { type: 'string' },
+        accordUtilisateur: { type: 'string', description: 'Réponse exacte de l\'utilisateur qui valide l\'envoi' },
+      },
+      required: ['confirmation', 'accordUtilisateur'],
+    },
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
+    async run(a, user) {
+      if (!str(a.accordUtilisateur)) throw new Error('accord explicite de l\'utilisateur requis');
+      const c = verify(a.confirmation, 'mail');
+      if (!c) throw new Error('code de confirmation invalide ou expiré : refaire preparer_email_client et redemander l\'accord');
+      const ref = db().collection('mcpEnvois').doc(String(c.eid));
+      const snap = await ref.get();
+      if (!snap.exists) throw new Error('e-mail préparé introuvable');
+      const e = snap.data();
+      if (e.envoye) throw new Error('cet e-mail a déjà été envoyé');
+      if (e.h !== c.h) throw new Error('le contenu ne correspond pas au récapitulatif validé');
+      const { tpl } = await loadTemplate();
+      const html = mailHtml(tpl, e.message, e.avis);
+      const from = process.env.RESEND_FROM || RESEND_FROM;
+      const sent = await resendSend({ from, to: [e.to], reply_to: REPLY_TO, subject: e.sujet, html });
+      const now = new Date().toISOString();
+      await ref.update({ envoye: true, envoyeAt: now, accord: str(a.accordUtilisateur, 300), par: user.email, resendId: sent.id || null });
+      if (e.clientId != null) await db().collection('clients').doc(String(e.clientId)).update({ lastEmailAt: now, lastEmailTo: e.to }).catch(() => {});
+      if (sent.id) {
+        await db().collection('emailsEnvoyes').doc(String(sent.id)).set({
+          id: String(sent.id), to: [e.to], from, subject: e.sujet, html, createdAt: now, lastEvent: 'sent', attachments: [], source: 'claude', sentBy: user.email,
+        }, { merge: true }).catch((err) => console.warn('mcp: archivage —', err.message));
+      }
+      return { envoye: true, a: e.to, objet: e.sujet, resendId: sent.id || null };
+    },
+  },
 ];
 
 const INSTRUCTIONS = 'Outils de gestion de l\'atelier AREPROG (Biarritz) : reprogrammation moteur et diagnostic. '
@@ -1227,6 +1897,9 @@ const INSTRUCTIONS = 'Outils de gestion de l\'atelier AREPROG (Biarritz) : repro
   + 'RÈGLE : avant toute création ou modification de devis/facture, et avant de préparer un envoi, montrer le contenu à l\'utilisateur et attendre son accord explicite. '
   + 'ENVOI AU CLIENT : toujours en 2 temps. 1) preparer_envoi_document, puis présenter le récapitulatif complet et demander « Je l\'envoie ? ». '
   + '2) envoyer_document seulement après un oui explicite de l\'utilisateur pour cet envoi précis — jamais de ta propre initiative. '
+  + 'Même règle pour les e-mails libres : preparer_email_client puis envoyer_email_client après un oui explicite. '
+  + 'Suppressions (RDV, client, document, véhicule du parc) : toujours demander confirmation avant. '
+  + 'Une facture émise ne se supprime pas (numérotation continue) : on l\'annule. '
   + 'Ne jamais suggérer de contourner le contrôle technique pour les prestations EGR/FAP/AdBlue (illégal, art. L318-3 Code de la route).';
 
 // ════════════════════════════════════════════════════════════
@@ -1243,7 +1916,7 @@ async function handleRpc(msg, user) {
       return ok({
         protocolVersion: PROTOCOL_VERSIONS.includes(asked) ? asked : PROTOCOL_VERSIONS[0],
         capabilities: { tools: { listChanged: false } },
-        serverInfo: { name: 'areprog-gestion', title: 'AREPROG — gestion', version: '1.0.0' },
+        serverInfo: { name: 'areprog-gestion', title: 'AREPROG — gestion', version: '1.2.0' },
         instructions: INSTRUCTIONS,
       });
     }
