@@ -263,12 +263,7 @@
           </div>
           <div class="totaux-row"><span class="tl">Total HT</span><span class="tv" id="t-ht">0,00 €</span></div>
           <div class="totaux-row">
-            <span class="tl">TVA
-              <select class="tva-sel" id="f-tva" onchange="renderLines()">
-                <option value="0">0 % (non assujetti)</option>
-                <option value="20">20 %</option>
-              </select>
-            </span>
+            <span class="tl" id="t-tva-lbl">TVA (20 %)</span><input type="hidden" id="f-tva" value="20"/>
             <span class="tv" id="t-tva">0,00 €</span>
           </div>
           <div class="totaux-row big"><span class="tl">TOTAL TTC</span><span class="tv" id="t-ttc">0,00 €</span></div>
@@ -1433,7 +1428,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<script src="/gestion.js?v=20261018"></script>
+<script src="/gestion.js?v=2026101802"></script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
 if ('serviceWorker' in navigator) {
