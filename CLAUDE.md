@@ -43,7 +43,8 @@ Functions with their own subdirectory:
 - `netlify/function/emails-envoyes/` — authenticated (Firebase idToken), backs the "📤 Envoyés" tab of `gestion.html` (sent-email history, shown directly without picking a client). GET lists sent emails: each call first copies recent emails from Resend's `GET /emails` list API (everything sent via Resend: gestion, rdv-rappels, lead-capture) into the Firestore `emailsEnvoyes` collection — the durable archive, since Resend only keeps logs for a limited time — paging back until a page has nothing new (max 8 pages, spaced for Resend's ~2 req/s limit). `GET ?id=<resendId>` returns one email's HTML (cached into Firestore on first view). `send-email` also writes each successful send (HTML, attachment names) to `emailsEnvoyes` directly.
 - `netlify/function/perf-check/` — internal tool backing `/perf`: proxies Google PageSpeed Insights, `path` param restricted to a hardcoded allowlist of the site's own public routes (never an arbitrary URL, to avoid an open-proxy scanning vector)
 - `netlify/function/devis-ia/` — authenticated (Firebase idToken): turns a free-text message pasted in `gestion.html`'s devis form into devis line items via Claude (Anthropic API). Official AREPROG catalogue prestations are returned at their exact price; anything else (mechanical parts, labour) gets an `aValider: true` estimate the admin must check before sending — the function has no live supplier-pricing access. Rate-limited via `_lib/rate-limit.js`.
-- `netlify/function/_lib/rate-limit.js` — shared Firestore-backed per-IP rate limiter (`rateLimits` collection), not a standalone function; required by `lead-capture`, `rdv-booking` and `devis-ia`
+- `netlify/function/mcp/` — MCP server (Streamable HTTP, stateless JSON, no SSE) exposing the back-office to Claude as a custom connector at `https://areprog.fr/mcp`: RDVs (list/create/edit/delete, free slots), clients (search/get/create), devis/factures/ordres (list/get/create, status, payments), catalogue, leads and an activity summary. Writes go straight to the same Firestore collections as `gestion.js` (same field names, same `genNum` numbering, `fireISO` computed in Europe/Paris), so they show up live via `onSnapshot`. Carries its own minimal stateless OAuth 2.1 server (discovery under `/.well-known/oauth-*`, dynamic registration, `/mcp/authorize` login page checking the gestion Firebase email/password, `/mcp/token` with mandatory PKCE S256); codes/tokens are HMAC-signed with `MCP_OAUTH_SECRET` (rotating it revokes every grant) and redirect URIs are restricted to Claude's callback (`claude.ai`/`claude.com` `/api/mcp/auth_callback`) and loopback. The login POST answers with a meta-refresh page rather than a 302, because the site-wide CSP `form-action 'self'` would block a post-submit redirect to claude.ai. Routes are rewritten in `_redirects` (`/mcp`, `/mcp/*`, `/.well-known/oauth-*`).
+- `netlify/function/_lib/rate-limit.js` — shared Firestore-backed per-IP rate limiter (`rateLimits` collection), not a standalone function; required by `lead-capture`, `rdv-booking`, `devis-ia` and `mcp` (login attempts)
 
 Functions at the root of `netlify/function/`:
 - `olsx-token.js` — token endpoint
@@ -103,10 +104,12 @@ Because the repo root is the publish directory, internal files (`/netlify/*`, `*
 
 | Variable | Used by |
 |---|---|
-| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-vehicule, lead-capture, send-email, emails-envoyes |
+| `FIREBASE_SERVICE_ACCOUNT` | rdv-rappels, upload-vehicule, lead-capture, send-email, emails-envoyes, mcp |
 | `RESEND_API_KEY` | rdv-rappels, lead-capture, send-email, emails-envoyes |
 | `RESEND_FROM` | rdv-rappels, lead-capture, send-email (optional — all three now default to the same hardcoded `AREPROG <contact@areprog.fr>` sender, kept in sync manually since each function hardcodes its own copy) |
 | `ANTHROPIC_API_KEY` | devis-ia |
+| `MCP_OAUTH_SECRET` | mcp — random string ≥ 32 chars signing OAuth codes/tokens; change it to revoke all Claude connector access |
+| `MCP_ALLOWED_EMAILS` | mcp (optional) — comma-separated Firebase Auth emails allowed to connect Claude; defaults to any gestion account |
 | `PAGESPEED_API_KEY` | perf-check — **required in practice**: verified live (2026-08-11) that Google's keyless PageSpeed Insights quota is 0/day (always returns HTTP 429), not just "more limited" as the API docs imply. Free key, 25,000 requests/day: https://developers.google.com/speed/docs/insights/v5/get-started |
 
 ## Key Patterns

@@ -14,6 +14,14 @@
 /package-lock.json                  /404.html                           404!
 /netlify.toml                       /404.html                           404!
 
+# ── Serveur MCP (connecteur Claude) + OAuth — netlify/function/mcp ─────
+/.well-known/oauth-protected-resource      /.netlify/functions/mcp/prm         200!
+/.well-known/oauth-protected-resource/*    /.netlify/functions/mcp/prm         200!
+/.well-known/oauth-authorization-server    /.netlify/functions/mcp/asm         200!
+/.well-known/oauth-authorization-server/*  /.netlify/functions/mcp/asm         200!
+/mcp                                       /.netlify/functions/mcp             200!
+/mcp/*                                     /.netlify/functions/mcp/:splat      200!
+
 # ── Admin (anciennement Netlify Identity — migré vers Firebase Auth) ─────
 /admin                              /gestion.html                       301
 /perf                                /perf.html                          200
