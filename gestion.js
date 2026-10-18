@@ -444,17 +444,12 @@ async function uploadClientDocs(input) {
   for (var i = 0; i < files.length; i++) {
     status.textContent = 'Envoi ' + (i + 1) + '/' + files.length + '…';
     status.style.color = 'var(--text-dim)';
-    if (files[i].size > 8 * 1024 * 1024) {
-      status.textContent = '✗ ' + files[i].name + ' dépasse 8 Mo';
-      status.style.color = 'var(--red)';
-      return;
-    }
     try {
-      var ct = files[i].type || 'application/pdf';
-      if (!UPLOAD_EXT[ct]) throw new Error('Format non accepté : ' + (files[i].name || 'fichier') + ' (PDF ou image)');
+      var prep = await prepareDocUpload(files[i]);
+      var ct   = prep.contentType;
       var name = safeUploadName(files[i].name || 'fichier', UPLOAD_EXT[ct]);
       var res = await uploadVehFile({
-        fileBase64: await fileToBase64(files[i]),
+        fileBase64: prep.base64,
         contentType: ct,
         kind: 'document',
         entity: 'client',
@@ -7290,6 +7285,27 @@ function safeUploadName(name, ext) {
   return (base || 'fichier') + '.' + ext;
 }
 
+// Les documents voyagent en base64 (+33 %) dans un corps JSON que Netlify
+// coupe vers 6 Mo : au-delà de ~4 Mo bruts l'envoi échoue, même si la
+// fonction accepte 8 Mo. Les images (photo de carte grise, facture prise au
+// téléphone…) sont donc réduites en JPEG ; un PDF trop lourd est refusé
+// avec un message clair plutôt qu'une erreur réseau.
+var MAX_DOC_UPLOAD_BYTES = 4 * 1024 * 1024;
+
+async function prepareDocUpload(file) {
+  var label = file.name || 'document';
+  var isPdf = file.type === 'application/pdf' || (!file.type && /\.pdf$/i.test(label));
+  if (isPdf) {
+    if (file.size > MAX_DOC_UPLOAD_BYTES) throw new Error(label + ' dépasse 4 Mo — compresse le PDF ou envoie-le en photo');
+    return { base64: await fileToBase64(file), contentType: 'application/pdf' };
+  }
+  // Image (y compris HEIC si le navigateur sait la décoder) : réduite à
+  // 2400 px, assez pour garder un document lisible.
+  var img = await resizeImage(file, 2400);
+  if (img && img.base64) return img;
+  throw new Error('Format non accepté : ' + label + ' (PDF ou image JPEG/PNG)');
+}
+
 function uploadVehFile(payload) {
   return authedFetch('/.netlify/functions/upload-vehicule', {
     method:  'POST',
@@ -7346,17 +7362,12 @@ async function uploadVehDocs(input) {
   for (var i = 0; i < files.length; i++) {
     status.textContent = 'Envoi ' + (i + 1) + '/' + files.length + '…';
     status.style.color = 'var(--text-dim)';
-    if (files[i].size > 8 * 1024 * 1024) {
-      status.textContent = '✗ ' + files[i].name + ' dépasse 8 Mo';
-      status.style.color = 'var(--red)';
-      return;
-    }
     try {
-      var ct = files[i].type || 'application/pdf';
-      if (!UPLOAD_EXT[ct]) throw new Error('Format non accepté : ' + (files[i].name || 'document') + ' (PDF ou image)');
+      var prep = await prepareDocUpload(files[i]);
+      var ct   = prep.contentType;
       var name = safeUploadName(files[i].name || 'document', UPLOAD_EXT[ct]);
       var res = await uploadVehFile({
-        fileBase64: await fileToBase64(files[i]),
+        fileBase64: prep.base64,
         contentType: ct,
         kind: 'document',
         vehiculeId: String(vehModalId),
