@@ -486,6 +486,11 @@ function cleanLines(lignes) {
 // son taux de TVA — même calcul que buildObj() dans gestion.js.
 // SASU assujettie : TVA 20 % sur chaque nouveau document (TVA_RATE dans gestion.js).
 const TVA_RATE = 20;
+// Prix catalogue : it.p est le HT (PU HT des lignes) ; TTC à TVA_RATE.
+function prixCatalogue(it) {
+  const ht = parseFloat(it.p) || 0;
+  return { label: it.l, prixHT: ht, prixTTC: round2(ht * (1 + TVA_RATE / 100)) };
+}
 function computeTotals(lines, remiseGlobale, tvaRate) {
   const brut = lines.reduce((s, l) => s + lineGrossHT(l), 0);
   const net = lines.reduce((s, l) => s + lineNetHT(l), 0);
@@ -1233,13 +1238,13 @@ const TOOLS = [
   },
   {
     name: 'lister_catalogue',
-    description: 'Catalogue officiel des prestations AREPROG avec leurs prix (à reprendre exactement dans les devis).',
+    description: 'Catalogue officiel des prestations AREPROG avec leurs prix HT et TTC (TVA 20 %). Le prix HT est à reprendre exactement comme PU HT des lignes de devis.',
     inputSchema: { type: 'object', properties: {} },
     annotations: { readOnlyHint: true },
     async run() {
       const snap = await db().collection('config').doc('catalogue').get();
       const cat = snap.exists && Array.isArray(snap.data().cat) ? snap.data().cat : [];
-      return cat.map((g) => ({ groupe: g.g, prestations: (g.items || []).map((it) => ({ label: it.l, prix: it.p })) }));
+      return cat.map((g) => ({ groupe: g.g, prestations: (g.items || []).map(prixCatalogue) }));
     },
   },
   {
@@ -1638,6 +1643,7 @@ const TOOLS = [
         label: { type: 'string', description: 'Libellé exact de la prestation (modifier / supprimer)' },
         nouveauLabel: { type: 'string' },
         prix: { type: 'number', description: 'Prix HT en €' },
+        prixTTC: { type: 'number', description: 'Prix TTC en € (TVA 20 %) — alternative à prix ; le HT est recalculé' },
         gains: { type: 'array', items: { type: 'string' }, description: 'Arguments affichés sur le devis' },
       },
       required: ['action'],
@@ -1653,26 +1659,29 @@ const TOOLS = [
         cat.forEach((g) => (g.items || []).forEach((x) => { if (norm(x.l).includes(norm(a.label))) cand.push(x.l); }));
         throw new Error('prestation introuvable : "' + a.label + '"' + (cand.length ? ' — libellés proches : ' + cand.slice(0, 5).join(' | ') : ''));
       };
+      // Saisi en TTC : HT à 4 décimales pour que le TTC du devis retombe pile sur le prix saisi.
+      const prixHT = a.prixTTC !== undefined ? Math.round(a.prixTTC / (1 + TVA_RATE / 100) * 10000) / 10000
+        : (a.prix !== undefined ? round2(a.prix) : undefined);
       let res;
       if (a.action === 'ajouter') {
-        if (!str(a.groupe) || !str(a.nouveauLabel || a.label) || !(a.prix >= 0)) throw new Error('groupe, label et prix requis');
+        if (!str(a.groupe) || !str(a.nouveauLabel || a.label) || !(prixHT >= 0)) throw new Error('groupe, label et prix (HT ou TTC) requis');
         let g = cat.find((x) => norm(x.g) === norm(a.groupe));
         if (!g) { g = { g: str(a.groupe, 80), items: [] }; cat.push(g); }
-        const it = { l: str(a.nouveauLabel || a.label, 200), p: round2(a.prix) };
+        const it = { l: str(a.nouveauLabel || a.label, 200), p: prixHT };
         if (Array.isArray(a.gains)) it.gains = a.gains.map((x) => str(x, 120)).filter(Boolean);
         g.items.push(it);
-        res = { groupe: g.g, prestation: { label: it.l, prix: it.p } };
+        res = { groupe: g.g, prestation: prixCatalogue(it) };
       } else if (a.action === 'modifier') {
         const { g, it } = trouver();
-        const avant = { label: it.l, prix: it.p };
+        const avant = prixCatalogue(it);
         if (a.nouveauLabel !== undefined && str(a.nouveauLabel)) it.l = str(a.nouveauLabel, 200);
-        if (a.prix !== undefined) it.p = round2(a.prix);
+        if (prixHT !== undefined) it.p = prixHT;
         if (Array.isArray(a.gains)) it.gains = a.gains.map((x) => str(x, 120)).filter(Boolean);
-        res = { groupe: g.g, avant, apres: { label: it.l, prix: it.p } };
+        res = { groupe: g.g, avant, apres: prixCatalogue(it) };
       } else if (a.action === 'supprimer') {
         const { g, it } = trouver();
         g.items = g.items.filter((x) => x !== it);
-        res = { groupe: g.g, supprime: { label: it.l, prix: it.p } };
+        res = { groupe: g.g, supprime: prixCatalogue(it) };
       } else throw new Error('action invalide');
       await ref.set({ cat });
       return Object.assign({ ok: true, action: a.action, note: 'gestion.html recharge le catalogue à son prochain démarrage' }, res);
@@ -1891,7 +1900,7 @@ const TOOLS = [
 
 const INSTRUCTIONS = 'Outils de gestion de l\'atelier AREPROG (Biarritz) : reprogrammation moteur et diagnostic. '
   + 'Montants en euros ; TVA 20 % sur chaque document (SASU assujettie). Heures en heure de Paris. '
-  + 'Pour un devis : chercher le client (rechercher_clients), reprendre les prix exacts de lister_catalogue pour les prestations AREPROG, '
+  + 'Pour un devis : chercher le client (rechercher_clients), reprendre les prix HT exacts (prixHT) de lister_catalogue comme PU HT des prestations AREPROG, '
   + 'puis creer_document. Les documents sont créés au statut "créé". '
   + 'RÈGLE : avant toute création ou modification de devis/facture, et avant de préparer un envoi, montrer le contenu à l\'utilisateur et attendre son accord explicite. '
   + 'ENVOI AU CLIENT : toujours en 2 temps. 1) preparer_envoi_document, puis présenter le récapitulatif complet et demander « Je l\'envoie ? ». '

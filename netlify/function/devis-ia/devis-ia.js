@@ -65,7 +65,7 @@ function catalogueAllege(cat) {
 }
 
 function buildPrompt(message, catalogue) {
-  return 'Voici le catalogue officiel de prestations AREPROG (reprogrammation moteur / diagnostics), au format JSON :\n'
+  return 'Voici le catalogue officiel de prestations AREPROG (reprogrammation moteur / diagnostics), au format JSON (prix en euros HT, TVA 20 % ajoutée ensuite sur le devis) :\n'
     + JSON.stringify(catalogue)
     + '\n\nVoici la demande d\'un client, telle quelle (message brut, à interpréter) :\n"""\n' + message + '\n"""\n\n'
     + 'Transforme cette demande en lignes de devis. Règles strictes :\n'

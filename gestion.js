@@ -1024,7 +1024,7 @@ function initLineAutocomplete(inputEl, lid, field) {
       }
       var pr = document.createElement('span');
       pr.className = 'ac-price';
-      pr.textContent = s.price > 0 ? s.price.toFixed(2) + '\u00a0\u20ac' : '';
+      pr.textContent = s.price > 0 ? s.price.toFixed(2) + '\u00a0\u20ac HT \u00b7 ' + catPrixTTC(s.price).toFixed(2) + '\u00a0\u20ac TTC' : '';
       item.appendChild(main);
       item.appendChild(pr);
       (function(suggestion) {
@@ -2791,7 +2791,7 @@ function renderCatEditor() {
           + (typeLabel ? ' <span class="cat-item-type ' + it.type + '">' + typeLabel + '</span>' : '')
           + (it.ref ? ' <span class="cat-item-ref">Réf. ' + escHtml(it.ref) + '</span>' : '')
           + (gainsCount > 0 ? ' <span style="font-size:10px;color:var(--green);margin-left:6px">✓ ' + gainsCount + ' gain' + (gainsCount>1?'s':'') + '</span>' : '') + '</div>'
-        + '<div class="cat-item-price">' + (it.p > 0 ? it.p + ' €' : '<span style="color:var(--text-muted)">Sur devis</span>') + '</div>'
+        + '<div class="cat-item-price">' + (it.p > 0 ? fmt(parseFloat(it.p) || 0) + ' HT<br><span class="cat-item-ttc">' + fmt(catPrixTTC(it.p)) + ' TTC</span>' : '<span style="color:var(--text-muted)">Sur devis</span>') + '</div>'
         + '<div class="cat-item-actions">'
           + '<button class="cat-icon-btn" onclick="editCatItem(' + gi + ',' + ii + ')" title="Modifier">✏️</button>'
           + '<button class="cat-icon-btn" onclick="moveCatItem(' + gi + ',' + ii + ',-1)" title="Monter">↑</button>'
@@ -2846,6 +2846,7 @@ function openCatModal(gi, ii) {
     var it = cat[gi].items[ii];
     $('cat-item-label').value = it.l;
     $('cat-item-price').value = it.p;
+    syncCatPrix('ht');
     $('cat-item-gains').value = (it.gains || []).join('\n');
     $('cat-item-type').value = it.type || 'service';
     $('cat-item-ref').value = it.ref || '';
@@ -2856,6 +2857,7 @@ function openCatModal(gi, ii) {
   } else {
     $('cat-item-label').value = '';
     $('cat-item-price').value = '';
+    $('cat-item-price-ttc').value = '';
     $('cat-item-gains').value = '';
     $('cat-item-type').value = 'service';
     $('cat-item-ref').value = '';
@@ -2866,6 +2868,20 @@ function openCatModal(gi, ii) {
   }
   $('cat-item-modal').classList.add('open');
   setTimeout(function(){ $('cat-item-label').focus(); }, 100);
+}
+
+// Prix catalogue : stocké HT (it.p, repris tel quel comme PU HT des lignes),
+// saisissable en HT ou en TTC. Depuis le TTC, le HT garde 4 décimales pour
+// que le TTC du devis retombe exactement sur le prix saisi (699,99 → 583,325).
+function catPrixTTC(ht) { return Math.round((parseFloat(ht) || 0) * (1 + TVA_RATE / 100) * 100) / 100; }
+function syncCatPrix(src) {
+  if (src === 'ttc') {
+    var ttc = $('cat-item-price-ttc').value;
+    $('cat-item-price').value = ttc === '' ? '' : String(Math.round(parseFloat(ttc) / (1 + TVA_RATE / 100) * 10000) / 10000);
+  } else {
+    var ht = $('cat-item-price').value;
+    $('cat-item-price-ttc').value = ht === '' ? '' : catPrixTTC(ht).toFixed(2);
+  }
 }
 
 function closeCatModal() { $('cat-item-modal').classList.remove('open'); }

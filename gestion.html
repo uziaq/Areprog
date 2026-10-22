@@ -23,7 +23,7 @@
 <script src="codages-data.js?v=20260824"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
-<link rel="stylesheet" href="/gestion.css?v=20261017"/>
+<link rel="stylesheet" href="/gestion.css?v=20261022"/>
 </head>
 <body>
 
@@ -1018,8 +1018,13 @@
         <input id="cat-item-ref" type="text" placeholder="Ex : REF-1234"/>
       </div>
     </div>
-    <div class="fr"><label>Prix indicatif (€ HT) — mettre 0 pour "Sur devis"</label>
-      <input id="cat-item-price" type="number" min="0" step="1" placeholder="330"/>
+    <div style="display:flex;gap:10px">
+      <div class="fr" style="flex:1"><label>Prix HT (€) — 0 = "Sur devis"</label>
+        <input id="cat-item-price" type="number" min="0" step="0.01" placeholder="275" oninput="syncCatPrix('ht')"/>
+      </div>
+      <div class="fr" style="flex:1"><label>Prix TTC (€) — TVA 20 %</label>
+        <input id="cat-item-price-ttc" type="number" min="0" step="0.01" placeholder="330" oninput="syncCatPrix('ttc')"/>
+      </div>
     </div>
     <div class="fr">
       <label>Description produit (optionnel — reprise dans la description de la ligne de devis)</label>
@@ -1428,7 +1433,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<script src="/gestion.js?v=20261018"></script>
+<script src="/gestion.js?v=20261022"></script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
 if ('serviceWorker' in navigator) {

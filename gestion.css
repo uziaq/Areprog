@@ -600,7 +600,8 @@ select option{background:var(--bg2);color:var(--text)}
 .cat-item-type.piece{background:rgba(11,122,82,.12);color:var(--green)}
 .cat-item-type.mo{background:rgba(13,91,175,.12);color:var(--blue)}
 .cat-item-ref{font-family:var(--fm);font-size:10px;color:var(--text-muted);margin-left:6px}
-.cat-item-price{font-family:var(--fm);font-size:12px;color:var(--blue);min-width:60px;text-align:right}
+.cat-item-price{font-family:var(--fm);font-size:12px;color:var(--blue);min-width:90px;white-space:nowrap;line-height:1.35;text-align:right}
+.cat-item-ttc{font-size:11px;color:var(--text-muted)}
 .cat-item-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
 .cat-item:hover .cat-item-actions{opacity:1}
 .cat-icon-btn{
