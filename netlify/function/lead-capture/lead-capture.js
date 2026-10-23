@@ -166,8 +166,8 @@ function mailClientDeblocage(lead) {
       + "<li>Expédiez en envoi <strong>suivi et assuré</strong> (Colissimo suivi ou équivalent) et transmettez-nous le numéro de suivi.</li>"
       + '</ul>'
       + '<h3 style="font-size:16px;margin:18px 0 6px">4. Retour</h3>'
-      + "<p>Dès réception, le calculateur est sauvegardé (lecture complète Flash + EEPROM) puis débloqué, et vous est renvoyé en envoi suivi. "
-      + 'Les frais de retour sont précisés sur le devis.</p>';
+      + "<p>Dès réception, le calculateur est sauvegardé (lecture complète Flash + EEPROM) puis débloqué <strong>sous 24 h ouvrées</strong>, "
+      + 'et vous est renvoyé en envoi suivi. <strong>Le retour est offert.</strong></p>';
   } else {
     suite = '<p>Nous vérifions la compatibilité de votre référence de calculateur et vous recontactons <strong>sous 24 h ouvrées</strong> '
       + "pour fixer un rendez-vous à l'atelier de Biarritz et vous confirmer le tarif.</p>";
