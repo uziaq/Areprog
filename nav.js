@@ -67,33 +67,49 @@ const NAV_HTML = `
  </button>
 </nav>
 <div class="nav-mobile" id="navMobile">
- <a href="/" data-page="index">Accueil</a>
- <div class="nav-mobile-group">
- <div class="nav-mobile-group-label">Diagnostic</div>
- <a href="/diagnostic" class="nav-mobile-sub" data-page="diagnostic">Diagnostic multimarque</a>
- <a href="/diagnostic-vag" class="nav-mobile-sub" data-page="diagnostic-vag">Diagnostic VAG (ODIS)</a>
- <a href="/diagnostic-bmw" class="nav-mobile-sub" data-page="diagnostic-bmw">Diagnostic BMW (ISTA)</a>
- <a href="/activation-carplay" class="nav-mobile-sub" data-page="activation-carplay">Activation CarPlay</a>
+ <div class="nm-body">
+ <a href="/" class="nm-link" data-page="index">Accueil</a>
+ <details class="nm-group">
+ <summary>Diagnostic</summary>
+ <div class="nm-panel">
+ <a href="/diagnostic" data-page="diagnostic">Diagnostic multimarque</a>
+ <a href="/diagnostic-vag" data-page="diagnostic-vag">Diagnostic VAG <span class="nm-badge">ODIS</span></a>
+ <a href="/diagnostic-bmw" data-page="diagnostic-bmw">Diagnostic BMW <span class="nm-badge">ISTA</span></a>
+ <a href="/activation-carplay" data-page="activation-carplay">Activation CarPlay</a>
  </div>
- <div class="nav-mobile-group">
- <div class="nav-mobile-group-label">Reprogrammation</div>
- <a href="/stage1" class="nav-mobile-sub" data-page="stage1">Stage 1</a>
- <a href="/stage2" class="nav-mobile-sub" data-page="stage2">Stage 2</a>
- <a href="/conversion-e85" class="nav-mobile-sub" data-page="conversion-e85">Conversion E85</a>
- <a href="/optimisation-consommation" class="nav-mobile-sub" data-page="optimisation-consommation">Optimisation consommation</a>
- <a href="/deblocage-calculateur" class="nav-mobile-sub" data-page="deblocage-calculateur">Déblocage calculateur</a>
- <a href="/desactivation-egr" class="nav-mobile-sub" data-page="desactivation-egr">Désactivation EGR</a>
- <a href="/desactivation-fap" class="nav-mobile-sub" data-page="desactivation-fap">Désactivation FAP</a>
- <a href="/desactivation-adblue" class="nav-mobile-sub" data-page="desactivation-adblue">Désactivation AdBlue</a>
- <a href="/vidange-boite-automatique" class="nav-mobile-sub" data-page="vidange-boite-automatique">Vidange Boîte Automatique</a>
- <a href="/reprogrammation-boite-vitesse" class="nav-mobile-sub" data-page="reprogrammation-boite-vitesse">Reprogrammation Boîte (TCU)</a>
+ </details>
+ <details class="nm-group">
+ <summary>Reprogrammation</summary>
+ <div class="nm-panel">
+ <a href="/reprogrammation" data-page="reprogrammation">Toutes les prestations</a>
+ <div class="nm-label">Moteur</div>
+ <a href="/stage1" data-page="stage1">Stage 1</a>
+ <a href="/stage2" data-page="stage2">Stage 2</a>
+ <a href="/conversion-e85" data-page="conversion-e85">Conversion E85</a>
+ <a href="/optimisation-consommation" data-page="optimisation-consommation">Optimisation consommation</a>
+ <a href="/deblocage-calculateur" data-page="deblocage-calculateur">Déblocage calculateur <span class="nm-badge nm-new">NEW</span></a>
+ <div class="nm-label">Désactivations</div>
+ <a href="/desactivation-egr" data-page="desactivation-egr">EGR</a>
+ <a href="/desactivation-fap" data-page="desactivation-fap">FAP</a>
+ <a href="/desactivation-adblue" data-page="desactivation-adblue">AdBlue</a>
+ <div class="nm-label">Boîte de vitesses</div>
+ <a href="/vidange-boite-automatique" data-page="vidange-boite-automatique">Vidange boîte automatique</a>
+ <a href="/reprogrammation-boite-vitesse" data-page="reprogrammation-boite-vitesse">Reprogrammation boîte (TCU)</a>
  </div>
- <a href="/tarifs" data-page="tarifs">Tarifs 2026</a>
- <a href="/about" data-page="about">À propos</a>
- <a href="/faq" data-page="faq">FAQ</a>
+ </details>
+ <div class="nm-grid">
+ <a href="/tarifs" data-page="tarifs">Tarifs</a>
  <a href="/simulateur" data-page="simulateur">Simulateur</a>
- <a href="/contact" data-page="contact">Nous contacter</a>
- <a href="/rdv" data-page="rdv">Prendre RDV</a>
+ <a href="/blog" data-page="blog">Blog</a>
+ <a href="/faq" data-page="faq">FAQ</a>
+ <a href="/about" data-page="about">À propos</a>
+ <a href="/contact" data-page="contact">Contact</a>
+ </div>
+ </div>
+ <div class="nm-actions">
+ <a href="/rdv" class="nm-btn nm-btn-primary" data-page="rdv">Prendre RDV</a>
+ <a href="tel:+33667924630" class="nm-btn nm-btn-call">📞 Appeler</a>
+ </div>
 </div>
 `;
 
@@ -181,24 +197,34 @@ document.addEventListener('DOMContentLoaded', () => {
  document.querySelectorAll('[data-page]').forEach(el => {
  if (el.dataset.page === page) el.classList.add('active');
  });
+ // Menu mobile : la section qui contient la page en cours s'ouvre d'office.
+ document.querySelectorAll('#navMobile details').forEach(d => {
+ if (d.querySelector('.active')) d.open = true;
+ });
 
  // ── Burger menu
  const burger = document.getElementById('burger');
  const mobile = document.getElementById('navMobile');
  if (burger && mobile) {
- burger.addEventListener('click', () => {
-   const isOpen = mobile.classList.toggle('open');
+ const setMenu = isOpen => {
+   mobile.classList.toggle('open', isOpen);
    burger.setAttribute('aria-expanded', isOpen);
    burger.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
    // La barre d'appel et la bulle WhatsApp flottent par-dessus le bas de
    // l'écran : sans ça, elles masquent les derniers liens du menu mobile.
+   // La même classe voile la page et bloque son défilement.
    document.documentElement.classList.toggle('nav-mobile-open', isOpen);
- });
+ };
+ burger.addEventListener('click', () => setMenu(!mobile.classList.contains('open')));
  mobile.querySelectorAll('a').forEach(a => {
- a.addEventListener('click', () => {
-   mobile.classList.remove('open');
-   document.documentElement.classList.remove('nav-mobile-open');
+ a.addEventListener('click', () => setMenu(false));
  });
+ // Toucher le voile (hors menu et hors barre de navigation) ferme le menu.
+ document.addEventListener('click', e => {
+   if (mobile.classList.contains('open') && !mobile.contains(e.target) && !e.target.closest('nav')) setMenu(false);
+ });
+ document.addEventListener('keydown', e => {
+   if (e.key === 'Escape' && mobile.classList.contains('open')) { setMenu(false); burger.focus(); }
  });
  }
 
