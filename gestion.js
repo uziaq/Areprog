@@ -6603,7 +6603,8 @@ function setDemFilter(f, btn) {
   paintDemandes();
 }
 
-// Normalise les documents de la collection `leads` (contact et simulateur)
+// Normalise les documents de la collection `leads` (contact, simulateur et
+// déblocage calculateur)
 // vers une forme commune consommée par paintDemandes().
 function normaliserDemande(id, d, collection) {
   var veh = d.vehicle || {};
@@ -6633,7 +6634,10 @@ function normaliserDemande(id, d, collection) {
     statut: d.status || 'nouveau',
     quand: quand,
     devisDraft: (d.devisDraft && Array.isArray(d.devisDraft.lignes)) ? d.devisDraft : null,
-    devisId: d.devisId || null
+    devisId: d.devisId || null,
+    ecu: d.ecu || null,
+    dossier: d.dossier || '',
+    clientNotified: d.clientNotified
   };
 }
 
@@ -6689,7 +6693,8 @@ function paintDemandes() {
 
 var SOURCE_LABEL = {
   contact:    { txt: '📝 Formulaire', col: 'var(--blue)' },
-  simulateur: { txt: '📊 Simulateur', col: 'var(--orange)' }
+  simulateur: { txt: '📊 Simulateur', col: 'var(--orange)' },
+  deblocage:  { txt: '🔓 Déblocage calculateur', col: 'var(--green)' }
 };
 
 function carteDemande(d) {
@@ -6705,6 +6710,12 @@ function carteDemande(d) {
       + '<span style="color:var(--text-muted);min-width:88px">' + label + '</span>'
       + '<span>' + escHtml(valeur) + '</span></div>';
   };
+  if (d.ecu) {
+    ajouter('Dossier', d.dossier);
+    ajouter('Calculateur', [d.ecu.ref, d.ecu.numero].filter(Boolean).join(' · '));
+    ajouter('Formule', d.ecu.mode === 'atelier' ? 'Dépôt à l\'atelier' : 'Envoi postal');
+    if (d.clientNotified === false) ajouter('Mail client', '⚠️ non envoyé — instructions à transmettre');
+  }
   ajouter('Véhicule', veh);
   ajouter('Motorisation', d.moteur);
   ajouter('Kilométrage', d.km);

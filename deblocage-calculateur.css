@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════════
+   AREPROG — deblocage-calculateur.css
+   Page /deblocage-calculateur : liste des calculateurs pris en charge
+   (Korhex + Flex) et formulaire d'envoi. S'appuie sur services.css
+   (sections) et contact.css (champs de formulaire).
+   ═══════════════════════════════════════════ */
+
+/* Liste des calculateurs */
+.ecu-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+.ecu-group { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.ecu-group-head { background: var(--surface2); border-bottom: 1px solid var(--border); padding: .9rem 1.2rem; font-family: var(--font-display); font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text); }
+.ecu-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: .7rem 1.2rem; border-bottom: 1px solid var(--border); }
+.ecu-row:last-child { border-bottom: none; }
+.ecu-brand { font-size: .88rem; color: var(--text2); }
+.ecu-brand small { display: block; font-size: .74rem; color: var(--muted); margin-top: .1rem; }
+.ecu-ref { font-family: var(--font-mono); font-weight: 700; font-size: .8rem; color: var(--accent); white-space: nowrap; text-align: right; }
+.ecu-note { margin-top: 1.2rem; font-size: .85rem; color: var(--muted); line-height: 1.65; max-width: 820px; }
+
+/* Formulaire */
+.sv-form { padding: 5rem; background: var(--bg-warm); border-top: 1px solid var(--border); }
+.deb-form-grid { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; margin-top: 3rem; align-items: start; }
+.deb-form { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 2.2rem; position: relative; }
+.deb-side { display: flex; flex-direction: column; gap: 1rem; }
+.deb-side-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.4rem; font-size: .85rem; color: var(--muted); line-height: 1.6; }
+.deb-side-card strong { color: var(--text); font-weight: 600; }
+.deb-side-title { font-family: var(--font-display); font-weight: 700; font-size: .95rem; text-transform: uppercase; color: var(--text); margin-bottom: .5rem; }
+
+.mode-choice { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-bottom: 1rem; }
+.mode-card { position: relative; display: block; border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.1rem; cursor: pointer; background: var(--surface); transition: border-color .15s, background .15s; }
+.mode-card input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.mode-card:has(input:checked) { border-color: var(--blue); background: var(--blue-dim); }
+.mode-card:has(input:focus-visible) { outline: 2px solid var(--blue); outline-offset: 2px; }
+.mode-title { font-weight: 600; font-size: .92rem; color: var(--text); }
+.mode-sub { font-size: .76rem; color: var(--muted); margin-top: .2rem; line-height: 1.45; }
+
+.deb-dossier { font-family: var(--font-mono); font-weight: 700; font-size: 1.3rem; color: var(--blue); letter-spacing: .05em; }
+
+@media (max-width: 1024px) {
+  .ecu-groups { grid-template-columns: 1fr 1fr; }
+  .deb-form-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .sv-form { padding-left: 1rem; padding-right: 1rem; }
+  .deb-form { padding: 1.4rem 1.1rem; }
+}
+@media (max-width: 600px) {
+  .ecu-groups, .mode-choice { grid-template-columns: 1fr; }
+}

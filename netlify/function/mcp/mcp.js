@@ -1244,7 +1244,7 @@ const TOOLS = [
   },
   {
     name: 'lister_demandes',
-    description: 'Demandes reçues via le formulaire de contact / simulateur du site (leads), les plus récentes d\'abord.',
+    description: 'Demandes reçues via le formulaire de contact / simulateur / déblocage calculateur du site (leads), les plus récentes d\'abord.',
     inputSchema: { type: 'object', properties: { statut: { type: 'string', description: 'ex. nouveau' }, limite: { type: 'number' } } },
     annotations: { readOnlyHint: true },
     async run(a) {
@@ -1259,6 +1259,7 @@ const TOOLS = [
           vehicule: [v.brand, v.model, v.engine, v.year].filter(Boolean).join(' '), immat: v.plate || '',
           prestations: Array.isArray(d.prestations) ? d.prestations : Array.isArray(d.options) ? d.options.map((o) => (o && o.name) || String(o)) : [],
           message: d.message || '', devisId: d.devisId || null,
+          ...(d.ecu ? { dossier: d.dossier || '', calculateur: d.ecu, mailClientEnvoye: d.clientNotified } : {}),
         };
       }).filter((r) => !a.statut || r.statut === a.statut);
       return { nombre: rows.length, demandes: rows.slice(0, lim) };
