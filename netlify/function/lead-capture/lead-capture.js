@@ -41,6 +41,7 @@ const PRESTATION_KEYWORDS = [
   { match: /\bfap\b|\bdpf\b/i, keywords: ['fap'] },
   { match: /adblue/i, keywords: ['adblue'] },
   { match: /\bodis\b/i, keywords: ['odis'] },
+  { match: /d[ée]blocage.*calculateur/i, keywords: ['deblocage'] },
 ];
 
 function normaliserTexte(s) {

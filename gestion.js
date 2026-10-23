@@ -6748,7 +6748,8 @@ function carteDemande(d) {
   }
 
   var creerLabel = d.devisDraft ? '✏️ Modifier le devis' : '→ Créer le devis';
-  var confirmBtn = (d.devisDraft && d.email)
+  // Un brouillon avec des lignes « à tarifer » (prix 0) ne part pas en un clic.
+  var confirmBtn = (d.devisDraft && d.email && !d.devisDraft.aTarifer)
     ? '<button class="btn-p btn-sm" onclick="confirmerEtEnvoyerDevis(\'' + ref + '\')" style="background:var(--green)">✅ Confirmer & envoyer</button>'
     : '';
 
