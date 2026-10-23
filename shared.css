@@ -235,13 +235,21 @@ nav {
   background: var(--text); transition: all .3s;
   border-radius: 2px;
 }
+/* Menu ouvert : le burger devient une croix (décalage = gap 5px + trait 1.5px). */
+.nav-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* Mobile nav */
 .nav-mobile {
   display: none;
   position: fixed; top: var(--nav-h); left: 0; right: 0;
-  /* clamp height so it doesn't overflow screen and is scrollable */
+  /* clamp height so it doesn't overflow screen and is scrollable.
+     100vh = écran SANS les barres du navigateur sur iPhone : les derniers
+     liens (Contact, Prendre RDV) restaient sous la barre d'outils de Safari.
+     100dvh suit la zone réellement visible ; 100vh reste en repli. */
   max-height: calc(100vh - var(--nav-h));
+  max-height: calc(100dvh - var(--nav-h));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   background: var(--surface);
