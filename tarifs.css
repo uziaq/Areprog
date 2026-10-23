@@ -282,6 +282,9 @@
     @media (max-width: 500px) {
       .options-grid { grid-template-columns: 1fr; }
       .suppl-grid { grid-template-columns: 1fr; }
+      .tarifs-table th, .tarifs-table td { padding: .65rem .6rem; }
+      .tarifs-table th { letter-spacing: .1em; }
+      .td-price-max { display: block; }
     }
     /* ── NOUVEAUX COMPOSANTS CONVERSION (mars 2026) ────── */
 

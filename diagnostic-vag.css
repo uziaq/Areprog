@@ -216,6 +216,12 @@
       .vs-table { font-size: .78rem; }
       .vs-table th, .vs-table td { padding: .8rem 1rem; }
     }
+    @media (max-width: 500px) {
+      .odis-vs { padding-left: 1.2rem; padding-right: 1.2rem; }
+      .vs-table th, .vs-table td { padding: .7rem .45rem; }
+      .vs-table th { font-size: .6rem; letter-spacing: .04em; }
+      .vs-table td { font-size: .74rem; }
+    }
     @media (max-width: 520px) {
       .odis-real-photos { grid-template-columns: 1fr; }
     }

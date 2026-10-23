@@ -547,7 +547,14 @@ footer { display: block; border-top: 1px solid var(--border); }
 @media (max-width: 500px) {
   .footer-top { grid-template-columns: 1fr; }
   section { padding: 3.5rem 1.2rem; }
+  /* Un libellé de bouton long (« Activation CarPlay / App-Connect → ») passe
+     à la ligne au lieu d'élargir la page. */
+  .btn { white-space: normal; max-width: 100%; }
 }
+
+/* Tableaux larges (comparatifs, tarifs, RGPD) : défilent dans leur propre
+   cadre sur mobile au lieu de faire défiler toute la page horizontalement. */
+.table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 /* ══════════════════════════════════════
    BARRE D'APPEL MOBILE STICKY (toutes pages)
