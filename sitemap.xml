@@ -10,15 +10,10 @@
   <!-- Page d'accueil -->
   <url>
     <loc>https://areprog.fr/</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- ── Pages locales (priorité max — SEO géo) ──────── -->
-
-
-  <!-- ── Pages locales supplémentaires ───────────────── -->
 
   <!-- ── Pages services principales ──────────────────── -->
   <url>
@@ -71,13 +66,13 @@
   </url>
   <url>
     <loc>https://areprog.fr/diagnostic-vag</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://areprog.fr/activation-carplay</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -89,7 +84,7 @@
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -162,8 +157,9 @@
        confirmation → noindex (robots.txt Disallow)
        produit      → noindex
        404          → noindex
-       mentions-legales         → noindex dans le HTML
-       politique-confidentialite → noindex dans le HTML
+       mentions-legales         → noindex dans le HTML (donc hors sitemap)
+       politique-confidentialite → noindex dans le HTML (donc hors sitemap)
+       sitemap-visuel, gestion, perf → noindex
   ─────────────────────────────────────────────────────── -->
 
   <url>
@@ -201,17 +197,5 @@
     <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/mentions-legales</loc>
-    <lastmod>2026-10-09</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://areprog.fr/politique-confidentialite</loc>
-    <lastmod>2026-10-09</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
   </url>
 </urlset>
