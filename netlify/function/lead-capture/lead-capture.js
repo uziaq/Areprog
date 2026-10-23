@@ -1,7 +1,8 @@
 // Netlify Function — enregistrement des demandes web
 // POST /.netlify/functions/lead-capture
 //
-// Reçoit les demandes du formulaire de contact et du simulateur, les écrit dans
+// Reçoit les demandes du formulaire de contact, du simulateur et de la page
+// déblocage calculateur (/deblocage-calculateur), les écrit dans
 // Firestore avec le SDK admin (aucune règle publique à ouvrir), pré-calcule un
 // brouillon de devis à partir du catalogue de prix, puis notifie par e-mail.
 // La notification est optionnelle : un échec d'envoi ne doit jamais faire
@@ -11,6 +12,11 @@
 //   FIREBASE_SERVICE_ACCOUNT : JSON du service account Firebase   (requis)
 //   RESEND_API_KEY           : clé API Resend                     (requis pour l'e-mail)
 //   RESEND_FROM              : adresse d'expédition vérifiée      (optionnel)
+//   ADRESSE_ENVOI_CALCULATEUR: adresse postale où le client expédie son
+//                              calculateur (déblocage) ; retours à la ligne
+//                              en « \n » ou « | ». Gardée hors du dépôt
+//                              (adresse personnelle). Absente : le mail de
+//                              prise en charge annonce un envoi séparé.
 
 const admin = require('firebase-admin');
 const { checkRateLimit } = require('../_lib/rate-limit');
@@ -35,6 +41,7 @@ const PRESTATION_KEYWORDS = [
   { match: /\bfap\b|\bdpf\b/i, keywords: ['fap'] },
   { match: /adblue/i, keywords: ['adblue'] },
   { match: /\bodis\b/i, keywords: ['odis'] },
+  { match: /d[ée]blocage.*calculateur/i, keywords: ['deblocage'] },
 ];
 
 function normaliserTexte(s) {
@@ -107,14 +114,111 @@ function emailValide(e) {
   return !e || /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e);
 }
 
+// ── Déblocage calculateur (Korhex/Flex) : envoi postal ou dépôt atelier ──
+const MODES_DEBLOCAGE = { postal: 'Envoi postal du calculateur', atelier: "Dépôt du véhicule à l'atelier (Biarritz)" };
+
+// N° de dossier lisible, à reporter sur le colis : DEB-AAMMJJ-XXXX.
+function numeroDossier() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, '0');
+  const alea = require('crypto').randomBytes(3).toString('hex').toUpperCase().slice(0, 4);
+  return `DEB-${String(d.getFullYear()).slice(2)}${p(d.getMonth() + 1)}${p(d.getDate())}-${alea}`;
+}
+
+function adresseEnvoi() {
+  const brut = (process.env.ADRESSE_ENVOI_CALCULATEUR || '').trim();
+  return brut ? brut.split(/\\n|\n|\|/).map(l => l.trim()).filter(Boolean) : [];
+}
+
+function mailClientDeblocage(lead) {
+  const e = lead.ecu || {};
+  const v = lead.vehicle || {};
+  const vehicule = [v.brand, v.model, v.year && `(${v.year})`].filter(Boolean).join(' ');
+  const prenom = escape((lead.name || '').split(' ')[0] || '');
+  const ligne = (label, valeur) => valeur
+    ? `<tr><td style="padding:3px 14px 3px 0;color:#666">${label}</td><td style="padding:3px 0"><strong>${escape(valeur)}</strong></td></tr>`
+    : '';
+  const recap = '<table style="font-size:14px;border-collapse:collapse;margin:8px 0 18px">'
+    + ligne('N° de dossier', lead.dossier)
+    + ligne('Véhicule', vehicule)
+    + ligne('Motorisation', v.engine)
+    + ligne('Calculateur', e.ref)
+    + ligne('N° Bosch / pièce', e.numero)
+    + ligne('Formule', MODES_DEBLOCAGE[e.mode])
+    + '</table>';
+
+  let suite;
+  if (e.mode === 'postal') {
+    const adr = adresseEnvoi();
+    const blocAdresse = adr.length
+      ? '<div style="background:#f4f5f7;border-left:4px solid #0d5baf;padding:12px 16px;margin:10px 0 16px;font-size:15px;line-height:1.5">'
+        + adr.map(escape).join('<br>') + '</div>'
+      : "<p>L'adresse d'expédition vous est communiquée par e-mail ou SMS avec notre confirmation de compatibilité.</p>";
+    suite = '<h3 style="font-size:16px;margin:18px 0 6px">1. Attendez notre feu vert</h3>'
+      + '<p>Nous vérifions la compatibilité de votre référence de calculateur et vous confirmons le tarif <strong>sous 24 h ouvrées</strong>. '
+      + "Merci d'attendre cette confirmation avant d'expédier le calculateur.</p>"
+      + `<h3 style="font-size:16px;margin:18px 0 6px">2. Adresse d'expédition</h3>` + blocAdresse
+      + '<h3 style="font-size:16px;margin:18px 0 6px">3. Emballage</h3>'
+      + '<ul style="padding-left:18px;margin:0 0 12px">'
+      + "<li><strong>N'ouvrez pas le calculateur</strong> : envoyez-le tel quel, boîtier fermé, connecteurs propres.</li>"
+      + '<li>Placez-le dans un sachet antistatique (ou un sac plastique), puis dans un carton rigide calé avec du papier bulle.</li>'
+      + `<li>Glissez dans le colis une feuille avec votre <strong>n° de dossier ${escape(lead.dossier)}</strong>, votre nom et votre téléphone.</li>`
+      + "<li>Expédiez en envoi <strong>suivi et assuré</strong> (Colissimo suivi ou équivalent) et transmettez-nous le numéro de suivi.</li>"
+      + '</ul>'
+      + '<h3 style="font-size:16px;margin:18px 0 6px">4. Retour</h3>'
+      + "<p>Dès réception, le calculateur est sauvegardé (lecture complète Flash + EEPROM) puis débloqué <strong>sous 24 h ouvrées</strong>, "
+      + 'et vous est renvoyé en envoi suivi. <strong>Le retour est offert.</strong></p>';
+  } else {
+    suite = '<p>Nous vérifions la compatibilité de votre référence de calculateur et vous recontactons <strong>sous 24 h ouvrées</strong> '
+      + "pour fixer un rendez-vous à l'atelier de Biarritz et vous confirmer le tarif.</p>";
+  }
+
+  return '<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1a1c1f;max-width:600px;line-height:1.55">'
+    + `<p>Bonjour${prenom ? ' ' + prenom : ''},</p>`
+    + '<p>Nous avons bien reçu votre demande de <strong>déblocage de calculateur</strong>. Voici votre récapitulatif :</p>'
+    + recap + suite
+    + "<p style=\"margin-top:20px\">Une question ? Répondez simplement à cet e-mail ou appelez-nous au <a href=\"tel:+33667924630\">06 67 92 46 30</a> "
+    + '(<a href="https://wa.me/33667924630">WhatsApp</a>).</p>'
+    + "<p>À très vite,<br><strong>AREPROG</strong> — Diagnostic & reprogrammation · Biarritz<br><a href=\"https://areprog.fr\">areprog.fr</a></p>"
+    + '</div>';
+}
+
+// Accusé de réception au client : il garde son n° de dossier et, en envoi
+// postal, les instructions d'expédition. Comme la notification interne, un
+// échec ne doit jamais faire perdre la demande.
+async function mailPriseEnCharge(lead) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || !lead.email) return false;
+  if (lead.ecu && lead.ecu.mode === 'postal' && !adresseEnvoi().length) {
+    console.warn('lead-capture : ADRESSE_ENVOI_CALCULATEUR absente — mail de prise en charge sans adresse');
+  }
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      from: process.env.RESEND_FROM || RESEND_FROM,
+      to: [lead.email],
+      reply_to: NOTIF_TO_EMAIL,
+      subject: `Prise en charge de votre calculateur — dossier ${lead.dossier}`,
+      html: mailClientDeblocage(lead),
+    }),
+  });
+  if (!res.ok) throw new Error('Resend ' + res.status + ' : ' + (await res.text()).slice(0, 200));
+  return true;
+}
+
+const SOURCE_TEXTE = { contact: 'Formulaire de contact', simulateur: 'Simulateur', deblocage: 'Déblocage calculateur' };
+
 function resumeHtml(lead) {
   const l = (label, valeur) => valeur
     ? `<tr><td style="padding:4px 12px 4px 0;color:#666">${label}</td><td style="padding:4px 0"><strong>${escape(valeur)}</strong></td></tr>`
     : '';
   const v = lead.vehicle || {};
   const vehicule = [v.brand, v.model, v.year && `(${v.year})`].filter(Boolean).join(' ');
+  const e = lead.ecu || {};
   return '<table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">'
-    + l('Source',       lead.source === 'simulateur' ? 'Simulateur' : 'Formulaire de contact')
+    + l('Source',       SOURCE_TEXTE[lead.source])
+    + l('Dossier',      lead.dossier)
     + l('Nom',          lead.name)
     + l('Téléphone',    lead.phone)
     + l('E-mail',       lead.email)
@@ -123,6 +227,9 @@ function resumeHtml(lead) {
     + l('Motorisation', v.engine)
     + l('Kilométrage',  v.km)
     + l('Immat.',       v.plate)
+    + l('Calculateur',  e.ref)
+    + l('N° Bosch',     e.numero)
+    + l('Formule',      MODES_DEBLOCAGE[e.mode])
     + l('Prestations',  (lead.prestations || []).join(', '))
     + l('Message',      lead.message)
     + '</table>';
@@ -158,7 +265,9 @@ async function notifier(lead) {
     body: JSON.stringify({
       from: process.env.RESEND_FROM || RESEND_FROM,
       to: [NOTIF_TO_EMAIL],
-      subject: `Nouvelle demande — ${lead.name || 'sans nom'}`,
+      subject: lead.source === 'deblocage'
+        ? `Déblocage calculateur ${lead.dossier} — ${lead.name || 'sans nom'}`
+        : `Nouvelle demande — ${lead.name || 'sans nom'}`,
       html: resumeHtml(lead) + devisDraftHtml(lead.devisDraft),
     }),
   });
@@ -207,8 +316,9 @@ exports.handler = async (event) => {
     return { statusCode: 429, headers: cors, body: JSON.stringify({ error: 'Trop de demandes depuis cette connexion. Merci de réessayer dans quelques minutes.' }) };
   }
 
-  const source = body.source === 'simulateur' ? 'simulateur' : 'contact';
+  const source = SOURCE_TEXTE[body.source] ? body.source : 'contact';
   const v = body.vehicle || {};
+  const ecu = body.ecu || {};
 
   const lead = {
     source,
@@ -233,6 +343,23 @@ exports.handler = async (event) => {
     userAgent: texte(event.headers['user-agent'], MAX.moyen),
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
   };
+
+  if (source === 'deblocage') {
+    lead.ecu = {
+      ref:    texte(ecu.ref, MAX.court),
+      numero: texte(ecu.numero, MAX.court),
+      mode:   ecu.mode === 'atelier' ? 'atelier' : 'postal',
+    };
+    lead.dossier = numeroDossier();
+    if (!lead.prestations.length) {
+      lead.prestations = ['Déblocage calculateur' + (lead.ecu.ref ? ' ' + lead.ecu.ref : '')];
+    }
+    // Le mail de prise en charge (instructions d'envoi) est tout l'objet du
+    // formulaire : sans e-mail, il n'a pas lieu d'être.
+    if (!lead.email) {
+      return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'E-mail requis pour recevoir les instructions' }) };
+    }
+  }
 
   // Une demande sans aucun moyen de rappel n'a pas d'intérêt.
   if (!lead.phone && !lead.email) {
@@ -268,5 +395,23 @@ exports.handler = async (event) => {
     console.error('lead-capture : notification échouée —', e.message);
   }
 
-  return { statusCode: 200, headers: cors, body: JSON.stringify({ ok: true, id, notified }) };
+  let clientNotified = false;
+  if (source === 'deblocage') {
+    try {
+      clientNotified = await mailPriseEnCharge(lead);
+    } catch (e) {
+      console.error('lead-capture : mail de prise en charge échoué —', e.message);
+    }
+    try {
+      await admin.firestore().collection('leads').doc(id).update({ clientNotified });
+    } catch (e) {
+      console.warn('lead-capture : clientNotified non enregistré —', e.message);
+    }
+  }
+
+  return {
+    statusCode: 200,
+    headers: cors,
+    body: JSON.stringify({ ok: true, id, notified, clientNotified, dossier: lead.dossier || null }),
+  };
 };
