@@ -16,7 +16,7 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
-  <link rel="stylesheet" href="shared.css?v=20261015"/>
+  <link rel="stylesheet" href="shared.css?v=20261023"/>
   <style>
     .page-wrap { padding-top: var(--nav-h, 64px); }
     .policy-body {
@@ -108,6 +108,7 @@
 
       <h2>Données collectées</h2>
       <p>Lors de l'utilisation du formulaire de devis, les données suivantes peuvent être collectées :</p>
+      <div class="table-scroll">
       <table class="policy-table">
         <thead>
           <tr><th>Donnée</th><th>Finalité</th><th>Base légale</th></tr>
@@ -123,7 +124,7 @@
           <tr><td>Message libre</td><td>Traitement de votre demande</td><td>Consentement</td></tr>
           <tr><td>Adresse e-mail seule (simulateur)</td><td>Envoi du devis chiffré demandé</td><td>Consentement</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <p>Le formulaire de devis a deux effets : il ouvre WhatsApp avec votre message pré-rempli, <strong>et il enregistre votre demande dans notre base de données</strong> (Google Cloud Firestore), afin que nous puissions y répondre même si le message WhatsApp n'est finalement pas envoyé. Le formulaire du simulateur enregistre uniquement votre adresse e-mail et le véhicule que vous indiquez.</p>
 
       <h2>Durée de conservation</h2>

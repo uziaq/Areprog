@@ -235,18 +235,26 @@ nav {
   background: var(--text); transition: all .3s;
   border-radius: 2px;
 }
+/* Menu ouvert : le burger devient une croix (décalage = gap 5px + trait 1.5px). */
+.nav-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* Mobile nav */
 .nav-mobile {
   display: none;
   position: fixed; top: var(--nav-h); left: 0; right: 0;
-  /* clamp height so it doesn't overflow screen and is scrollable */
+  /* clamp height so it doesn't overflow screen and is scrollable.
+     100vh = écran SANS les barres du navigateur sur iPhone : les derniers
+     liens (Contact, Prendre RDV) restaient sous la barre d'outils de Safari.
+     100dvh suit la zone réellement visible ; 100vh reste en repli. */
   max-height: calc(100vh - var(--nav-h));
+  max-height: calc(100dvh - var(--nav-h));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  z-index: 499; padding: .5rem 0;
+  z-index: 499; padding: 0;
   box-shadow: 0 16px 40px rgba(0,0,0,.5);
   overscroll-behavior: contain;
 }
@@ -260,15 +268,81 @@ html.nav-mobile-open .mobile-call-bar,
 html.nav-mobile-open #wa-widget {
   display: none;
 }
-.nav-mobile a {
-  display: block; padding: .85rem 1.5rem;
-  font-family: var(--font-body); font-size: .92rem;
-  color: var(--muted); text-decoration: none;
-  border-bottom: 1px solid var(--border);
-  transition: color .15s, background .15s;
+/* Menu ouvert : la page derrière est voilée et ne défile plus
+   (un toucher sur le voile ferme le menu, cf. nav.js). */
+html.nav-mobile-open { overflow: hidden; }
+html.nav-mobile-open body::after {
+  content: ''; position: fixed; inset: 0; z-index: 498;
+  background: rgba(15,18,22,.45);
 }
-.nav-mobile a:hover { color: var(--text); background: var(--surface2); }
-.nav-mobile a.active { color: var(--blue); }
+/* Hiérarchie du menu mobile : rubriques (Accueil, Diagnostic, Reprogrammation)
+   en titres repliables, sous-pages en retrait, pages secondaires en grille,
+   et les deux actions clés collées en bas de l'écran. */
+.nm-body { padding: .4rem 0 .8rem; }
+.nm-link, .nm-group > summary {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .95rem 1.4rem;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.nm-group > summary { list-style: none; }
+.nm-group > summary::-webkit-details-marker { display: none; }
+.nm-group > summary::after {
+  content: ''; width: .5rem; height: .5rem; margin-right: .2rem;
+  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg) translateY(-2px); transition: transform .2s;
+}
+.nm-group[open] > summary { color: var(--blue); border-bottom-color: transparent; }
+.nm-group[open] > summary::after { transform: rotate(-135deg) translateY(-2px); border-color: var(--blue); }
+.nm-panel {
+  padding: 0 0 .6rem; background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.nm-panel a {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .7rem 1.4rem .7rem 2.2rem;
+  font-size: .95rem; color: var(--text2); text-decoration: none;
+}
+.nm-label {
+  padding: .8rem 1.4rem .2rem 2.2rem;
+  font-family: var(--font-mono); font-size: .62rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--muted2);
+}
+.nm-badge {
+  font-family: var(--font-mono); font-size: .58rem; font-weight: 700; letter-spacing: .08em;
+  padding: .1rem .35rem; border: 1px solid var(--border2); border-radius: 3px; color: var(--muted);
+}
+.nm-badge.nm-new { color: var(--green); border-color: rgba(11,122,82,.4); }
+.nm-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .5rem;
+  padding: 1rem 1.4rem 0;
+}
+.nm-grid a {
+  padding: .75rem .9rem; font-size: .92rem; color: var(--text2); text-decoration: none;
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg);
+}
+.nav-mobile a:hover { color: var(--text); }
+.nm-panel a:hover, .nm-grid a:hover { background: var(--surface2); }
+.nav-mobile a.active { color: var(--blue); font-weight: 600; }
+.nm-panel a.active { box-shadow: inset 3px 0 0 var(--blue); }
+.nm-actions {
+  position: sticky; bottom: 0;
+  display: grid; grid-template-columns: 1fr 1fr; gap: .6rem;
+  padding: .8rem 1.4rem calc(.8rem + env(safe-area-inset-bottom));
+  background: var(--surface); border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 18px rgba(0,0,0,.06);
+}
+.nm-btn {
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  padding: .85rem .5rem; border-radius: var(--radius);
+  font-family: var(--font-display); font-weight: 700; font-size: .95rem;
+  letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+}
+.nav-mobile .nm-btn-primary, .nav-mobile .nm-btn-primary.active { background: var(--blue); color: #fff; }
+.nav-mobile .nm-btn-call { background: var(--green); color: #fff; }
 
 /* Dropdown zones */
 .nav-dropdown { position: relative; }
@@ -300,19 +374,6 @@ html.nav-mobile-open #wa-widget {
 }
 .dropdown-divider { height: 1px; background: var(--border); margin: .3rem 0; }
 
-/* Mobile groups */
-.nav-mobile-group { border-bottom: 1px solid var(--border); }
-.nav-mobile-group-label {
-  padding: .7rem 1.5rem .2rem;
-  font-family: var(--font-mono); font-size: .6rem; font-weight: 700;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--blue);
-}
-.nav-mobile-sub {
-  display: block; padding: .6rem 1.5rem .6rem 2.2rem;
-  font-size: .88rem; color: var(--muted); text-decoration: none;
-  transition: color .15s;
-}
-.nav-mobile-sub:hover { color: var(--text); }
 
 /* ══════════════════════════════════════════
    SECTION LAYOUT
@@ -547,7 +608,14 @@ footer { display: block; border-top: 1px solid var(--border); }
 @media (max-width: 500px) {
   .footer-top { grid-template-columns: 1fr; }
   section { padding: 3.5rem 1.2rem; }
+  /* Un libellé de bouton long (« Activation CarPlay / App-Connect → ») passe
+     à la ligne au lieu d'élargir la page. */
+  .btn { white-space: normal; max-width: 100%; }
 }
+
+/* Tableaux larges (comparatifs, tarifs, RGPD) : défilent dans leur propre
+   cadre sur mobile au lieu de faire défiler toute la page horizontalement. */
+.table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 /* ══════════════════════════════════════
    BARRE D'APPEL MOBILE STICKY (toutes pages)

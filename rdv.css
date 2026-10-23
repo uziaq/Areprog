@@ -62,6 +62,7 @@
 .cal-day-blank { visibility: hidden; }
 .cal-day-btn {
   aspect-ratio: 1;
+  width: 100%;
   max-width: 3.1rem;
   margin: 0 auto;
   border: 1px solid transparent;

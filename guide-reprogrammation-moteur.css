@@ -37,6 +37,10 @@
 .gains-table td { padding: .8rem 1.2rem; font-size: .85rem; color: var(--text2); border-bottom: 1px solid var(--border); }
 .gains-table tr:last-child td { border-bottom: none; }
 .gains-table tr:hover td { background: var(--surface); }
+@media (max-width: 500px) {
+  .gains-table th, .gains-table td { padding: .65rem .6rem; }
+  .gains-table th { letter-spacing: .08em; }
+}
 .highlight { color: var(--blue-light,#42A5F5) !important; font-weight: 600; }
 
 /* Sidebar */
