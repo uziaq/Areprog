@@ -69,7 +69,7 @@
   </script>
   <!-- Preload ressources critiques -->
   <link rel="preload" href="shared.css?v=20261023" as="style"/>
-  <link rel="preload" href="home.css?v=20261015" as="style"/>
+  <link rel="preload" href="home.css?v=20261107" as="style"/>
   <link rel="preload" href="nav.js?v=20261104" as="script"/>
   <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
   <link rel="dns-prefetch" href="https://fonts.gstatic.com"/>
@@ -79,7 +79,7 @@
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/>
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;1,300;1,600&family=Barlow:wght@300;400;500;600&display=swap"/></noscript>
   <link rel="stylesheet" href="shared.css?v=20261023"/>
-  <link rel="stylesheet" href="home.css?v=20261015"/>
+  <link rel="stylesheet" href="home.css?v=20261107"/>
 </head>
 <body data-page="index">
   <div id="nav-container"></div>
@@ -348,63 +348,18 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z" fill="#EA4335"/></svg>
         </div>
         <div class="grb-content">
-          <div class="grb-stars">★★★★★</div>
+          <div class="grb-stars" id="grb-stars"></div>
           <div class="grb-info">
-            <span class="grb-score">5,0</span>
-            <span class="grb-count">&nbsp;· 12 avis Google</span>
+            <span class="grb-score" id="grb-score"></span>
+            <span class="grb-count" id="grb-count">Nos avis Google</span>
           </div>
         </div>
         <div class="grb-arrow">Voir →</div>
       </a>
     </div>
 
-    <div class="temo-grid">
-      <div class="temo-card reveal">
-        <div class="temo-card-top">
-          <div class="temo-stars">★★★★★</div>
-          <div class="temo-source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z" fill="#EA4335"/></svg><span>Google</span></div>
-        </div>
-        <p class="temo-text">Intervention nickel en atelier sur mon Golf 7 GTI. La différence est énorme, la voiture tire beaucoup mieux sur toute la plage de régimes. Technicien très pro et pédagogue.</p>
-        <div class="temo-author">
-          <div class="temo-avatar">TM</div>
-          <div><div class="temo-name">Thomas M.</div><div class="temo-vehicle">VW Golf 7 GTI · Stage 1</div></div>
-          <div class="temo-gain">+55 ch</div>
-        </div>
-      </div>
-
-      <div class="temo-card reveal">
-        <div class="temo-card-top">
-          <div class="temo-stars">★★★★★</div>
-          <div class="temo-source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z" fill="#EA4335"/></svg><span>Google</span></div>
-        </div>
-        <p class="temo-text">Conversion E85 sur mon 308 GTi, le bilan est excellent. Je fais le plein pour moitié moins cher et je n'ai perdu aucune performance. ROI atteint en 8 mois.</p>
-        <div class="temo-author">
-          <div class="temo-avatar">SL</div>
-          <div><div class="temo-name">Sophie L.</div><div class="temo-vehicle">Peugeot 308 GTi · Conversion E85</div></div>
-          <div class="temo-gain">−40%</div>
-        </div>
-      </div>
-
-      <div class="temo-card reveal">
-        <div class="temo-card-top">
-          <div class="temo-stars">★★★★★</div>
-          <div class="temo-source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z" fill="#EA4335"/></svg><span>Google</span></div>
-        </div>
-        <p class="temo-text">Mon Audi A4 avait un voyant FAP allumé en permanence. Désactivation FAP + EGR faite en 1h30 sur mon parking. Plus aucun problème depuis 6 mois.</p>
-        <div class="temo-proof">
-          <picture>
-            <source srcset="audi-flash-succes.webp" type="image/webp"/>
-            <img src="audi-flash-succes.jpg" alt="Écran Bosch STATUT SUCCÈS — flashage ECU Audi A4 TDI, désactivation FAP EGR terminée" loading="lazy" width="1200" height="900" onerror="this.closest('picture').closest('.temo-proof').style.display='none'"/>
-          </picture>
-          <div class="temo-proof-label">Intervention réelle · Statut : SUCCÈS ✓</div>
-        </div>
-        <div class="temo-author">
-          <div class="temo-avatar">KD</div>
-          <div><div class="temo-name">Karim D.</div><div class="temo-vehicle">Audi A4 2.0 TDI · FAP + EGR OFF</div></div>
-          <div class="temo-gain">0 panne</div>
-        </div>
-      </div>
-    </div>
+    <div class="temo-grid" id="avis-google" hidden></div>
+    <p class="temo-attrib" id="avis-attrib" hidden>Avis publiés par nos clients sur Google · <a id="avis-tous" href="https://maps.app.goo.gl/XymJPM5Tgh8eRSM36" target="_blank" rel="noopener noreferrer">Voir tous les avis</a></p>
 
     <div class="temo-cta-bar">
       <div class="temo-cta-left">
@@ -496,6 +451,82 @@
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Vrais avis Google (netlify/function/google-avis). En cas d'échec, la
+    // grille reste masquée et le badge renvoie simplement vers la fiche.
+    (function () {
+      const grid = document.getElementById('avis-google');
+      if (!grid) return;
+      const el = (tag, cls, txt) => {
+        const n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (txt != null) n.textContent = txt;
+        return n;
+      };
+      const etoiles = (n) => '★★★★★'.slice(0, Math.round(n)) + '☆☆☆☆☆'.slice(0, 5 - Math.round(n));
+      const initiales = (nom) => nom.split(/\s+/).filter(Boolean).slice(0, 2).map(m => (m.match(/\p{L}/u) || [''])[0].toUpperCase()).join('') || '★';
+      const logo = document.querySelector('.grb-logo svg');
+
+      fetch('/.netlify/functions/google-avis')
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(d => {
+          if (d.rating) {
+            document.getElementById('grb-score').textContent = d.rating.toFixed(1).replace('.', ',');
+            document.getElementById('grb-stars').textContent = etoiles(d.rating);
+          }
+          if (d.total) document.getElementById('grb-count').textContent = ' · ' + d.total + ' avis Google';
+          if (d.mapsUrl) document.getElementById('avis-tous').href = d.mapsUrl;
+
+          (d.avis || []).slice(0, 3).forEach(a => {
+            const card = el('div', 'temo-card');
+            const top = el('div', 'temo-card-top');
+            top.appendChild(el('div', 'temo-stars', etoiles(a.note)));
+            const src = el('div', 'temo-source');
+            if (logo) { const svg = logo.cloneNode(true); svg.setAttribute('width', 14); svg.setAttribute('height', 14); src.appendChild(svg); }
+            src.appendChild(el('span', null, 'Google'));
+            top.appendChild(src);
+            card.appendChild(top);
+
+            const long = a.texte.length > 280;
+            card.appendChild(el('p', 'temo-text', long ? a.texte.slice(0, 280).replace(/\s+\S*$/, '') + '…' : a.texte));
+            if (long && a.lien) {
+              const more = el('a', 'temo-more', 'Lire la suite sur Google →');
+              more.href = a.lien; more.target = '_blank'; more.rel = 'noopener noreferrer';
+              card.appendChild(more);
+            }
+
+            const author = el('div', 'temo-author');
+            const avatar = el('div', 'temo-avatar');
+            if (a.photo) {
+              const img = el('img');
+              img.src = a.photo; img.alt = ''; img.width = 36; img.height = 36;
+              img.loading = 'lazy'; img.referrerPolicy = 'no-referrer';
+              img.onerror = () => { img.remove(); avatar.textContent = initiales(a.auteur); };
+              avatar.appendChild(img);
+            } else {
+              avatar.textContent = initiales(a.auteur);
+            }
+            author.appendChild(avatar);
+            const who = el('div');
+            if (a.lienAuteur) {
+              const name = el('a', 'temo-name', a.auteur);
+              name.href = a.lienAuteur; name.target = '_blank'; name.rel = 'noopener noreferrer';
+              who.appendChild(name);
+            } else {
+              who.appendChild(el('div', 'temo-name', a.auteur));
+            }
+            if (a.date) who.appendChild(el('div', 'temo-date', a.date));
+            author.appendChild(who);
+            card.appendChild(author);
+            grid.appendChild(card);
+          });
+          if (grid.children.length) {
+            grid.hidden = false;
+            document.getElementById('avis-attrib').hidden = false;
+          }
+        })
+        .catch(() => {});
+    })();
   </script>
 
   </body>
