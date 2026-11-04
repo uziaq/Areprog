@@ -26,19 +26,28 @@
 /admin                              /gestion.html                       301
 /perf                                /perf.html                          200
 
+# ── Univers (dossiers) : /reprogrammation/…, /diagnostic/…, /entretien/…, /activation/…
+#    Pages dans des sous-dossiers : tous leurs assets en chemin absolu (/shared.css…).
+/reprogrammation                             /reprogrammation/index.html                      200
+/reprogrammation/stage1                      /reprogrammation/stage1.html                     200
+/reprogrammation/stage2                      /reprogrammation/stage2.html                     200
+/reprogrammation/conversion-e85              /reprogrammation/conversion-e85.html             200
+/reprogrammation/desactivation-egr           /reprogrammation/desactivation-egr.html          200
+/reprogrammation/desactivation-fap           /reprogrammation/desactivation-fap.html          200
+/reprogrammation/desactivation-adblue        /reprogrammation/desactivation-adblue.html       200
+/reprogrammation/optimisation-consommation   /reprogrammation/optimisation-consommation.html  200
+/reprogrammation/boite-vitesse               /reprogrammation/boite-vitesse.html              200
+/reprogrammation/deblocage-calculateur       /reprogrammation/deblocage-calculateur.html      200
+/diagnostic                                  /diagnostic/index.html                           200
+/diagnostic/vag                              /diagnostic/vag.html                             200
+/diagnostic/bmw                              /diagnostic/bmw.html                             200
+/entretien/vidange-boite-automatique         /entretien/vidange-boite-automatique.html        200
+/activation/carplay                          /activation/carplay.html                         200
+# Pas encore de page hub pour ces deux univers : renvoi vers leur unique page.
+/entretien                                   /entretien/vidange-boite-automatique             302
+/activation                                  /activation/carplay                              302
+
 # ── Clean URLs (sans .html) ─────────────────────────────────
-/diagnostic                         /diagnostic.html                    200
-/diagnostic-vag                     /diagnostic-vag.html                200
-/diagnostic-bmw                     /diagnostic-bmw.html                200
-/activation-carplay                 /activation-carplay.html            200
-/reprogrammation                    /reprogrammation.html               200
-/stage1                             /stage1.html                        200
-/stage2                             /stage2.html                        200
-/conversion-e85                     /conversion-e85.html                200
-/desactivation-egr                  /desactivation-egr.html             200
-/desactivation-fap                  /desactivation-fap.html             200
-/desactivation-adblue               /desactivation-adblue.html          200
-/optimisation-consommation          /optimisation-consommation.html     200
 /tarifs                             /tarifs.html                        200
 /contact                            /contact.html                       200
 /rdv                                /rdv.html                           200
@@ -46,9 +55,6 @@
 /faq                                /faq.html                           200
 /simulateur                         /simulateur.html                    200
 /guide-reprogrammation-moteur       /guide-reprogrammation-moteur.html  200
-/reprogrammation-boite-vitesse      /reprogrammation-boite-vitesse.html 200
-/deblocage-calculateur              /deblocage-calculateur.html         200
-/vidange-boite-automatique          /vidange-boite-automatique.html     200
 /mentions-legales                   /mentions-legales.html              200
 /politique-confidentialite          /politique-confidentialite.html     200
 /sitemap-visuel                     /sitemap-visuel.html                200
@@ -101,9 +107,39 @@
 /confirmation                       /                                   301
 /confirmation.html                  /                                   301
 /admin.html                         /gestion.html                       301
-/odis                                /diagnostic-vag                    301
-/odis.html                           /diagnostic-vag                    301
+/odis                                /diagnostic/vag                    301
+/odis.html                           /diagnostic/vag                    301
 /chip-tuning-pays-basque             /reprogrammation                   301
 /chip-tuning-pays-basque.html        /reprogrammation                   301
-/ethanol-prix                        /conversion-e85                    301
-/ethanol-prix.html                   /conversion-e85                    301
+/ethanol-prix                        /reprogrammation/conversion-e85                    301
+/ethanol-prix.html                   /reprogrammation/conversion-e85                    301
+
+# ── Anciennes URLs à plat (nov. 2026) → URLs rangées par univers ──────
+/stage1                                   /reprogrammation/stage1                       301
+/stage1.html                              /reprogrammation/stage1                       301
+/stage2                                   /reprogrammation/stage2                       301
+/stage2.html                              /reprogrammation/stage2                       301
+/conversion-e85                           /reprogrammation/conversion-e85               301
+/conversion-e85.html                      /reprogrammation/conversion-e85               301
+/desactivation-egr                        /reprogrammation/desactivation-egr            301
+/desactivation-egr.html                   /reprogrammation/desactivation-egr            301
+/desactivation-fap                        /reprogrammation/desactivation-fap            301
+/desactivation-fap.html                   /reprogrammation/desactivation-fap            301
+/desactivation-adblue                     /reprogrammation/desactivation-adblue         301
+/desactivation-adblue.html                /reprogrammation/desactivation-adblue         301
+/optimisation-consommation                /reprogrammation/optimisation-consommation    301
+/optimisation-consommation.html           /reprogrammation/optimisation-consommation    301
+/reprogrammation-boite-vitesse            /reprogrammation/boite-vitesse                301
+/reprogrammation-boite-vitesse.html       /reprogrammation/boite-vitesse                301
+/deblocage-calculateur                    /reprogrammation/deblocage-calculateur        301
+/deblocage-calculateur.html               /reprogrammation/deblocage-calculateur        301
+/diagnostic-vag                           /diagnostic/vag                               301
+/diagnostic-vag.html                      /diagnostic/vag                               301
+/diagnostic-bmw                           /diagnostic/bmw                               301
+/diagnostic-bmw.html                      /diagnostic/bmw                               301
+/vidange-boite-automatique                /entretien/vidange-boite-automatique          301
+/vidange-boite-automatique.html           /entretien/vidange-boite-automatique          301
+/activation-carplay                       /activation/carplay                           301
+/activation-carplay.html                  /activation/carplay                           301
+/reprogrammation.html                     /reprogrammation                              301
+/diagnostic.html                          /diagnostic                                   301
