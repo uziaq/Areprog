@@ -12,16 +12,16 @@ Allow: /
 
 # Pages autorisées à l'indexation IA
 Allow: /diagnostic
-Allow: /diagnostic-vag
-Allow: /diagnostic-bmw
-Allow: /activation-carplay
+Allow: /diagnostic/vag
+Allow: /diagnostic/bmw
+Allow: /activation/carplay
 Allow: /reprogrammation
-Allow: /stage1
-Allow: /stage2
-Allow: /conversion-e85
-Allow: /desactivation-egr
-Allow: /desactivation-fap
-Allow: /desactivation-adblue
+Allow: /reprogrammation/stage1
+Allow: /reprogrammation/stage2
+Allow: /reprogrammation/conversion-e85
+Allow: /reprogrammation/desactivation-egr
+Allow: /reprogrammation/desactivation-fap
+Allow: /reprogrammation/desactivation-adblue
 Allow: /tarifs
 Allow: /faq
 Allow: /guide-reprogrammation-moteur

@@ -2,7 +2,7 @@
 // POST /.netlify/functions/lead-capture
 //
 // Reçoit les demandes du formulaire de contact, du simulateur et de la page
-// déblocage calculateur (/deblocage-calculateur), les écrit dans
+// déblocage calculateur (/reprogrammation/deblocage-calculateur), les écrit dans
 // Firestore avec le SDK admin (aucune règle publique à ouvrir), pré-calcule un
 // brouillon de devis à partir du catalogue de prix, puis notifie par e-mail.
 // La notification est optionnelle : un échec d'envoi ne doit jamais faire

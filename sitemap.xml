@@ -17,44 +17,44 @@
 
   <!-- ── Pages services principales ──────────────────── -->
   <url>
-    <loc>https://areprog.fr/stage1</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/stage1</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/conversion-e85</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/conversion-e85</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/stage2</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/stage2</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/desactivation-egr</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/desactivation-egr</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/desactivation-fap</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/desactivation-fap</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/desactivation-adblue</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/desactivation-adblue</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/optimisation-consommation</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/optimisation-consommation</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -65,20 +65,20 @@
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/diagnostic-vag</loc>
-    <lastmod>2026-10-15</lastmod>
+    <loc>https://areprog.fr/diagnostic/vag</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/activation-carplay</loc>
-    <lastmod>2026-10-23</lastmod>
+    <loc>https://areprog.fr/activation/carplay</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/diagnostic-bmw</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/diagnostic/bmw</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
@@ -89,20 +89,20 @@
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/reprogrammation-boite-vitesse</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/reprogrammation/boite-vitesse</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/deblocage-calculateur</loc>
-    <lastmod>2026-10-23</lastmod>
+    <loc>https://areprog.fr/reprogrammation/deblocage-calculateur</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://areprog.fr/vidange-boite-automatique</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://areprog.fr/entretien/vidange-boite-automatique</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>

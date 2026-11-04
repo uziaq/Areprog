@@ -29,28 +29,28 @@ const NAV_HTML = `
  <a href="#" class="nav-dropdown-toggle" data-page="diagnostic">Diagnostic ▾</a>
  <ul class="nav-dropdown-menu">
  <li><a href="/diagnostic">Diagnostic multimarque</a></li>
- <li><a href="/diagnostic-vag">Diagnostic VAG <span class="nav-badge">ODIS</span></a></li>
- <li><a href="/diagnostic-bmw">Diagnostic BMW <span class="nav-badge">ISTA</span></a></li>
- <li><a href="/activation-carplay">Activation CarPlay</a></li>
+ <li><a href="/diagnostic/vag">Diagnostic VAG <span class="nav-badge">ODIS</span></a></li>
+ <li><a href="/diagnostic/bmw">Diagnostic BMW <span class="nav-badge">ISTA</span></a></li>
+ <li><a href="/activation/carplay">Activation CarPlay</a></li>
  </ul>
  </li>
  <li class="nav-dropdown">
  <a href="#" class="nav-dropdown-toggle" data-page="reprogrammation">Reprogrammation ▾</a>
  <ul class="nav-dropdown-menu">
- <li><a href="/stage1">Stage 1</a></li>
- <li><a href="/stage2">Stage 2</a></li>
- <li><a href="/conversion-e85">Conversion E85</a></li>
- <li><a href="/optimisation-consommation">Optimisation consommation</a></li>
- <li><a href="/deblocage-calculateur">Déblocage calculateur <span class="nav-badge" style="color:#10a36d;border-color:rgba(11,122,82,.4)">NEW</span></a></li>
+ <li><a href="/reprogrammation/stage1">Stage 1</a></li>
+ <li><a href="/reprogrammation/stage2">Stage 2</a></li>
+ <li><a href="/reprogrammation/conversion-e85">Conversion E85</a></li>
+ <li><a href="/reprogrammation/optimisation-consommation">Optimisation consommation</a></li>
+ <li><a href="/reprogrammation/deblocage-calculateur">Déblocage calculateur <span class="nav-badge" style="color:#10a36d;border-color:rgba(11,122,82,.4)">NEW</span></a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Désactivations</li>
- <li><a href="/desactivation-egr">EGR</a></li>
- <li><a href="/desactivation-fap">FAP</a></li>
- <li><a href="/desactivation-adblue">AdBlue</a></li>
+ <li><a href="/reprogrammation/desactivation-egr">EGR</a></li>
+ <li><a href="/reprogrammation/desactivation-fap">FAP</a></li>
+ <li><a href="/reprogrammation/desactivation-adblue">AdBlue</a></li>
  <li class="dropdown-divider"></li>
  <li class="dropdown-group-label">Entretien</li>
- <li><a href="/vidange-boite-automatique">Vidange Boîte Auto</a></li>
- <li><a href="/reprogrammation-boite-vitesse">Reprog Boîte (TCU) <span class="nav-badge" style="color:#FCD34D;border-color:rgba(245,158,11,.4)">NEW</span></a></li>
+ <li><a href="/entretien/vidange-boite-automatique">Vidange Boîte Auto</a></li>
+ <li><a href="/reprogrammation/boite-vitesse">Reprog Boîte (TCU) <span class="nav-badge" style="color:#FCD34D;border-color:rgba(245,158,11,.4)">NEW</span></a></li>
  </ul>
  </li>
  <li><a href="/blog" data-page="blog">Blog</a></li>
@@ -73,9 +73,9 @@ const NAV_HTML = `
  <summary>Diagnostic</summary>
  <div class="nm-panel">
  <a href="/diagnostic" data-page="diagnostic">Diagnostic multimarque</a>
- <a href="/diagnostic-vag" data-page="diagnostic-vag">Diagnostic VAG <span class="nm-badge">ODIS</span></a>
- <a href="/diagnostic-bmw" data-page="diagnostic-bmw">Diagnostic BMW <span class="nm-badge">ISTA</span></a>
- <a href="/activation-carplay" data-page="activation-carplay">Activation CarPlay</a>
+ <a href="/diagnostic/vag" data-page="diagnostic-vag">Diagnostic VAG <span class="nm-badge">ODIS</span></a>
+ <a href="/diagnostic/bmw" data-page="diagnostic-bmw">Diagnostic BMW <span class="nm-badge">ISTA</span></a>
+ <a href="/activation/carplay" data-page="activation-carplay">Activation CarPlay</a>
  </div>
  </details>
  <details class="nm-group">
@@ -83,18 +83,18 @@ const NAV_HTML = `
  <div class="nm-panel">
  <a href="/reprogrammation" data-page="reprogrammation">Toutes les prestations</a>
  <div class="nm-label">Moteur</div>
- <a href="/stage1" data-page="stage1">Stage 1</a>
- <a href="/stage2" data-page="stage2">Stage 2</a>
- <a href="/conversion-e85" data-page="conversion-e85">Conversion E85</a>
- <a href="/optimisation-consommation" data-page="optimisation-consommation">Optimisation consommation</a>
- <a href="/deblocage-calculateur" data-page="deblocage-calculateur">Déblocage calculateur <span class="nm-badge nm-new">NEW</span></a>
+ <a href="/reprogrammation/stage1" data-page="stage1">Stage 1</a>
+ <a href="/reprogrammation/stage2" data-page="stage2">Stage 2</a>
+ <a href="/reprogrammation/conversion-e85" data-page="conversion-e85">Conversion E85</a>
+ <a href="/reprogrammation/optimisation-consommation" data-page="optimisation-consommation">Optimisation consommation</a>
+ <a href="/reprogrammation/deblocage-calculateur" data-page="deblocage-calculateur">Déblocage calculateur <span class="nm-badge nm-new">NEW</span></a>
  <div class="nm-label">Désactivations</div>
- <a href="/desactivation-egr" data-page="desactivation-egr">EGR</a>
- <a href="/desactivation-fap" data-page="desactivation-fap">FAP</a>
- <a href="/desactivation-adblue" data-page="desactivation-adblue">AdBlue</a>
+ <a href="/reprogrammation/desactivation-egr" data-page="desactivation-egr">EGR</a>
+ <a href="/reprogrammation/desactivation-fap" data-page="desactivation-fap">FAP</a>
+ <a href="/reprogrammation/desactivation-adblue" data-page="desactivation-adblue">AdBlue</a>
  <div class="nm-label">Boîte de vitesses</div>
- <a href="/vidange-boite-automatique" data-page="vidange-boite-automatique">Vidange boîte automatique</a>
- <a href="/reprogrammation-boite-vitesse" data-page="reprogrammation-boite-vitesse">Reprogrammation boîte (TCU)</a>
+ <a href="/entretien/vidange-boite-automatique" data-page="vidange-boite-automatique">Vidange boîte automatique</a>
+ <a href="/reprogrammation/boite-vitesse" data-page="reprogrammation-boite-vitesse">Reprogrammation boîte (TCU)</a>
  </div>
  </details>
  <div class="nm-grid">
@@ -124,22 +124,22 @@ const FOOTER_HTML = `
  <div class="footer-col">
  <div class="footer-col-title">Diagnostic</div>
  <a href="/diagnostic">Diagnostic multimarque</a>
- <a href="/diagnostic-vag">Diagnostic VAG (ODIS)</a>
- <a href="/diagnostic-bmw">Diagnostic BMW (ISTA)</a>
- <a href="/activation-carplay">Activation CarPlay</a>
+ <a href="/diagnostic/vag">Diagnostic VAG (ODIS)</a>
+ <a href="/diagnostic/bmw">Diagnostic BMW (ISTA)</a>
+ <a href="/activation/carplay">Activation CarPlay</a>
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Reprogrammation</div>
- <a href="/stage1">Stage 1</a>
- <a href="/stage2">Stage 2</a>
- <a href="/conversion-e85">Conversion E85</a>
- <a href="/optimisation-consommation">Optimisation consommation</a>
- <a href="/deblocage-calculateur">Déblocage calculateur</a>
- <a href="/desactivation-egr">Désactivation EGR</a>
- <a href="/desactivation-fap">Désactivation FAP</a>
- <a href="/desactivation-adblue">Désactivation AdBlue</a>
- <a href="/vidange-boite-automatique">Vidange Boîte Automatique</a>
- <a href="/reprogrammation-boite-vitesse">Reprogrammation Boîte (TCU)</a>
+ <a href="/reprogrammation/stage1">Stage 1</a>
+ <a href="/reprogrammation/stage2">Stage 2</a>
+ <a href="/reprogrammation/conversion-e85">Conversion E85</a>
+ <a href="/reprogrammation/optimisation-consommation">Optimisation consommation</a>
+ <a href="/reprogrammation/deblocage-calculateur">Déblocage calculateur</a>
+ <a href="/reprogrammation/desactivation-egr">Désactivation EGR</a>
+ <a href="/reprogrammation/desactivation-fap">Désactivation FAP</a>
+ <a href="/reprogrammation/desactivation-adblue">Désactivation AdBlue</a>
+ <a href="/entretien/vidange-boite-automatique">Vidange Boîte Automatique</a>
+ <a href="/reprogrammation/boite-vitesse">Reprogrammation Boîte (TCU)</a>
  </div>
  <div class="footer-col">
  <div class="footer-col-title">Atelier</div>

@@ -1,5 +1,5 @@
 // Netlify Function — proxy vers Google PageSpeed Insights
-// GET /.netlify/functions/perf-check?path=/stage1&strategy=mobile
+// GET /.netlify/functions/perf-check?path=/reprogrammation/stage1&strategy=mobile
 //
 // Outil interne : mesure les Core Web Vitals et les scores Lighthouse d'une
 // page du site, sans exposer le site à un usage de proxy ouvert. Le
@@ -22,18 +22,18 @@ const ALLOWED_ORIGINS = ['https://areprog.fr', 'https://www.areprog.fr'];
 const ALLOWED_PATHS = [
   '/',
   '/diagnostic',
-  '/diagnostic-vag',
-  '/diagnostic-bmw',
+  '/diagnostic/vag',
+  '/diagnostic/bmw',
   '/reprogrammation',
-  '/stage1',
-  '/stage2',
-  '/conversion-e85',
-  '/desactivation-egr',
-  '/desactivation-fap',
-  '/desactivation-adblue',
-  '/optimisation-consommation',
-  '/reprogrammation-boite-vitesse',
-  '/vidange-boite-automatique',
+  '/reprogrammation/stage1',
+  '/reprogrammation/stage2',
+  '/reprogrammation/conversion-e85',
+  '/reprogrammation/desactivation-egr',
+  '/reprogrammation/desactivation-fap',
+  '/reprogrammation/desactivation-adblue',
+  '/reprogrammation/optimisation-consommation',
+  '/reprogrammation/boite-vitesse',
+  '/entretien/vidange-boite-automatique',
   '/tarifs',
   '/simulateur',
   '/contact',
