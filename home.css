@@ -212,8 +212,6 @@
   .temo-author { display: flex; align-items: center; gap: .8rem; padding-top: 1rem; border-top: 1px solid var(--border); }
   .temo-avatar { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: .9rem; color: var(--blue-light); flex-shrink: 0; }
   .temo-name { font-weight: 600; font-size: .85rem; color: var(--text); line-height: 1.2; }
-  .temo-vehicle { font-size: .72rem; color: var(--muted); margin-top: .1rem; }
-  .temo-gain { margin-left: auto; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--green); }
 
   /* ══════════════════════════════════════
      CHIFFRES
@@ -267,10 +265,17 @@
   .process-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
   .process-step:hover .process-photo img { transform: scale(1.04); }
 
-  /* Preuve photo dans témoignage */
-  .temo-proof { border-radius: 6px; overflow: hidden; position: relative; aspect-ratio: 16/9; }
-  .temo-proof img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .temo-proof-label { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.75)); padding: .5rem .7rem .5rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #34D399; }
+  /* Avis Google chargés par google-avis */
+  .temo-stars { color: #FBBC05; letter-spacing: .05em; }
+  .temo-avatar { overflow: hidden; }
+  .temo-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  a.temo-name { text-decoration: none; display: block; }
+  a.temo-name:hover { color: var(--blue); }
+  .temo-date { font-size: .72rem; color: var(--muted); margin-top: .1rem; }
+  .temo-more { font-size: .78rem; color: var(--blue); text-decoration: none; margin-top: -.6rem; }
+  .temo-more:hover { text-decoration: underline; }
+  .temo-attrib { margin-top: 1rem; font-size: .75rem; color: var(--muted); }
+  .temo-attrib a { color: var(--blue); }
 
   /* ══════════════════════════════════════
      CTA FINAL
