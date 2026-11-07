@@ -23,7 +23,7 @@
 <script src="codages-data.js?v=20260824"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
-<link rel="stylesheet" href="/gestion.css?v=20261017"/>
+<link rel="stylesheet" href="/gestion.css?v=20261107"/>
 </head>
 <body>
 
@@ -1420,6 +1420,7 @@ Cordialement, AREPROG"></textarea>
     <div class="modal-toolbar">
       <button class="btn-p" onclick="printFromModal()">🖨️ Imprimer / PDF</button>
       <button class="btn-p" id="send-email-btn" onclick="sendDocByEmail()" style="background:#25d366">📧 Envoyer par email</button>
+      <button class="btn-s" id="pdp-send-btn" onclick="envoyerFactureElectronique()" style="display:none" title="Transmettre la facture électronique (Factur-X) via SUPER PDP">📡 Facture électronique</button>
       <button class="btn-s" onclick="closeModal()">✕ Fermer</button>
     </div>
     <div class="modal-inner">
@@ -1428,7 +1429,7 @@ Cordialement, AREPROG"></textarea>
   </div>
 </div>
 
-<script src="/gestion.js?v=20261023"></script>
+<script src="/gestion.js?v=20261107"></script>
 <script>
 // Enregistrement du Service Worker (notifications en arrière-plan)
 if ('serviceWorker' in navigator) {

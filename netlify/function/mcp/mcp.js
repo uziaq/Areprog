@@ -1054,7 +1054,7 @@ const TOOLS = [
       const d = await findDoc(a);
       if (!d) throw new Error('document introuvable');
       if (d.statut === 'annulé') throw new Error('document annulé : non modifiable');
-      if (d.type === 'facture' && (d.statut !== 'créé' || d.lastEmailAt || (d.paiements || []).length)) {
+      if (d.type === 'facture' && (d.statut !== 'créé' || d.lastEmailAt || (d.paiements || []).length || (d.pdp && d.pdp.id))) {
         throw new Error('facture déjà envoyée ou réglée : non modifiable ici (faire un avoir / corriger dans gestion.html)');
       }
       const avant = resumeDoc(d);
@@ -1374,7 +1374,7 @@ const TOOLS = [
       const type = DOC_TYPES.includes(a.type) ? a.type : orig.type;
       Object.assign(c, {
         id: Date.now(), type, num: genNum(DOC_PREFIX[type], docs), date: todayParis(), ech: todayParis(30), statut: 'créé',
-        paiements: [], acompte: null, envoiPropose: null, lastEmailAt: null, lastEmailTo: null, avisEmailAt: null, refDevis: null, source: 'claude',
+        paiements: [], acompte: null, envoiPropose: null, lastEmailAt: null, lastEmailTo: null, avisEmailAt: null, refDevis: null, pdp: null, source: 'claude',
       }, computeTotals(c.lines || [], c.remiseGlobale, TVA_RATE), { tvaRate: TVA_RATE });
       await db().collection('docs').doc(String(c.id)).set(c);
       return { ok: true, copie: resumeDoc(c), origine: orig.num };
@@ -1388,7 +1388,7 @@ const TOOLS = [
     async run(a) {
       const d = await findDoc(a);
       if (!d) throw new Error('document introuvable');
-      if (d.type === 'facture' && (d.lastEmailAt || (d.paiements || []).length || (d.acompte && d.acompte.recu) || !['créé', 'annulé'].includes(d.statut))) {
+      if (d.type === 'facture' && (d.lastEmailAt || (d.pdp && d.pdp.id) || (d.paiements || []).length || (d.acompte && d.acompte.recu) || !['créé', 'annulé'].includes(d.statut))) {
         throw new Error('facture déjà émise (envoyée ou réglée) : la numérotation doit rester continue, utiliser modifier_statut_document → "annulé"');
       }
       await db().collection('docs').doc(String(d.id)).delete();
