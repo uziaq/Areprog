@@ -31,6 +31,7 @@ const NAV_HTML = `
  <li><a href="/diagnostic">Diagnostic multimarque</a></li>
  <li><a href="/diagnostic/vag">Diagnostic VAG <span class="nav-badge">ODIS</span></a></li>
  <li><a href="/diagnostic/bmw">Diagnostic BMW <span class="nav-badge">ISTA</span></a></li>
+ <li><a href="/diagnostic/reparation-cas3">Réparation CAS3 BMW</a></li>
  <li><a href="/activation/carplay">Activation CarPlay</a></li>
  </ul>
  </li>
@@ -75,6 +76,7 @@ const NAV_HTML = `
  <a href="/diagnostic" data-page="diagnostic">Diagnostic multimarque</a>
  <a href="/diagnostic/vag" data-page="diagnostic-vag">Diagnostic VAG <span class="nm-badge">ODIS</span></a>
  <a href="/diagnostic/bmw" data-page="diagnostic-bmw">Diagnostic BMW <span class="nm-badge">ISTA</span></a>
+ <a href="/diagnostic/reparation-cas3" data-page="reparation-cas3">Réparation CAS3 BMW</a>
  <a href="/activation/carplay" data-page="activation-carplay">Activation CarPlay</a>
  </div>
  </details>
@@ -126,6 +128,7 @@ const FOOTER_HTML = `
  <a href="/diagnostic">Diagnostic multimarque</a>
  <a href="/diagnostic/vag">Diagnostic VAG (ODIS)</a>
  <a href="/diagnostic/bmw">Diagnostic BMW (ISTA)</a>
+ <a href="/diagnostic/reparation-cas3">Réparation CAS3 BMW</a>
  <a href="/activation/carplay">Activation CarPlay</a>
  </div>
  <div class="footer-col">

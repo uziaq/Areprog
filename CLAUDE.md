@@ -8,7 +8,7 @@ AREPROG is a French-language SaaS platform for automotive diagnostics and chip-t
 
 Service pages are filed by "universe", one folder per universe, and the URL mirrors the folder (`/reprogrammation/stage1` ← `reprogrammation/stage1.html`):
 - **Reprogrammation** (`reprogrammation/index.html` hub, `/reprogrammation`) — `stage1`, `stage2`, `conversion-e85`, `desactivation-{egr,fap,adblue}`, `optimisation-consommation`, `boite-vitesse` (TCU), `deblocage-calculateur`.
-- **Diagnostic** (`diagnostic/index.html` hub, `/diagnostic`) — multi-brand electronic diagnostics, plus `vag` (official ODIS tool) and `bmw` (ISTA).
+- **Diagnostic** (`diagnostic/index.html` hub, `/diagnostic`) — multi-brand electronic diagnostics, plus `vag` (official ODIS tool), `bmw` (ISTA) and `reparation-cas3` (BMW/MINI CAS3/CAS3+ module repair: EEPROM, keys, ISN — never mileage correction; key/immobiliser work requires carte grise + ID).
 - **Entretien** (`entretien/`) — `vidange-boite-automatique`. **Activation** (`activation/`) — `carplay`. Neither has a hub page yet: `/entretien` and `/activation` 302 to their only page (replace by a real hub once a second page exists).
 
 General pages (tarifs, simulateur, guide, faq, about, contact, rdv, legal) stay at the root. The old flat URLs (`/stage1`, `/diagnostic-vag`, `/activation-carplay`…) 301 to the new ones (block at the end of `_redirects`). Adding a page to a universe means: the file in its folder, a `200` rewrite in the "Univers" block of `_redirects`, a `sitemap.xml` entry, and — like the blog — **absolute** paths for every asset (`/shared.css?v=…`, `/nav.js?v=…`, images). Page CSS files stay at the root under their old names (`/diagnostic-vag.css`, `/deblocage-calculateur.css`).

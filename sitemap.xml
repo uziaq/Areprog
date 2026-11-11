@@ -78,9 +78,15 @@
   </url>
   <url>
     <loc>https://areprog.fr/diagnostic/bmw</loc>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://areprog.fr/diagnostic/reparation-cas3</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
   </url>
   <url>
     <loc>https://areprog.fr/reprogrammation</loc>
